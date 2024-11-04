@@ -41,6 +41,7 @@ export const WashimaFormPage: React.FC<WashimaFormPageProps> = ({  currentWashim
                 const response = currentWashima ? await api.patch("/washima", { ...data, id: currentWashima.id }) : await api.post("/washima", data)
                 console.log(response.data)
                 setCurrentWashima(response.data)
+                formik.resetForm()
             } catch (error) {
                 console.log(error)
             } finally {
