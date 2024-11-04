@@ -113,11 +113,13 @@ export const ChatContainer: React.FC<ChatProps> = ({ chat, onChatClick, washima,
             }}
             onClick={handleClick}
         >
-            <Avatar
-                src={profilePic}
-                sx={{ width: isMobile ? "15vw" : "3vw", height: isMobile ? "15vw" : "3vw", bgcolor: "primary.main" }}
-                // onClick={() => picture.open(profilePic || "")}
-            />
+            <Paper elevation={2} sx={{ borderRadius: "100%" }}>
+                <Avatar
+                    src={profilePic}
+                    sx={{ width: isMobile ? "15vw" : "3vw", height: isMobile ? "15vw" : "3vw" }}
+                    // onClick={() => picture.open(profilePic || "")}
+                />
+            </Paper>
             <Box
                 sx={{
                     flexDirection: "column",

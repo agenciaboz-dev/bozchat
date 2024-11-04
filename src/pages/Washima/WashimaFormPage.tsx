@@ -10,6 +10,7 @@ import { api } from "../../api"
 import { QRCode } from "react-qrcode-logo"
 import { ArrowBackIos } from "@mui/icons-material"
 import { useIo } from "../../hooks/useIo"
+import { WashimaTools } from "./WashimaTools"
 
 interface WashimaFormPageProps {
     currentWashima: Washima | null
@@ -18,7 +19,7 @@ interface WashimaFormPageProps {
     setShowForm: React.Dispatch<React.SetStateAction<boolean>>
 }
 
-export const WashimaFormPage: React.FC<WashimaFormPageProps> = ({  currentWashima, setCurrentWashima, showForm, setShowForm }) => {
+export const WashimaFormPage: React.FC<WashimaFormPageProps> = ({ currentWashima, setCurrentWashima, showForm, setShowForm }) => {
     const io = useIo()
     const vw = window.innerWidth / 100
     const { darkMode } = useDarkMode()
@@ -29,9 +30,7 @@ export const WashimaFormPage: React.FC<WashimaFormPageProps> = ({  currentWashim
     const [fetchingMessages, setFetchingMessages] = useState(false)
 
     const formik = useFormik<WashimaForm>({
-        initialValues: currentWashima
-            ? { name: currentWashima.name, number: currentWashima.number, }
-            : { name: "", number: "" },
+        initialValues: currentWashima ? { name: currentWashima.name, number: currentWashima.number } : { name: "", number: "" },
         async onSubmit(values, formikHelpers) {
             if (loading) return
 
@@ -118,57 +117,57 @@ export const WashimaFormPage: React.FC<WashimaFormPageProps> = ({  currentWashim
     return (
         <Box sx={{ flex: 1, gap: "2vw" }}>
             <Box sx={{ padding: "2vw", flexDirection: "column", gap: "1vw", flex: 0.5 }}>
-                    <>
-                        <Box sx={{ fontSize: "1.5rem", color: "text.secondary", fontWeight: "bold", gap: "1vw" }}>
-                            {showForm && (
-                                <IconButton onClick={() => setShowForm(false)}>
-                                    <ArrowBackIos />
-                                </IconButton>
-                            )}
-                            {currentWashima?.name || "Novo whatsapp"}
-                        </Box>
+                <>
+                    <Box sx={{ fontSize: "1.5rem", color: "text.secondary", fontWeight: "bold", gap: "1vw" }}>
+                        {showForm && (
+                            <IconButton onClick={() => setShowForm(false)}>
+                                <ArrowBackIos />
+                            </IconButton>
+                        )}
+                        {currentWashima?.name || "Novo whatsapp"}
+                    </Box>
 
-                        <Box sx={{ gap: "1vw" }}>
-                            <TextField
-                                label="Nome"
-                                name="name"
-                                value={formik.values.name}
-                                onChange={formik.handleChange}
-                                error={formik.touched.name && !!formik.errors.name}
-                                helperText={formik.errors.name}
-                                required
-                            />
-                            <TextField
-                                label="Número"
-                                name="number"
-                                value={formik.values.number}
-                                onChange={formik.handleChange}
-                                error={!!formik.errors.number}
-                                helperText={formik.errors.number}
-                                InputProps={{ inputComponent: MaskedInput, inputProps: { mask: "(00) 0 0000-0000" } }}
-                                required
-                            />
-                        </Box>
+                    <Box sx={{ gap: "1vw" }}>
+                        <TextField
+                            label="Nome"
+                            name="name"
+                            value={formik.values.name}
+                            onChange={formik.handleChange}
+                            error={formik.touched.name && !!formik.errors.name}
+                            helperText={formik.errors.name}
+                            required
+                        />
+                        <TextField
+                            label="Número"
+                            name="number"
+                            value={formik.values.number}
+                            onChange={formik.handleChange}
+                            error={!!formik.errors.number}
+                            helperText={formik.errors.number}
+                            InputProps={{ inputComponent: MaskedInput, inputProps: { mask: "(00) 0 0000-0000" } }}
+                            required
+                        />
+                    </Box>
 
-                        <Box sx={{ marginLeft: "auto", gap: "1vw" }}>
-                            {currentWashima && (
-                                <>
-                                    <Button variant="outlined" onClick={onRefetchMessages}>
-                                        {fetchingMessages ? <CircularProgress size={"1.5rem"} color="primary" /> : "Sincronizar mensagens"}
-                                    </Button>
-                                    <Button variant="outlined" color="error" onClick={onDeletePress} disabled={restarting}>
-                                        Deletar
-                                    </Button>
-                                    <Button variant="outlined" color="warning" onClick={onRestartPress}>
-                                        {restarting ? <CircularProgress size={"1.5rem"} color="inherit" /> : "reiniciar"}
-                                    </Button>
-                                </>
-                            )}
-                            <Button variant="contained" onClick={() => formik.handleSubmit()} disabled={restarting}>
-                                {loading ? <CircularProgress size={"1.5rem"} color="secondary" /> : "Salvar"}
-                            </Button>
-                        </Box>
-                    </>
+                    <Box sx={{ marginLeft: "auto", gap: "1vw" }}>
+                        {currentWashima && (
+                            <>
+                                <Button variant="outlined" onClick={onRefetchMessages}>
+                                    {fetchingMessages ? <CircularProgress size={"1.5rem"} color="primary" /> : "Sincronizar mensagens"}
+                                </Button>
+                                <Button variant="outlined" color="error" onClick={onDeletePress} disabled={restarting}>
+                                    Deletar
+                                </Button>
+                                <Button variant="outlined" color="warning" onClick={onRestartPress}>
+                                    {restarting ? <CircularProgress size={"1.5rem"} color="inherit" /> : "reiniciar"}
+                                </Button>
+                            </>
+                        )}
+                        <Button variant="contained" onClick={() => formik.handleSubmit()} disabled={restarting}>
+                            {loading ? <CircularProgress size={"1.5rem"} color="secondary" /> : "Salvar"}
+                        </Button>
+                    </Box>
+                </>
             </Box>
 
             <Paper
@@ -182,12 +181,7 @@ export const WashimaFormPage: React.FC<WashimaFormPageProps> = ({  currentWashim
             >
                 {currentWashima ? (
                     currentWashima.ready ? (
-                        <Box sx={{ justifyContent: "center", alignItems: "center", flexDirection: "column", gap: "1vw" }}>
-                            Conectado
-                            <Button variant="contained" onClick={() => setShowForm(false)} disabled={restarting}>
-                                acessar
-                            </Button>
-                        </Box>
+                        <WashimaTools washima={currentWashima} />
                     ) : currentWashima.qrcode ? (
                         <QRCode value={currentWashima.qrcode} size={25 * vw} />
                     ) : ready ? (
