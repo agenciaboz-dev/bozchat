@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg id="Camada_9" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 210 240">
+  <defs>
+    <style>
+      .cls-1 {
+        stroke-width: 8.26px;
+      }
+
+      .cls-1, .cls-2, .cls-3 {
+        fill: #38df88;
+      }
+
+      .cls-1, .cls-3 {
+        stroke: #38df88;
+      }
+
+      .cls-4 {
+        fill: #fff;
+      }
+
+      .cls-5 {
+        fill: none;
+      }
+
+      .cls-6 {
+        clip-path: url(#clippath-1);
+      }
+
+      .cls-3 {
+        stroke-width: 6.35px;
+      }
+
+      .cls-7 {
+        fill: #89efb7;
+      }
+
+      .cls-8 {
+        clip-path: url(#clippath);
+      }
+    </style>
+    <clipPath id="clippath">
+      <polygon class="cls-5" points="0 0 0 240 210 240 210 84 126 0 0 0"/>
+    </clipPath>
+    <clipPath id="clippath-1">
+      <rect class="cls-5" x="47.2" y="114.52" width="115.6" height="94.96"/>
+    </clipPath>
+  </defs>
+  <g class="cls-8">
+    <rect class="cls-2" width="210" height="240" rx="13.45" ry="13.45"/>
+    <path class="cls-7" d="M126,0h84v84h-70.55c-7.42,0-13.45-6.02-13.45-13.45V0h0Z"/>
+    <g class="cls-6">
+      <g>
+        <g id="b">
+          <ellipse class="cls-4" cx="105" cy="182.54" rx="57.8" ry="53.35"/>
+          <rect class="cls-4" x="47.2" y="169.2" width="115.6" height="115.6" rx="13.97" ry="13.97"/>
+        </g>
+        <path class="cls-4" d="M67.13,115.04h0c-1.99,1.11-2.71,3.62-1.61,5.61l22.48,40.55c1.11,1.99,3.62,2.71,5.61,1.61h0c1.99-1.11,2.71-3.62,1.61-5.61l-22.48-40.55c-1.11-1.99-3.62-2.71-5.61-1.61Z"/>
+        <path class="cls-4" d="M142.87,115.04h0c1.99,1.11,2.71,3.62,1.61,5.61l-22.48,40.55c-1.11,1.99-3.62,2.71-5.61,1.61h0c-1.99-1.11-2.71-3.62-1.61-5.61l22.48-40.55c1.11-1.99,3.62-2.71,5.61-1.61Z"/>
+        <g id="b-2" data-name="b">
+          <ellipse class="cls-4" cx="105" cy="182.54" rx="57.8" ry="53.35"/>
+          <rect class="cls-4" x="47.2" y="169.2" width="115.6" height="115.6" rx="13.97" ry="13.97"/>
+        </g>
+      </g>
+      <path class="cls-1" d="M44.66,184.77h120.68"/>
+      <g>
+        <circle class="cls-3" cx="78.32" cy="156.5" r="2.54"/>
+        <circle class="cls-3" cx="131.68" cy="156.5" r="2.54"/>
+      </g>
+    </g>
+  </g>
+</svg>

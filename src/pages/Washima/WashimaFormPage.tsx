@@ -1,0 +1,203 @@
+import React, { useEffect, useState } from "react"
+import { Autocomplete, Box, Button, CircularProgress, IconButton, Paper, Skeleton, TextField } from "@mui/material"
+import { useFormik } from "formik"
+import { Washima, WashimaForm } from "../../types/server/class/Washima/Washima"
+import { useUser } from "../../hooks/useUser"
+import { useDarkMode } from "../../hooks/useDarkMode"
+import * as Yup from "yup"
+import MaskedInput from "../../components/MaskedInput"
+import { api } from "../../api"
+import { QRCode } from "react-qrcode-logo"
+import { ArrowBackIos } from "@mui/icons-material"
+import { useIo } from "../../hooks/useIo"
+
+interface WashimaFormPageProps {
+    currentWashima: Washima | null
+    setCurrentWashima: React.Dispatch<React.SetStateAction<Washima | null>>
+    showForm: boolean
+    setShowForm: React.Dispatch<React.SetStateAction<boolean>>
+}
+
+export const WashimaFormPage: React.FC<WashimaFormPageProps> = ({  currentWashima, setCurrentWashima, showForm, setShowForm }) => {
+    const io = useIo()
+    const vw = window.innerWidth / 100
+    const { darkMode } = useDarkMode()
+
+    const [loading, setLoading] = useState(false)
+    const [ready, setReady] = useState(false)
+    const [restarting, setRestarting] = useState(false)
+    const [fetchingMessages, setFetchingMessages] = useState(false)
+
+    const formik = useFormik<WashimaForm>({
+        initialValues: currentWashima
+            ? { name: currentWashima.name, number: currentWashima.number, }
+            : { name: "", number: "" },
+        async onSubmit(values, formikHelpers) {
+            if (loading) return
+
+            try {
+                setLoading(true)
+                const data = { ...values }
+                const response = currentWashima ? await api.patch("/washima", { ...data, id: currentWashima.id }) : await api.post("/washima", data)
+                console.log(response.data)
+                setCurrentWashima(response.data)
+            } catch (error) {
+                console.log(error)
+            } finally {
+                setLoading(false)
+            }
+        },
+        validationSchema: Yup.object().shape({
+            name: Yup.string().required("campo obrigatório").min(3, "aí você tá de sacanagem né"),
+            number: Yup.string().required("campo obrigatório").length(16, "número inválido"),
+            users: Yup.array().min(1, "selecione pelo menos um usuário"),
+        }),
+        enableReinitialize: true,
+        validateOnChange: false,
+    })
+
+    const onRestartPress = async () => {
+        if (restarting || !currentWashima) return
+
+        try {
+            setRestarting(true)
+            const response = await api.post("/washima/restart", { washima_id: currentWashima.id })
+            console.log(response.data)
+        } catch (error) {
+            console.log(error)
+        } finally {
+            setRestarting(false)
+        }
+    }
+
+    const onDeletePress = async () => {
+        if (!currentWashima) return
+
+        try {
+            const response = await api.delete("/washima", { data: { washima_id: currentWashima.id } })
+            setCurrentWashima(null)
+            formik.resetForm()
+        } catch (error) {
+            console.log(error)
+        }
+    }
+
+    const onRefetchMessages = async () => {
+        if (fetchingMessages || !currentWashima) return
+
+        try {
+            setFetchingMessages(true)
+            const response = await api.post(
+                "/washima/fetch-messages-whatsappweb",
+                { id: currentWashima.id, options: { groupOnly: false } },
+                { timeout: 0 }
+            )
+            console.log(response.data)
+        } catch (error) {
+            console.log(error)
+        } finally {
+            setFetchingMessages(false)
+        }
+    }
+
+    useEffect(() => {
+        if (currentWashima) {
+            io.on("washima:ready", (id) => {
+                if (id === currentWashima.id) {
+                    setReady(true)
+                }
+            })
+
+            return () => {
+                io.off("washima:ready")
+            }
+        }
+    }, [currentWashima])
+
+    return (
+        <Box sx={{ flex: 1, gap: "2vw" }}>
+            <Box sx={{ padding: "2vw", flexDirection: "column", gap: "1vw", flex: 0.5 }}>
+                    <>
+                        <Box sx={{ fontSize: "1.5rem", color: "text.secondary", fontWeight: "bold", gap: "1vw" }}>
+                            {showForm && (
+                                <IconButton onClick={() => setShowForm(false)}>
+                                    <ArrowBackIos />
+                                </IconButton>
+                            )}
+                            {currentWashima?.name || "Novo whatsapp"}
+                        </Box>
+
+                        <Box sx={{ gap: "1vw" }}>
+                            <TextField
+                                label="Nome"
+                                name="name"
+                                value={formik.values.name}
+                                onChange={formik.handleChange}
+                                error={formik.touched.name && !!formik.errors.name}
+                                helperText={formik.errors.name}
+                                required
+                            />
+                            <TextField
+                                label="Número"
+                                name="number"
+                                value={formik.values.number}
+                                onChange={formik.handleChange}
+                                error={!!formik.errors.number}
+                                helperText={formik.errors.number}
+                                InputProps={{ inputComponent: MaskedInput, inputProps: { mask: "(00) 0 0000-0000" } }}
+                                required
+                            />
+                        </Box>
+
+                        <Box sx={{ marginLeft: "auto", gap: "1vw" }}>
+                            {currentWashima && (
+                                <>
+                                    <Button variant="outlined" onClick={onRefetchMessages}>
+                                        {fetchingMessages ? <CircularProgress size={"1.5rem"} color="primary" /> : "Sincronizar mensagens"}
+                                    </Button>
+                                    <Button variant="outlined" color="error" onClick={onDeletePress} disabled={restarting}>
+                                        Deletar
+                                    </Button>
+                                    <Button variant="outlined" color="warning" onClick={onRestartPress}>
+                                        {restarting ? <CircularProgress size={"1.5rem"} color="inherit" /> : "reiniciar"}
+                                    </Button>
+                                </>
+                            )}
+                            <Button variant="contained" onClick={() => formik.handleSubmit()} disabled={restarting}>
+                                {loading ? <CircularProgress size={"1.5rem"} color="secondary" /> : "Salvar"}
+                            </Button>
+                        </Box>
+                    </>
+            </Box>
+
+            <Paper
+                sx={{
+                    flex: 0.5,
+                    flexDirection: "column",
+                    bgcolor: darkMode ? "" : "background.default",
+                    justifyContent: "center",
+                    alignItems: "center",
+                }}
+            >
+                {currentWashima ? (
+                    currentWashima.ready ? (
+                        <Box sx={{ justifyContent: "center", alignItems: "center", flexDirection: "column", gap: "1vw" }}>
+                            Conectado
+                            <Button variant="contained" onClick={() => setShowForm(false)} disabled={restarting}>
+                                acessar
+                            </Button>
+                        </Box>
+                    ) : currentWashima.qrcode ? (
+                        <QRCode value={currentWashima.qrcode} size={25 * vw} />
+                    ) : ready ? (
+                        <CircularProgress size={"15vw"} />
+                    ) : (
+                        <Skeleton variant="rounded" sx={{ width: "25vw", height: "25vw" }} animation="wave" />
+                    )
+                ) : (
+                    "O QRCode aparecerá aqui após cadastrar o número"
+                )}
+            </Paper>
+        </Box>
+    )
+}

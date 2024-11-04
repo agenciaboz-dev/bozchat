@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg id="Camada_6" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 210 240">
+  <defs>
+    <style>
+      .cls-1 {
+        fill: #00afef;
+      }
+
+      .cls-2 {
+        fill: none;
+      }
+
+      .cls-3 {
+        fill: #1f1f1f;
+      }
+
+      .cls-4 {
+        fill: #3a3a3a;
+      }
+
+      .cls-5 {
+        clip-path: url(#clippath);
+      }
+    </style>
+    <clipPath id="clippath">
+      <polygon class="cls-2" points="0 0 0 240 210 240 210 84 126 0 0 0"/>
+    </clipPath>
+  </defs>
+  <g class="cls-5">
+    <rect class="cls-3" y="0" width="210" height="240" rx="13.45" ry="13.45"/>
+    <path class="cls-4" d="M126,0h84v84h-70.55c-7.42,0-13.45-6.02-13.45-13.45V0h0Z"/>
+    <g>
+      <path class="cls-1" d="M80.48,180.18l-45.41-17.27v-12.4l45.41-17.27v11.92l-40.93,14.88v-6.68l40.93,14.88v11.92Z"/>
+      <path class="cls-1" d="M83.15,199.64l31.48-89.86h13.26l-31.48,89.86h-13.26Z"/>
+      <path class="cls-1" d="M129.61,180.18v-11.92l40.92-14.88v6.68l-40.92-14.88v-11.92l45.41,17.27v12.4l-45.41,17.27Z"/>
+    </g>
+  </g>
+</svg>

@@ -1,0 +1,38 @@
+import { Prisma } from "@prisma/client";
+import WAWebJS from "whatsapp-web.js";
+import { WashimaMessageId } from "./Washima";
+export type MessageType = "ptt" | "video" | "image" | "text" | "revoked" | "sticker" | "audio" | "chat" | "document" | "sticker";
+export declare enum MessageAck {
+    error = -1,
+    pending = 0,
+    sent = 1,
+    received = 2,
+    read = 3,
+    played = 4
+}
+export type WashimaMessagePrisma = Prisma.WashimaMessageGetPayload<{}>;
+export interface WashimaMessageForm {
+    message: WAWebJS.Message;
+    washima_id: string;
+    chat_id: string;
+    isGroup?: boolean;
+}
+export declare class WashimaMessage {
+    sid: string;
+    washima_id: string;
+    chat_id: string;
+    id: WashimaMessageId;
+    author?: string | null;
+    body: string;
+    from: string;
+    fromMe: boolean;
+    hasMedia: boolean;
+    timestamp: number;
+    to: string;
+    type: MessageType;
+    ack?: MessageAck | null;
+    static getChatMessages(chat_id: string, offset?: number): Promise<WashimaMessage[]>;
+    static new(data: WashimaMessageForm): Promise<WashimaMessage>;
+    static update(message: WAWebJS.Message): Promise<WashimaMessage | undefined>;
+    constructor(data: WashimaMessagePrisma);
+}

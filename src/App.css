@@ -1,0 +1,108 @@
+
+@font-face {
+    font-family: Montserrat;
+    src: url("/fonts/Montserrat-Regular.ttf") ;
+}
+
+/* @font-face {
+    font-family: Montserrat;
+    src: url("../public/fonts/Montserrat-SemiBold.ttf") ;
+    font-weight: 200 400;
+} */
+
+@font-face {
+    font-family: Montserrat;
+    src: url("/fonts/Montserrat-Bold.ttf") ;
+    font-weight: bold;
+}
+
+
+.MuiList-root {
+    width: 100%;
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: Montserrat;
+    /* user-select: none; */
+}
+
+.MuiTextField-root {
+    width: 100%;
+}
+
+/* .slide-routes {
+    width: 100%;
+    overflow-y: auto!important;
+    height: 100%;
+
+    .item {
+        width: 100%;
+        height: 100%;
+
+    }
+} */
+
+#root {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+}
+
+form {
+    display: contents;
+    width: 100%;
+}
+
+html {
+    scroll-behavior: smooth;
+    height: 100%;
+}
+
+body {
+    overflow-x: hidden;
+    height: 100%;
+}
+
+#root {
+    height: 100%;
+}
+
+section {
+    display: contents;
+}
+
+.MuiPaper-root {
+    display: flex;
+    flex-shrink: 0
+}
+
+.MuiBox-root {
+    display: flex;
+    flex-shrink: 0
+}
+
+img {
+    object-fit: contain;
+}
+
+::-webkit-scrollbar {
+    width: 5px;
+    height: 5px;
+  }
+
+  ::selection {
+    color: white;
+    background: #00AFEF
+}
+
+.link {
+    cursor: pointer;
+    font-weight: bold;
+}
+
+.link:hover {
+    text-decoration: underline;
+}
