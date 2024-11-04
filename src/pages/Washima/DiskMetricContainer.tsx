@@ -11,7 +11,7 @@ interface DiskMetricContainerProps {
 }
 
 export const DiskMetricContainer: React.FC<DiskMetricContainerProps> = ({ label, value, onDeletePress, deleting, max_value = 100 }) => {
-    const progress_value = ((value || 0) * 100) / max_value
+    const progress_value = value ? (value * 100) / (max_value >= value ? max_value : value) : 0
 
     console.log(progress_value)
 
@@ -27,7 +27,11 @@ export const DiskMetricContainer: React.FC<DiskMetricContainerProps> = ({ label,
                     </IconButton>
                 )}
             </Box>
-            <LinearProgress value={progress_value} variant={value === undefined ? "indeterminate" : "determinate"} />
+            <LinearProgress
+                color={progress_value < 25 ? "primary" : progress_value < 50 ? "success" : progress_value < 75 ? "warning" : "error"}
+                value={progress_value}
+                variant={value === undefined ? "indeterminate" : "determinate"}
+            />
         </Paper>
     )
 }
