@@ -114,20 +114,26 @@ export const ChatList: React.FC<ChatsProps> = ({
 
     return (
         <Box sx={{ flexDirection: "column", gap: isMobile ? "3vw" : "0.1vw", alignItems: "center" }}>
-            {!loading
-                ? (chats as Chat[])
-                      .sort((a, b) => b.lastMessage?.timestamp - a.lastMessage?.timestamp)
-                      .map((chat, index) => (
-                          <ChatContainer
-                              key={chat.id._serialized}
-                              chat={chat}
-                              onChatClick={onChatClick}
-                              washima={washima}
-                              active={currentChat?.id._serialized === chat.id._serialized}
-                              onVisible={index === chats.length - 1 ? () => fetchChats(chats.length) : undefined}
-                          />
-                      ))
-                : new Array(20).fill(0).map((_, index) => <ChatSkeleton key={index} />)}
+            {!loading ? (
+                !!chats.length ? (
+                    chats
+                        .sort((a, b) => b.lastMessage?.timestamp - a.lastMessage?.timestamp)
+                        .map((chat, index) => (
+                            <ChatContainer
+                                key={chat.id._serialized}
+                                chat={chat}
+                                onChatClick={onChatClick}
+                                washima={washima}
+                                active={currentChat?.id._serialized === chat.id._serialized}
+                                onVisible={index === chats.length - 1 ? () => fetchChats(chats.length) : undefined}
+                            />
+                        ))
+                ) : (
+                    <Box sx={{ color: "secondary.main" }}>Nenhum resultado</Box>
+                )
+            ) : (
+                new Array(20).fill(0).map((_, index) => <ChatSkeleton key={index} />)
+            )}
             {fetching && <LinearProgress sx={{ position: "fixed", top: "10vh", left: 0, right: 0 }} />}
         </Box>
     )
