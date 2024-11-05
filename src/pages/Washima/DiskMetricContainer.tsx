@@ -19,7 +19,7 @@ export const DiskMetricContainer: React.FC<DiskMetricContainerProps> = ({ label,
         <Paper sx={{ padding: "1vw", gap: "1vw", flex: 1, flexDirection: "column" }}>
             <Box sx={{ flexDirection: "row", alignItems: "center", justifyContent: "space-between" }}>
                 <Box>
-                    {label}: {value !== undefined ? `${value.toFixed(2)} Mb` : null}
+                    {label}: {value !== undefined ? `${value.toFixed(3)} Mb` : null}
                 </Box>
                 {onDeletePress && (
                     <IconButton onClick={onDeletePress} sx={{ padding: 0 }}>
