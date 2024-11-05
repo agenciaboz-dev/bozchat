@@ -22,7 +22,6 @@ export const ChatContainer: React.FC<ChatProps> = ({ chat, onChatClick, washima,
     const formatTime = useFormatMessageTime()
 
     const ref = useVisibleCallback(() => {
-        fetchProfilePic()
         if (onVisible) {
             onVisible()
             console.log(chat)
@@ -91,6 +90,10 @@ export const ChatContainer: React.FC<ChatProps> = ({ chat, onChatClick, washima,
             formatMediaType(mediaMetaData.mimetype)
         }
     }, [mediaMetaData])
+
+    useEffect(() => {
+        fetchProfilePic()
+    }, [chat])
 
     return (
         <MenuItem
