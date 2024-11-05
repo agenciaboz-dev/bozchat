@@ -9,6 +9,8 @@ import { ThemeProvider as CustomThemeProvider } from "./contexts/themeContext"
 import "@mantine/core/styles.css"
 import { version } from "./version"
 import { Header } from "./components/Header"
+import "react-photo-view/dist/react-photo-view.css"
+
 
 const Themed = () => {
     const theme = useMuiTheme()

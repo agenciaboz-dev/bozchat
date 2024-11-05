@@ -13,6 +13,7 @@ import { WashimaGroupUpdate } from "../../../types/server/class/Washima/WashimaG
 import { GroupUpdateItem } from "./GroupUpdateItem"
 import { Chat } from "../../../types/Chat"
 import { NoChat } from "./NoChat"
+import { PhotoProvider, PhotoView } from "react-photo-view"
 
 interface WashimaChatProps {
     washima: Washima
@@ -231,11 +232,20 @@ export const WashimaChat: React.FC<WashimaChatProps> = ({ washima, chat, onClose
                 {loading ? (
                     <Skeleton variant="circular" animation="wave" sx={{ width: isMobile ? "12vw" : "3vw", height: isMobile ? "12vw" : "3vw" }} />
                 ) : (
-                    <Avatar
-                        src={profilePic}
-                        sx={{ width: isMobile ? "12vw" : "3vw", height: isMobile ? "12vw" : "3vw", bgcolor: "primary.main", cursor: "pointer" }}
-                        // onClick={() => picture.open(profilePic || "")}
-                    />
+                    <PhotoProvider>
+                        <PhotoView src={profilePic}>
+                            <Avatar
+                                src={profilePic}
+                                sx={{
+                                    width: isMobile ? "12vw" : "3vw",
+                                    height: isMobile ? "12vw" : "3vw",
+                                    bgcolor: "primary.main",
+                                    cursor: "pointer",
+                                }}
+                                // onClick={() => picture.open(profilePic || "")}
+                            />
+                        </PhotoView>
+                    </PhotoProvider>
                 )}
                 <p style={{ fontWeight: "bold" }}>{chat?.name}</p>
                 {!!chat && (

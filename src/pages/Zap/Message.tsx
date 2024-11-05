@@ -18,6 +18,7 @@ import { documentIcon } from "../../tools/documentIcon"
 import { WashimaGroupUpdate } from "../../types/server/class/Washima/WashimaGroupUpdate"
 import { DateChip } from "../Washima/WashimaChat/DateChip"
 import Inputmask from "inputmask"
+import { PhotoView } from "react-photo-view"
 
 interface MessageProps {
     washima: Washima
@@ -199,13 +200,20 @@ export const Message: React.FC<MessageProps> = ({ message, isGroup, washima, pre
                                     (loading ? (
                                         <Skeleton variant="rounded" animation="wave" sx={{ width: "20vw", height: "20vw", borderRadius: "1vw" }} />
                                     ) : (
-                                        <MenuItem sx={{ padding: 0, borderRadius: "0.75vw" }}>
-                                            <img
-                                                style={{ width: "20vw", height: "20vw", objectFit: "contain", borderRadius: "0.75vw" }}
-                                                // onClick={() => picture.open(mediaObj?.source || "")}
-                                                src={mediaObj?.source}
-                                            />
-                                        </MenuItem>
+                                        <PhotoView src={mediaObj?.source}>
+                                            <MenuItem sx={{ padding: 0, borderRadius: "0.75vw" }}>
+                                                <img
+                                                    style={{
+                                                        width: "20vw",
+                                                        height: "20vw",
+                                                        objectFit: "contain",
+                                                        borderRadius: "0.75vw",
+                                                    }}
+                                                    // onClick={() => picture.open(mediaObj?.source || "")}
+                                                    src={mediaObj?.source}
+                                                />
+                                            </MenuItem>
+                                        </PhotoView>
                                     ))}
                                 {is_sticker &&
                                     (loading ? (
