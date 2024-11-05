@@ -18,7 +18,7 @@ export default DarkModeContext
 
 export const DarkModeProvider: React.FC<DarkModeProviderProps> = ({ children }) => {
     const storage = useLocalStorage()
-    const [value, setValue] = useState<boolean>(storage.get("boz:darkmode"))
+    const [value, setValue] = useState<boolean>(true)
 
     const toogleDarkMode = () => {
         setValue(!value)
