@@ -23,6 +23,7 @@ export const WashimaFormPage: React.FC<WashimaFormPageProps> = ({ currentWashima
     const io = useIo()
     const vw = window.innerWidth / 100
     const { darkMode } = useDarkMode()
+    const { user } = useUser()
 
     const [loading, setLoading] = useState(false)
     const [restarting, setRestarting] = useState(false)
@@ -31,14 +32,18 @@ export const WashimaFormPage: React.FC<WashimaFormPageProps> = ({ currentWashima
     const [syncProgress, setSyncProgress] = useState(0)
 
     const formik = useFormik<WashimaForm>({
-        initialValues: currentWashima ? { name: currentWashima.name, number: currentWashima.number } : { name: "", number: "" },
+        initialValues: currentWashima
+            ? { name: currentWashima.name, number: currentWashima.number, user_id: "" }
+            : { name: "", number: "", user_id: "" },
         async onSubmit(values, formikHelpers) {
-            if (loading) return
+            if (loading || !user) return
 
             try {
                 setLoading(true)
-                const data = { ...values }
-                const response = currentWashima ? await api.patch("/washima", { ...data, id: currentWashima.id }) : await api.post("/washima", data)
+                const data: WashimaForm = { ...values }
+                const response = currentWashima
+                    ? await api.patch("/washima", { ...data, id: currentWashima.id })
+                    : await api.post("/washima", { ...data, user_id: user.id })
                 console.log(response.data)
                 setCurrentWashima(response.data)
                 formik.resetForm()

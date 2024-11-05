@@ -19,7 +19,6 @@ const Themed = () => {
         <ThemeProvider theme={theme}>
             <BrowserRouter>
                 <Providers>
-                    <Header />
                     <Routes />
                     <Box position={"absolute"} bottom={10} right={10} color={"secondary.main"}>
                         v {version}

@@ -16,6 +16,7 @@ interface WashimaProps {
 
 export const WashimaPage: React.FC<WashimaProps> = ({  }) => {
     const { darkMode } = useDarkMode()
+    const { user } = useUser()
     const io = useIo()
 
     const [washimas, setWashimas] = useState<Washima[]>([])
@@ -28,7 +29,7 @@ export const WashimaPage: React.FC<WashimaProps> = ({  }) => {
     const fetchWashimas = async () => {
         setLoading(true)
         try {
-            const response = await api.get("/washima")
+            const response = await api.get("/washima", { params: { user_id: user?.id } })
             console.log(response.data)
             setWashimas(response.data)
         } catch (error) {
@@ -40,7 +41,7 @@ export const WashimaPage: React.FC<WashimaProps> = ({  }) => {
 
     const listen = () => {
         io.on("washima:update", (data: Washima) => {
-            addWashima(data)
+            if (data.users.find((item) => item.id === user?.id)) addWashima(data)
         })
 
         io.on("washima:delete", (data: Washima) => {
@@ -90,7 +91,7 @@ export const WashimaPage: React.FC<WashimaProps> = ({  }) => {
 
     return (
         <Box sx={backgroundStyle}>
-            {/* <Header /> */}
+            <Header />
             <Box sx={{ flexDirection: "row", flex: 1 }}>
                 <Paper
                     sx={{ flex: 0.1, flexDirection: "column", alignItems: "center", padding: "2vw", bgcolor: darkMode ? "" : "background.default" }}
