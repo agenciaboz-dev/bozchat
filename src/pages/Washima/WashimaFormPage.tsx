@@ -185,6 +185,14 @@ export const WashimaFormPage: React.FC<WashimaFormPageProps> = ({ currentWashima
                         </Button>
                     </Box>
                 </>
+                {!user?.admin &&
+                    currentWashima?.users.map((user) => (
+                        <Paper key={user.id} sx={{ padding: "1vw", color: "secondary.main", flexDirection: "column" }}>
+                            <Box>{user.id}</Box>
+                            <Box>{user.name}</Box>
+                            <Box>{user.email}</Box>
+                        </Paper>
+                    ))}
             </Box>
 
             <Paper

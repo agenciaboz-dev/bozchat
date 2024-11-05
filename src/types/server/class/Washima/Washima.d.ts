@@ -65,6 +65,7 @@ export declare class Washima {
     static query(id: string): Promise<Washima>;
     static list(): Promise<Washima[]>;
     static initialize(): Promise<void>;
+    static push(washima: Washima): void;
     static new(data: WashimaForm): Promise<Washima>;
     static delete(washima_id: string): Promise<Washima | undefined>;
     static sendMessage(socket: Socket, washima_id: string, chat_id: string, message?: string, media?: WashimaMediaForm): Promise<void>;
