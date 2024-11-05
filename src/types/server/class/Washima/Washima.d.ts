@@ -40,7 +40,6 @@ export declare class WashimaMedia {
     mimetype: string;
     static new(data: WashimaMediaPrisma): Promise<WashimaMedia | undefined>;
     static get(message_id: string): Promise<WashimaMedia | undefined>;
-    static getCached(message: Message): Promise<WashimaMedia | undefined>;
     constructor(data: WashimaMediaPrisma);
 }
 export declare class Washima {
@@ -89,12 +88,16 @@ export declare class Washima {
         message_id: string;
     }>;
     cacheProfilePic(target_id: string, target?: "chat" | "message"): Promise<WashimaProfilePic | undefined>;
+    getCachedMedia(message: Message): Promise<WashimaMedia | undefined>;
     getCachedProfilePicture(target_id: string, target?: "chat" | "message"): Promise<WashimaProfilePic | undefined>;
     fetchAndSaveAllMessages(options?: {
         groupOnly?: boolean;
     }): Promise<void>;
     getTableUsage(table: string): Promise<number>;
     getDiskUsage(): Promise<WashimaDiskMetrics>;
+    clearMedia(): Promise<number>;
+    clearMessages(): Promise<number>;
+    search(value: string): Promise<WAWebJS.Chat[]>;
     toJSON(): never;
 }
 export {};
