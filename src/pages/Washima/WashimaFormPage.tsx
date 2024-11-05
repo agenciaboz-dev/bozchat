@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react"
-import { Autocomplete, Box, Button, CircularProgress, IconButton, Paper, Skeleton, TextField } from "@mui/material"
+import { Autocomplete, Box, Button, CircularProgress, IconButton, LinearProgress, Paper, Skeleton, TextField } from "@mui/material"
 import { useFormik } from "formik"
 import { Washima, WashimaForm } from "../../types/server/class/Washima/Washima"
 import { useUser } from "../../hooks/useUser"
@@ -25,9 +25,10 @@ export const WashimaFormPage: React.FC<WashimaFormPageProps> = ({ currentWashima
     const { darkMode } = useDarkMode()
 
     const [loading, setLoading] = useState(false)
-    const [ready, setReady] = useState(false)
     const [restarting, setRestarting] = useState(false)
     const [fetchingMessages, setFetchingMessages] = useState(false)
+    const [syncStatus, setSyncStatus] = useState("Inicializando")
+    const [syncProgress, setSyncProgress] = useState(0)
 
     const formik = useFormik<WashimaForm>({
         initialValues: currentWashima ? { name: currentWashima.name, number: currentWashima.number } : { name: "", number: "" },
@@ -104,12 +105,24 @@ export const WashimaFormPage: React.FC<WashimaFormPageProps> = ({ currentWashima
         if (currentWashima) {
             io.on("washima:ready", (id) => {
                 if (id === currentWashima.id) {
-                    setReady(true)
+                }
+            })
+
+            io.on(`washima:${currentWashima.id}:init`, (status: string, progress: number) => {
+                setSyncStatus(status)
+                setSyncProgress(progress)
+
+                if (progress === 4) {
+                    setTimeout(() => {
+                        setSyncStatus("Iniciando")
+                        setSyncProgress(0)
+                    }, 1000)
                 }
             })
 
             return () => {
                 io.off("washima:ready")
+                io.off(`washima:${currentWashima.id}:init`)
             }
         }
     }, [currentWashima])
@@ -181,10 +194,11 @@ export const WashimaFormPage: React.FC<WashimaFormPageProps> = ({ currentWashima
                         <WashimaTools washima={currentWashima} fetchingMessages={fetchingMessages} onSyncMessages={onSyncMessages} />
                     ) : currentWashima.qrcode ? (
                         <QRCode value={currentWashima.qrcode} size={25 * vw} />
-                    ) : ready ? (
-                        <CircularProgress size={"15vw"} />
                     ) : (
-                        <Skeleton variant="rounded" sx={{ width: "25vw", height: "25vw" }} animation="wave" />
+                        <Paper sx={{ flexDirection: "column", gap: "1vw", width: "80%", padding: "1vw" }}>
+                            {syncStatus}
+                            <LinearProgress variant={syncProgress ? "determinate" : "indeterminate"} value={(syncProgress * 100) / 4} />
+                        </Paper>
                     )
                 ) : (
                     "O QRCode aparecerá aqui após cadastrar o número"
