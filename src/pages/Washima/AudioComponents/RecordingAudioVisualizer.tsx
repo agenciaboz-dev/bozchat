@@ -38,7 +38,7 @@ export const RecordingAudioVisualizer: React.FC<RecordingAudioVisualizerProps> =
         const draw = () => {
             const drawVisual = requestAnimationFrame(draw)
             analyser.getByteFrequencyData(dataArray)
-            canvasCtx.fillStyle = lighten(theme.palette.background.paper, 0.1)
+            canvasCtx.fillStyle = lighten(theme.palette.background.default, 0.1)
             canvasCtx.fillRect(0, 0, WIDTH, HEIGHT)
             const barWidth = (WIDTH / bufferLength) * 2.5
             let x = 0
