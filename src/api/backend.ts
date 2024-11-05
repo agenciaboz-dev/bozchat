@@ -1,2 +1,2 @@
-// export const url = "s://apizap.nandoburgos.dev"
-export const url = "://localhost:4105"
+export const url = "s://wagazap.boz.app.br"
+// export const url = "://192.168.15.18:4105"
