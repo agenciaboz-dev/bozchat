@@ -7,11 +7,11 @@ services:
     ports:
       - "8084:8084"
     restart: unless-stopped
-    deploy:
-      resources:
-        limits:
-          cpus: '0.25'
-          memory: 256M
+    # deploy:
+    #   resources:
+    #     limits:
+    #       cpus: '0.25'
+    #       memory: 256M
 
 networks:
   default:
