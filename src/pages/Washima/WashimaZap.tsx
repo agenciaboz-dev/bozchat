@@ -26,8 +26,15 @@ export const WashimaZap: React.FC<WashimaZapProps> = ({ washima, onEdit }) => {
 
     const handleSearch = async (value: string) => {
         onStartSearch(value)
+        console.log("searched", value)
         if (!value) {
-            onSearch(washima.chats.slice(0, 10))
+            try {
+                const response = await api.get("/washima/chat", { params: { washima_id: washima.id, take: 10 } })
+                console.log(response.data)
+                onSearch(response.data)
+            } catch (error) {
+                console.log(error)
+            }
             return
         }
         try {

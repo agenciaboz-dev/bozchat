@@ -39,11 +39,14 @@ export const ChatList: React.FC<ChatsProps> = ({
 
     const [chats, setChats] = useState<Chat[]>([])
     const [fetching, setFetching] = useState(false)
+    const [searchedValue, setSearchedValue] = useState("")
 
     const addChats = (new_chats: Chat[]) =>
         setChats((chats) => [...chats.filter((item) => !new_chats.find((chat) => chat.id._serialized === item.id._serialized)), ...new_chats])
 
     const fetchChats = async (offset: number = 0, setAll?: boolean) => {
+        if (!!searchedValue) return
+
         if (offset) {
             setFetching(true)
         } else {
@@ -64,12 +67,15 @@ export const ChatList: React.FC<ChatsProps> = ({
 
     const onSearch = async (result: Chat[]) => {
         setChats(result)
-        setTimeout(() => setFetching(false), 1000)
+        setTimeout(() => {
+            setFetching(false)
+        }, 1000)
         return null
     }
 
     const onStartSearch = async (value: string) => {
         setFetching(true)
+        setSearchedValue(value)
 
         return null
     }
@@ -98,7 +104,7 @@ export const ChatList: React.FC<ChatsProps> = ({
         }
 
         io.on(`washima:${washima.id}:message`, ({ chat, message }: { chat: Chat; message: WashimaMessage }) => {
-            addChats([chat])
+            if (!searchedValue) addChats([chat])
         })
 
         return () => {
