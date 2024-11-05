@@ -12,6 +12,7 @@ import { WashimaMessage } from "../../../types/server/class/Washima/WashimaMessa
 import { WashimaGroupUpdate } from "../../../types/server/class/Washima/WashimaGroupUpdate"
 import { GroupUpdateItem } from "./GroupUpdateItem"
 import { Chat } from "../../../types/Chat"
+import { NoChat } from "./NoChat"
 
 interface WashimaChatProps {
     washima: Washima
@@ -305,26 +306,6 @@ export const WashimaChat: React.FC<WashimaChatProps> = ({ washima, chat, onClose
             </Paper>
         </Paper>
     ) : (
-        <Paper
-            sx={{
-                flex: 1,
-                flexDirection: "column",
-                justifyContent: "center",
-                alignItems: "center",
-                gap: "1vw",
-                color: "secondary.main",
-                padding: "1vw",
-            }}
-        >
-            <WhatsappWebSvg />
-            <Box sx={{ fontSize: "2rem" }}>Washima Web</Box>
-            <Box>Envie e receba mensagens sem precisar do celular conectado a conta.</Box>
-            <Box>Use o WhatsApp em quantos dispositivos quiser, ao mesmo tempo.</Box>
-
-            <Box sx={{ position: "absolute", bottom: 0, gap: "0.5vw", paddingBottom: "1vw", alignItems: "center" }}>
-                <Lock sx={{ width: "0.7vw", height: "0.7vw" }} />
-                <Box fontSize={"0.8rem"}>Suas mensagens não são protegidas com criptografia nenhuma.</Box>
-            </Box>
-        </Paper>
+        <NoChat />
     )
 }
