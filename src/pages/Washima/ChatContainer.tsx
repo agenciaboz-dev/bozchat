@@ -14,14 +14,19 @@ interface ChatProps {
     chat: Chat
     onChatClick: (chat: Chat) => void
     active?: boolean
+    onVisible?: () => void
 }
 
-export const ChatContainer: React.FC<ChatProps> = ({ chat, onChatClick, washima, active }) => {
+export const ChatContainer: React.FC<ChatProps> = ({ chat, onChatClick, washima, active, onVisible }) => {
     const isMobile = useMediaQuery("(orientation: portrait)")
     const formatTime = useFormatMessageTime()
 
     const ref = useVisibleCallback(() => {
         fetchProfilePic()
+        if (onVisible) {
+            onVisible()
+            console.log(chat)
+        }
         if (chat.lastMessage.hasMedia) {
             fetchMediaMetadata()
         }
