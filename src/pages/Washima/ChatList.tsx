@@ -18,31 +18,27 @@ interface ChatsProps {
     loading: boolean
     setLoading: React.Dispatch<React.SetStateAction<boolean>>
     currentChat: Chat | null
+    setOnSearch: React.Dispatch<React.SetStateAction<(result: Chat[]) => Promise<null>>>
+    setOnStartSearch: React.Dispatch<React.SetStateAction<(searched: string) => Promise<null>>>
 }
 
 const TAKE = 10
 
-export const Chats: React.FC<ChatsProps> = ({ onChatClick, washima, lastWashima, loading, setLoading, currentChat }) => {
+export const ChatList: React.FC<ChatsProps> = ({
+    onChatClick,
+    washima,
+    lastWashima,
+    loading,
+    setLoading,
+    currentChat,
+    setOnSearch,
+    setOnStartSearch,
+}) => {
     const io = useIo()
     const isMobile = useMediaQuery("(orientation: portrait)")
 
     const [chats, setChats] = useState<Chat[]>([])
     const [fetching, setFetching] = useState(false)
-
-    const handleSearch = useCallback(
-        (value: string) => {
-            const result = (washima.chats as Chat[]).filter((chat) => {
-                const searched = normalize(value)
-
-                const name = normalize(chat.name)
-                const phone = unmask(normalize(chat.id.user))
-
-                return phone.includes(searched) || name.includes(searched)
-            })
-            setChats(result)
-        },
-        [washima.chats]
-    )
 
     const addChats = (new_chats: Chat[]) =>
         setChats((chats) => [...chats.filter((item) => !new_chats.find((chat) => chat.id._serialized === item.id._serialized)), ...new_chats])
@@ -66,11 +62,26 @@ export const Chats: React.FC<ChatsProps> = ({ onChatClick, washima, lastWashima,
         }
     }
 
+    const onSearch = async (result: Chat[]) => {
+        setChats(result)
+        setTimeout(() => setFetching(false), 1000)
+        return null
+    }
+
+    const onStartSearch = async (value: string) => {
+        setFetching(true)
+
+        return null
+    }
+
     useEffect(() => {
         if (washima.id !== lastWashima.id) {
             setLoading(true)
             setChats([])
         }
+
+        setOnSearch(() => onSearch)
+        setOnStartSearch(() => onStartSearch)
     }, [washima])
 
     useEffect(() => {
@@ -81,7 +92,9 @@ export const Chats: React.FC<ChatsProps> = ({ onChatClick, washima, lastWashima,
         if (chats.length) {
             setTimeout(() => setLoading(false), 1000 * 1)
         } else {
-            fetchChats(0, true)
+            if (!fetching) {
+                fetchChats(0, true)
+            }
         }
 
         io.on(`washima:${washima.id}:message`, ({ chat, message }: { chat: Chat; message: WashimaMessage }) => {

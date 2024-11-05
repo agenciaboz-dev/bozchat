@@ -4,7 +4,7 @@ import { backgroundStyle } from "../../style/background"
 import { Header } from "../../components/Header"
 import { useZap } from "../../hooks/useZap"
 import { QrCode } from "./QrCode"
-import { Chats } from "../Washima/ChatList"
+import { ChatList } from "../Washima/ChatList"
 import { ChatsSkeletons } from "./ChatsSkeletons"
 import { ZapDrawer } from "../../components/ZapDrawer"
 import { useSearch } from "../../hooks/useSearch"
@@ -74,7 +74,7 @@ export const Zap: React.FC<ZapProps> = ({ user }) => {
                         >
                             {client.info.pushname}
                         </p>
-                        {loading ? <ChatsSkeletons /> : <Chats chats={chats} onChatClick={handleChatClick} />}
+                        {loading ? <ChatsSkeletons /> : <ChatList chats={chats} onChatClick={handleChatClick} />}
                         <ZapDrawer />
                     </Box>
                 ) : (
