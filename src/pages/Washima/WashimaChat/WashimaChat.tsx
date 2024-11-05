@@ -213,7 +213,6 @@ export const WashimaChat: React.FC<WashimaChatProps> = ({ washima, chat, onClose
 
     return chat ? (
         <Paper
-            elevation={5}
             sx={{
                 flex: 1,
                 justifyContent: isMobile ? "flex-end" : "center",
@@ -316,7 +315,6 @@ export const WashimaChat: React.FC<WashimaChatProps> = ({ washima, chat, onClose
                 color: "secondary.main",
                 padding: "1vw",
             }}
-            elevation={5}
         >
             <WhatsappWebSvg />
             <Box sx={{ fontSize: "2rem" }}>Washima Web</Box>
