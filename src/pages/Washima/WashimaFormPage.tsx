@@ -128,7 +128,7 @@ export const WashimaFormPage: React.FC<WashimaFormPageProps> = ({ currentWashima
     }, [currentWashima])
 
     return (
-        <Box sx={{ flex: 1, gap: "2vw" }}>
+        <Box sx={{ flex: 1 }}>
             <Box sx={{ padding: "2vw", flexDirection: "column", gap: "1vw", flex: 0.5 }}>
                 <>
                     <Box sx={{ fontSize: "1.5rem", color: "text.secondary", fontWeight: "bold", gap: "1vw" }}>
@@ -149,6 +149,7 @@ export const WashimaFormPage: React.FC<WashimaFormPageProps> = ({ currentWashima
                             error={formik.touched.name && !!formik.errors.name}
                             helperText={formik.errors.name}
                             required
+                            fullWidth
                         />
                         <TextField
                             label="Número"
@@ -159,6 +160,7 @@ export const WashimaFormPage: React.FC<WashimaFormPageProps> = ({ currentWashima
                             helperText={formik.errors.number}
                             InputProps={{ inputComponent: MaskedInput, inputProps: { mask: "(00) 0 0000-0000" } }}
                             required
+                            fullWidth
                         />
                     </Box>
 
