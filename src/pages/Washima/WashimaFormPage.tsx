@@ -208,7 +208,10 @@ export const WashimaFormPage: React.FC<WashimaFormPageProps> = ({ currentWashima
                         </Paper>
                     )
                 ) : (
-                    "O QRCode aparecerá aqui após cadastrar o número"
+                    <>
+                        <Box>O QRCode aparecerá aqui após cadastrar o número.</Box>
+                        <Box>Pode ser que o primeiro carregamento demore.</Box>
+                    </>
                 )}
             </Paper>
         </Box>
