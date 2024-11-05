@@ -93,7 +93,6 @@ export const WashimaPage: React.FC<WashimaProps> = ({  }) => {
             {/* <Header /> */}
             <Box sx={{ flexDirection: "row", flex: 1 }}>
                 <Paper
-                    elevation={5}
                     sx={{ flex: 0.1, flexDirection: "column", alignItems: "center", padding: "2vw", bgcolor: darkMode ? "" : "background.default" }}
                 >
                     <Box sx={{ alignItems: "center", gap: "1vw", color: "text.secondary" }}>
