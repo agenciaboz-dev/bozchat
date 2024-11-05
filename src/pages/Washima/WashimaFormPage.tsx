@@ -82,7 +82,7 @@ export const WashimaFormPage: React.FC<WashimaFormPageProps> = ({ currentWashima
         }
     }
 
-    const onRefetchMessages = async () => {
+    const onSyncMessages = async () => {
         if (fetchingMessages || !currentWashima) return
 
         try {
@@ -152,18 +152,15 @@ export const WashimaFormPage: React.FC<WashimaFormPageProps> = ({ currentWashima
                     <Box sx={{ marginLeft: "auto", gap: "1vw" }}>
                         {currentWashima && (
                             <>
-                                <Button variant="outlined" onClick={onRefetchMessages}>
-                                    {fetchingMessages ? <CircularProgress size={"1.5rem"} color="primary" /> : "Sincronizar mensagens"}
-                                </Button>
-                                <Button variant="outlined" color="error" onClick={onDeletePress} disabled={restarting}>
+                                <Button variant="outlined" color="error" onClick={onDeletePress} disabled={restarting || fetchingMessages}>
                                     Deletar
                                 </Button>
-                                <Button variant="outlined" color="warning" onClick={onRestartPress}>
+                                <Button variant="outlined" color="warning" onClick={onRestartPress} disabled={fetchingMessages}>
                                     {restarting ? <CircularProgress size={"1.5rem"} color="inherit" /> : "reiniciar"}
                                 </Button>
                             </>
                         )}
-                        <Button variant="contained" onClick={() => formik.handleSubmit()} disabled={restarting}>
+                        <Button variant="contained" onClick={() => formik.handleSubmit()} disabled={restarting || fetchingMessages}>
                             {loading ? <CircularProgress size={"1.5rem"} color="secondary" /> : "Salvar"}
                         </Button>
                     </Box>
@@ -181,7 +178,7 @@ export const WashimaFormPage: React.FC<WashimaFormPageProps> = ({ currentWashima
             >
                 {currentWashima ? (
                     currentWashima.ready ? (
-                        <WashimaTools washima={currentWashima} />
+                        <WashimaTools washima={currentWashima} fetchingMessages={fetchingMessages} onSyncMessages={onSyncMessages} />
                     ) : currentWashima.qrcode ? (
                         <QRCode value={currentWashima.qrcode} size={25 * vw} />
                     ) : ready ? (
