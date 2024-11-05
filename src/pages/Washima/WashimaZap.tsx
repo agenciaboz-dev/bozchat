@@ -78,7 +78,7 @@ export const WashimaZap: React.FC<WashimaZapProps> = ({ washima, onEdit }) => {
                         {washima.info.pushname}
                     </p>
 
-                    <IconButton onClick={() => onEdit()}>
+                    <IconButton onClick={() => onEdit()} sx={{ padding: 0 }}>
                         <Settings />
                     </IconButton>
                 </Box>
