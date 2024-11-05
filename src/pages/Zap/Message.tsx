@@ -161,14 +161,17 @@ export const Message: React.FC<MessageProps> = ({ message, isGroup, washima, pre
                             borderRadius: "0.75vw",
                             borderTopRightRadius: show_triangle && message.fromMe ? "0" : undefined,
                             borderTopLeftRadius: show_triangle && !message.fromMe ? "0" : undefined,
-                            bgcolor: message.fromMe ? primary : secondary,
+                            bgcolor: is_sticker ? "transparent" : message.fromMe ? primary : secondary,
                             marginTop: !same_as_previous && !day_changing ? "0.5vw" : undefined,
-                            gap: is_document ? "0.5vw" : undefined,
+                            gap: is_document ? "0.5vw" : is_sticker ? "0.2vw" : undefined,
                             alignItems: is_document ? "center" : undefined,
                         }}
                     >
                         {show_triangle && (
-                            <TrianguloFudido color={message.fromMe ? primary : secondary} alignment={message.fromMe ? "right" : "left"} />
+                            <TrianguloFudido
+                                color={is_sticker ? "transparent" : message.fromMe ? primary : secondary}
+                                alignment={message.fromMe ? "right" : "left"}
+                            />
                         )}
 
                         {/*//* MESSAGE AUTHOR  */}
