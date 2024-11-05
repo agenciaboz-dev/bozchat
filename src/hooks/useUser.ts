@@ -16,9 +16,15 @@ export const useUser = () => {
         navigate('/washima')
     }
 
+    const logout = () => {
+        setUser(null)
+        navigate("/")
+    }
+
     return {
         user,
         firstname,
-        onLogin
+        onLogin,
+        logout,
     }
 }
