@@ -32,6 +32,9 @@ export const WashimaPage: React.FC<WashimaProps> = ({  }) => {
             const response = await api.get("/washima", { params: { user_id: user?.id } })
             console.log(response.data)
             setWashimas(response.data)
+            if (response.data.length > 0 && currentWashima === null) {
+                setCurrentWashima(response.data[0])
+            }
         } catch (error) {
             console.log(error)
         } finally {
