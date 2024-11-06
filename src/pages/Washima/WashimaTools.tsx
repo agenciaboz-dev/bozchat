@@ -63,7 +63,7 @@ export const WashimaTools: React.FC<WashimaToolsProps> = ({ washima, fetchingMes
     }, [washima])
 
     return (
-        <Box sx={{ flexDirection: "column", gap: "1vw", flex: 1, width: "100%", padding: "2vw" }}>
+        <Box sx={{ flexDirection: "column", gap: "1vw", flex: 1, width: "100%", padding: "2vw", color: "secondary.main" }}>
             Uso de disco
             <Box sx={{ gap: "1vw" }}>
                 <DiskMetricContainer label="Mensagens" value={diskMetrics?.messages} onDeletePress={deleteMessages} deleting={deletingMessages} />

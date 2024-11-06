@@ -38,7 +38,7 @@ export const SyncMessagesContainer: React.FC<SyncMessagesContainerProps> = ({ wa
     }, [])
 
     return syncing ? (
-        <Box sx={{ flexDirection: "column", gap: "1vw" }}>
+        <Box sx={{ flexDirection: "column", gap: "1vw", color: "primary.main" }}>
             Mensagens: {currentMessagesSyncProgress}/{totalMessagesSyncProgress} ({messages_progress_value.toFixed(2)}%)
             <LinearProgress variant="determinate" value={messages_progress_value} />
             Chats: {currentChatSyncProgress}/{totalChatSyncProgress} ({chat_progress_value.toFixed(2)}%)
