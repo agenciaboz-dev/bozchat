@@ -15,7 +15,7 @@ export const MessageAuthor: React.FC<MessageAuthorProps> = ({ message }) => {
     const theme = useTheme()
 
     const author_split = message.author?.split(" - ") || []
-    const author_name = author_split?.length > 0 ? author_split[0] : ""
+    const author_name = author_split?.length > 0 ? (author_split[0] === "undefined" ? "" : author_split[0]) : ""
     const author_phone =
         // @ts-ignore
         author_split?.length > 1 ? new Inputmask({ mask: "+99 (99) 9999-9999", placeholder: "", greedy: false }).format(author_split[1]) : ""
