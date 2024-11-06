@@ -120,7 +120,7 @@ export const ChatList: React.FC<ChatsProps> = ({
                         .sort((a, b) => b.lastMessage?.timestamp - a.lastMessage?.timestamp)
                         .map((chat, index) => (
                             <ChatContainer
-                                key={chat.id._serialized}
+                                key={chat.id._serialized + chat.lastMessage.id._serialized || ""}
                                 chat={chat}
                                 onChatClick={onChatClick}
                                 washima={washima}
