@@ -74,6 +74,7 @@ export const MediaInputMenu: React.FC<MediaInputMenuProps> = ({ washima, chat_id
     useEffect(() => {
         if (acceptedMimetypes) {
             inputRef.current?.click()
+            setTimeout(() => setAcceptedMimetypes(""), 500)
         }
     }, [acceptedMimetypes])
 
