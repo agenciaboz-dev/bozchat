@@ -91,6 +91,7 @@ export const MediaInputMenu: React.FC<MediaInputMenuProps> = ({ washima, chat_id
                 onClose={handleCloseMenu}
                 // anchorPosition={{ top: -10, left: 0 }}
                 anchorOrigin={{ vertical: "top", horizontal: "left" }}
+                slotProps={{ paper: { sx: { bgcolor: "background.default" } } }}
             >
                 {media_input_list.map((item) => (
                     <MenuItem key={item.label} sx={{ gap: "0.5vw" }} onClick={item.onClick}>
