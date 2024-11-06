@@ -11,6 +11,7 @@ import { QRCode } from "react-qrcode-logo"
 import { ArrowBackIos } from "@mui/icons-material"
 import { useIo } from "../../hooks/useIo"
 import { WashimaTools } from "./WashimaTools"
+import { useConfirmDialog } from "burgos-confirm"
 
 interface WashimaFormPageProps {
     currentWashima: Washima | null
@@ -24,6 +25,7 @@ export const WashimaFormPage: React.FC<WashimaFormPageProps> = ({ currentWashima
     const vw = window.innerWidth / 100
     const { darkMode } = useDarkMode()
     const { user } = useUser()
+    const { confirm } = useConfirmDialog()
 
     const [loading, setLoading] = useState(false)
     const [restarting, setRestarting] = useState(false)
@@ -79,13 +81,19 @@ export const WashimaFormPage: React.FC<WashimaFormPageProps> = ({ currentWashima
     const onDeletePress = async () => {
         if (!currentWashima) return
 
-        try {
-            const response = await api.delete("/washima", { data: { washima_id: currentWashima.id } })
-            setCurrentWashima(null)
-            formik.resetForm()
-        } catch (error) {
-            console.log(error)
-        }
+        confirm({
+            title: "Deletar instância",
+            content: "Tem certeza que deseja deletar essa instância? Essa ação é irreversível.",
+            onConfirm: async () => {
+                try {
+                    const response = await api.delete("/washima", { data: { washima_id: currentWashima.id } })
+                    setCurrentWashima(null)
+                    formik.resetForm()
+                } catch (error) {
+                    console.log(error)
+                }
+            },
+        })
     }
 
     const onSyncMessages = async () => {
