@@ -31,7 +31,9 @@ export declare class WashimaMessage {
     to: string;
     type: MessageType;
     ack?: MessageAck | null;
-    static getChatMessages(chat_id: string, offset?: number): Promise<WashimaMessage[]>;
+    static getChatMessages(chat_id: string, offset?: number, take?: number | null): Promise<WashimaMessage[]>;
+    static getWashimaMessages(washima_id: string, body?: any): Promise<WashimaMessage[]>;
+    static search(value: string): Promise<WashimaMessage[]>;
     static new(data: WashimaMessageForm): Promise<WashimaMessage>;
     static update(message: WAWebJS.Message): Promise<WashimaMessage | undefined>;
     constructor(data: WashimaMessagePrisma);
