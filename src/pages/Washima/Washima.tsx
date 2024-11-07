@@ -178,19 +178,20 @@ export const WashimaPage: React.FC<WashimaProps> = ({}) => {
                             )
                         })}
                 </Paper>
-
-                <Box sx={{ flex: 1 }}>
-                    {!currentWashima || !currentWashima.ready || showForm ? (
-                        <WashimaFormPage
-                            showForm={showForm}
-                            setShowForm={setShowForm}
-                            currentWashima={currentWashima}
-                            setCurrentWashima={setCurrentWashima}
-                        />
-                    ) : (
-                        <WashimaZap washima={currentWashima} onEdit={() => setShowForm(true)} />
-                    )}
-                </Box>
+                {!isMobile ? (
+                    <Box sx={{ flex: 1 }}>
+                        {!currentWashima || !currentWashima.ready || showForm ? (
+                            <WashimaFormPage
+                                showForm={showForm}
+                                setShowForm={setShowForm}
+                                currentWashima={currentWashima}
+                                setCurrentWashima={setCurrentWashima}
+                            />
+                        ) : (
+                            <WashimaZap washima={currentWashima} onEdit={() => setShowForm(true)} />
+                        )}
+                    </Box>
+                ) : null}
             </Box>
         </Box>
     )
