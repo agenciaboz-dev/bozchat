@@ -116,11 +116,11 @@ export const Message: React.FC<MessageProps> = ({ message, isGroup, washima, pre
         }
     }
 
-    useEffect(() => {
-        if (hovering) {
-            console.log(message)
-        }
-    }, [hovering])
+    // useEffect(() => {
+    //     if (hovering) {
+    //         console.log(message)
+    //     }
+    // }, [hovering])
 
     return (
         <Box sx={{ display: "contents" }} onPointerEnter={() => setHovering(true)} onPointerLeave={() => setHovering(false)}>
