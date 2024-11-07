@@ -9,6 +9,7 @@ import { AttachFile, Headphones, PhotoCamera, Videocam } from "@mui/icons-materi
 import { MessageAck } from "../Zap/MessageAck"
 import { Chat } from "../../types/Chat"
 import { DeletedMessage } from "../Zap/DeletedMessage"
+import { WashimaMessage } from "../../types/server/class/Washima/WashimaMessage"
 
 interface ChatProps {
     washima: Washima
@@ -40,6 +41,15 @@ export const ChatContainer: React.FC<ChatProps> = ({ chat, onChatClick, washima,
     }>()
     const [formattedMediaType, setFormattedMediaType] = useState("")
     const [MediaIcon, setMediaIcon] = useState<React.ReactElement | null>(null)
+
+    const mocked_last_message: WashimaMessage = {
+        ...chat.lastMessage,
+        chat_id: chat.id._serialized,
+        sid: chat.lastMessage.id._serialized,
+        washima_id: washima.id,
+        deleted: false,
+        edited: false,
+    }
 
     const handleClick = () => {
         onChatClick(chat)
@@ -174,18 +184,7 @@ export const ChatContainer: React.FC<ChatProps> = ({ chat, onChatClick, washima,
                     }}
                     title={chat.lastMessage?.body}
                 >
-                    {chat.lastMessage && (
-                        <MessageAck
-                            message={{
-                                ...chat.lastMessage,
-                                chat_id: chat.id._serialized,
-                                sid: chat.lastMessage.id._serialized,
-                                washima_id: washima.id,
-                                deleted: false,
-                                edited: false,
-                            }}
-                        />
-                    )}
+                    {chat.lastMessage && <MessageAck message={mocked_last_message} />}
                     {chat.lastMessage?.hasMedia && (
                         <Chip
                             sx={{
@@ -205,7 +204,7 @@ export const ChatContainer: React.FC<ChatProps> = ({ chat, onChatClick, washima,
                         />
                     )}
                     {chat.lastMessage?.type === "revoked" ? (
-                        <DeletedMessage />
+                        <DeletedMessage message={{ ...mocked_last_message, deleted: true }} />
                     ) : (
                         <p
                             style={{
