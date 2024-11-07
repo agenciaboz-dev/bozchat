@@ -40,7 +40,7 @@ export const Header: React.FC<HeaderProps> = ({}) => {
             </IconButton>
             <Menu anchorEl={menuAchor} open={!!menuAchor} onClose={handleCloseMenu} slotProps={{ paper: { sx: { bgcolor: "background.default" } } }}>
                 <Box sx={{ padding: "1vw", color: "secondary.main", fontSize: "0.8rem" }}>{user?.name}</Box>
-                <MenuItem onClick={logout}>Desconectar</MenuItem>
+                <MenuItem onClick={logout}>Sair</MenuItem>
             </Menu>
         </Paper>
     )
