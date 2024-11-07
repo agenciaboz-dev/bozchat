@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react"
-import { Box, Button, CircularProgress, IconButton, MenuItem, Paper } from "@mui/material"
+import { Box, Button, CircularProgress, IconButton, MenuItem, Paper, Typography } from "@mui/material"
 import { backgroundStyle } from "../../style/background"
 import { Header } from "../../components/Header"
 import { api } from "../../api"
@@ -11,10 +11,9 @@ import { useIo } from "../../hooks/useIo"
 import { WashimaZap } from "./WashimaZap"
 import { useUser } from "../../hooks/useUser"
 
-interface WashimaProps {
-}
+interface WashimaProps {}
 
-export const WashimaPage: React.FC<WashimaProps> = ({  }) => {
+export const WashimaPage: React.FC<WashimaProps> = ({}) => {
     const { darkMode } = useDarkMode()
     const { user } = useUser()
     const io = useIo()
@@ -82,7 +81,6 @@ export const WashimaPage: React.FC<WashimaProps> = ({  }) => {
         }
     }, [washimas])
 
-
     useEffect(() => {
         fetchWashimas()
         listen()
@@ -130,7 +128,16 @@ export const WashimaPage: React.FC<WashimaProps> = ({  }) => {
                                     }}
                                     onClick={() => setCurrentWashima(item)}
                                 >
-                                    {item.name}
+                                    <Typography
+                                        style={{
+                                            maxWidth: "calc(100% - 1.5vw)",
+                                            whiteSpace: "nowrap",
+                                            overflow: "hidden",
+                                            textOverflow: "ellipsis",
+                                        }}
+                                    >
+                                        {item.name}
+                                    </Typography>
                                     {!item.ready &&
                                         (!item.qrcode ? (
                                             <CircularProgress size="1rem" color="warning" />
