@@ -95,6 +95,34 @@ export const WashimaPage: React.FC<WashimaProps> = ({}) => {
     return (
         <Box sx={backgroundStyle}>
             <Header />
+            {isMobile ? (
+                <Box sx={{ flexDirection: "row" }}>
+                    <Button
+                        variant="outlined"
+                        color="primary"
+                        fullWidth
+                        sx={{
+                            margin: "1vw",
+                            fontSize: "1rem",
+                        }}
+                        onClick={() => setCurrentWashima(null)}
+                    >
+                        Washima
+                    </Button>
+                    <Button
+                        variant="outlined"
+                        color="primary"
+                        fullWidth
+                        sx={{
+                            margin: "1vw",
+                            fontSize: "1rem",
+                        }}
+                        onClick={() => setCurrentWashima(null)}
+                    >
+                        Conversas
+                    </Button>
+                </Box>
+            ) : null}
             <Box sx={{ flexDirection: "row", flex: 1 }}>
                 <Paper
                     sx={{ flex: 0.1, flexDirection: "column", alignItems: "center", padding: "2vw", bgcolor: darkMode ? "" : "background.default" }}
