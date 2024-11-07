@@ -41,6 +41,7 @@ export declare class WashimaMedia {
     filename: string;
     data: string;
     mimetype: string;
+    size: string;
     static new(data: WashimaMediaPrisma): Promise<WashimaMedia | undefined>;
     static get(message_id: string): Promise<WashimaMedia | undefined>;
     constructor(data: WashimaMediaPrisma);
