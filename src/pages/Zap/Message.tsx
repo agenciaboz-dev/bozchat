@@ -221,13 +221,18 @@ export const Message: React.FC<MessageProps> = ({ message, isGroup, washima, pre
                                         <Skeleton
                                             variant="rounded"
                                             animation="wave"
-                                            sx={{ width: "5vw", height: "5vw", borderRadius: "1vw", flexDirection: "row" }}
+                                            sx={{ width: "3vw", height: "3.42vw", borderRadius: "0.2vw", flexDirection: "row" }}
                                         />
                                     ) : (
                                         <Avatar
-                                            sx={{ width: "3vw", height: "3vw", borderRadius: "0.5vw", flexDirection: "row" }}
+                                            sx={{
+                                                width: "3vw",
+                                                height: "auto",
+                                                objectFit: "contain",
+                                                borderRadius: 0,
+                                            }}
                                             alt="icone"
-                                            src={documentIcon(message.body.split(".").pop()) || "/icones-documentos-washima/undefined.jpg"}
+                                            src={documentIcon(message.body.split(".").pop()) || "/icones-documentos-washima/icon-generic.svg"}
                                         />
                                     ))}
 
@@ -254,7 +259,7 @@ export const Message: React.FC<MessageProps> = ({ message, isGroup, washima, pre
                                     WebkitBoxOrient: "vertical",
                                     overflow: "hidden",
                                     textOverflow: "ellipsis",
-                                    maxWidth: is_document ? "16.5vw" : undefined,
+                                    width: is_document ? "16vw" : undefined,
                                 }}
                                 onClick={isLink ? () => window.open(message.body, "_new") : undefined}
                             >
