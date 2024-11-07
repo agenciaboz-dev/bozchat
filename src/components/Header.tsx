@@ -30,13 +30,15 @@ export const Header: React.FC<HeaderProps> = ({}) => {
                 borderRadius: 0,
             }}
         >
-            <img src="/wagazap.svg" style={{ width: "4vw", height: "4vw" }} />
+            <img src="/wagazap.svg" style={{ width: "4vw", height: "4vw" }} draggable={false} />
             <IconButton sx={{ position: "absolute", left: "2vw" }} onClick={() => menu.drawer.toogle()}>
                 <MenuIcon />
             </IconButton>
 
             <IconButton sx={{ position: "absolute", right: "2vw" }} onClick={handleClickMenu}>
-                <Avatar sx={{ bgcolor: "secondary.main", color: "primary.main", fontWeight: "bold" }}>{splitted_name.map((word) => word[0])}</Avatar>
+                <Avatar sx={{ bgcolor: "secondary.main", color: "primary.main", fontWeight: "bold" }} imgProps={{ draggable: false }}>
+                    {splitted_name.map((word) => word[0])}
+                </Avatar>
             </IconButton>
             <Menu anchorEl={menuAchor} open={!!menuAchor} onClose={handleCloseMenu} slotProps={{ paper: { sx: { bgcolor: "background.default" } } }}>
                 <Box sx={{ padding: "1vw", color: "secondary.main", fontSize: "0.8rem" }}>{user?.name}</Box>

@@ -17,7 +17,7 @@ export const MediaListItem: React.FC<MediaListItemProps> = ({ file, is_current, 
     console.log(type)
     return (
         <MenuItem sx={{ padding: 0, width: "fit-content", position: "relative" }} onClick={onClick}>
-            {type === "image" && <img src={url} style={{ width: "auto", height: "10vh", objectFit: "contain" }} />}
+            {type === "image" && <img src={url} style={{ width: "auto", height: "10vh", objectFit: "contain" }} draggable={false} />}
             {type === "video" && <video src={url} style={{ width: "auto", height: "10vh", objectFit: "contain" }} />}
             {type !== "image" && type !== "video" && documentType && (
                 <Avatar
@@ -28,6 +28,7 @@ export const MediaListItem: React.FC<MediaListItemProps> = ({ file, is_current, 
                         borderRadius: 0,
                     }}
                     alt="icone"
+                    imgProps={{ draggable: false }}
                     src={documentIcon(documentType)}
                 />
             )}

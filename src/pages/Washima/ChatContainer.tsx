@@ -137,6 +137,7 @@ export const ChatContainer: React.FC<ChatProps> = ({ chat, onChatClick, washima,
                     src={profilePic}
                     sx={{ width: isMobile ? "15vw" : "3vw", height: isMobile ? "15vw" : "3vw" }}
                     // onClick={() => picture.open(profilePic || "")}
+                    imgProps={{ draggable: false }}
                 />
             </Paper>
             <Box

@@ -183,6 +183,7 @@ export const Message: React.FC<MessageProps> = ({ message, isGroup, washima, pre
                                                     }}
                                                     // onClick={() => picture.open(mediaObj?.source || "")}
                                                     src={mediaObj?.source}
+                                                    draggable={false}
                                                 />
                                             </MenuItem>
                                         </PhotoView>
@@ -232,6 +233,7 @@ export const Message: React.FC<MessageProps> = ({ message, isGroup, washima, pre
                                                 objectFit: "contain",
                                                 borderRadius: 0,
                                             }}
+                                            imgProps={{ draggable: false }}
                                             alt="icone"
                                             src={documentIcon(message.body.split(".").pop()) || "/icones-documentos-washima/icon-generic.svg"}
                                         />

@@ -55,7 +55,7 @@ export const Login: React.FC<LoginProps> = ({}) => {
 
     return (
         <Box sx={{ ...backgroundStyle, justifyContent: "center", alignItems: "center", flexDirection: "column", gap: isMobile ? "10vw" : "0" }}>
-            <img src={"/wagazap.svg"} alt="logo" style={{ aspectRatio: "2/1", width: isMobile ? "70vw" : "24vw" }} />
+            <img src={"/wagazap.svg"} alt="logo" style={{ aspectRatio: "2/1", width: isMobile ? "70vw" : "24vw" }} draggable={false} />
             <form onSubmit={formik.handleSubmit}>
                 <Box
                     sx={{
