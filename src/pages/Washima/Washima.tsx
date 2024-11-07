@@ -125,7 +125,13 @@ export const WashimaPage: React.FC<WashimaProps> = ({}) => {
             ) : null}
             <Box sx={{ flexDirection: "row", flex: 1 }}>
                 <Paper
-                    sx={{ flex: 0.1, flexDirection: "column", alignItems: "center", padding: "2vw", bgcolor: darkMode ? "" : "background.default" }}
+                    sx={{
+                        flex: isMobile ? 1 : 0.1,
+                        flexDirection: "column",
+                        alignItems: "center",
+                        padding: "2vw",
+                        bgcolor: darkMode ? "" : "background.default",
+                    }}
                 >
                     <Box sx={{ alignItems: "center", gap: "1vw", color: "text.secondary" }}>
                         <Box sx={{ fontWeight: "bold", fontSize: "1.5rem" }}>Washima</Box>
