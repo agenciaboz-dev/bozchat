@@ -25,6 +25,8 @@ export const WashimaPage: React.FC<WashimaProps> = ({}) => {
     const [showForm, setShowForm] = useState(false)
     const [currentWashima, setCurrentWashima] = useState<Washima | null>(null)
 
+    const [isChat, setIsChat] = useState(false)
+
     const addWashima = (washima: Washima) => setWashimas((values) => [...values.filter((item) => item.id !== washima.id), washima])
 
     const fetchWashimas = async () => {
@@ -105,7 +107,7 @@ export const WashimaPage: React.FC<WashimaProps> = ({}) => {
                             margin: "1vw",
                             fontSize: "1rem",
                         }}
-                        onClick={() => setCurrentWashima(null)}
+                        onClick={() => setIsChat(false)}
                     >
                         Washima
                     </Button>
@@ -117,73 +119,90 @@ export const WashimaPage: React.FC<WashimaProps> = ({}) => {
                             margin: "1vw",
                             fontSize: "1rem",
                         }}
-                        onClick={() => setCurrentWashima(null)}
+                        onClick={() => setIsChat(true)}
                     >
                         Conversas
                     </Button>
                 </Box>
             ) : null}
             <Box sx={{ flexDirection: "row", flex: 1 }}>
-                <Paper
-                    sx={{
-                        flex: isMobile ? 1 : 0.1,
-                        flexDirection: "column",
-                        alignItems: "center",
-                        padding: "2vw",
-                        bgcolor: darkMode ? "" : "background.default",
-                    }}
-                >
-                    <Box sx={{ alignItems: "center", gap: "1vw", color: "text.secondary" }}>
-                        <Box sx={{ fontWeight: "bold", fontSize: "1.5rem" }}>Washima</Box>
-                        <IconButton onClick={() => fetchWashimas()}>{loading ? <CircularProgress size={"1.5rem"} /> : <ReplayOutlined />}</IconButton>
-                    </Box>
-
-                    <Button
-                        variant="outlined"
-                        color="primary"
-                        fullWidth
-                        sx={{ margin: "1vw 0", borderStyle: "dashed", fontSize: "1rem" }}
-                        onClick={() => setCurrentWashima(null)}
+                {!isChat ? (
+                    <Paper
+                        sx={{
+                            flex: isMobile ? 1 : 0.1,
+                            flexDirection: "column",
+                            alignItems: "center",
+                            padding: "2vw",
+                            bgcolor: darkMode ? "" : "background.default",
+                        }}
                     >
-                        +
-                    </Button>
-                    {washimas
-                        .sort((a, b) => Number(b.created_at) - Number(a.created_at))
-                        .map((item) => {
-                            const active = currentWashima?.id === item.id
-                            return (
-                                <MenuItem
-                                    key={item.id}
-                                    sx={{
-                                        width: 1,
-                                        margin: "0 -2vw",
-                                        flexShrink: 0,
-                                        outline: active ? "1px solid" : "",
-                                        borderRadius: "0.3vw",
-                                        justifyContent: "space-between",
-                                    }}
-                                    onClick={() => setCurrentWashima(item)}
-                                >
-                                    <Typography
-                                        style={{
-                                            maxWidth: "calc(100% - 1.5vw)",
-                                            whiteSpace: "nowrap",
-                                            overflow: "hidden",
-                                            textOverflow: "ellipsis",
+                        <Box sx={{ alignItems: "center", gap: "1vw", color: "text.secondary" }}>
+                            <Box sx={{ fontWeight: "bold", fontSize: "1.5rem" }}>Washima</Box>
+                            <IconButton onClick={() => fetchWashimas()}>
+                                {loading ? <CircularProgress size={"1.5rem"} /> : <ReplayOutlined />}
+                            </IconButton>
+                        </Box>
+
+                        <Button
+                            variant="outlined"
+                            color="primary"
+                            fullWidth
+                            sx={{ margin: "1vw 0", borderStyle: "dashed", fontSize: "1rem" }}
+                            onClick={() => setCurrentWashima(null)}
+                        >
+                            +
+                        </Button>
+                        {washimas
+                            .sort((a, b) => Number(b.created_at) - Number(a.created_at))
+                            .map((item) => {
+                                const active = currentWashima?.id === item.id
+                                return (
+                                    <MenuItem
+                                        key={item.id}
+                                        sx={{
+                                            width: 1,
+                                            margin: "0 -2vw",
+                                            flexShrink: 0,
+                                            outline: active ? "1px solid" : "",
+                                            borderRadius: "0.3vw",
+                                            justifyContent: "space-between",
                                         }}
+                                        onClick={() => setCurrentWashima(item)}
                                     >
-                                        {item.name}
-                                    </Typography>
-                                    {!item.ready &&
-                                        (!item.qrcode ? (
-                                            <CircularProgress size="1rem" color="warning" />
-                                        ) : (
-                                            <QrCodeScanner color="warning" sx={{ width: "1.3vw", height: "1.3vw" }} />
-                                        ))}
-                                </MenuItem>
-                            )
-                        })}
-                </Paper>
+                                        <Typography
+                                            style={{
+                                                maxWidth: "calc(100% - 1.5vw)",
+                                                whiteSpace: "nowrap",
+                                                overflow: "hidden",
+                                                textOverflow: "ellipsis",
+                                            }}
+                                        >
+                                            {item.name}
+                                        </Typography>
+                                        {!item.ready &&
+                                            (!item.qrcode ? (
+                                                <CircularProgress size="1rem" color="warning" />
+                                            ) : (
+                                                <QrCodeScanner color="warning" sx={{ width: "1.3vw", height: "1.3vw" }} />
+                                            ))}
+                                    </MenuItem>
+                                )
+                            })}
+                    </Paper>
+                ) : (
+                    <Box sx={{ flex: 1 }}>
+                        {!currentWashima || !currentWashima.ready || showForm ? (
+                            <WashimaFormPage
+                                showForm={showForm}
+                                setShowForm={setShowForm}
+                                currentWashima={currentWashima}
+                                setCurrentWashima={setCurrentWashima}
+                            />
+                        ) : (
+                            <WashimaZap washima={currentWashima} onEdit={() => setShowForm(true)} />
+                        )}
+                    </Box>
+                )}
                 {!isMobile ? (
                     <Box sx={{ flex: 1 }}>
                         {!currentWashima || !currentWashima.ready || showForm ? (
