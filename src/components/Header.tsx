@@ -30,7 +30,7 @@ export const Header: React.FC<HeaderProps> = ({}) => {
                 borderRadius: 0,
             }}
         >
-            <img src="/wagazap.svg" style={{ width: "3vw", height: "3vw" }} />
+            <img src="/wagazap.svg" style={{ width: "4vw", height: "4vw" }} />
             <IconButton sx={{ position: "absolute", left: "2vw" }} onClick={() => menu.drawer.toogle()}>
                 <MenuIcon />
             </IconButton>

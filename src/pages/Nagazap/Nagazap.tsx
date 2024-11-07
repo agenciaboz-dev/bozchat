@@ -1,9 +1,9 @@
 import React, { useEffect, useState } from "react"
-import { Box, Paper } from "@mui/material"
+import { Box, MenuItem, Paper, TextField } from "@mui/material"
 import { backgroundStyle } from "../../style/background"
-import { WhatsApp } from "@mui/icons-material"
+import { Add, AddCircle, WhatsApp } from "@mui/icons-material"
 import { ToolButton } from "./ToolButton"
-import { Route, Routes } from "react-router-dom"
+import { Route, Routes, useNavigate } from "react-router-dom"
 import { Token } from "./Token"
 import { Nagazap } from "../../types/server/class/Nagazap"
 import { api } from "../../api"
@@ -16,21 +16,28 @@ import { useIo } from "../../hooks/useIo"
 import { Logs } from "./Logs/Logs"
 import { Title } from "../../components/Title"
 import { Header } from "../../components/Header"
+import { useUser } from "../../hooks/useUser"
+import { textFieldStyle } from "../../style/textfield"
+import { NagazapForm } from "./NagazapForm"
 
 interface NagazapProps {}
 
 export const NagazapScreen: React.FC<NagazapProps> = ({}) => {
     const io = useIo()
+    const { user } = useUser()
+    const navigate = useNavigate()
 
+    const [nagazapList, setNagazapList] = useState<Nagazap[]>([])
     const [nagazap, setNagazap] = useState<Nagazap>()
     const [loading, setLoading] = useState(false)
 
-    const refreshNagazap = async () => {
+    const fetchNagazap = async () => {
+        if (!user) return
         setLoading(true)
 
         try {
-            const response = await api.get("/whatsapp")
-            setNagazap(response.data)
+            const response = await api.get("/nagazap", { params: { user_id: user.id } })
+            setNagazapList(response.data)
             console.log(response.data)
         } catch (error) {
             console.log(error)
@@ -39,8 +46,13 @@ export const NagazapScreen: React.FC<NagazapProps> = ({}) => {
         }
     }
 
+    const onAddNagazap = (new_nagazap: Nagazap) => {
+        setNagazapList((list) => [...list, new_nagazap])
+        setNagazap(new_nagazap)
+    }
+
     useEffect(() => {
-        refreshNagazap()
+        fetchNagazap()
 
         io.on("nagazap:update", (data) => setNagazap(data))
 
@@ -74,25 +86,59 @@ export const NagazapScreen: React.FC<NagazapProps> = ({}) => {
                     elevation={5}
                 >
                     <Title title="Nagazap" icon={<WhatsApp />}>
-                        <ToolButton label="Informações" route="/" />
-                        <ToolButton label="Mensagens" route="/messages" />
-                        <ToolButton label="Enviar mensagem" route="/message_form" />
-                        <ToolButton label="Forno" route="/oven" />
-                        <ToolButton label="Logs" route="/logs" />
-                        <ToolButton label="Lista negra" route="/blacklist" />
-                        <ToolButton label="Token" route="/token" />
+                        <Box sx={{ flexDirection: "column", gap: "2vw" }}>
+                            <Box sx={{ padding: "0 2vw" }}>
+                                <TextField
+                                    sx={textFieldStyle}
+                                    select
+                                    value={nagazap?.id || null}
+                                    label="Selecione uma conta"
+                                    SelectProps={{ MenuProps: { MenuListProps: { sx: { bgcolor: "background.default" } } } }}
+                                >
+                                    <MenuItem sx={{ fontWeight: "bold", gap: "1vw" }} onClick={() => navigate("/nagazap/form")}>
+                                        <AddCircle />
+                                        Adicionar conta
+                                    </MenuItem>
+                                    {nagazapList.map((item) => (
+                                        <MenuItem key={item.id} value={item.id} onClick={() => setNagazap(item)}>
+                                            {item.phoneId}
+                                        </MenuItem>
+                                    ))}
+                                    {!nagazapList.length && <MenuItem disabled>Nenhuma conta encontrada</MenuItem>}
+                                </TextField>
+                            </Box>
+                            {nagazap && (
+                                <Box sx={{ flexDirection: "column" }}>
+                                    <ToolButton label="Informações" route="/" />
+                                    <ToolButton label="Mensagens" route="/messages" />
+                                    <ToolButton label="Enviar mensagem" route="/message_form" />
+                                    <ToolButton label="Forno" route="/oven" />
+                                    <ToolButton label="Logs" route="/logs" />
+                                    <ToolButton label="Lista negra" route="/blacklist" />
+                                    <ToolButton label="Token" route="/token" />
+                                </Box>
+                            )}
+                        </Box>
                     </Title>
                 </Paper>
                 <Box sx={{ width: "80vw" }}>
-                    <Routes>
-                        <Route index element={<Info />} />
-                        <Route path="/token" element={<Token nagazap={nagazap} setNagazap={setNagazap} />} />
-                        <Route path="/messages" element={<MessagesScreen />} />
-                        <Route path="/oven" element={<Oven nagazap={nagazap} setNagazap={setNagazap} />} />
-                        <Route path="/blacklist" element={<Blacklist nagazap={nagazap} setNagazap={setNagazap} />} />
-                        <Route path="/logs" element={<Logs nagazap={nagazap} setNagazap={setNagazap} />} />
-                        <Route path="/message_form" element={<MessageFormScreen />} />
-                    </Routes>
+                    {nagazap ? (
+                        <Routes>
+                            <Route index element={<Info />} />
+                            <Route path="/token" element={<Token nagazap={nagazap} setNagazap={setNagazap} />} />
+                            <Route path="/messages" element={<MessagesScreen />} />
+                            <Route path="/oven" element={<Oven nagazap={nagazap} setNagazap={setNagazap} />} />
+                            <Route path="/blacklist" element={<Blacklist nagazap={nagazap} setNagazap={setNagazap} />} />
+                            <Route path="/logs" element={<Logs nagazap={nagazap} setNagazap={setNagazap} />} />
+                            <Route path="/message_form" element={<MessageFormScreen />} />
+                            <Route path="/form" element={<NagazapForm onSuccess={onAddNagazap} />} />
+                        </Routes>
+                    ) : (
+                        <Routes>
+                            <Route index element={<NagazapForm onSuccess={onAddNagazap} />} />
+                            <Route path="/*" element={<NagazapForm onSuccess={onAddNagazap} />} />
+                        </Routes>
+                    )}
                 </Box>
             </Box>
         </Box>

@@ -2,9 +2,15 @@ import { Prisma } from "@prisma/client";
 import { OvenForm, WhatsappForm } from "../types/shared/Meta/WhatsappBusiness/WhatsappForm";
 import { UploadedFile } from "express-fileupload";
 import { FailedMessageLog, SentMessageLog } from "../types/shared/Meta/WhatsappBusiness/Logs";
+import { User } from "./User";
 export type NagaMessagePrisma = Prisma.NagazapMessageGetPayload<{}>;
 export type NagaMessageForm = Omit<Prisma.NagazapMessageGetPayload<{}>, "id">;
-export type NagazapPrisma = Prisma.NagazapGetPayload<{}>;
+export declare const nagazap_include: {
+    user: true;
+};
+export type NagazapPrisma = Prisma.NagazapGetPayload<{
+    include: typeof nagazap_include;
+}>;
 interface BuildHeadersOptions {
     upload?: boolean;
 }
@@ -16,12 +22,19 @@ export declare class NagaMessage {
     name: string;
     constructor(data: NagaMessagePrisma);
 }
+export interface NagazapForm {
+    token: string;
+    appId: string;
+    phoneId: string;
+    businessId: string;
+    userId: string;
+}
 export declare class Nagazap {
     id: number;
     token: string;
     appId: string;
     phoneId: string;
-    bussinessId: string;
+    businessId: string;
     lastUpdated: string;
     stack: WhatsappForm[];
     blacklist: string[];
@@ -31,6 +44,8 @@ export declare class Nagazap {
     paused: boolean;
     sentMessages: SentMessageLog[];
     failedMessages: FailedMessageLog[];
+    userId: string;
+    user: User;
     static initialize(): Promise<void>;
     static get(): Promise<Nagazap>;
     static shouldBake(): Promise<void>;

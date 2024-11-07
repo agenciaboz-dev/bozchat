@@ -17,8 +17,9 @@ import { formatSize } from "../../tools/formatSize"
 import { documentIcon } from "../../tools/documentIcon"
 import { WashimaGroupUpdate } from "../../types/server/class/Washima/WashimaGroupUpdate"
 import { DateChip } from "../Washima/WashimaChat/DateChip"
-import Inputmask from "inputmask"
 import { PhotoView } from "react-photo-view"
+import { DeletedMessage } from "./DeletedMessage"
+import { MessageAuthor } from "./MessageAuthor"
 
 interface MessageProps {
     washima: Washima
@@ -27,9 +28,6 @@ interface MessageProps {
     isGroup?: boolean
     onVisible?: () => void
 }
-
-const authors_colors: { author: string; color: string }[] = []
-const random_colors = washima_colors
 
 export const Message: React.FC<MessageProps> = ({ message, isGroup, washima, previousItem, onVisible }) => {
     const visibleCallbackRef = useVisibleCallback(() => {
@@ -41,11 +39,6 @@ export const Message: React.FC<MessageProps> = ({ message, isGroup, washima, pre
     const theme = useMuiTheme()
     const primary = "#0f6787"
     const secondary = "#5e5e5e"
-    const author_split = message.author?.split(" - ") || []
-    const author_name = author_split?.length > 0 ? author_split[0] : ""
-    const author_phone =
-        // @ts-ignore
-        author_split?.length > 1 ? new Inputmask({ mask: "+99 (99) 9999-9999", placeholder: "", greedy: false }).format(author_split[1]) : ""
 
     const same_as_previous =
         !!previousItem && (message.author ? previousItem?.author === message.author : (previousItem as WashimaMessage).fromMe === message.fromMe)
@@ -53,7 +46,8 @@ export const Message: React.FC<MessageProps> = ({ message, isGroup, washima, pre
         !previousItem || new Date(previousItem.timestamp * 1000).toLocaleDateString() !== new Date(message.timestamp * 1000).toLocaleDateString()
     const show_triangle = !same_as_previous || day_changing
 
-    const [authorColor, setAuthorColor] = useState("")
+    const show_author = (!same_as_previous || day_changing) && isGroup
+
     const [mediaObj, setMediaObj] = useState<{ source: string; ext: string; size: string }>()
     const [loading, setLoading] = useState(message.hasMedia)
     const [downloading, setDownloading] = useState(false)
@@ -123,17 +117,6 @@ export const Message: React.FC<MessageProps> = ({ message, isGroup, washima, pre
     }
 
     useEffect(() => {
-        if (message.author) {
-            if (!authors_colors.find((item) => item.author === message.author)) {
-                authors_colors.push({ author: message.author, color: random_colors[authors_colors.length] })
-            }
-
-            const color_index = authors_colors.findIndex((item) => item.author === message.author)
-            setAuthorColor(authors_colors[color_index].color)
-        }
-    }, [])
-
-    useEffect(() => {
         if (hovering) {
             console.log(message)
         }
@@ -151,6 +134,8 @@ export const Message: React.FC<MessageProps> = ({ message, isGroup, washima, pre
                         maxWidth: message.hasMedia && is_document ? "25vw" : message.hasMedia ? "20vw" : isMobile ? "90%" : "75%",
                     }}
                 >
+                    {/*//* MESSAGE AUTHOR  */}
+                    {show_author && message.type === "revoked" && <MessageAuthor message={message} />}
                     <Box
                         sx={{
                             position: "relative",
@@ -166,6 +151,7 @@ export const Message: React.FC<MessageProps> = ({ message, isGroup, washima, pre
                             marginTop: !same_as_previous && !day_changing ? "0.5vw" : undefined,
                             gap: is_document ? "0.5vw" : is_sticker ? "0.2vw" : undefined,
                             alignItems: is_document ? "center" : undefined,
+                            opacity: message.type === "revoked" ? 0.3 : undefined,
                         }}
                     >
                         {show_triangle && (
@@ -176,24 +162,9 @@ export const Message: React.FC<MessageProps> = ({ message, isGroup, washima, pre
                         )}
 
                         {/*//* MESSAGE AUTHOR  */}
-                        {(!same_as_previous || day_changing) && isGroup && (
-                            <Box
-                                sx={{
-                                    fontSize: "0.85rem",
-                                    gap: "0.5vw",
-                                    fontWeight: "bold",
-                                    alignItems: "center",
-                                }}
-                            >
-                                <Box sx={{ color: authorColor }}>
-                                    {!!author_phone && "~ "}
-                                    {author_name}
-                                </Box>
-                                <Box sx={{ color: theme.palette.secondary.dark, fontSize: "0.7rem" }}>{author_phone}</Box>
-                            </Box>
-                        )}
+                        {show_author && message.type !== "revoked" && <MessageAuthor message={message} />}
 
-                        {message.type === "revoked" && <Chip sx={{ color: "" }} label="Mensagem deletada" color="warning" icon={<Delete />} />}
+                        {message.type === "revoked" && <DeletedMessage message={message} />}
                         {message.hasMedia && (
                             <Box sx={{}}>
                                 {is_image &&
