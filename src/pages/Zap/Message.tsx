@@ -196,6 +196,7 @@ export const Message: React.FC<MessageProps> = ({ message, isGroup, washima, pre
                                             style={{ width: "10vw", height: "10vw", objectFit: "contain", borderRadius: "0.75vw" }}
                                             // onClick={() => picture.open(mediaObj?.source || "")}
                                             src={mediaObj?.source}
+                                            draggable={false}
                                         />
                                     ))}
                                 {is_video &&
