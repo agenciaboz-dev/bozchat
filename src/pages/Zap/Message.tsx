@@ -170,14 +170,18 @@ export const Message: React.FC<MessageProps> = ({ message, isGroup, washima, pre
                             <Box sx={{}}>
                                 {is_image &&
                                     (loading ? (
-                                        <Skeleton variant="rounded" animation="wave" sx={{ width: "20vw", height: "20vw", borderRadius: "1vw" }} />
+                                        <Skeleton
+                                            variant="rounded"
+                                            animation="wave"
+                                            sx={{ width: isMobile ? "60vw" : "20vw", height: isMobile ? "70vw" : "20vw", borderRadius: "1vw" }}
+                                        />
                                     ) : (
                                         <PhotoView src={mediaObj?.source}>
                                             <MenuItem sx={{ padding: 0, borderRadius: "0.75vw" }}>
                                                 <img
                                                     style={{
-                                                        width: "20vw",
-                                                        height: "20vw",
+                                                        width: isMobile ? "60vw" : "20vw",
+                                                        height: isMobile ? "70vw" : "20vw",
                                                         objectFit: "contain",
                                                         borderRadius: "0.75vw",
                                                     }}
@@ -189,19 +193,33 @@ export const Message: React.FC<MessageProps> = ({ message, isGroup, washima, pre
                                     ))}
                                 {is_sticker &&
                                     (loading ? (
-                                        <CircularProgress size={"10vw"} sx={{}} />
+                                        <CircularProgress size={isMobile ? "30vw" : "10vw"} sx={{}} />
                                     ) : (
                                         <img
-                                            style={{ width: "10vw", height: "10vw", objectFit: "contain", borderRadius: "0.75vw" }}
+                                            style={{
+                                                width: isMobile ? "30vw" : "10vw",
+                                                height: isMobile ? "30vw" : "10vw",
+                                                objectFit: "contain",
+                                                borderRadius: "0.75vw",
+                                            }}
                                             // onClick={() => picture.open(mediaObj?.source || "")}
                                             src={mediaObj?.source}
                                         />
                                     ))}
                                 {is_video &&
                                     (loading ? (
-                                        <Skeleton variant="rounded" animation="wave" sx={{ width: "20vw", height: "20vw", borderRadius: "1vw" }} />
+                                        <Skeleton
+                                            variant="rounded"
+                                            animation="wave"
+                                            sx={{ width: isMobile ? "60vw" : "20vw", height: isMobile ? "70vw" : "20vw", borderRadius: "1vw" }}
+                                        />
                                     ) : mediaObj ? (
-                                        <video style={{ width: "20vw", height: "20vw" }} src={mediaObj.source} controls muted={false} />
+                                        <video
+                                            style={{ width: isMobile ? "60vw" : "20vw", height: isMobile ? "70vw" : "20vw" }}
+                                            src={mediaObj.source}
+                                            controls
+                                            muted={false}
+                                        />
                                     ) : (
                                         <Box sx={{ flexDirection: "column", alignItems: "center", color: "error.main" }}>
                                             erro ao baixar vídeo
