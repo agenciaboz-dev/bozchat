@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useState } from "react"
+import React, { useEffect, useState } from "react"
 import { Box, LinearProgress, Paper, Skeleton } from "@mui/material"
 import { ChatContainer } from "./ChatContainer"
 import { useMediaQuery } from "@mui/material"
@@ -89,10 +89,6 @@ export const ChatList: React.FC<ChatsProps> = ({
         setOnSearch(() => onSearch)
         setOnStartSearch(() => onStartSearch)
     }, [washima])
-
-    useEffect(() => {
-        console.log(loading)
-    }, [loading])
 
     useEffect(() => {
         if (chats.length) {

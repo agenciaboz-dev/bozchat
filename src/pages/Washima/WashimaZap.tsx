@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useState } from "react"
+import React, { useCallback, useEffect, useRef, useState } from "react"
 import { Box, debounce, IconButton, TextField, useMediaQuery } from "@mui/material"
 import { Washima } from "../../types/server/class/Washima/Washima"
 import { ChatList } from "./ChatList"
@@ -17,6 +17,7 @@ interface WashimaZapProps {
 
 export const WashimaZap: React.FC<WashimaZapProps> = ({ washima, onEdit }) => {
     const isMobile = useMediaQuery("(orientation: portrait)")
+    const chatListRef = useRef<HTMLDivElement>(null)
 
     const [chat, setChat] = useState<Chat | null>(null)
     const [lastWashima, setLastWashima] = useState(washima)
@@ -51,6 +52,7 @@ export const WashimaZap: React.FC<WashimaZapProps> = ({ washima, onEdit }) => {
     useEffect(() => {
         if (washima.id !== lastWashima.id) {
             setChat(null)
+            chatListRef.current?.scrollTo({ top: 0 })
         }
 
         setLastWashima(washima)
@@ -59,6 +61,7 @@ export const WashimaZap: React.FC<WashimaZapProps> = ({ washima, onEdit }) => {
     return (
         <Box sx={{ flex: 1 }}>
             <Box
+                ref={chatListRef}
                 sx={{
                     flex: 0.5,
                     flexDirection: "column",
