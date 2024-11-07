@@ -4,10 +4,10 @@ import { useDarkMode } from "../hooks/useDarkMode"
 export const textFieldStyle: SxProps = {
     "& .MuiInputLabel-root": {
         color: "grey",
-        fontSize: "0.8vw",
+        fontSize: "0.8rem",
 
         "@media (max-width: 600px)": {
-            fontSize: "5vw",
+            fontSize: "0.8rem",
         },
     },
 
@@ -49,7 +49,7 @@ export const textFieldStyle: SxProps = {
     },
 
     "& .MuiInputBase-root:not(.MuiInputBase-multiline)": {
-        height: "3vw",
+        height: "3rem",
     },
 
     "& .MuiInputLabel-shrink": {
