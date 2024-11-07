@@ -6,6 +6,8 @@ import { MediaListItem } from "./MediaListItem"
 import { Washima, WashimaMediaForm } from "../../../types/server/class/Washima/Washima"
 import { file2base64 } from "../../../tools/toBase64"
 import { useIo } from "../../../hooks/useIo"
+import { Center } from "@mantine/core"
+import { documentIcon } from "../../../tools/documentIcon"
 
 interface ConfirmationModalProps {
     files: File[]
@@ -25,6 +27,7 @@ export const DocumentConfirmationModal: React.FC<ConfirmationModalProps> = ({ fi
     const [loading, setLoading] = useState(-1)
 
     const type = useMemo(() => currentFile?.type.split("/")[0], [currentFile])
+    const url = useMemo(() => (currentFile ? URL.createObjectURL(currentFile) : ""), [currentFile])
 
     const onSubmit = async () => {
         if (loading > 0) return
@@ -98,35 +101,37 @@ export const DocumentConfirmationModal: React.FC<ConfirmationModalProps> = ({ fi
                 <Close />
             </IconButton>
 
-            <Avatar
-                sx={{
-                    width: "10vw",
-                    height: "auto",
-                    objectFit: "contain",
-                    borderRadius: 0,
-                    margin: "0 auto",
-                }}
-                alt="icone"
-                src={"/icones-documentos-washima/icon-doc.svg"}
-            />
+            {type === "image" && <img src={url} style={{ width: "auto", height: "15vw", objectFit: "contain", margin: "4vw auto 0" }} />}
+            {type === "video" && <video src={url} style={{ width: "auto", height: "15vw", objectFit: "contain", margin: "4vw auto 0" }} controls />}
+
+            {type !== "image" && type !== "video" && (
+                <Avatar
+                    sx={{
+                        width: "auto",
+                        height: "15vw",
+                        objectFit: "contain",
+                        borderRadius: 0,
+                        margin: "4vw auto 0",
+                    }}
+                    alt="icone"
+                    src={documentIcon(currentFile?.name.split(".").pop())}
+                />
+            )}
+
+            {type !== "image" && type !== "video" ? (
+                <Typography sx={{ color: "#fff", alignSelf: "center", marginBottom: "4vw" }}>Pré-visualização do documento indisponível</Typography>
+            ) : (
+                <Box sx={{ height: "1.5rem", marginBottom: "4vw" }}></Box>
+            )}
+
             <Box sx={{ justifyContent: "center", width: "55vw", gap: "0.5vw", overflow: "auto" }}>
                 {files.map((file, index) => (
-                    // <MediaListItem
-                    //     key={file.name}
-                    //     file={file}
-                    //     is_current={index === currentFileIndex}
-                    //     onClick={() => setCurrentFileIndex(index)}
-                    //     onDelete={() => (loading > 0 ? undefined : onDelete(index))}
-                    // />
-                    <Avatar
-                        sx={{
-                            width: "3vw",
-                            height: "auto",
-                            objectFit: "contain",
-                            borderRadius: 0,
-                        }}
-                        alt="icone"
-                        src={"/icones-documentos-washima/icon-doc.svg"}
+                    <MediaListItem
+                        key={file.name}
+                        file={file}
+                        is_current={index === currentFileIndex}
+                        onClick={() => setCurrentFileIndex(index)}
+                        onDelete={() => (loading > 0 ? undefined : onDelete(index))}
                     />
                 ))}
             </Box>
