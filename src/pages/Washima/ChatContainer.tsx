@@ -8,6 +8,7 @@ import { useVisibleCallback } from "burgos-use-visible-callback"
 import { AttachFile, Headphones, PhotoCamera, Videocam } from "@mui/icons-material"
 import { MessageAck } from "../Zap/MessageAck"
 import { Chat } from "../../types/Chat"
+import { DeletedMessage } from "../Zap/DeletedMessage"
 
 interface ChatProps {
     washima: Washima
@@ -180,6 +181,8 @@ export const ChatContainer: React.FC<ChatProps> = ({ chat, onChatClick, washima,
                                 chat_id: chat.id._serialized,
                                 sid: chat.lastMessage.id._serialized,
                                 washima_id: washima.id,
+                                deleted: false,
+                                edited: false,
                             }}
                         />
                     )}
@@ -201,17 +204,21 @@ export const ChatContainer: React.FC<ChatProps> = ({ chat, onChatClick, washima,
                             icon={MediaIcon}
                         />
                     )}
-                    <p
-                        style={{
-                            whiteSpace: "nowrap",
-                            textOverflow: "ellipsis",
-                            width: isMobile ? "100%" : chat.lastMessage?.hasMedia ? "13vw" : !!chat.unreadCount ? "19vw" : "21vw",
-                            overflow: "hidden",
-                        }}
-                        title={chat.lastMessage?.body}
-                    >
-                        {!chat.isReadOnly ? chat.lastMessage?.body : "Você não faz parte do grupo"}
-                    </p>
+                    {chat.lastMessage?.type === "revoked" ? (
+                        <DeletedMessage />
+                    ) : (
+                        <p
+                            style={{
+                                whiteSpace: "nowrap",
+                                textOverflow: "ellipsis",
+                                width: isMobile ? "100%" : chat.lastMessage?.hasMedia ? "13vw" : !!chat.unreadCount ? "19vw" : "21vw",
+                                overflow: "hidden",
+                            }}
+                            title={chat.lastMessage?.body}
+                        >
+                            {!chat.isReadOnly ? chat.lastMessage?.body : "Você não faz parte do grupo"}
+                        </p>
+                    )}
 
                     {!!chat.unreadCount && (
                         <Box
