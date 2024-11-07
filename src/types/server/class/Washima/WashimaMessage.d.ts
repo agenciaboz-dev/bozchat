@@ -41,5 +41,6 @@ export declare class WashimaMessage {
         edited?: boolean;
         deleted?: boolean;
     }): Promise<WashimaMessage | undefined>;
+    static revoke(message: WAWebJS.Message): Promise<WashimaMessage | undefined>;
     constructor(data: WashimaMessagePrisma);
 }
