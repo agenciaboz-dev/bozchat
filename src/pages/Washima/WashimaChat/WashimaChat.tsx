@@ -6,7 +6,7 @@ import { api } from "../../../api"
 import { Message } from "../../Zap/Message"
 import { useIo } from "../../../hooks/useIo"
 import { WashimaInput } from "../WashimaInput"
-import { CopyAll, KeyboardDoubleArrowDown, Lock } from "@mui/icons-material"
+import { KeyboardDoubleArrowDown, Lock } from "@mui/icons-material"
 import { WhatsappWebSvg } from "../WhatsappWebSvg"
 import { WashimaMessage } from "../../../types/server/class/Washima/WashimaMessage"
 import { WashimaGroupUpdate } from "../../../types/server/class/Washima/WashimaGroupUpdate"
@@ -14,6 +14,7 @@ import { GroupUpdateItem } from "./GroupUpdateItem"
 import { Chat } from "../../../types/Chat"
 import { NoChat } from "./NoChat"
 import { PhotoProvider, PhotoView } from "react-photo-view"
+import { CopyAllButton } from "./WashimaTools/CopyAll"
 
 interface WashimaChatProps {
     washima: Washima
@@ -148,18 +149,6 @@ export const WashimaChat: React.FC<WashimaChatProps> = ({ washima, chat, onClose
         setGroupUpdates([])
     }
 
-    const copyAllMessages = async () => {
-        if (!chat) return
-
-        const texts: string[] = []
-        messages.forEach((message) => {
-            const text = `${message.fromMe ? "Eu:" : chat.name + ":"} ${message.body}`
-            texts.push(text)
-        })
-
-        navigator.clipboard.writeText(texts.join("\n"))
-    }
-
     useEffect(() => {
         io.on("washima:message:update", (updated_message: WashimaMessage, updated_chat_id: string) => {
             const index = messages.findIndex((item) => item.sid === updated_message.sid)
@@ -250,9 +239,7 @@ export const WashimaChat: React.FC<WashimaChatProps> = ({ washima, chat, onClose
                 <p style={{ fontWeight: "bold" }}>{chat?.name}</p>
                 {!!chat && (
                     <Box sx={{ marginLeft: "auto" }}>
-                        <IconButton sx={{ color: "white", padding: isMobile ? "0" : "" }} onClick={copyAllMessages}>
-                            <CopyAll />
-                        </IconButton>
+                        <CopyAllButton chat={chat} />
                         <IconButton sx={{ color: "white", padding: isMobile ? "0" : "" }} onClick={onClose}>
                             <CancelIcon />
                         </IconButton>
