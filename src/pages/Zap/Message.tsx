@@ -60,6 +60,7 @@ export const Message: React.FC<MessageProps> = ({ message, isGroup, washima, pre
     const is_video = message.type === "video"
     const is_document = message.type === "document"
     const is_sticker = message.type === "sticker"
+    const is_deleted = message.type === "revoked" || message.deleted
 
     function isURL(str: string) {
         if (str.split("http").length === 1) return
@@ -77,7 +78,7 @@ export const Message: React.FC<MessageProps> = ({ message, isGroup, washima, pre
     const isLink = isURL(message.body)
 
     const downloadMedia = async () => {
-        if (!message.hasMedia || downloading) return
+        if (!message.hasMedia || downloading || is_deleted) return
 
         try {
             setDownloading(true)
@@ -96,7 +97,7 @@ export const Message: React.FC<MessageProps> = ({ message, isGroup, washima, pre
     }
 
     const fetchMedia = async (download?: "download") => {
-        if (!message.hasMedia || !valid_types.includes(message.type)) return
+        if (!message.hasMedia || !valid_types.includes(message.type) || is_deleted) return
         try {
             setLoading(true)
             const response = await api.get("/washima/media", {
@@ -116,11 +117,11 @@ export const Message: React.FC<MessageProps> = ({ message, isGroup, washima, pre
         }
     }
 
-    // useEffect(() => {
-    //     if (hovering) {
-    //         console.log(message)
-    //     }
-    // }, [hovering])
+    useEffect(() => {
+        if (hovering) {
+            console.log(message)
+        }
+    }, [hovering])
 
     return (
         <Box sx={{ display: "contents" }} onPointerEnter={() => setHovering(true)} onPointerLeave={() => setHovering(false)}>
@@ -135,7 +136,7 @@ export const Message: React.FC<MessageProps> = ({ message, isGroup, washima, pre
                     }}
                 >
                     {/*//* MESSAGE AUTHOR  */}
-                    {show_author && message.type === "revoked" && <MessageAuthor message={message} />}
+                    {show_author && is_deleted && <MessageAuthor message={message} />}
                     <Box
                         sx={{
                             position: "relative",
@@ -151,7 +152,7 @@ export const Message: React.FC<MessageProps> = ({ message, isGroup, washima, pre
                             marginTop: !same_as_previous && !day_changing ? "0.5vw" : undefined,
                             gap: is_document ? "0.5vw" : is_sticker ? "0.2vw" : undefined,
                             alignItems: is_document ? "center" : undefined,
-                            opacity: message.type === "revoked" ? 0.3 : undefined,
+                            opacity: is_deleted ? 0.3 : undefined,
                         }}
                     >
                         {show_triangle && (
@@ -164,8 +165,8 @@ export const Message: React.FC<MessageProps> = ({ message, isGroup, washima, pre
                         {/*//* MESSAGE AUTHOR  */}
                         {show_author && message.type !== "revoked" && <MessageAuthor message={message} />}
 
-                        {message.type === "revoked" && <DeletedMessage message={message} />}
-                        {message.hasMedia && (
+                        {is_deleted && <DeletedMessage message={message} />}
+                        {message.hasMedia && !is_deleted && (
                             <Box sx={{}}>
                                 {is_image &&
                                     (loading ? (
@@ -246,27 +247,29 @@ export const Message: React.FC<MessageProps> = ({ message, isGroup, washima, pre
                         )}
 
                         {/*//* MESSAGE BODY TEXT */}
-                        <Box sx={{ flexDirection: "column" }}>
-                            <p
-                                className={isLink ? "link" : undefined}
-                                style={{
-                                    padding: is_image ? "0 0.25vw" : undefined,
-                                    wordBreak: "break-word",
-                                    whiteSpace: "pre-line",
-                                    color: isLink ? theme.palette.success.light : undefined,
-                                    textAlign: "left",
-                                    WebkitLineClamp: 2,
-                                    WebkitBoxOrient: "vertical",
-                                    overflow: "hidden",
-                                    textOverflow: "ellipsis",
-                                    width: is_document ? "16vw" : undefined,
-                                }}
-                                onClick={isLink ? () => window.open(message.body, "_new") : undefined}
-                            >
-                                {message.body}
-                            </p>
-                            {is_document && <p style={{ textAlign: "left" }}>{mediaObj?.size}</p>}
-                        </Box>
+                        {!is_deleted && (
+                            <Box sx={{ flexDirection: "column" }}>
+                                <p
+                                    className={isLink ? "link" : undefined}
+                                    style={{
+                                        padding: is_image ? "0 0.25vw" : undefined,
+                                        wordBreak: "break-word",
+                                        whiteSpace: "pre-line",
+                                        color: isLink ? theme.palette.success.light : undefined,
+                                        textAlign: "left",
+                                        WebkitLineClamp: 2,
+                                        WebkitBoxOrient: "vertical",
+                                        overflow: "hidden",
+                                        textOverflow: "ellipsis",
+                                        width: is_document ? "16vw" : undefined,
+                                    }}
+                                    onClick={isLink ? () => window.open(message.body, "_new") : undefined}
+                                >
+                                    {message.body}
+                                </p>
+                                {is_document && <p style={{ textAlign: "left" }}>{mediaObj?.size}</p>}
+                            </Box>
+                        )}
                         {/*//* TIME */}
                         <MessageDateContainer message={message} is_audio={is_audio} is_image={is_image} is_document={is_document} />
 

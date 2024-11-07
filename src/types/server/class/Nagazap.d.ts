@@ -47,7 +47,9 @@ export declare class Nagazap {
     userId: string;
     user: User;
     static initialize(): Promise<void>;
-    static get(): Promise<Nagazap>;
+    static new(data: NagazapForm): Promise<Nagazap>;
+    static getByUserId(user_id: string): Promise<Nagazap[]>;
+    static getAll(): Promise<Nagazap[]>;
     static shouldBake(): Promise<void>;
     constructor(data: NagazapPrisma);
     getMessages(): Promise<NagaMessage[]>;

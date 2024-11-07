@@ -25,6 +25,7 @@ export const MessageDateContainer: React.FC<MessageDateContainerProps> = ({ mess
                 gap: "0.2vw",
             }}
         >
+            {message.edited && <Box>Editado</Box>}
             <p>{new Date(message.timestamp * 1000).toLocaleTimeString("pt-br", { hour: "2-digit", minute: "2-digit" })}</p>
             <MessageAck message={message} />
         </Box>
