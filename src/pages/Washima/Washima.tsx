@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react"
-import { Box, Button, CircularProgress, IconButton, MenuItem, Paper, Typography } from "@mui/material"
+import { Box, Button, CircularProgress, IconButton, MenuItem, Paper, Typography, useMediaQuery } from "@mui/material"
 import { backgroundStyle } from "../../style/background"
 import { Header } from "../../components/Header"
 import { api } from "../../api"
@@ -17,6 +17,8 @@ export const WashimaPage: React.FC<WashimaProps> = ({}) => {
     const { darkMode } = useDarkMode()
     const { user } = useUser()
     const io = useIo()
+
+    const isMobile = useMediaQuery("(orientation: portrait)")
 
     const [washimas, setWashimas] = useState<Washima[]>([])
     const [loading, setLoading] = useState(false)
