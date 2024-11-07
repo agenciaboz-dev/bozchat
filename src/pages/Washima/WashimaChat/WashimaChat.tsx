@@ -208,7 +208,7 @@ export const WashimaChat: React.FC<WashimaChatProps> = ({ washima, chat, onClose
                 flex: 1,
                 justifyContent: isMobile ? "flex-end" : "center",
                 bgcolor: "background.paper",
-                height: "90vh",
+                // height: "90vh",
                 padding: "1vw",
                 color: "secondary.main",
                 gap: "1vw",
