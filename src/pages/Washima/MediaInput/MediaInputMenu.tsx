@@ -3,6 +3,7 @@ import { Box, IconButton, Menu, MenuItem } from "@mui/material"
 import { Add, Description, Photo } from "@mui/icons-material"
 import { PhotoVideoConfirmationModal } from "./PhotoVideoConfirmationModal"
 import { Washima } from "../../../types/server/class/Washima/Washima"
+import { DocumentConfirmationModal } from "./DocumentConfirmationModal"
 
 interface MediaInputMenuProps {
     washima: Washima
@@ -16,14 +17,14 @@ export const MediaInputMenu: React.FC<MediaInputMenuProps> = ({ washima, chat_id
 
     const [acceptedMimetypes, setAcceptedMimetypes] = React.useState("")
     const [selectedFiles, setSelectedFiles] = React.useState<File[]>([])
-    const [mediaType, setMediaType] = React.useState<"image-video" | "">("")
+    const [mediaType, setMediaType] = React.useState<"image-video" | "document" | "">("")
 
     const media_input_list = [
         {
             label: "Fotos e vídeos",
             icon: <Photo />,
             onClick: () => {
-                openFilesChooser("image/*,video/*")
+                openFilesChooser("image/*, video/*")
                 setMediaType("image-video")
             },
         },
@@ -32,7 +33,7 @@ export const MediaInputMenu: React.FC<MediaInputMenuProps> = ({ washima, chat_id
             icon: <Description />,
             onClick: () => {
                 openFilesChooser("*")
-                setMediaType("")
+                setMediaType("document")
             },
         },
     ]
@@ -101,6 +102,15 @@ export const MediaInputMenu: React.FC<MediaInputMenuProps> = ({ washima, chat_id
 
             <PhotoVideoConfirmationModal
                 isOpen={mediaType === "image-video"}
+                files={selectedFiles}
+                onCancel={() => resetMediaChooser()}
+                washima={washima}
+                chat_id={chat_id}
+                onDelete={onDeleteFile}
+            />
+
+            <DocumentConfirmationModal
+                isOpen={mediaType === "document"}
                 files={selectedFiles}
                 onCancel={() => resetMediaChooser()}
                 washima={washima}
