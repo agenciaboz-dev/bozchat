@@ -1,10 +1,11 @@
-import React, { useEffect, useMemo, useRef, useState } from "react"
+import React, { useEffect, useRef, useState } from "react"
 import { Box, CircularProgress, IconButton, Paper } from "@mui/material"
 import { Delete, Mic, PauseCircleOutline, Send } from "@mui/icons-material"
 import { useReactMediaRecorder } from "react-media-recorder"
 import { RecordingAudioVisualizer } from "./RecordingAudioVisualizer"
 import { WashimaMediaForm } from "../../../types/server/class/Washima/Washima"
 import { formatTimeDuration } from "../../../tools/formatTimeDuration"
+import { useSnackbar } from "burgos-snackbar"
 
 interface RecordAudioContainerProps {
     onSend: (audio: WashimaMediaForm) => void
@@ -13,6 +14,7 @@ interface RecordAudioContainerProps {
 }
 
 export const RecordAudioContainer: React.FC<RecordAudioContainerProps> = ({ onSend, onRecordStart, onRecordFinish }) => {
+    const { snackbar } = useSnackbar()
     const durationIntervalRef = useRef<ReturnType<typeof setInterval> | null>(null)
     const shouldSendRef = useRef(false)
     const streamRef = useRef<MediaStream | null>(null)
@@ -84,7 +86,18 @@ export const RecordAudioContainer: React.FC<RecordAudioContainerProps> = ({ onSe
         setDuration(0)
     }
 
-    const startRecording = () => {
+    const startRecording = async () => {
+        const noMicSnackbar = () => snackbar({ severity: "error", text: "Microfone não encontrado" })
+        try {
+            const mic = await navigator.mediaDevices.getUserMedia({ audio: true })
+            if (!mic) {
+                noMicSnackbar()
+                return
+            }
+        } catch (error) {
+            noMicSnackbar()
+            return
+        }
         onRecordStart()
         recorder.startRecording()
     }
