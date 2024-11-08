@@ -17,7 +17,7 @@ export const PrivacyTerms: React.FC<PrivacyTermsProps> = ({}) => {
 
                 <p>
                     Welcome to Wagazap. This privacy policy ("Policy") helps you understand how Boz ("we", "us", "our") collects, uses, and protects
-                    the information you provide when you visit and use Wagazap.com ("the Site").
+                    the information you provide when you visit and use wagazap.boz.app.br ("the Site").
                 </p>
 
                 <h2>What We Collect and How We Use It</h2>
