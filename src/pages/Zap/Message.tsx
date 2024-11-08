@@ -146,7 +146,13 @@ export const Message: React.FC<MessageProps> = ({ message, isGroup, washima, pre
         <Box sx={{ display: "contents" }} onPointerEnter={() => setHovering(true)} onPointerLeave={() => setHovering(false)}>
             {/*//* DATE CHIP */}
             {day_changing && <DateChip timestamp={message.timestamp * 1000} />}
-            <Box sx={{ flexDirection: message.fromMe ? "row-reverse" : "row", alignItems: "center", gap: "1vw" }}>
+            <Box
+                sx={{
+                    flexDirection: message.fromMe ? "row-reverse" : "row",
+                    alignItems: "center",
+                    gap: "1vw",
+                }}
+            >
                 <Box
                     ref={visibleCallbackRef}
                     sx={{
@@ -168,7 +174,7 @@ export const Message: React.FC<MessageProps> = ({ message, isGroup, washima, pre
                             borderTopRightRadius: show_triangle && message.fromMe ? "0" : undefined,
                             borderTopLeftRadius: show_triangle && !message.fromMe ? "0" : undefined,
                             bgcolor: is_sticker ? "transparent" : message.fromMe ? primary : secondary,
-                            marginTop: !same_as_previous && !day_changing ? "0.5vw" : undefined,
+                            marginTop: !same_as_previous && !day_changing ? (isMobile ? "2vw" : "0.5vw") : undefined,
                             gap: is_document ? (isMobile ? "3vw" : "0.5vw") : is_sticker ? "0.2vw" : undefined,
                             alignItems: is_document ? "center" : undefined,
                             opacity: is_deleted ? 0.3 : undefined,
