@@ -68,7 +68,7 @@ export const WashimaZap: React.FC<WashimaZapProps> = ({ washima, onEdit }) => {
                         flexDirection: "column",
                         alignItems: isMobile ? "center" : "",
                         padding: "2vw",
-                        height: "90vh",
+                        height: !isMobile ? "90vh" : "72vh",
                         overflowX: isMobile ? "hidden" : "auto",
                         overflowY: loading ? "hidden" : "auto",
                         gap: "1vw",
@@ -76,6 +76,7 @@ export const WashimaZap: React.FC<WashimaZapProps> = ({ washima, onEdit }) => {
                         "::-webkit-scrollbar-thumb": {
                             backgroundColor: "primary.main",
                         },
+                        width: isMobile ? "100vw" : undefined,
                     }}
                 >
                     <Box sx={{ alignItems: "center", justifyContent: "space-between" }}>
@@ -94,7 +95,7 @@ export const WashimaZap: React.FC<WashimaZapProps> = ({ washima, onEdit }) => {
                         </IconButton>
                     </Box>
 
-                <WashimaSearch handleSearch={debouncedSearch} />
+                    <WashimaSearch handleSearch={debouncedSearch} />
 
                     <ChatList
                         onChatClick={(chat) => setChat(chat)}
