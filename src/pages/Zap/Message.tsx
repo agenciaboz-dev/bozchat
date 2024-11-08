@@ -146,13 +146,7 @@ export const Message: React.FC<MessageProps> = ({ message, isGroup, washima, pre
         <Box sx={{ display: "contents" }} onPointerEnter={() => setHovering(true)} onPointerLeave={() => setHovering(false)}>
             {/*//* DATE CHIP */}
             {day_changing && <DateChip timestamp={message.timestamp * 1000} />}
-            <Box
-                sx={{
-                    flexDirection: message.fromMe ? "row-reverse" : "row",
-                    alignItems: "center",
-                    gap: "1vw",
-                }}
-            >
+            <Box sx={{ flexDirection: message.fromMe ? "row-reverse" : "row", alignItems: "center", gap: "1vw" }}>
                 <Box
                     ref={visibleCallbackRef}
                     sx={{
