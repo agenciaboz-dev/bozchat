@@ -145,7 +145,7 @@ export const Message: React.FC<MessageProps> = ({ message, isGroup, washima, pre
                             flexDirection: is_document ? "row" : "column",
                             alignSelf: message.fromMe ? "flex-end" : "flex-start",
                             textAlign: message.fromMe ? "end" : "start",
-                            borderRadius: "0.75vw",
+                            borderRadius: isMobile ? "3vw" : "0.75vw",
                             borderTopRightRadius: show_triangle && message.fromMe ? "0" : undefined,
                             borderTopLeftRadius: show_triangle && !message.fromMe ? "0" : undefined,
                             bgcolor: is_sticker ? "transparent" : message.fromMe ? primary : secondary,
@@ -240,12 +240,17 @@ export const Message: React.FC<MessageProps> = ({ message, isGroup, washima, pre
                                         <Skeleton
                                             variant="rounded"
                                             animation="wave"
-                                            sx={{ width: "3vw", height: "3.42vw", borderRadius: "0.2vw", flexDirection: "row" }}
+                                            sx={{
+                                                width: isMobile ? "10vw" : "3vw",
+                                                height: isMobile ? "10vw" : "3.42vw",
+                                                borderRadius: "0.2vw",
+                                                flexDirection: "row",
+                                            }}
                                         />
                                     ) : (
                                         <Avatar
                                             sx={{
-                                                width: "3vw",
+                                                width: isMobile ? "10vw" : "3vw",
                                                 height: "auto",
                                                 objectFit: "contain",
                                                 borderRadius: 0,
@@ -279,7 +284,7 @@ export const Message: React.FC<MessageProps> = ({ message, isGroup, washima, pre
                                         WebkitBoxOrient: "vertical",
                                         overflow: "hidden",
                                         textOverflow: "ellipsis",
-                                        width: is_document ? "16vw" : undefined,
+                                        width: is_document ? (isMobile ? "55vw" : "16vw") : undefined,
                                     }}
                                     onClick={isLink ? () => window.open(message.body, "_new") : undefined}
                                 >
@@ -296,8 +301,8 @@ export const Message: React.FC<MessageProps> = ({ message, isGroup, washima, pre
                             <Box
                                 sx={{
                                     position: "absolute",
-                                    left: message.fromMe ? "-4vw" : undefined,
-                                    right: !message.fromMe ? "-4vw" : undefined,
+                                    left: message.fromMe ? (isMobile ? "-15vw" : "-4vw") : undefined,
+                                    right: !message.fromMe ? (isMobile ? "-15vw" : "-4vw") : undefined,
                                     top: 0,
                                     bottom: 0,
                                     alignItems: "center",
