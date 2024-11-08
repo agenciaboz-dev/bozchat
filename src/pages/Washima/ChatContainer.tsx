@@ -112,7 +112,7 @@ export const ChatContainer: React.FC<ChatProps> = ({ chat, onChatClick, washima,
             ref={ref}
             disabled={chat.isReadOnly}
             sx={{
-                padding: isMobile ? "2vw 0" : "1vw",
+                padding: isMobile ? "2vw 1vw" : "1vw",
                 alignItems: "center",
                 backgroundColor: active ? "action.hover" : "background.default",
                 gap: isMobile ? "3vw" : "1vw",
