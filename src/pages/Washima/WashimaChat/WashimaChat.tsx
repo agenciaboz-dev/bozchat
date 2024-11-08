@@ -217,7 +217,14 @@ export const WashimaChat: React.FC<WashimaChatProps> = ({ washima, chat, onClose
                 position: "relative",
             }}
         >
-            <Box sx={{ gap: "2vw", alignItems: "center", height: isMobile ? "7vh" : "5vh", padding: isMobile ? "2vw" : "" }}>
+            <Box
+                sx={{
+                    gap: isMobile ? "3vw" : "2vw",
+                    alignItems: "center",
+                    height: isMobile ? "7vh" : "5vh",
+                    padding: isMobile ? "2vw" : "",
+                }}
+            >
                 {loading ? (
                     <Skeleton variant="circular" animation="wave" sx={{ width: isMobile ? "12vw" : "3vw", height: isMobile ? "12vw" : "3vw" }} />
                 ) : (
@@ -260,7 +267,7 @@ export const WashimaChat: React.FC<WashimaChatProps> = ({ washima, chat, onClose
                     padding: "2vw",
                     color: "text.secondary",
                     flexDirection: "column",
-                    gap: isMobile ? "2.5vw" : "0.25vw",
+                    gap: isMobile ? "1vw" : "0.25vw",
                     position: "relative",
 
                     "::-webkit-scrollbar-thumb": {
