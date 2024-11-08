@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react"
-import { Autocomplete, Box, Button, CircularProgress, IconButton, LinearProgress, Paper, Skeleton, TextField } from "@mui/material"
+import { Autocomplete, Box, Button, CircularProgress, IconButton, LinearProgress, Paper, Skeleton, TextField, useMediaQuery } from "@mui/material"
 import { useFormik } from "formik"
 import { Washima, WashimaForm } from "../../types/server/class/Washima/Washima"
 import { useUser } from "../../hooks/useUser"
@@ -26,6 +26,8 @@ export const WashimaFormPage: React.FC<WashimaFormPageProps> = ({ currentWashima
     const { darkMode } = useDarkMode()
     const { user } = useUser()
     const { confirm } = useConfirmDialog()
+
+    const isMobile = useMediaQuery("(orientation: portrait)")
 
     const [loading, setLoading] = useState(false)
     const [restarting, setRestarting] = useState(false)
@@ -142,7 +144,12 @@ export const WashimaFormPage: React.FC<WashimaFormPageProps> = ({ currentWashima
     }, [currentWashima])
 
     return (
-        <Box sx={{ flex: 1 }}>
+        <Box
+            sx={{
+                flex: 1,
+                flexDirection: isMobile ? "column" : "row",
+            }}
+        >
             <Box sx={{ padding: "2vw", flexDirection: "column", gap: "1vw", flex: 0.5 }}>
                 <>
                     <Box sx={{ fontSize: "1.5rem", color: "text.secondary", fontWeight: "bold", gap: "1vw" }}>
@@ -178,7 +185,12 @@ export const WashimaFormPage: React.FC<WashimaFormPageProps> = ({ currentWashima
                         />
                     </Box>
 
-                    <Box sx={{ marginLeft: "auto", gap: "1vw" }}>
+                    <Box
+                        sx={{
+                            marginLeft: isMobile ? undefined : "auto",
+                            gap: "1vw",
+                        }}
+                    >
                         {currentWashima && (
                             <>
                                 <Button variant="outlined" color="error" onClick={onDeletePress} disabled={restarting || fetchingMessages}>
@@ -189,7 +201,12 @@ export const WashimaFormPage: React.FC<WashimaFormPageProps> = ({ currentWashima
                                 </Button>
                             </>
                         )}
-                        <Button variant="contained" onClick={() => formik.handleSubmit()} disabled={restarting || fetchingMessages}>
+                        <Button
+                            style={{ flex: 1 }}
+                            variant="contained"
+                            onClick={() => formik.handleSubmit()}
+                            disabled={restarting || fetchingMessages}
+                        >
                             {loading ? <CircularProgress size={"1.5rem"} color="secondary" /> : "Salvar"}
                         </Button>
                     </Box>

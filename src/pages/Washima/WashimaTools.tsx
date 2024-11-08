@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react"
-import { Box, Button, CircularProgress } from "@mui/material"
+import { Box, Button, CircularProgress, useMediaQuery } from "@mui/material"
 import { Washima, WashimaDiskMetrics } from "../../types/server/class/Washima/Washima"
 import { DiskMetricContainer } from "./DiskMetricContainer"
 import { api } from "../../api"
@@ -12,6 +12,8 @@ interface WashimaToolsProps {
 }
 
 export const WashimaTools: React.FC<WashimaToolsProps> = ({ washima, fetchingMessages, onSyncMessages }) => {
+    const isMobile = useMediaQuery("(orientation: portrait)")
+
     const [diskMetrics, setDiskMetrics] = useState<WashimaDiskMetrics | null>(null)
     const [deletingMedia, setDeletingMedia] = useState(false)
     const [deletingMessages, setDeletingMessages] = useState(false)
@@ -65,7 +67,7 @@ export const WashimaTools: React.FC<WashimaToolsProps> = ({ washima, fetchingMes
     return (
         <Box sx={{ flexDirection: "column", gap: "1vw", flex: 1, width: "100%", padding: "2vw", color: "secondary.main" }}>
             Uso de disco
-            <Box sx={{ gap: "1vw" }}>
+            <Box sx={{ gap: "1vw", flexDirection: isMobile ? "column" : "row" }}>
                 <DiskMetricContainer label="Mensagens" value={diskMetrics?.messages} onDeletePress={deleteMessages} deleting={deletingMessages} />
                 <DiskMetricContainer label="Mídia" value={diskMetrics?.media} onDeletePress={deleteMedia} deleting={deletingMedia} />
             </Box>
