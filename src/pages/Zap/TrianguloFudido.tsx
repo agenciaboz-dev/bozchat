@@ -1,15 +1,16 @@
 import React from "react"
-import { Box } from "@mui/material"
+import { Box, useMediaQuery } from "@mui/material"
 
 interface TriaguloFudidoProps {
     color: string
     alignment: "left" | "right"
 }
 
-const size = "0.6vw"
-const offset = "0.55vw"
-
 export const TrianguloFudido: React.FC<TriaguloFudidoProps> = ({ color, alignment }) => {
+    const isMobile = useMediaQuery("(orientation: portrait)")
+    const size = isMobile ? "2.8vw" : "0.6vw"
+    const offset = isMobile ? "2.5vw" : "0.55vw"
+
     return (
         <Box
             sx={{
