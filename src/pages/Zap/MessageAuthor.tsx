@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react"
-import { Box, useTheme } from "@mui/material"
+import { Box, useMediaQuery, useTheme } from "@mui/material"
 import { WashimaMessage } from "../../types/server/class/Washima/WashimaMessage"
 import Inputmask from "inputmask"
 import { washima_colors } from "../../style/colors"
@@ -12,6 +12,8 @@ const authors_colors: { author: string; color: string }[] = []
 const random_colors = washima_colors
 
 export const MessageAuthor: React.FC<MessageAuthorProps> = ({ message }) => {
+    const isMobile = useMediaQuery("(orientation: portrait)")
+
     const theme = useTheme()
 
     const author_split = message.author?.split(" - ") || []
@@ -37,7 +39,7 @@ export const MessageAuthor: React.FC<MessageAuthorProps> = ({ message }) => {
         <Box
             sx={{
                 fontSize: "0.85rem",
-                gap: "0.5vw",
+                gap: isMobile ? "2vw" : "0.5vw",
                 fontWeight: "bold",
                 alignItems: "center",
             }}
