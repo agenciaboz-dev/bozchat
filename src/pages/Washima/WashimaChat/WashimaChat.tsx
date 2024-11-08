@@ -208,8 +208,8 @@ export const WashimaChat: React.FC<WashimaChatProps> = ({ washima, chat, onClose
                 flex: 1,
                 justifyContent: isMobile ? "flex-end" : "center",
                 bgcolor: "background.paper",
-                // height: "90vh",
-                padding: "1vw",
+                // height: isMobile ? "77vh" : "90vh",
+                padding: isMobile ? "2vw" : "1vw",
                 color: "secondary.main",
                 gap: "1vw",
                 flexDirection: "column",
@@ -221,7 +221,7 @@ export const WashimaChat: React.FC<WashimaChatProps> = ({ washima, chat, onClose
                 sx={{
                     gap: isMobile ? "3vw" : "2vw",
                     alignItems: "center",
-                    height: isMobile ? "7vh" : "5vh",
+                    // height: isMobile ? "7vh" : "5vh",
                     padding: isMobile ? "2vw" : "",
                 }}
             >
@@ -260,7 +260,7 @@ export const WashimaChat: React.FC<WashimaChatProps> = ({ washima, chat, onClose
                 onScroll={handleScroll}
                 sx={{
                     width: "100%",
-                    height: "70vh",
+                    height: isMobile ? "60vh" : "70vh",
                     bgcolor: "background.default",
                     overflowY: "auto",
                     borderRadius: isMobile ? "0 3vw 0 3vw" : "0 1.5vw 0 1.5vw",
