@@ -19,7 +19,7 @@ export const MessageDateContainer: React.FC<MessageDateContainerProps> = ({ mess
                 right: "0.5vw",
                 fontSize: "0.6vw",
                 marginTop: is_audio ? "0.5vw" : undefined,
-                padding: is_image ? "0 0.25vw" : undefined,
+                padding: is_image ? "0.25vw 0.25vw 0 0.25vw" : undefined,
                 justifyContent: "flex-end",
                 alignItems: "center",
                 gap: "0.2vw",

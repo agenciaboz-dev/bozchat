@@ -196,8 +196,8 @@ export const Message: React.FC<MessageProps> = ({ message, isGroup, washima, pre
                                                 <img
                                                     style={{
                                                         width: "20vw",
-                                                        height: "20vw",
-                                                        objectFit: "contain",
+                                                        maxHeight: "20vw",
+                                                        objectFit: "cover",
                                                         borderRadius: "0.75vw",
                                                     }}
                                                     // onClick={() => picture.open(mediaObj?.source || "")}
