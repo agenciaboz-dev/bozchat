@@ -255,7 +255,10 @@ export const Message: React.FC<MessageProps> = ({ message, isGroup, washima, pre
                                             }}
                                             imgProps={{ draggable: false }}
                                             alt="icone"
-                                            src={documentIcon(message.body.split(".").pop()) || "/icones-documentos-washima/icon-generic.svg"}
+                                            src={
+                                                documentIcon(attachmendMetaData?.filename.split(".").pop()) ||
+                                                "/icones-documentos-washima/icon-generic.svg"
+                                            }
                                         />
                                     ))}
 
