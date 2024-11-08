@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState } from "react"
-import { Avatar, Box, CircularProgress, IconButton, Paper, Skeleton, Slider } from "@mui/material"
+import { Avatar, Box, CircularProgress, IconButton, Paper, Skeleton, Slider, useMediaQuery } from "@mui/material"
 import { Headphones, Pause, PlayArrow } from "@mui/icons-material"
 import { useAudioPlayer, useGlobalAudioPlayer } from "react-use-audio-player"
 import { formatTimeDuration } from "../../../tools/formatTimeDuration"
@@ -18,6 +18,7 @@ interface AudioPlayerProps {
 export const AudioPlayer: React.FC<AudioPlayerProps> = ({ media, washima, chat_id, loading, message }) => {
     const player = useAudioPlayer()
     const test = useRef(0)
+    const isMobile = useMediaQuery("(orientation: portrait)")
 
     const [position, setPosition] = useState(0)
     const [profilePicUrl, setProfilePicUrl] = useState("")
@@ -65,18 +66,18 @@ export const AudioPlayer: React.FC<AudioPlayerProps> = ({ media, washima, chat_i
     }, [media])
 
     return (
-        <Box sx={{ width: "19.5vw", gap: "0.5vw", alignItems: "center" }}>
-            <Avatar sx={{ bgcolor: "warning.main", width: "3.5vw", height: "3.5vw" }} src={profilePicUrl}>
-                <Headphones sx={{ borderRadius: 100, width: "2vw", height: "2vw" }} color="secondary" />
+        <Box sx={{ width: isMobile ? "60vw" : "19.5vw", gap: "0.5vw", alignItems: "center" }}>
+            <Avatar sx={{ bgcolor: "warning.main", width: isMobile ? "12vw" : "3.5vw", height: isMobile ? "12vw" : "3.5vw" }} src={profilePicUrl}>
+                <Headphones sx={{ borderRadius: 100, width: isMobile ? "6vw" : "2vw", height: isMobile ? "6vw" : "2vw" }} color="secondary" />
             </Avatar>
             {/* <CircularProgress size={"3.5vw"} /> */}
             <IconButton size="small" onClick={() => player.togglePlayPause()} disabled={loading}>
                 {loading ? (
-                    <CircularProgress size="2vw" color="inherit" />
+                    <CircularProgress size={isMobile ? "8vw" : "2vw"} color="inherit" />
                 ) : player.playing ? (
-                    <Pause sx={{ width: "2vw", height: "2vw" }} />
+                    <Pause sx={{ width: isMobile ? "8vw" : "2vw", height: isMobile ? "8vw" : "2vw" }} />
                 ) : (
-                    <PlayArrow sx={{ width: "2vw", height: "2vw" }} />
+                    <PlayArrow sx={{ width: isMobile ? "8vw" : "2vw", height: isMobile ? "8vw" : "2vw" }} />
                 )}
             </IconButton>
             <Box sx={{ position: "relative", flex: 1, height: "100%", alignItems: "center" }}>
