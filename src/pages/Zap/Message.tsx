@@ -160,7 +160,7 @@ export const Message: React.FC<MessageProps> = ({ message, isGroup, washima, pre
                         sx={{
                             position: "relative",
                             padding: isMobile ? "3vw" : `${is_image || is_video ? "0.25vw" : "0.5vw"}`,
-                            paddingX: is_document ? "0.5vw" : undefined,
+                            paddingX: is_document ? (isMobile ? "3vw" : "0.5vw") : undefined,
                             flexDirection: is_document ? "row" : "column",
                             alignSelf: message.fromMe ? "flex-end" : "flex-start",
                             textAlign: message.fromMe ? "end" : "start",
@@ -169,7 +169,7 @@ export const Message: React.FC<MessageProps> = ({ message, isGroup, washima, pre
                             borderTopLeftRadius: show_triangle && !message.fromMe ? "0" : undefined,
                             bgcolor: is_sticker ? "transparent" : message.fromMe ? primary : secondary,
                             marginTop: !same_as_previous && !day_changing ? "0.5vw" : undefined,
-                            gap: is_document ? "0.5vw" : is_sticker ? "0.2vw" : undefined,
+                            gap: is_document ? (isMobile ? "3vw" : "0.5vw") : is_sticker ? "0.2vw" : undefined,
                             alignItems: is_document ? "center" : undefined,
                             opacity: is_deleted ? 0.3 : undefined,
                         }}
@@ -302,14 +302,14 @@ export const Message: React.FC<MessageProps> = ({ message, isGroup, washima, pre
                                     style={{
                                         padding: is_image ? "0 0.25vw" : undefined,
                                         wordBreak: "break-word",
-                                        whiteSpace: "pre-line",
+                                        whiteSpace: isMobile && is_document ? "nowrap" : "pre-line",
                                         color: isLink ? theme.palette.success.light : undefined,
                                         textAlign: "left",
                                         WebkitLineClamp: 2,
                                         WebkitBoxOrient: "vertical",
                                         overflow: "hidden",
                                         textOverflow: "ellipsis",
-                                        width: is_document ? (isMobile ? "55vw" : "16vw") : undefined,
+                                        width: is_document ? (isMobile ? "47vw" : "16vw") : undefined,
                                     }}
                                     onClick={isLink ? () => window.open(message.body, "_new") : undefined}
                                 >
