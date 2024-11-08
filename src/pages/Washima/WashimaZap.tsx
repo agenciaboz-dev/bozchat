@@ -94,17 +94,7 @@ export const WashimaZap: React.FC<WashimaZapProps> = ({ washima, onEdit }) => {
                         </IconButton>
                     </Box>
 
-                    <TextField
-                        sx={textFieldStyle}
-                        onChange={(ev) => debouncedSearch(ev.target.value)}
-                        placeholder="Pesquisar chat ou mensagem"
-                        InputProps={{
-                            sx: {
-                                gap: "0.5vw",
-                            },
-                            startAdornment: <Search />,
-                        }}
-                    />
+                <WashimaSearch handleSearch={debouncedSearch} />
 
                     <ChatList
                         onChatClick={(chat) => setChat(chat)}

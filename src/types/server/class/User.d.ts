@@ -1,7 +1,8 @@
 import { Prisma } from "@prisma/client";
 import { LoginForm } from "../types/shared/LoginForm";
+import { WithoutFunctions } from "./helpers";
 export type UserPrisma = Prisma.UserGetPayload<{}>;
-export type UserForm = Omit<User, "id" | "admin">;
+export type UserForm = Omit<WithoutFunctions<User>, "id" | "admin">;
 export declare class User {
     id: string;
     name: string;

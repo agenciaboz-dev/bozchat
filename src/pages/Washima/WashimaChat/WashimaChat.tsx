@@ -231,6 +231,7 @@ export const WashimaChat: React.FC<WashimaChatProps> = ({ washima, chat, onClose
                                     bgcolor: "primary.main",
                                     cursor: "pointer",
                                 }}
+                                imgProps={{ draggable: false }}
                                 // onClick={() => picture.open(profilePic || "")}
                             />
                         </PhotoView>

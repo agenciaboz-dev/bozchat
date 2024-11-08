@@ -6,6 +6,8 @@ import { NagazapScreen } from "./pages/Nagazap/Nagazap"
 import { Login } from "./pages/Login"
 import { Signup } from "./pages/Signup/Signup"
 import { useUser } from "./hooks/useUser"
+import { DeleteAccount } from "./pages/DeleteAccount/DeleteAccount"
+import { PrivacyTerms } from "./pages/PrivacyTerms/PrivacyTerms"
 
 interface RoutesProps {}
 
@@ -23,6 +25,8 @@ export const Routes: React.FC<RoutesProps> = ({}) => {
         <ReactRoutes>
             <Route index element={<Login />} />
             <Route path="/signup/*" element={<Signup />} />
+            <Route path="/deletar-conta" element={<DeleteAccount />} />
+            <Route path="/termos-privacidade" element={<PrivacyTerms />} />
             <Route path="*" element={<Login />} />
         </ReactRoutes>
     )

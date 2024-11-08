@@ -67,7 +67,7 @@ export const AudioPlayer: React.FC<AudioPlayerProps> = ({ media, washima, chat_i
 
     return (
         <Box sx={{ width: isMobile ? "60vw" : "19.5vw", gap: "0.5vw", alignItems: "center" }}>
-            <Avatar sx={{ bgcolor: "warning.main", width: isMobile ? "12vw" : "3.5vw", height: isMobile ? "12vw" : "3.5vw" }} src={profilePicUrl}>
+            <Avatar sx={{ bgcolor: "warning.main", width: isMobile ? "12vw" : "3.5vw", height: isMobile ? "12vw" : "3.5vw" }} src={profilePicUrl} imgProps={{ draggable: false }}>
                 <Headphones sx={{ borderRadius: 100, width: isMobile ? "6vw" : "2vw", height: isMobile ? "6vw" : "2vw" }} color="secondary" />
             </Avatar>
             {/* <CircularProgress size={"3.5vw"} /> */}

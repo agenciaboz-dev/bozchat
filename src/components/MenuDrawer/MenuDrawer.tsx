@@ -27,7 +27,7 @@ export const MenuDrawer: React.FC<MenuDrawerProps> = ({}) => {
                 sx={{ padding: isMobile ? "6vw" : "2vw", flexDirection: "column", gap: "1vw", width: "100%", alignItems: "center" }}
                 color={"text.secondary"}
             >
-                <img src={"/wagazap.svg"} style={{ width: isMobile ? "25vw" : "10vw" }} />
+                <img src={"/wagazap.svg"} style={{ width: isMobile ? "25vw" : "10vw" }} draggable={false} />
             </Box>
             <Box sx={{ flexDirection: "column", flex: 1 }}>
                 {drawer.menus.map((menu) => (

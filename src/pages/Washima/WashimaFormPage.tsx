@@ -127,6 +127,7 @@ export const WashimaFormPage: React.FC<WashimaFormPageProps> = ({ currentWashima
 
                 if (progress === 4) {
                     setTimeout(() => {
+                        currentWashima.ready = true
                         setSyncStatus("Iniciando")
                         setSyncProgress(0)
                     }, 1000)

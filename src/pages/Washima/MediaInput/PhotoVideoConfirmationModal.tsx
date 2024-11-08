@@ -99,7 +99,7 @@ export const PhotoVideoConfirmationModal: React.FC<PhotoVideoConfirmationModalPr
                 <Close />
             </IconButton>
 
-            {type === "image" && <img src={url} style={{ width: "auto", height: "60vh", objectFit: "contain" }} />}
+            {type === "image" && <img src={url} style={{ width: "auto", height: "60vh", objectFit: "contain" }} draggable={false} />}
             {type === "video" && <video src={url} style={{ width: "auto", height: "60vh", objectFit: "contain" }} controls />}
 
             <Box sx={{ justifyContent: "center", width: "55vw", gap: "0.5vw", overflow: "auto" }}>

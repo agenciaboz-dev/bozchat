@@ -101,7 +101,9 @@ export const DocumentConfirmationModal: React.FC<ConfirmationModalProps> = ({ fi
                 <Close />
             </IconButton>
 
-            {type === "image" && <img src={url} style={{ width: "auto", height: "15vw", objectFit: "contain", margin: "4vw auto 0" }} />}
+            {type === "image" && (
+                <img src={url} style={{ width: "auto", height: "15vw", objectFit: "contain", margin: "4vw auto 0" }} draggable={false} />
+            )}
             {type === "video" && <video src={url} style={{ width: "auto", height: "15vw", objectFit: "contain", margin: "4vw auto 0" }} controls />}
 
             {type !== "image" && type !== "video" && (
@@ -114,6 +116,7 @@ export const DocumentConfirmationModal: React.FC<ConfirmationModalProps> = ({ fi
                         margin: "4vw auto 0",
                     }}
                     alt="icone"
+                    imgProps={{ draggable: false }}
                     src={documentIcon(currentFile?.name.split(".").pop())}
                 />
             )}

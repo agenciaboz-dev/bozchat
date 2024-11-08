@@ -33,6 +33,7 @@ export const GroupWelcomeBox: React.FC<GroupWelcomeBoxProps> = ({ chat, profileP
                 <Avatar
                     src={profilePic}
                     sx={{ width: AVATAR_SIZE, height: AVATAR_SIZE, bgcolor: "primary.main", cursor: "pointer" }}
+                    imgProps={{ draggable: false }}
                     // onClick={() => picture.open(profilePic || "")}
                 />
 

@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react"
 import { Avatar, Box, Chip, CircularProgress, Icon, IconButton, MenuItem, Skeleton, alpha } from "@mui/material"
 import { useMuiTheme } from "../../hooks/useMuiTheme"
 import { useMediaQuery } from "@mui/material"
-import { Washima } from "../../types/server/class/Washima/Washima"
+import { Washima, WashimaMedia } from "../../types/server/class/Washima/Washima"
 import { api } from "../../api"
 import { useVisibleCallback } from "burgos-use-visible-callback"
 import { ErrorChip, TodoChip } from "../../components/TodoChip"
@@ -49,6 +49,7 @@ export const Message: React.FC<MessageProps> = ({ message, isGroup, washima, pre
     const show_author = (!same_as_previous || day_changing) && isGroup
 
     const [mediaObj, setMediaObj] = useState<{ source: string; ext: string; size: string }>()
+    const [attachmendMetaData, setAttachmendMetaData] = useState<WashimaMedia | null>(null)
     const [loading, setLoading] = useState(message.hasMedia)
     const [downloading, setDownloading] = useState(false)
     const [hovering, setHovering] = useState(false)
@@ -96,14 +97,32 @@ export const Message: React.FC<MessageProps> = ({ message, isGroup, washima, pre
         }
     }
 
-    const fetchMedia = async (download?: "download") => {
+    const fetchMedia = async () => {
         if (!message.hasMedia || !valid_types.includes(message.type) || is_deleted) return
+
+        const fetchMetadata = async () => {
+            const response = await api.get("/washima/media-metadata", { params: { washima_id: washima.id, message_id: message.sid } })
+            setAttachmendMetaData(response.data)
+            return response.data
+        }
         try {
             setLoading(true)
+
+            if (is_document) {
+                const meta = await fetchMetadata()
+                if (meta) return
+            }
+
             const response = await api.get("/washima/media", {
                 params: { washima_id: washima.id, message_id: message.id._serialized },
                 responseType: "blob",
             })
+
+            if (is_document) {
+                const meta = await fetchMetadata()
+                if (meta) return
+            }
+
             const blob = response.data
 
             const size = formatSize(blob.size)
@@ -119,7 +138,7 @@ export const Message: React.FC<MessageProps> = ({ message, isGroup, washima, pre
 
     useEffect(() => {
         if (hovering) {
-            console.log(message)
+            console.log(attachmendMetaData)
         }
     }, [hovering])
 
@@ -181,12 +200,13 @@ export const Message: React.FC<MessageProps> = ({ message, isGroup, washima, pre
                                                 <img
                                                     style={{
                                                         width: isMobile ? "60vw" : "20vw",
-                                                        height: isMobile ? "70vw" : "20vw",
-                                                        objectFit: "contain",
+                                                        maxHeight: isMobile ? "70vw" : "20vw",
+                                                        objectFit: "cover",
                                                         borderRadius: "0.75vw",
                                                     }}
                                                     // onClick={() => picture.open(mediaObj?.source || "")}
                                                     src={mediaObj?.source}
+                                                    draggable={false}
                                                 />
                                             </MenuItem>
                                         </PhotoView>
@@ -204,6 +224,7 @@ export const Message: React.FC<MessageProps> = ({ message, isGroup, washima, pre
                                             }}
                                             // onClick={() => picture.open(mediaObj?.source || "")}
                                             src={mediaObj?.source}
+                                            draggable={false}
                                         />
                                     ))}
                                 {is_video &&
@@ -255,8 +276,12 @@ export const Message: React.FC<MessageProps> = ({ message, isGroup, washima, pre
                                                 objectFit: "contain",
                                                 borderRadius: 0,
                                             }}
+                                            imgProps={{ draggable: false }}
                                             alt="icone"
-                                            src={documentIcon(message.body.split(".").pop()) || "/icones-documentos-washima/icon-generic.svg"}
+                                            src={
+                                                documentIcon(attachmendMetaData?.filename?.split(".").pop()) ||
+                                                "/icones-documentos-washima/icon-generic.svg"
+                                            }
                                         />
                                     ))}
 
@@ -288,9 +313,9 @@ export const Message: React.FC<MessageProps> = ({ message, isGroup, washima, pre
                                     }}
                                     onClick={isLink ? () => window.open(message.body, "_new") : undefined}
                                 >
-                                    {message.body}
+                                    {attachmendMetaData ? attachmendMetaData.filename : message.body}
                                 </p>
-                                {is_document && <p style={{ textAlign: "left" }}>{mediaObj?.size}</p>}
+                                {attachmendMetaData && <p style={{ textAlign: "left" }}>{attachmendMetaData.size}</p>}
                             </Box>
                         )}
                         {/*//* TIME */}

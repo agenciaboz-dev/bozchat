@@ -42,7 +42,7 @@ export const Signup: React.FC<SignupProps> = ({}) => {
 
     return (
         <Box sx={{ ...backgroundStyle, justifyContent: "center", alignItems: "center", flexDirection: "column" }}>
-            <img src={"/wagazap.svg"} alt="logo" style={{ aspectRatio: "2/1", width: "24vw" }} />
+            <img src={"/wagazap.svg"} alt="logo" style={{ aspectRatio: "2/1", width: "24vw" }} draggable={false} />
             <Box
                 sx={{
                     padding: "3vw",
