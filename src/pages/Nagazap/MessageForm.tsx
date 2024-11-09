@@ -9,14 +9,17 @@ import { TemplateComponent, TemplateInfo } from "../../types/server/Meta/Whatsap
 import { Avatar, FileInputButton } from "@files-ui/react"
 import { getPhonesfromSheet } from "../../tools/getPhonesFromSheet"
 import { useSnackbar } from "burgos-snackbar"
+import { Nagazap } from "../../types/server/class/Nagazap"
 
-interface MessageFormProps {}
+interface MessageFormProps {
+    nagazap: Nagazap
+}
 
 const ComponentType: React.FC<{ component: TemplateComponent }> = ({ component }) => {
     return <Box sx={{ color: "secondary.main", fontWeight: "bold" }}>{component.type}</Box>
 }
 
-export const MessageFormScreen: React.FC<MessageFormProps> = ({}) => {
+export const MessageFormScreen: React.FC<MessageFormProps> = ({ nagazap }) => {
     const { snackbar } = useSnackbar()
 
     const [templates, setTemplates] = useState<TemplateInfo[]>([])
@@ -26,7 +29,7 @@ export const MessageFormScreen: React.FC<MessageFormProps> = ({}) => {
 
     const fetchTemplates = async () => {
         try {
-            const response = await api.get("/whatsapp/templates")
+            const response = await api.get("/nagazap/templates", { params: { nagazap_id: nagazap.id } })
             setTemplates(response.data)
         } catch (error) {
             console.log(error)
@@ -46,7 +49,7 @@ export const MessageFormScreen: React.FC<MessageFormProps> = ({}) => {
 
             setLoading(true)
             try {
-                const response = await api.post("/whatsapp/oven", formData)
+                const response = await api.post("/nagazap/oven", formData, { params: { nagazap_id: nagazap.id } })
                 console.log(response)
                 snackbar({ severity: "success", text: "Mensagens colocadas no forno" })
             } catch (error) {
@@ -102,6 +105,7 @@ export const MessageFormScreen: React.FC<MessageFormProps> = ({}) => {
                                         formik.setFieldValue("template", templates.find((item) => item.name == event.target.value) || null)
                                     }
                                     select
+                                    SelectProps={{ MenuProps: { MenuListProps: { sx: { bgcolor: "background.default" } } } }}
                                 >
                                     <MenuItem value={""} sx={{ display: "none" }} />
                                     {templates.map((item) => (
