@@ -45,6 +45,7 @@ export const Info: React.FC<InfoProps> = ({ nagazap }) => {
     ]
 
     const fetchInfo = async () => {
+        setInfo(null)
         setLoading(true)
 
         try {
