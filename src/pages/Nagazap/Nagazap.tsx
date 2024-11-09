@@ -19,6 +19,7 @@ import { Header } from "../../components/Header"
 import { useUser } from "../../hooks/useUser"
 import { textFieldStyle } from "../../style/textfield"
 import { NagazapForm } from "./NagazapForm"
+import { WagaLoading } from "../../components/WagaLoading"
 
 interface NagazapProps {}
 
@@ -37,12 +38,15 @@ export const NagazapScreen: React.FC<NagazapProps> = ({}) => {
 
         try {
             const response = await api.get("/nagazap", { params: { user_id: user.id } })
-            setNagazapList(response.data)
-            console.log(response.data)
+            const list = response.data as Nagazap[]
+            setNagazapList(list)
+            if (!!list.length) setNagazap(list[0])
         } catch (error) {
             console.log(error)
         } finally {
-            setLoading(false)
+            setTimeout(() => {
+                setLoading(false)
+            }, 1000)
         }
     }
 
@@ -131,7 +135,11 @@ export const NagazapScreen: React.FC<NagazapProps> = ({}) => {
                     </Title>
                 </Paper>
                 <Box sx={{ width: "80vw" }}>
-                    {nagazap ? (
+                    {loading ? (
+                        <Box sx={{ justifyContent: "center", alignItems: "center", flex: 1 }}>
+                            <WagaLoading />
+                        </Box>
+                    ) : nagazap ? (
                         <Routes>
                             <Route index element={<Info nagazap={nagazap} />} />
                             <Route path="/messages" element={<MessagesScreen nagazap={nagazap} />} />
