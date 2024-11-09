@@ -16,10 +16,10 @@ export const Token: React.FC<TokenProps> = ({ nagazap, setNagazap }) => {
     const formik = useFormik<{ token: string }>({
         initialValues: { token: nagazap?.token || "" },
         onSubmit: async (values) => {
-            if (loading) return
+            if (loading || !nagazap) return
             setLoading(true)
             try {
-                const response = await api.patch("/whatsapp/token", values)
+                const response = await api.patch("/nagazap/token", values, { params: { nagazap_id: nagazap.id } })
                 setNagazap(response.data)
             } catch (error) {
                 console.log(error)

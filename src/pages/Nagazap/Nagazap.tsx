@@ -1,13 +1,13 @@
 import React, { useEffect, useState } from "react"
 import { Box, MenuItem, Paper, TextField } from "@mui/material"
 import { backgroundStyle } from "../../style/background"
-import { Add, AddCircle, WhatsApp } from "@mui/icons-material"
+import { Add, AddCircle, Hub, WhatsApp } from "@mui/icons-material"
 import { ToolButton } from "./ToolButton"
 import { Route, Routes, useNavigate } from "react-router-dom"
 import { Token } from "./Token"
 import { Nagazap } from "../../types/server/class/Nagazap"
 import { api } from "../../api"
-import { Info } from "./Info"
+import { Info } from "./Info/Info"
 import { MessagesScreen } from "./Messages/Messages"
 import { Oven } from "./Oven/Oven"
 import { MessageFormScreen } from "./MessageForm"
@@ -46,10 +46,19 @@ export const NagazapScreen: React.FC<NagazapProps> = ({}) => {
         }
     }
 
+    const onNewNagazapPress = () => {
+        navigate("/nagazap/form")
+        setNagazap(undefined)
+    }
+
     const onAddNagazap = (new_nagazap: Nagazap) => {
         setNagazapList((list) => [...list, new_nagazap])
         setNagazap(new_nagazap)
     }
+
+    useEffect(() => {
+        if (nagazap) navigate("/nagazap/")
+    }, [nagazap])
 
     useEffect(() => {
         fetchNagazap()
@@ -85,23 +94,23 @@ export const NagazapScreen: React.FC<NagazapProps> = ({}) => {
                     }}
                     elevation={5}
                 >
-                    <Title title="Nagazap" icon={<WhatsApp />}>
+                    <Title title="Nagazap" icon={<Hub />}>
                         <Box sx={{ flexDirection: "column", gap: "2vw" }}>
                             <Box sx={{ padding: "0 2vw" }}>
                                 <TextField
                                     sx={textFieldStyle}
                                     select
-                                    value={nagazap?.id || null}
+                                    value={nagazap?.id || ""}
                                     label="Selecione uma conta"
                                     SelectProps={{ MenuProps: { MenuListProps: { sx: { bgcolor: "background.default" } } } }}
                                 >
-                                    <MenuItem sx={{ fontWeight: "bold", gap: "1vw" }} onClick={() => navigate("/nagazap/form")}>
+                                    <MenuItem sx={{ fontWeight: "bold", gap: "1vw" }} onClick={onNewNagazapPress}>
                                         <AddCircle />
                                         Adicionar conta
                                     </MenuItem>
                                     {nagazapList.map((item) => (
                                         <MenuItem key={item.id} value={item.id} onClick={() => setNagazap(item)}>
-                                            {item.phoneId}
+                                            {item.displayPhone} - {item.displayName}
                                         </MenuItem>
                                     ))}
                                     {!nagazapList.length && <MenuItem disabled>Nenhuma conta encontrada</MenuItem>}
@@ -124,7 +133,7 @@ export const NagazapScreen: React.FC<NagazapProps> = ({}) => {
                 <Box sx={{ width: "80vw" }}>
                     {nagazap ? (
                         <Routes>
-                            <Route index element={<Info />} />
+                            <Route index element={<Info nagazap={nagazap} />} />
                             <Route path="/token" element={<Token nagazap={nagazap} setNagazap={setNagazap} />} />
                             <Route path="/messages" element={<MessagesScreen />} />
                             <Route path="/oven" element={<Oven nagazap={nagazap} setNagazap={setNagazap} />} />
