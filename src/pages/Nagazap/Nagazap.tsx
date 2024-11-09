@@ -51,14 +51,15 @@ export const NagazapScreen: React.FC<NagazapProps> = ({}) => {
         setNagazap(undefined)
     }
 
+    const onNagazapChoose = (nagazap: Nagazap) => {
+        setNagazap(nagazap)
+        navigate("/nagazap/")
+    }
+
     const onAddNagazap = (new_nagazap: Nagazap) => {
         setNagazapList((list) => [...list, new_nagazap])
         setNagazap(new_nagazap)
     }
-
-    useEffect(() => {
-        if (nagazap) navigate("/nagazap/")
-    }, [nagazap])
 
     useEffect(() => {
         fetchNagazap()
@@ -109,7 +110,7 @@ export const NagazapScreen: React.FC<NagazapProps> = ({}) => {
                                         Adicionar conta
                                     </MenuItem>
                                     {nagazapList.map((item) => (
-                                        <MenuItem key={item.id} value={item.id} onClick={() => setNagazap(item)}>
+                                        <MenuItem key={item.id} value={item.id} onClick={() => onNagazapChoose(item)}>
                                             {item.displayPhone} - {item.displayName}
                                         </MenuItem>
                                     ))}

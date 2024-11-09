@@ -7,6 +7,7 @@ import { api } from "../../../api"
 import { WhatsappForm } from "../../../types/server/Meta/WhatsappBusiness/WhatsappForm"
 import { Batch } from "./Batch"
 import { useIo } from "../../../hooks/useIo"
+import { useUser } from "../../../hooks/useUser"
 
 interface OvenProps {
     nagazap?: Nagazap
@@ -24,6 +25,7 @@ export const Oven: React.FC<OvenProps> = ({ nagazap, setNagazap }) => {
     }
 
     const io = useIo()
+    const { user } = useUser()
 
     const [frequency, setFrequency] = useState(nagazap?.frequency || "")
     const [batchSize, setBatchSize] = useState(nagazap?.batchSize || 0)
@@ -34,12 +36,13 @@ export const Oven: React.FC<OvenProps> = ({ nagazap, setNagazap }) => {
     const textfield_size = 250
 
     const refresh = async () => {
+        if (!nagazap || !user) return
+
         setLoading(true)
 
         try {
-            const response = await api.get("/whatsapp")
+            const response = await api.get("/nagazap", { params: { nagazap_id: nagazap.id, user_id: user.id } })
             setNagazap(response.data)
-            console.log(response.data)
         } catch (error) {
             console.log(error)
         } finally {
@@ -48,7 +51,7 @@ export const Oven: React.FC<OvenProps> = ({ nagazap, setNagazap }) => {
     }
 
     const save = async (type: "frequency" | "batchSize", value: string | number) => {
-        if (loading) return
+        if (loading || !nagazap) return
         setLoading(true)
         try {
             let data: any = {}
@@ -57,7 +60,7 @@ export const Oven: React.FC<OvenProps> = ({ nagazap, setNagazap }) => {
                 console.log(frequencyUnit)
                 data[type] = ((value as number) * (frequencyUnit === "seg" ? 1000 : frequencyUnit === "min" ? 60000 : 3600000)).toString()
             }
-            const response = await api.patch("/whatsapp", data)
+            const response = await api.patch("/nagazap", data, { params: { nagazap_id: nagazap.id } })
             setNagazap(response.data)
             setFrequencyUnit("mili")
         } catch (error) {
@@ -80,11 +83,11 @@ export const Oven: React.FC<OvenProps> = ({ nagazap, setNagazap }) => {
     }, [nagazap])
 
     const onStatusToggleClick = async (option: "start" | "pause") => {
-        if (loading) return
+        if (loading || !nagazap) return
         setLoading(true)
 
         try {
-            const response = await api.get("/whatsapp/" + option)
+            const response = await api.get("/nagazap/" + option, { params: { nagazap_id: nagazap.id } })
             setNagazap(response.data)
         } catch (error) {
             console.log(error)
@@ -94,11 +97,11 @@ export const Oven: React.FC<OvenProps> = ({ nagazap, setNagazap }) => {
     }
 
     const onClearOvenClick = async () => {
-        if (loading) return
+        if (loading || !nagazap) return
         setLoading(true)
 
         try {
-            const response = await api.get("/whatsapp/clearOven")
+            const response = await api.get("/nagazap/clearOven", { params: { nagazap_id: nagazap.id } })
             setNagazap(response.data)
         } catch (error) {
             console.log(error)
