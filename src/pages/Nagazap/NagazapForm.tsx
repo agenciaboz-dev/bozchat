@@ -1,5 +1,5 @@
 import React, { useState } from "react"
-import { Box, Button, CircularProgress, Grid, TextField } from "@mui/material"
+import { Box, Button, CircularProgress, Grid, TextField, useTheme } from "@mui/material"
 import { Subroute } from "./Subroute"
 import { useFormik } from "formik"
 import { Nagazap, NagazapForm as NagazapFormType } from "../../types/server/class/Nagazap"
@@ -15,6 +15,11 @@ interface NagazapFormProps {
 
 export const NagazapForm: React.FC<NagazapFormProps> = ({ onSuccess }) => {
     const { user } = useUser()
+    const theme = useTheme()
+
+    const PrimaryText: React.FC<{ children: React.ReactNode }> = ({ children }) => (
+        <span style={{ color: theme.palette.primary.main }}>{children}</span>
+    )
 
     const [loading, setLoading] = useState(false)
     const [error, setError] = useState("")
@@ -43,8 +48,19 @@ export const NagazapForm: React.FC<NagazapFormProps> = ({ onSuccess }) => {
 
     return (
         <Subroute title="Adicionar conta">
-            <Box sx={{ flex: 1, flexDirection: "column", gap: 3 }}>
+            <Box sx={{ flex: 1, flexDirection: "column", gap: 3, color: "secondary.main" }}>
+                <p>
+                    Para cadastrar uma conta no Nagazap, é preciso ter uma <PrimaryText>MBA (Meta Business Account)</PrimaryText> ativa com um App
+                    adicionado e configurado para usar o Whatsapp. Todos os IDs abaixo podem ser coletados do painel do App no Meta.
+                </p>
+                <p>App ID: localizado no canto superior esquerdo, no painel do App</p>
+                <p style={{ color: theme.palette.secondary.main }}>
+                    Token, Phone ID, Business ID: No painel do App, no menu a esquerda. Expanda <PrimaryText>Whatsapp</PrimaryText> e selecione{" "}
+                    <PrimaryText>configuração da API</PrimaryText>. O Token é gerado na primeira seção dessa página, e logo abaixo estão os IDs que
+                    faltam.
+                </p>
                 <form onSubmit={formik.handleSubmit}>
+                    <Box sx={{ fontWeight: "bold", color: "primary.main" }}>Formulário</Box>
                     <Grid container columns={3} spacing={3}>
                         <Grid item xs={1}>
                             <TextField
