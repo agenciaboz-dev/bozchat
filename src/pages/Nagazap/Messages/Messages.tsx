@@ -2,14 +2,16 @@ import React, { useEffect, useState } from "react"
 import { Box, CircularProgress, Grid, IconButton } from "@mui/material"
 import { Subroute } from "../Subroute"
 import { api } from "../../../api"
-import { NagaMessage } from "../../../types/server/class/Nagazap"
+import { NagaMessage, Nagazap } from "../../../types/server/class/Nagazap"
 import { MessageContainer } from "./MessageContainer"
 import { Refresh } from "@mui/icons-material"
 import { useIo } from "../../../hooks/useIo"
 
-interface MessagesScreenProps {}
+interface MessagesScreenProps {
+    nagazap: Nagazap
+}
 
-export const MessagesScreen: React.FC<MessagesScreenProps> = ({}) => {
+export const MessagesScreen: React.FC<MessagesScreenProps> = ({ nagazap }) => {
     const io = useIo()
 
     const [loading, setLoading] = useState(false)
@@ -21,7 +23,7 @@ export const MessagesScreen: React.FC<MessagesScreenProps> = ({}) => {
         setLoading(true)
 
         try {
-            const response = await api.get("/whatsapp/messages")
+            const response = await api.get("/nagazap/messages", { params: { nagazap_id: nagazap.id } })
             console.log("a")
             console.log(response.data)
             setMessages(response.data)

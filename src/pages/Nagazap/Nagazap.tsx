@@ -136,7 +136,7 @@ export const NagazapScreen: React.FC<NagazapProps> = ({}) => {
                         <Routes>
                             <Route index element={<Info nagazap={nagazap} />} />
                             <Route path="/token" element={<Token nagazap={nagazap} setNagazap={setNagazap} />} />
-                            <Route path="/messages" element={<MessagesScreen />} />
+                            <Route path="/messages" element={<MessagesScreen nagazap={nagazap} />} />
                             <Route path="/oven" element={<Oven nagazap={nagazap} setNagazap={setNagazap} />} />
                             <Route path="/blacklist" element={<Blacklist nagazap={nagazap} setNagazap={setNagazap} />} />
                             <Route path="/logs" element={<Logs nagazap={nagazap} setNagazap={setNagazap} />} />
