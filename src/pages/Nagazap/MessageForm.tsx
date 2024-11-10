@@ -2,11 +2,11 @@ import React, { useEffect, useState } from "react"
 import { Box, Button, CircularProgress, Grid, IconButton, MenuItem, Paper, TextField } from "@mui/material"
 import { Subroute } from "./Subroute"
 import { useFormik } from "formik"
-import { OvenForm, WhatsappForm, WhatsappTemplateComponent } from "../../types/server/Meta/WhatsappBusiness/WhatsappForm"
-import { CloudUpload, Delete, DeleteForever, PlusOne } from "@mui/icons-material"
+import { OvenForm } from "../../types/server/Meta/WhatsappBusiness/WhatsappForm"
+import { Check, CloudUpload, DeleteForever, Error, PlusOne, WatchLater } from "@mui/icons-material"
 import { api } from "../../api"
 import { TemplateComponent, TemplateInfo } from "../../types/server/Meta/WhatsappBusiness/TemplatesInfo"
-import { Avatar, FileInputButton } from "@files-ui/react"
+import { Avatar } from "@files-ui/react"
 import { getPhonesfromSheet } from "../../tools/getPhonesFromSheet"
 import { useSnackbar } from "burgos-snackbar"
 import { Nagazap } from "../../types/server/class/Nagazap"
@@ -109,7 +109,10 @@ export const MessageFormScreen: React.FC<MessageFormProps> = ({ nagazap }) => {
                                 >
                                     <MenuItem value={""} sx={{ display: "none" }} />
                                     {templates.map((item) => (
-                                        <MenuItem key={item.id} value={item.name}>
+                                        <MenuItem key={item.id} value={item.name} sx={{ gap: "0.5vw" }} title={item.status}>
+                                            {item.status === "PENDING" && <WatchLater color="warning" />}
+                                            {item.status === "APPROVED" && <Check color="success" />}
+                                            {item.status === "REJECTED" && <Error color="error" />}
                                             {item.name}
                                         </MenuItem>
                                     ))}
