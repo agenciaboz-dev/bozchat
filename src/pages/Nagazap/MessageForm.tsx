@@ -118,7 +118,7 @@ export const MessageFormScreen: React.FC<MessageFormProps> = ({ nagazap }) => {
                             {formik.values.template?.components.map((component, index) => {
                                 if (component.format == "IMAGE") {
                                     return (
-                                        <Grid item xs={1}>
+                                        <Grid item xs={1} key={index}>
                                             <ComponentType component={component} />
                                             <Box sx={{ flexDirection: "column" }}>
                                                 <Avatar

@@ -20,6 +20,7 @@ import { useUser } from "../../hooks/useUser"
 import { textFieldStyle } from "../../style/textfield"
 import { NagazapForm } from "./NagazapForm"
 import { WagaLoading } from "../../components/WagaLoading"
+import { TemplateForm } from "./TemplateForm/TemplateForm"
 
 interface NagazapProps {}
 
@@ -125,7 +126,8 @@ export const NagazapScreen: React.FC<NagazapProps> = ({}) => {
                                 <Box sx={{ flexDirection: "column" }}>
                                     <ToolButton label="Informações" route="/" />
                                     <ToolButton label="Mensagens" route="/messages" />
-                                    <ToolButton label="Enviar mensagem" route="/message_form" />
+                                    <ToolButton label="Criar template" route="/template-form" />
+                                    <ToolButton label="Enviar mensagem" route="/message-form" />
                                     <ToolButton label="Forno" route="/oven" />
                                     <ToolButton label="Logs" route="/logs" />
                                     <ToolButton label="Lista negra" route="/blacklist" />
@@ -134,7 +136,7 @@ export const NagazapScreen: React.FC<NagazapProps> = ({}) => {
                         </Box>
                     </Title>
                 </Paper>
-                <Box sx={{ width: "80vw" }}>
+                <Box sx={{ width: "80vw", overflowY: "auto", height: "100%" }}>
                     {loading ? (
                         <Box sx={{ justifyContent: "center", alignItems: "center", flex: 1 }}>
                             <WagaLoading />
@@ -146,7 +148,8 @@ export const NagazapScreen: React.FC<NagazapProps> = ({}) => {
                             <Route path="/oven" element={<Oven nagazap={nagazap} setNagazap={setNagazap} />} />
                             <Route path="/blacklist" element={<Blacklist nagazap={nagazap} setNagazap={setNagazap} />} />
                             <Route path="/logs" element={<Logs nagazap={nagazap} setNagazap={setNagazap} />} />
-                            <Route path="/message_form" element={<MessageFormScreen nagazap={nagazap} />} />
+                            <Route path="/template-form" element={<TemplateForm nagazap={nagazap} />} />
+                            <Route path="/message-form" element={<MessageFormScreen nagazap={nagazap} />} />
                             <Route path="/form" element={<NagazapForm onSuccess={onAddNagazap} />} />
                         </Routes>
                     ) : (

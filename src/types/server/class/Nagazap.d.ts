@@ -2,12 +2,12 @@ import { Prisma } from "@prisma/client";
 import { OvenForm, WhatsappForm } from "../types/shared/Meta/WhatsappBusiness/WhatsappForm";
 import { UploadedFile } from "express-fileupload";
 import { FailedMessageLog, SentMessageLog } from "../types/shared/Meta/WhatsappBusiness/Logs";
-import { HandledError } from "./HandledError";
 import { WithoutFunctions } from "./helpers";
 import { User } from "./User";
 import { BusinessInfo } from "../types/shared/Meta/WhatsappBusiness/BusinessInfo";
+import { TemplateForm, TemplateFormResponse } from "../types/shared/Meta/WhatsappBusiness/TemplatesInfo";
 export type NagaMessagePrisma = Prisma.NagazapMessageGetPayload<{}>;
-export type NagaMessageForm = Omit<Prisma.NagazapMessageGetPayload<{}>, "id">;
+export type NagaMessageForm = Omit<Prisma.NagazapMessageGetPayload<{}>, "id" | "nagazap_id">;
 export declare const nagazap_include: {
     user: true;
 };
@@ -52,7 +52,9 @@ export declare class Nagazap {
     userId: string;
     user: User;
     static initialize(): Promise<void>;
-    static new(data: NagazapForm): Promise<HandledError | Nagazap>;
+    static new(data: NagazapForm): Promise<Nagazap>;
+    static getByBusinessId(business_id: string): Promise<Nagazap>;
+    static getById(id: number): Promise<Nagazap>;
     static getByUserId(user_id: string): Promise<Nagazap[]>;
     static getAll(): Promise<Nagazap[]>;
     static shouldBake(): Promise<void>;
@@ -85,6 +87,7 @@ export declare class Nagazap {
     clearOven(): Promise<void>;
     log(data: any): Promise<void>;
     errorLog(data: any, number: string): Promise<void>;
+    createTemplate(data: TemplateForm): Promise<TemplateFormResponse>;
     emit(): void;
 }
 export {};
