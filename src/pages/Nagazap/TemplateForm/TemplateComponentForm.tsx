@@ -1,6 +1,7 @@
-import React from "react"
-import { Box, MenuItem, TextField } from "@mui/material"
-import { TemplateComponent } from "../../../types/server/Meta/WhatsappBusiness/TemplatesInfo"
+import React, { useCallback, useRef } from "react"
+import { Box, Button, MenuItem, TextField } from "@mui/material"
+import { ButtonType, TemplateComponent } from "../../../types/server/Meta/WhatsappBusiness/TemplatesInfo"
+import { ButtonForm } from "./TemplateButtons/ButtonForm"
 
 interface TemplateComponentFormProps {
     component: TemplateComponent
@@ -8,18 +9,36 @@ interface TemplateComponentFormProps {
 }
 
 export const TemplateComponentForm: React.FC<TemplateComponentFormProps> = ({ component, setComponent }) => {
+    const inputRef = useRef<HTMLInputElement>(null)
+
+    const handleFileChange = useCallback(
+        (event: React.ChangeEvent<HTMLInputElement>) => {
+            const files = event.target.files
+            if (files) {
+                console.log(files)
+                setComponent({ ...component, file: files[0] })
+            }
+        },
+        [component]
+    )
+
     return (
         <Box sx={{ flexDirection: "column", gap: "1vw" }}>
             {component.type === "HEADER" && (
                 <TextField
                     label="Tipo"
                     value={component.format!}
-                    onChange={(ev) => setComponent({ ...component, format: ev.target.value as "IMAGE" | "TEXT" })}
+                    onChange={(ev) => {
+                        const format = ev.target.value as "IMAGE" | "TEXT"
+                        setComponent({ ...component, format, text: format === "TEXT" ? "" : undefined })
+                    }}
                     select
                     SelectProps={{ MenuProps: { MenuListProps: { sx: { bgcolor: "background.default" } } } }}
                 >
                     <MenuItem value={"TEXT"}>Texto</MenuItem>
-                    <MenuItem value={"IMAGE"}>Imagem</MenuItem>
+                    <MenuItem value={"IMAGE"} disabled>
+                        Imagem (em desenvolvimento)
+                    </MenuItem>
                 </TextField>
             )}
 
@@ -32,6 +51,35 @@ export const TemplateComponentForm: React.FC<TemplateComponentFormProps> = ({ co
                     value={component.text}
                     onChange={(ev) => setComponent({ ...component, text: ev.target.value })}
                 />
+            )}
+            {/* IMAGEM */}
+            {component.format === "IMAGE" && (
+                <>
+                    <input type="file" ref={inputRef} style={{ display: "none" }} accept={"image/*"} onChange={handleFileChange} />
+
+                    <Button variant="outlined" onClick={() => inputRef.current?.click()}>
+                        Enviar imagem
+                    </Button>
+                </>
+            )}
+
+            {/* BOTOES */}
+            {component.type === "BUTTONS" && (
+                <Box sx={{ flexDirection: "column", gap: "1vw" }}>
+                    {component.buttons?.map((button, index) => (
+                        <ButtonForm key={index} component={component} setComponent={setComponent} button={button} index={index} />
+                    ))}
+                    <Button
+                        variant="outlined"
+                        onClick={() => {
+                            const buttons = component.buttons || []
+                            buttons.push({ type: "QUICK_REPLY", text: "Novo botão!" })
+                            setComponent({ ...component, buttons })
+                        }}
+                    >
+                        Novo botão
+                    </Button>
+                </Box>
             )}
         </Box>
     )

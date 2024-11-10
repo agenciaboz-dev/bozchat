@@ -72,11 +72,22 @@ export const TemplateForm: React.FC<TemplateFormProps> = ({ nagazap }) => {
             if (loading) return
             setLoading(true)
 
-            const data: TemplateFormType = { ...values, components: [templateHeader, templateBody, templateFooter, templateButtons] }
+            const formData = new FormData()
+            if (templateHeader.file) {
+                formData.append("file", templateHeader.file)
+            }
+
+            const data: TemplateFormType = {
+                ...values,
+                components: [{ ...templateHeader, file: undefined }, templateBody, templateFooter, templateButtons],
+            }
+            console.log(data)
+            formData.append("data", JSON.stringify(data))
+
             try {
-                const response = await api.post("/nagazap/template", data, { params: { nagazap_id: nagazap.id } })
+                const response = await api.post("/nagazap/template", formData, { params: { nagazap_id: nagazap.id } })
                 console.log(response.data)
-                snackbar({ severity: "success", text: "Template criado" })
+                snackbar({ severity: "success", text: "Criação do template solicitada, aguardar aprovação" })
             } catch (error) {
                 console.log(error)
                 if (error instanceof AxiosError && error.response?.data) {
@@ -92,7 +103,7 @@ export const TemplateForm: React.FC<TemplateFormProps> = ({ nagazap }) => {
         <Subroute title="Novo Template">
             <Box sx={{ height: "64vh" }}>
                 <form onSubmit={formik.handleSubmit}>
-                    <Grid container columns={2} spacing={"1vw"}>
+                    <Grid container columns={3} spacing={"1vw"}>
                         <Grid item xs={1}>
                             <Paper
                                 sx={{
@@ -103,6 +114,7 @@ export const TemplateForm: React.FC<TemplateFormProps> = ({ nagazap }) => {
                                     borderRadius: "0.5vw",
                                     borderTopLeftRadius: 0,
                                     color: "secondary.main",
+                                    marginBottom: "2vw",
                                 }}
                             >
                                 <TemplateHeader component={templateHeader} />
@@ -112,8 +124,18 @@ export const TemplateForm: React.FC<TemplateFormProps> = ({ nagazap }) => {
                                 <TrianguloFudido alignment="left" color={"#2a323c"} />
                             </Paper>
                         </Grid>
-                        <Grid item xs={1}>
-                            <Box sx={{ flexDirection: "column", gap: "1vw" }}>
+                        <Grid item xs={2}>
+                            <Box
+                                sx={{
+                                    flexDirection: "column",
+                                    gap: "1vw",
+                                    paddingBottom: "2vw",
+                                    height: "68vh",
+                                    overflowY: "auto",
+                                    marginTop: "-1vw",
+                                    paddingTop: "1vw",
+                                }}
+                            >
                                 <TextField label="Nome do template" value={formik.values.name} onChange={formik.handleChange} name="name" required />
                                 <Tabs value={currentType} onChange={(_, value) => setCurrentType(value)} variant="fullWidth">
                                     <Tab value={"HEADER"} label="Cabeçalho" />
@@ -123,7 +145,7 @@ export const TemplateForm: React.FC<TemplateFormProps> = ({ nagazap }) => {
                                 </Tabs>
                                 <TemplateComponentForm component={currentComponent} setComponent={currentSetComponent} />
                                 <Button variant="contained" type="submit" sx={{ alignSelf: "flex-end" }}>
-                                    {loading ? <CircularProgress size="1.5rem" color="secondary" /> : "Enviar"}
+                                    {loading ? <CircularProgress size="1.5rem" color="secondary" /> : "Concluir"}
                                 </Button>
                             </Box>
                         </Grid>
