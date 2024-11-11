@@ -23,6 +23,9 @@ export interface TemplateComponent {
     text?: string
     buttons?: TemplateButton[]
     file?: File
+    example?: {
+        header_handle: string[]
+    }
 }
 
 export type TemplateForm = Omit<TemplateInfo, "status" | "id"> & {

@@ -41,15 +41,17 @@ export const MessagesScreen: React.FC<MessagesScreenProps> = ({ nagazap }) => {
 
     useEffect(() => {
         fetchMessages()
+    }, [])
 
-        io.on("nagazap:message", (message) => {
+    useEffect(() => {
+        io.on(`nagazap:${nagazap.id}:message`, (message) => {
             setMessages((messages) => [...messages, message])
         })
 
         return () => {
-            io.off("nagazap:message")
+            io.off(`nagazap:${nagazap.id}:message`)
         }
-    }, [])
+    }, [nagazap])
 
     useEffect(() => {
         setFilteredMessages(messages)
@@ -64,7 +66,7 @@ export const MessagesScreen: React.FC<MessagesScreenProps> = ({ nagazap }) => {
                 </IconButton>
             }
         >
-            <Grid container columns={1} spacing={2}>
+            <Grid container columns={1} spacing={"1vw"} sx={{ height: "64vh", gap: "0.5vw" }}>
                 {messages
                     .filter(
                         (message) =>

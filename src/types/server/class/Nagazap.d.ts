@@ -6,6 +6,7 @@ import { WithoutFunctions } from "./helpers";
 import { User } from "./User";
 import { BusinessInfo } from "../types/shared/Meta/WhatsappBusiness/BusinessInfo";
 import { TemplateForm, TemplateFormResponse } from "../types/shared/Meta/WhatsappBusiness/TemplatesInfo";
+export type NagaMessageType = "text" | "reaction" | "sticker" | "image" | "audio" | "video" | "button";
 export type NagaMessagePrisma = Prisma.NagazapMessageGetPayload<{}>;
 export type NagaMessageForm = Omit<Prisma.NagazapMessageGetPayload<{}>, "id" | "nagazap_id">;
 export declare const nagazap_include: {
@@ -23,6 +24,7 @@ export declare class NagaMessage {
     timestamp: string;
     text: string;
     name: string;
+    type: NagaMessageType;
     constructor(data: NagaMessagePrisma);
 }
 export interface NagazapForm {
@@ -58,6 +60,25 @@ export declare class Nagazap {
     static getByUserId(user_id: string): Promise<Nagazap[]>;
     static getAll(): Promise<Nagazap[]>;
     static shouldBake(): Promise<void>;
+    static delete(id: number): Promise<{
+        id: number;
+        token: string;
+        lastUpdated: string;
+        appId: string;
+        phoneId: string;
+        businessId: string;
+        stack: string;
+        blacklist: string;
+        frequency: string;
+        batchSize: number;
+        lastMessageTime: string;
+        paused: boolean;
+        sentMessages: string;
+        failedMessages: string;
+        displayName: string | null;
+        displayPhone: string | null;
+        userId: string;
+    }>;
     constructor(data: NagazapPrisma);
     getMessages(): Promise<NagaMessage[]>;
     update(data: Partial<WithoutFunctions<Nagazap>>): Promise<this>;
@@ -88,6 +109,8 @@ export declare class Nagazap {
     log(data: any): Promise<void>;
     errorLog(data: any, number: string): Promise<void>;
     createTemplate(data: TemplateForm): Promise<TemplateFormResponse>;
+    uploadTemplateMedia(file: UploadedFile): Promise<any>;
+    downloadMedia(media_id: string): Promise<string>;
     emit(): void;
 }
 export {};
