@@ -61,7 +61,7 @@ export const Info: React.FC<InfoProps> = ({ nagazap }) => {
 
     useEffect(() => {
         fetchInfo()
-    }, [])
+    }, [nagazap])
 
     return (
         <Subroute
