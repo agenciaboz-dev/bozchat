@@ -21,6 +21,7 @@ import { textFieldStyle } from "../../style/textfield"
 import { NagazapForm } from "./NagazapForm"
 import { WagaLoading } from "../../components/WagaLoading"
 import { TemplateForm } from "./TemplateForm/TemplateForm"
+import { NagazapSettings } from "./NagazapSettings/NagazapSettings"
 
 interface NagazapProps {}
 
@@ -131,6 +132,7 @@ export const NagazapScreen: React.FC<NagazapProps> = ({}) => {
                                     <ToolButton label="Forno" route="/oven" />
                                     <ToolButton label="Logs" route="/logs" />
                                     <ToolButton label="Lista negra" route="/blacklist" />
+                                    <ToolButton label="Configurações" route="/settings" />
                                 </Box>
                             )}
                         </Box>
@@ -145,6 +147,7 @@ export const NagazapScreen: React.FC<NagazapProps> = ({}) => {
                         <Routes>
                             <Route index element={<Info nagazap={nagazap} />} />
                             <Route path="/messages" element={<MessagesScreen nagazap={nagazap} />} />
+                            <Route path="/settings" element={<NagazapSettings nagazap={nagazap} />} />
                             <Route path="/oven" element={<Oven nagazap={nagazap} setNagazap={setNagazap} />} />
                             <Route path="/blacklist" element={<Blacklist nagazap={nagazap} setNagazap={setNagazap} />} />
                             <Route path="/logs" element={<Logs nagazap={nagazap} setNagazap={setNagazap} />} />

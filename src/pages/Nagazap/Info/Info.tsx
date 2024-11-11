@@ -88,7 +88,6 @@ export const Info: React.FC<InfoProps> = ({ nagazap }) => {
                     </Box>
                 </Grid>
             </Grid>
-            <Token nagazap={nagazap} />
         </Subroute>
     )
 }
