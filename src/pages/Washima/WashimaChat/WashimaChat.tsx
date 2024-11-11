@@ -264,7 +264,7 @@ export const WashimaChat: React.FC<WashimaChatProps> = ({ washima, chat, onClose
                     bgcolor: "background.default",
                     overflowY: "auto",
                     borderRadius: isMobile ? "0 3vw 0 3vw" : "0 1.5vw 0 1.5vw",
-                    padding: "2vw",
+                    padding: isMobile ? "4vw" : "2vw",
                     color: "text.secondary",
                     flexDirection: "column",
                     gap: isMobile ? "1vw" : "0.25vw",
