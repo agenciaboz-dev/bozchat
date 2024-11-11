@@ -13,7 +13,7 @@ export const TemplateHeader: React.FC<TemplateHeaderProps> = ({ component }) => 
         <TextHeader component={component} />
     ) : (
         <Avatar
-            variant="square"
+            variant="rounded"
             src={component.file ? URL.createObjectURL(component.file) : undefined}
             sx={{ width: "100%", height: "auto", aspectRatio: 1, bgcolor: "background.default" }}
         >
