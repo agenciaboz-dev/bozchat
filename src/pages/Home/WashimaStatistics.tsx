@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react"
-import { Box, IconButton } from "@mui/material"
+import { Box, IconButton, useMediaQuery } from "@mui/material"
 import { Title2 } from "../../components/Title"
 import { GeneralStat } from "../../types/GeneralStat"
 import { GeneralStatsList } from "./GeneralStatsList"
@@ -10,6 +10,7 @@ import { useUser } from "../../hooks/useUser"
 interface WashimaStatisticsProps {}
 
 export const WashimaStatistics: React.FC<WashimaStatisticsProps> = ({}) => {
+    const isMobile = useMediaQuery("(orientation: portrait)")
     const { user } = useUser()
 
     const [connectedWashimas, setConnectedWashimas] = useState(0)
@@ -85,7 +86,7 @@ export const WashimaStatistics: React.FC<WashimaStatisticsProps> = ({}) => {
     }, [])
 
     return (
-        <Box sx={{ flex: 1, flexDirection: "column", gap: "1vw" }}>
+        <Box sx={{ flex: isMobile ? undefined : 1, flexDirection: "column", gap: "1vw" }}>
             <Title2
                 name="Washima"
                 right={
