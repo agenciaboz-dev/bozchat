@@ -73,13 +73,17 @@ export const NagazapScreen: React.FC<NagazapProps> = ({}) => {
     }
 
     useEffect(() => {
-        fetchNagazap()
+        if (nagazap) {
+            io.on(`nagazap:${nagazap.id}:update`, (data) => setNagazap(data))
 
-        io.on("nagazap:update", (data) => setNagazap(data))
-
-        return () => {
-            io.off("nagazap:update")
+            return () => {
+                io.off(`nagazap:${nagazap.id}:update`)
+            }
         }
+    }, [nagazap])
+
+    useEffect(() => {
+        fetchNagazap()
     }, [])
 
     return (
