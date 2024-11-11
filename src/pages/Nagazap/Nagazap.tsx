@@ -157,7 +157,7 @@ export const NagazapScreen: React.FC<NagazapProps> = ({}) => {
                     </Paper>
                 ) : null}
                 {!isMobile || (isMobile && showInformations) ? (
-                    <Box sx={{ width: isMobile ? "100vw" : "80vw", overflowY: "auto", height: "100%" }}>
+                    <Box sx={{ width: isMobile ? "100%" : "80vw", overflowY: "auto", height: "100%" }}>
                         {loading ? (
                             <Box sx={{ justifyContent: "center", alignItems: "center", flex: 1 }}>
                                 <WagaLoading />
