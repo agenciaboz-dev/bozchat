@@ -1,5 +1,5 @@
 import React from "react"
-import { Box, Grid, useMediaQuery } from "@mui/material"
+import { Box, useMediaQuery } from "@mui/material"
 import { Header } from "../../components/Header"
 import { backgroundStyle } from "../../style/background"
 import { WashimaStatistics } from "./WashimaStatistics"
@@ -10,7 +10,7 @@ interface HomeProps {}
 export const Home: React.FC<HomeProps> = ({}) => {
     const isMobile = useMediaQuery("(orientation: portrait)")
     return (
-        <Box sx={backgroundStyle}>
+        <Box sx={{ ...backgroundStyle, overflow: "auto" }}>
             <Header />
             <Box
                 sx={{
@@ -18,7 +18,6 @@ export const Home: React.FC<HomeProps> = ({}) => {
                     gap: "2vw",
                     padding: "2vw",
                     flexDirection: isMobile ? "column" : "row",
-                    // overflow: "auto",
                 }}
             >
                 <WashimaStatistics />
