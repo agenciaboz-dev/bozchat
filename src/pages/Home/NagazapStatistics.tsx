@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react"
 import { Box, IconButton } from "@mui/material"
 import { Title2 } from "../../components/Title"
-import { Check, Replay } from "@mui/icons-material"
+import { Block, Check, Close, DocumentScanner, Error, Loop, Replay, WhatsApp } from "@mui/icons-material"
 import { useUser } from "../../hooks/useUser"
 import { GeneralStat } from "../../types/GeneralStat"
 import { GeneralStatsList } from "./GeneralStatsList"
@@ -20,12 +20,12 @@ export const NagazapStatistics: React.FC<NagazapStatisticsProps> = ({}) => {
     const [blacklistCount, setBlacklistCount] = useState<number>()
 
     const generalStatistics: GeneralStat[] = [
-        { title: "Contas conectadas", icon: Check, value: nagazapsCount, loading: nagazapsCount === undefined },
-        { title: "Templates", icon: Check, value: templatesCount, loading: templatesCount === undefined },
+        { title: "Contas conectadas", icon: WhatsApp, value: nagazapsCount, loading: nagazapsCount === undefined },
+        { title: "Templates", icon: DocumentScanner, value: templatesCount, loading: templatesCount === undefined },
         { title: "Mensagens enviadas com sucesso", icon: Check, value: sucessfulMessages, loading: sucessfulMessages === undefined },
-        { title: "Mensagens não enviadas", icon: Check, value: errorMessages, loading: errorMessages === undefined },
-        { title: "Mensagens no forno", icon: Check, value: ovenMessages, loading: ovenMessages === undefined },
-        { title: "Números na lista negra", icon: Check, value: blacklistCount, loading: blacklistCount === undefined },
+        { title: "Mensagens não enviadas", icon: Close, value: errorMessages, loading: errorMessages === undefined },
+        { title: "Mensagens no forno", icon: Loop, value: ovenMessages, loading: ovenMessages === undefined },
+        { title: "Números na lista negra", icon: Block, value: blacklistCount, loading: blacklistCount === undefined },
     ]
 
     const fetchNagazaps = async () => {
