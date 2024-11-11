@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react"
-import { Box, Button, CircularProgress, IconButton, MenuItem, Paper, Typography, useMediaQuery } from "@mui/material"
+import { Box, Button, CircularProgress, IconButton, MenuItem, Paper, Tab, Tabs, Typography, useMediaQuery } from "@mui/material"
 import { backgroundStyle } from "../../style/background"
 import { Header } from "../../components/Header"
 import { api } from "../../api"
@@ -66,6 +66,10 @@ export const WashimaPage: React.FC<WashimaProps> = ({}) => {
         io.off("washima:list")
     }
 
+    const handleChange = (event: React.SyntheticEvent, newValue: number) => {
+        setIsChat(newValue === 1)
+    }
+
     useEffect(() => {
         const washima = washimas.find((item) => item.id === currentWashima?.id)
         if (washima) {
@@ -99,7 +103,7 @@ export const WashimaPage: React.FC<WashimaProps> = ({}) => {
             <Header />
             {isMobile ? (
                 <Box sx={{ flexDirection: "row" }}>
-                    <Button
+                    {/* <Button
                         variant="outlined"
                         color="primary"
                         fullWidth
@@ -122,7 +126,24 @@ export const WashimaPage: React.FC<WashimaProps> = ({}) => {
                         onClick={() => setIsChat(true)}
                     >
                         Conversas
-                    </Button>
+                    </Button> */}
+
+                    <Tabs value={isChat ? 1 : 0} onChange={handleChange} sx={{ flex: 1 }}>
+                        <Tab
+                            label="Washima"
+                            sx={{ flex: 1 }}
+                            onClick={() => {
+                                setIsChat(false)
+                            }}
+                        />
+                        <Tab
+                            label="Conversas"
+                            sx={{ flex: 1 }}
+                            onClick={() => {
+                                setIsChat(true)
+                            }}
+                        />
+                    </Tabs>
                 </Box>
             ) : null}
             <Box sx={{ flexDirection: "row", flex: 1 }}>
@@ -148,7 +169,12 @@ export const WashimaPage: React.FC<WashimaProps> = ({}) => {
                             color="primary"
                             fullWidth
                             sx={{ margin: "1vw 0", borderStyle: "dashed", fontSize: "1rem" }}
-                            onClick={() => setCurrentWashima(null)}
+                            onClick={() => {
+                                setCurrentWashima(null)
+                                if (isMobile) {
+                                    setIsChat(true)
+                                }
+                            }}
                         >
                             +
                         </Button>
@@ -167,7 +193,12 @@ export const WashimaPage: React.FC<WashimaProps> = ({}) => {
                                             borderRadius: "0.3vw",
                                             justifyContent: "space-between",
                                         }}
-                                        onClick={() => setCurrentWashima(item)}
+                                        onClick={() => {
+                                            setCurrentWashima(item)
+                                            if (isMobile) {
+                                                setIsChat(true)
+                                            }
+                                        }}
                                     >
                                         <Typography
                                             style={{
@@ -183,7 +214,10 @@ export const WashimaPage: React.FC<WashimaProps> = ({}) => {
                                             (!item.qrcode ? (
                                                 <CircularProgress size="1rem" color="warning" />
                                             ) : (
-                                                <QrCodeScanner color="warning" sx={{ width: "1.3vw", height: "1.3vw" }} />
+                                                <QrCodeScanner
+                                                    color="warning"
+                                                    sx={{ width: isMobile ? "7vw" : "1.3vw", height: isMobile ? "7vw" : "1.3vw" }}
+                                                />
                                             ))}
                                     </MenuItem>
                                 )
