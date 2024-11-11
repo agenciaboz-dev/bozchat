@@ -9,9 +9,10 @@ import { useUser } from "../../../hooks/useUser"
 interface BlacklistProps {
     nagazap: Nagazap
     setNagazap: React.Dispatch<React.SetStateAction<Nagazap>>
+    setShowInformations: React.Dispatch<React.SetStateAction<boolean>>
 }
 
-export const Blacklist: React.FC<BlacklistProps> = ({ nagazap, setNagazap }) => {
+export const Blacklist: React.FC<BlacklistProps> = ({ nagazap, setNagazap, setShowInformations }) => {
     const { user } = useUser()
 
     const [loading, setLoading] = useState(false)
@@ -55,7 +56,13 @@ export const Blacklist: React.FC<BlacklistProps> = ({ nagazap, setNagazap }) => 
         <Subroute
             title="Lista negra"
             right={
-                <IconButton onClick={refresh} disabled={loading}>
+                <IconButton
+                    onClick={() => {
+                        refresh()
+                        setShowInformations(false)
+                    }}
+                    disabled={loading}
+                >
                     {loading ? <CircularProgress size="1.5rem" color="secondary" /> : <Refresh />}
                 </IconButton>
             }

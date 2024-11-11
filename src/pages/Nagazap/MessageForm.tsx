@@ -16,7 +16,7 @@ import {
 import { Subroute } from "./Subroute"
 import { useFormik } from "formik"
 import { OvenForm } from "../../types/server/Meta/WhatsappBusiness/WhatsappForm"
-import { Check, CloudUpload, DeleteForever, Error, PlusOne, WatchLater } from "@mui/icons-material"
+import { Check, CloudUpload, DeleteForever, Error, PlusOne, Refresh, WatchLater } from "@mui/icons-material"
 import { api } from "../../api"
 import { TemplateComponent, TemplateInfo } from "../../types/server/Meta/WhatsappBusiness/TemplatesInfo"
 import { Avatar } from "@files-ui/react"
@@ -33,13 +33,14 @@ import { object } from "yup"
 
 interface MessageFormProps {
     nagazap: Nagazap
+    setShowInformations: React.Dispatch<React.SetStateAction<boolean>>
 }
 
 const ComponentType: React.FC<{ component: TemplateComponent }> = ({ component }) => {
     return <Box sx={{ color: "secondary.main", fontWeight: "bold" }}>{component.type}</Box>
 }
 
-export const MessageFormScreen: React.FC<MessageFormProps> = ({ nagazap }) => {
+export const MessageFormScreen: React.FC<MessageFormProps> = ({ nagazap, setShowInformations }) => {
     const { snackbar } = useSnackbar()
 
     const icons = [
@@ -118,7 +119,18 @@ export const MessageFormScreen: React.FC<MessageFormProps> = ({ nagazap }) => {
     }, [])
 
     return (
-        <Subroute title="Enviar mensagem">
+        <Subroute
+            title="Enviar mensagem"
+            right={
+                <IconButton
+                    onClick={() => {
+                        setShowInformations(false)
+                    }}
+                >
+                    <Refresh />
+                </IconButton>
+            }
+        >
             <form onSubmit={formik.handleSubmit}>
                 <Grid container columns={isMobile ? 1 : 3} spacing={"1vw"}>
                     <Grid item xs={2}>

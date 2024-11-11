@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react"
-import { Box, Button, CircularProgress, Grid, Paper, Tab, Tabs, TextField } from "@mui/material"
+import { Box, Button, CircularProgress, Grid, IconButton, Paper, Tab, Tabs, TextField } from "@mui/material"
 import { Nagazap } from "../../../types/server/class/Nagazap"
 import { Subroute } from "../Subroute"
 import { useFormik } from "formik"
@@ -16,12 +16,14 @@ import { TemplateComponentForm } from "./TemplateComponentForm"
 import { api } from "../../../api"
 import { AxiosError } from "axios"
 import { useSnackbar } from "burgos-snackbar"
+import { Refresh } from "@mui/icons-material"
 
 interface TemplateFormProps {
     nagazap: Nagazap
+    setShowInformations: React.Dispatch<React.SetStateAction<boolean>>
 }
 
-export const TemplateForm: React.FC<TemplateFormProps> = ({ nagazap }) => {
+export const TemplateForm: React.FC<TemplateFormProps> = ({ nagazap, setShowInformations }) => {
     const { snackbar } = useSnackbar()
 
     const [loading, setLoading] = useState(false)
@@ -100,7 +102,18 @@ export const TemplateForm: React.FC<TemplateFormProps> = ({ nagazap }) => {
     })
 
     return (
-        <Subroute title="Novo Template">
+        <Subroute
+            title="Novo Template"
+            right={
+                <IconButton
+                    onClick={() => {
+                        setShowInformations(false)
+                    }}
+                >
+                    <Refresh />
+                </IconButton>
+            }
+        >
             <Box sx={{ height: "64vh" }}>
                 <form onSubmit={formik.handleSubmit}>
                     <Grid container columns={3} spacing={"1vw"}>

@@ -1,19 +1,32 @@
-import React from "react"
-import { Box } from "@mui/material"
+import React, { Dispatch, SetStateAction } from "react"
+import { Box, IconButton } from "@mui/material"
 import { Nagazap } from "../../../types/server/class/Nagazap"
 import { Subroute } from "../Subroute"
 import { Token } from "./Token"
 import { DeleteNagazap } from "./DeleteNagazap"
+import { Refresh } from "@mui/icons-material"
 
 interface NagazapSettingsProps {
     nagazap: Nagazap
     setNagazap: React.Dispatch<React.SetStateAction<Nagazap | undefined>>
     fetchNagazaps: () => Promise<void>
+    setShowInformations: Dispatch<SetStateAction<boolean>>
 }
 
-export const NagazapSettings: React.FC<NagazapSettingsProps> = ({ nagazap, setNagazap, fetchNagazaps }) => {
+export const NagazapSettings: React.FC<NagazapSettingsProps> = ({ nagazap, setNagazap, fetchNagazaps, setShowInformations }) => {
     return (
-        <Subroute title="Configurações">
+        <Subroute
+            title="Configurações"
+            right={
+                <IconButton
+                    onClick={() => {
+                        setShowInformations(false)
+                    }}
+                >
+                    <Refresh />
+                </IconButton>
+            }
+        >
             <Box sx={{ flexDirection: "column", gap: "1vw" }}>
                 <Token nagazap={nagazap} />
                 <DeleteNagazap nagazap={nagazap} setNagazap={setNagazap} fetchNagazaps={fetchNagazaps} />

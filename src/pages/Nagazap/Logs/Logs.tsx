@@ -10,9 +10,10 @@ import { useUser } from "../../../hooks/useUser"
 interface LogsProps {
     nagazap: Nagazap
     setNagazap: React.Dispatch<React.SetStateAction<Nagazap>>
+    setShowInformations: React.Dispatch<React.SetStateAction<boolean>>
 }
 
-export const Logs: React.FC<LogsProps> = ({ nagazap, setNagazap }) => {
+export const Logs: React.FC<LogsProps> = ({ nagazap, setNagazap, setShowInformations }) => {
     const { user } = useUser()
 
     const [loading, setLoading] = useState(false)
@@ -42,7 +43,13 @@ export const Logs: React.FC<LogsProps> = ({ nagazap, setNagazap }) => {
         <Subroute
             title="Logs"
             right={
-                <IconButton onClick={refresh} disabled={loading}>
+                <IconButton
+                    onClick={() => {
+                        refresh()
+                        setShowInformations(false)
+                    }}
+                    disabled={loading}
+                >
                     {loading ? <CircularProgress size="1.5rem" color="secondary" /> : <Refresh />}
                 </IconButton>
             }
