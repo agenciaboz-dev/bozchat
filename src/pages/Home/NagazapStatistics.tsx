@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react"
 import { Box, IconButton } from "@mui/material"
 import { Title2 } from "../../components/Title"
-import { Block, Check, Close, DocumentScanner, Error, Loop, Replay, WhatsApp } from "@mui/icons-material"
+import { AlarmOnSharp, Block, Check, Close, DocumentScanner, Error, Loop, Replay, WhatsApp } from "@mui/icons-material"
 import { useUser } from "../../hooks/useUser"
 import { GeneralStat } from "../../types/GeneralStat"
 import { GeneralStatsList } from "./GeneralStatsList"
@@ -24,7 +24,7 @@ export const NagazapStatistics: React.FC<NagazapStatisticsProps> = ({}) => {
         { title: "Templates", icon: DocumentScanner, value: templatesCount, loading: templatesCount === undefined },
         { title: "Mensagens enviadas com sucesso", icon: Check, value: sucessfulMessages, loading: sucessfulMessages === undefined },
         { title: "Mensagens não enviadas", icon: Close, value: errorMessages, loading: errorMessages === undefined },
-        { title: "Mensagens no forno", icon: Loop, value: ovenMessages, loading: ovenMessages === undefined },
+        { title: "Mensagens no forno", icon: AlarmOnSharp, value: ovenMessages, loading: ovenMessages === undefined },
         { title: "Números na lista negra", icon: Block, value: blacklistCount, loading: blacklistCount === undefined },
     ]
 
