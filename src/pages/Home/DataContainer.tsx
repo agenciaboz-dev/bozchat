@@ -19,7 +19,7 @@ export const DataContainer: React.FC<DataContainerProps> = ({ stat }) => {
                     alignItems: "center",
                     flex: 1,
                     padding: isMobile ? "3vw" : "1vw",
-                    height: "5.7rem",
+                    height: isMobile ? "4.6rem" : "5.7rem",
                 },
             ]}
         >
