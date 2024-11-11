@@ -17,7 +17,7 @@ export const Info: React.FC<InfoProps> = ({ nagazap }) => {
     const [loading, setLoading] = useState(true)
     const [info, setInfo] = useState<BusinessInfo | null>(null)
 
-    const infos: GeneralStat[] = [
+    const infos: (GeneralStat & { copy?: boolean })[] = [
         { title: "Business Account", value: info?.name, icon: AccountBox, loading: !info },
         { title: "Nome do Whatsapp Business", value: info?.phone_numbers.data[0].verified_name, icon: WhatsApp, loading: !info },
         { title: "Número do Whatsapp Business", value: info?.phone_numbers.data[0].display_phone_number, icon: LocalPhone, loading: !info },
@@ -38,10 +38,10 @@ export const Info: React.FC<InfoProps> = ({ nagazap }) => {
         },
     ]
 
-    const ids: GeneralStat[] = [
-        { title: "Business ID", value: nagazap.businessId, icon: Business },
-        { title: "App ID", value: nagazap.appId, icon: Facebook },
-        { title: "Phone ID", value: nagazap.phoneId, icon: LocalPhone },
+    const ids: (GeneralStat & { copy?: boolean })[] = [
+        { title: "Business ID", value: nagazap.businessId, icon: Business, copy: true },
+        { title: "App ID", value: nagazap.appId, icon: Facebook, copy: true },
+        { title: "Phone ID", value: nagazap.phoneId, icon: LocalPhone, copy: true },
     ]
 
     const fetchInfo = async () => {

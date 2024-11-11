@@ -1,9 +1,10 @@
 import React from "react"
-import { Box, Skeleton } from "@mui/material"
+import { Box, IconButton, Skeleton } from "@mui/material"
 import { GeneralStat } from "../../../types/GeneralStat"
+import { CopyAll } from "@mui/icons-material"
 
 interface InfoDataContainerProps {
-    data: GeneralStat
+    data: GeneralStat & { copy?: boolean }
 }
 
 export const InfoDataContainer: React.FC<InfoDataContainerProps> = ({ data }) => {
@@ -18,7 +19,14 @@ export const InfoDataContainer: React.FC<InfoDataContainerProps> = ({ data }) =>
                 {data.loading ? (
                     <Skeleton variant="rounded" animation="wave" sx={{ height: "2.21vw", width: "20vw" }} />
                 ) : (
-                    <Box sx={[{ fontSize: "1.5rem", fontWeight: "bold", color: "primary.main" }]}>{data.value}</Box>
+                    <Box sx={[{ fontSize: "1.5rem", fontWeight: "bold", color: "primary.main", gap: "0.5vw" }]}>
+                        {data.value}
+                        {data.copy && !!data.value && (
+                            <IconButton onClick={() => navigator.clipboard.writeText(data.value!.toString())}>
+                                <CopyAll />
+                            </IconButton>
+                        )}
+                    </Box>
                 )}
             </Box>
         </Box>
