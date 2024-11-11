@@ -1,5 +1,18 @@
-import React, { useEffect, useState } from "react"
-import { Box, Button, CircularProgress, Grid, IconButton, MenuItem, Paper, TextField } from "@mui/material"
+import React, { useContext, useEffect, useState } from "react"
+import {
+    alpha,
+    Box,
+    Button,
+    CircularProgress,
+    Grid,
+    IconButton,
+    MenuItem,
+    Paper,
+    TextField,
+    Typography,
+    useMediaQuery,
+    useTheme,
+} from "@mui/material"
 import { Subroute } from "./Subroute"
 import { useFormik } from "formik"
 import { OvenForm } from "../../types/server/Meta/WhatsappBusiness/WhatsappForm"
@@ -10,6 +23,13 @@ import { Avatar } from "@files-ui/react"
 import { getPhonesfromSheet } from "../../tools/getPhonesFromSheet"
 import { useSnackbar } from "burgos-snackbar"
 import { Nagazap } from "../../types/server/class/Nagazap"
+import ReplyIcon from "@mui/icons-material/Reply"
+import { OpenInNew, Reply } from "@mui/icons-material"
+
+import OpenInNewIcon from "@mui/icons-material/OpenInNew"
+import { TrianguloFudido } from "../Zap/TrianguloFudido"
+import ThemeContext from "../../contexts/themeContext"
+import { object } from "yup"
 
 interface MessageFormProps {
     nagazap: Nagazap
@@ -22,10 +42,16 @@ const ComponentType: React.FC<{ component: TemplateComponent }> = ({ component }
 export const MessageFormScreen: React.FC<MessageFormProps> = ({ nagazap }) => {
     const { snackbar } = useSnackbar()
 
+    const icons = [
+        { type: "QUICK_REPLY", icon: <Reply /> },
+        { type: "URL", icon: <OpenInNew /> },
+    ]
+
     const [templates, setTemplates] = useState<TemplateInfo[]>([])
     const [image, setImage] = useState<File>()
     const [loading, setLoading] = useState(false)
     const [sheetPhones, setSheetPhones] = useState<string[]>([])
+    const isMobile = useMediaQuery("(orientation: portrait)")
 
     const fetchTemplates = async () => {
         try {
@@ -94,126 +120,175 @@ export const MessageFormScreen: React.FC<MessageFormProps> = ({ nagazap }) => {
     return (
         <Subroute title="Enviar mensagem">
             <form onSubmit={formik.handleSubmit}>
-                <Box sx={{ flexDirection: "column", gap: "1vw" }}>
-                    <Paper sx={{ padding: "1vw" }}>
-                        <Grid container columns={2} spacing={2}>
-                            <Grid item xs={2}>
-                                <TextField
-                                    label="Template"
-                                    value={formik.values.template?.name || ""}
-                                    onChange={(event) =>
-                                        formik.setFieldValue("template", templates.find((item) => item.name == event.target.value) || null)
-                                    }
-                                    select
-                                    SelectProps={{
-                                        SelectDisplayProps: { style: { display: "flex", alignItems: "center", gap: "0.5vw" } },
-                                        MenuProps: { MenuListProps: { sx: { bgcolor: "background.default" } } },
+                <Grid container columns={isMobile ? 1 : 3} spacing={"1vw"}>
+                    <Grid item xs={2}>
+                        <Box
+                            sx={{
+                                flexDirection: "column",
+                                gap: isMobile ? "5vw" : "1vw",
+                                padding: isMobile ? "1vw" : undefined,
+                            }}
+                        >
+                            {/* <Paper sx={{ padding: "1vw", flexDirection: "column", gap: "1vw" }}> */}
+                            <TextField
+                                label="Template"
+                                value={formik.values.template?.name || ""}
+                                onChange={(event) =>
+                                    formik.setFieldValue("template", templates.find((item) => item.name == event.target.value) || null)
+                                }
+                                select
+                                SelectProps={{
+                                    SelectDisplayProps: { style: { display: "flex", alignItems: "center", gap: "0.5vw" } },
+                                    MenuProps: { MenuListProps: { sx: { bgcolor: "background.default" } } },
+                                }}
+                            >
+                                <MenuItem value={""} sx={{ display: "none" }} />
+                                {templates.map((item) => (
+                                    <MenuItem
+                                        key={item.id}
+                                        value={item.name}
+                                        sx={{ gap: "0.5vw" }}
+                                        title={item.status}
+                                        disabled={item.status !== "APPROVED"}
+                                    >
+                                        {item.status === "PENDING" && <WatchLater color="warning" />}
+                                        {item.status === "APPROVED" && <Check color="success" />}
+                                        {item.status === "REJECTED" && <Error color="error" />}
+                                        {item.name}
+                                    </MenuItem>
+                                ))}
+                            </TextField>
+
+                            {/* </Paper> */}
+
+                            {/* <Paper sx={{ padding: "1vw", alignItems: "center" }}> */}
+                            <Grid container columns={isMobile ? 1 : 3} spacing={2}>
+                                <Grid item xs={1}>
+                                    <Button component="label" variant="outlined" sx={{ borderStyle: "dashed", height: "100%", gap: "1vw" }} fullWidth>
+                                        <CloudUpload />
+                                        {!!sheetPhones.length ? `${sheetPhones.length} números importados` : "Importar planilha"}
+                                        <input onChange={handleSheetsUpload} style={{ display: "none" }} type="file" />
+                                    </Button>
+                                </Grid>
+                                {formik.values.to.map((number, index) => (
+                                    <Grid item xs={1} key={index}>
+                                        <TextField
+                                            label="Número"
+                                            name={`to[${index}]`}
+                                            value={number}
+                                            onChange={formik.handleChange}
+                                            InputProps={{
+                                                sx: { gap: "0.5vw" },
+                                                startAdornment: (
+                                                    <IconButton color="secondary" onClick={() => onDeleteMessage(index)} sx={{ padding: 0 }}>
+                                                        <DeleteForever />
+                                                    </IconButton>
+                                                ),
+                                            }}
+                                        />
+                                    </Grid>
+                                ))}
+                                <Grid item xs={1}>
+                                    <Button variant="outlined" sx={{ borderStyle: "dashed", height: "100%" }} onClick={() => onNewPhone()} fullWidth>
+                                        <PlusOne />
+                                    </Button>
+                                </Grid>
+                            </Grid>
+                            {/* </Paper> */}
+                            {!isMobile && (
+                                <Button
+                                    type="submit"
+                                    variant="contained"
+                                    disabled={(!formik.values.to.length && !sheetPhones.length) || !formik.values.template}
+                                >
+                                    {loading ? <CircularProgress size="1.5rem" color="inherit" /> : "enviar"}
+                                </Button>
+                            )}
+                        </Box>
+                    </Grid>
+
+                    <Grid item xs={1}>
+                        {formik.values.template?.components.length && (
+                            <>
+                                <Paper
+                                    sx={{
+                                        // width: "object-fit",
+                                        // maxWidth: isMobile ? undefined : "30vw",
+                                        flexDirection: "column",
+                                        gap: isMobile ? "5vw" : "1vw",
+                                        padding: isMobile ? "4vw" : "0.5vw",
+                                        position: "relative",
+                                        borderRadius: "0.5vw",
+                                        borderTopLeftRadius: 0,
+                                        color: "secondary.main",
+                                        // margin: "0 auto",
                                     }}
                                 >
-                                    <MenuItem value={""} sx={{ display: "none" }} />
-                                    {templates.map((item) => (
-                                        <MenuItem
-                                            key={item.id}
-                                            value={item.name}
-                                            sx={{ gap: "0.5vw" }}
-                                            title={item.status}
-                                            disabled={item.status !== "APPROVED"}
-                                        >
-                                            {item.status === "PENDING" && <WatchLater color="warning" />}
-                                            {item.status === "APPROVED" && <Check color="success" />}
-                                            {item.status === "REJECTED" && <Error color="error" />}
-                                            {item.name}
-                                        </MenuItem>
-                                    ))}
-                                </TextField>
-                            </Grid>
-                            {formik.values.template?.components.map((component, index) => {
-                                if (component.format == "IMAGE") {
-                                    return (
-                                        <Grid item xs={1} key={index}>
-                                            <ComponentType component={component} />
-                                            <Box sx={{ flexDirection: "column" }}>
-                                                <Avatar
-                                                    style={{ width: "60%", height: "auto", aspectRatio: "2/1", objectFit: "contain" }}
-                                                    emptyLabel="Enviar imagem"
-                                                    changeLabel="Trocar imagem"
-                                                    src={image}
-                                                    onChange={(file) => handleImageChange(file)}
-                                                />
-                                            </Box>
-                                        </Grid>
-                                    )
-                                }
-
-                                if (component.text) {
-                                    return (
-                                        <Grid item xs={1}>
-                                            <ComponentType component={component} />
-                                            <Box>{component.text}</Box>
-                                        </Grid>
-                                    )
-                                }
-
-                                if (component.buttons) {
-                                    return (
-                                        <Grid item xs={1}>
-                                            <ComponentType component={component} />
-                                            <Grid container columns={2} spacing={2}>
-                                                {component.buttons.map((button) => (
-                                                    <Grid item xs={1} key={button.text}>
-                                                        <Button variant="outlined" fullWidth sx={{ textTransform: "none" }}>
+                                    <TrianguloFudido alignment="left" color="#2a323c" />
+                                    {formik.values.template?.components.map((component, index) => {
+                                        if (component.format == "IMAGE") {
+                                            return (
+                                                <Box sx={{ flexDirection: "column" }}>
+                                                    <Avatar
+                                                        style={{ width: "60%", height: "auto", aspectRatio: "2/1", objectFit: "contain" }}
+                                                        emptyLabel="Enviar imagem"
+                                                        changeLabel="Trocar imagem"
+                                                        src={image}
+                                                        onChange={(file) => handleImageChange(file)}
+                                                    />
+                                                </Box>
+                                            )
+                                        }
+                                        if (component.text) {
+                                            return (
+                                                <Typography
+                                                    color="#fff"
+                                                    sx={{
+                                                        fontWeight: component.type == "HEADER" ? "bold" : undefined,
+                                                        fontSize: component.type == "FOOTER" ? "0.8rem" : undefined,
+                                                        opacity: component.type == "FOOTER" ? 0.5 : 1,
+                                                    }}
+                                                >
+                                                    {component.text}
+                                                </Typography>
+                                            )
+                                        }
+                                        if (component.buttons) {
+                                            return (
+                                                <>
+                                                    {component.buttons?.map((button, index) => (
+                                                        <Button
+                                                            key={`${button.text}-${index}`}
+                                                            variant="text"
+                                                            fullWidth
+                                                            sx={{ textTransform: "none", gap: "1vw" }}
+                                                            startIcon={icons.find((item) => item.type === button.type)?.icon}
+                                                            onClick={() => button.type === "URL" && window.open(button.url, "_blank")}
+                                                        >
                                                             {button.text}
                                                         </Button>
-                                                    </Grid>
-                                                ))}
-                                            </Grid>
-                                        </Grid>
-                                    )
-                                }
-
-                                return null
-                            })}
-                        </Grid>
-                    </Paper>
-
-                    <Paper sx={{ padding: "1vw", alignItems: "center" }}>
-                        <Grid container columns={4} spacing={2}>
-                            <Grid item xs={1}>
-                                <Button component="label" variant="outlined" sx={{ borderStyle: "dashed", height: "100%", gap: "1vw" }} fullWidth>
-                                    <CloudUpload />
-                                    {!!sheetPhones.length ? `${sheetPhones.length} números importados` : "Importar planilha"}
-                                    <input onChange={handleSheetsUpload} style={{ display: "none" }} type="file" />
-                                </Button>
-                            </Grid>
-                            {formik.values.to.map((number, index) => (
-                                <Grid item xs={1} key={index}>
-                                    <TextField
-                                        label="Número"
-                                        name={`to[${index}]`}
-                                        value={number}
-                                        onChange={formik.handleChange}
-                                        InputProps={{
-                                            startAdornment: (
-                                                <IconButton color="secondary" onClick={() => onDeleteMessage(index)}>
-                                                    <DeleteForever />
-                                                </IconButton>
-                                            ),
-                                        }}
-                                    />
-                                </Grid>
-                            ))}
-                            <Grid item xs={1}>
-                                <Button variant="outlined" sx={{ borderStyle: "dashed", height: "100%" }} onClick={() => onNewPhone()} fullWidth>
-                                    <PlusOne />
-                                </Button>
-                            </Grid>
-                        </Grid>
-                    </Paper>
-                </Box>
-
-                <Button type="submit" variant="contained" disabled={(!formik.values.to.length && !sheetPhones.length) || !formik.values.template}>
-                    {loading ? <CircularProgress size="1.5rem" color="inherit" /> : "enviar"}
-                </Button>
+                                                    ))}
+                                                </>
+                                            )
+                                        }
+                                        return null
+                                    })}
+                                </Paper>
+                                {isMobile && (
+                                    <Button
+                                        type="submit"
+                                        fullWidth
+                                        variant="contained"
+                                        disabled={(!formik.values.to.length && !sheetPhones.length) || !formik.values.template}
+                                        sx={{ marginTop: isMobile ? "5vw" : undefined }}
+                                    >
+                                        {loading ? <CircularProgress size="1.5rem" color="inherit" /> : "enviar"}
+                                    </Button>
+                                )}
+                            </>
+                        )}
+                    </Grid>
+                </Grid>
             </form>
         </Subroute>
     )
