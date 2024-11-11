@@ -36,7 +36,7 @@ export const TemplateComponentForm: React.FC<TemplateComponentFormProps> = ({ co
                     SelectProps={{ MenuProps: { MenuListProps: { sx: { bgcolor: "background.default" } } } }}
                 >
                     <MenuItem value={"TEXT"}>Texto</MenuItem>
-                    <MenuItem value={"IMAGE"}>Imagem (em desenvolvimento)</MenuItem>
+                    <MenuItem value={"IMAGE"}>Imagem</MenuItem>
                 </TextField>
             )}
 
