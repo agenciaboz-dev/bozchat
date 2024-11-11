@@ -223,24 +223,29 @@ export const WashimaFormPage: React.FC<WashimaFormPageProps> = ({ currentWashima
 
             <Paper
                 sx={{
-                    flex: 0.5,
-                    flexDirection: "column",
+                    flex: isMobile ? 1 : 0.5,
+                    flexDirection: isMobile ? "row" : "column",
                     bgcolor: darkMode ? "" : "background.default",
                     justifyContent: "center",
-                    alignItems: "center",
+                    alignItems: currentWashima?.ready && isMobile ? "baseline" : "center",
                 }}
             >
                 {currentWashima ? (
                     currentWashima.ready ? (
                         <WashimaTools washima={currentWashima} fetchingMessages={fetchingMessages} onSyncMessages={onSyncMessages} />
                     ) : currentWashima.qrcode ? (
-                        <QRCode value={currentWashima.qrcode} size={25 * vw} />
+                        <QRCode value={currentWashima.qrcode} size={isMobile ? 75 * vw : 25 * vw} />
                     ) : (
                         <Paper sx={{ flexDirection: "column", gap: "1vw", width: "80%", padding: "1vw" }}>
                             {syncStatus}
                             <LinearProgress variant={syncProgress ? "determinate" : "indeterminate"} value={(syncProgress * 100) / 4} />
                         </Paper>
                     )
+                ) : isMobile ? (
+                    <Box sx={{ flexDirection: "column", alignItems: "center", justifyContent: "center" }}>
+                        <Box>O QRCode aparecerá aqui após cadastrar o número.</Box>
+                        <Box>Pode ser que o primeiro carregamento demore.</Box>
+                    </Box>
                 ) : (
                     <>
                         <Box>O QRCode aparecerá aqui após cadastrar o número.</Box>
