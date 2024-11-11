@@ -4,7 +4,7 @@ import { backgroundStyle } from "../../style/background"
 import { Add, AddCircle, Hub, WhatsApp } from "@mui/icons-material"
 import { ToolButton } from "./ToolButton"
 import { Route, Routes, useNavigate } from "react-router-dom"
-import { Token } from "./Token"
+import { Token } from "./NagazapSettings/Token"
 import { Nagazap } from "../../types/server/class/Nagazap"
 import { api } from "../../api"
 import { Info } from "./Info/Info"
@@ -42,7 +42,11 @@ export const NagazapScreen: React.FC<NagazapProps> = ({}) => {
             const response = await api.get("/nagazap", { params: { user_id: user.id } })
             const list = response.data as Nagazap[]
             setNagazapList(list)
-            if (!!list.length) setNagazap(list[0])
+            if (!!list.length) {
+                setNagazap(list[0])
+            } else {
+                setNagazap(undefined)
+            }
         } catch (error) {
             console.log(error)
         } finally {
@@ -65,6 +69,7 @@ export const NagazapScreen: React.FC<NagazapProps> = ({}) => {
     const onAddNagazap = (new_nagazap: Nagazap) => {
         setNagazapList((list) => [...list, new_nagazap])
         setNagazap(new_nagazap)
+        navigate("/nagazap/")
     }
 
     useEffect(() => {
@@ -147,7 +152,10 @@ export const NagazapScreen: React.FC<NagazapProps> = ({}) => {
                         <Routes>
                             <Route index element={<Info nagazap={nagazap} />} />
                             <Route path="/messages" element={<MessagesScreen nagazap={nagazap} />} />
-                            <Route path="/settings" element={<NagazapSettings nagazap={nagazap} />} />
+                            <Route
+                                path="/settings"
+                                element={<NagazapSettings nagazap={nagazap} setNagazap={setNagazap} fetchNagazaps={fetchNagazap} />}
+                            />
                             <Route path="/oven" element={<Oven nagazap={nagazap} setNagazap={setNagazap} />} />
                             <Route path="/blacklist" element={<Blacklist nagazap={nagazap} setNagazap={setNagazap} />} />
                             <Route path="/logs" element={<Logs nagazap={nagazap} setNagazap={setNagazap} />} />

@@ -7,7 +7,7 @@ import { Nagazap } from "../../../types/server/class/Nagazap"
 import { BusinessInfo } from "../../../types/server/Meta/WhatsappBusiness/BusinessInfo"
 import { GeneralStat } from "../../../types/GeneralStat"
 import { InfoDataContainer } from "./InfoDataContainer"
-import { Token } from "../Token"
+import { Token } from "../NagazapSettings/Token"
 
 interface InfoProps {
     nagazap: Nagazap

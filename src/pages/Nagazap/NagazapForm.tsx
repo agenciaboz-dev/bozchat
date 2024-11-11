@@ -105,6 +105,9 @@ export const NagazapForm: React.FC<NagazapFormProps> = ({ onSuccess }) => {
                         required
                         error={!!error}
                         helperText={error}
+                        multiline
+                        maxRows={2}
+                        minRows={2}
                     />
 
                     <Button variant="contained" sx={{ alignSelf: "flex-end" }} type="submit">

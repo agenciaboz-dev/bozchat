@@ -1,9 +1,9 @@
 import React, { useState } from "react"
 import { Box, Button, CircularProgress, Paper, Switch, TextField } from "@mui/material"
-import { Nagazap } from "../../types/server/class/Nagazap"
+import { Nagazap } from "../../../types/server/class/Nagazap"
 import { useFormik } from "formik"
-import { api } from "../../api"
-import { Subroute } from "./Subroute"
+import { api } from "../../../api"
+import { Subroute } from "../Subroute"
 import { useSnackbar } from "burgos-snackbar"
 import { Lock, LockOpen } from "@mui/icons-material"
 
