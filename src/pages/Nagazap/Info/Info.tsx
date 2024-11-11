@@ -17,6 +17,7 @@ interface InfoProps {
 export const Info: React.FC<InfoProps> = ({ nagazap, setShowInformations }) => {
     const [loading, setLoading] = useState(true)
     const [info, setInfo] = useState<BusinessInfo | null>(null)
+    const isMobile = useMediaQuery("(orientation: portrait)")
 
     const infos: (GeneralStat & { copy?: boolean })[] = [
         { title: "Business Account", value: info?.name, icon: AccountBox, loading: !info },
@@ -79,7 +80,7 @@ export const Info: React.FC<InfoProps> = ({ nagazap, setShowInformations }) => {
                 </IconButton>
             }
         >
-            <Grid container columns={2}>
+            <Grid container columns={isMobile ? 1 : 2}>
                 <Grid item xs={1}>
                     <Box sx={{ flexDirection: "column", gap: "0.5vw" }}>
                         {infos.map((info) => (
