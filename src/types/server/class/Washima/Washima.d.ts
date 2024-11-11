@@ -44,6 +44,7 @@ export declare class WashimaMedia {
     size: string;
     static new(data: WashimaMediaPrisma): Promise<WashimaMedia | undefined>;
     static get(message_id: string): Promise<WashimaMedia | undefined>;
+    static getMetadata(message_id: string): Promise<WashimaMedia | undefined>;
     constructor(data: WashimaMediaPrisma);
 }
 export declare class Washima {
@@ -88,19 +89,15 @@ export declare class Washima {
     getContact(contact_id: string): Promise<string>;
     getMedia(message: Message): Promise<WashimaMedia | undefined>;
     restart(): Promise<void>;
-    getMediaMeta(message_id: string): Promise<{
-        mimetype: string | undefined;
-        filename: string | undefined;
-        message_id: string;
-    }>;
+    getMediaMeta(message_id: string): Promise<WashimaMedia | undefined>;
     cacheProfilePic(target_id: string, target?: "chat" | "message"): Promise<WashimaProfilePic | undefined>;
     getCachedMedia(message: Message): Promise<WashimaMedia | undefined>;
     getCachedProfilePicture(target_id: string, target?: "chat" | "message"): Promise<WashimaProfilePic | undefined>;
     fetchAndSaveAllMessages(options?: {
         groupOnly?: boolean;
     }): Promise<void>;
-    getTableUsage(table: string): Promise<number>;
-    getDiskUsage(): Promise<WashimaDiskMetrics>;
+    getTableUsage(table: string, megabyte?: boolean): Promise<number>;
+    getDiskUsage(megabyte?: boolean): Promise<WashimaDiskMetrics>;
     clearMedia(): Promise<number>;
     clearMessages(): Promise<number>;
     search(value: string): Promise<WAWebJS.Chat[]>;

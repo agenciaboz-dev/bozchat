@@ -1,5 +1,5 @@
 import { Route, Routes as ReactRoutes } from "react-router-dom"
-import { Home } from "./pages/Home"
+import { Home } from "./pages/Home/Home"
 import { WildCard } from "./pages/WildCard"
 import { WashimaPage } from "./pages/Washima/Washima"
 import { NagazapScreen } from "./pages/Nagazap/Nagazap"
@@ -16,7 +16,7 @@ export const Routes: React.FC<RoutesProps> = ({}) => {
 
     return user ? (
         <ReactRoutes>
-            <Route index element={<WashimaPage />} />
+            <Route index element={<Home />} />
             <Route index path="/washima/*" element={<WashimaPage />} />
             <Route path="/nagazap/*" element={<NagazapScreen />} />
             <Route path="*" element={<WildCard />} />

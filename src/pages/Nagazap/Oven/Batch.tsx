@@ -18,7 +18,7 @@ export const Batch: React.FC<BatchProps> = ({ batch, nagazap, index }) => {
                 right={
                     nagazap.paused ? null : (
                         <Box sx={{ fontSize: "0.9rem" }}>
-                            {new Date(Number(nagazap.lastMessageTime) + Number(nagazap.frequency) * (index + 1)).toLocaleString("pt-br")}
+                            {new Date(Number(nagazap.lastMessageTime) + Number(nagazap.frequency) * 60 * 1000 * (index + 1)).toLocaleString("pt-br")}
                         </Box>
                     )
                 }

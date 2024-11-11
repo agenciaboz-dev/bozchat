@@ -5,24 +5,26 @@ import { Subroute } from "../Subroute"
 import { api } from "../../../api"
 import { Refresh } from "@mui/icons-material"
 import { LogsList } from "./LogsList"
+import { useUser } from "../../../hooks/useUser"
 
 interface LogsProps {
-    nagazap?: Nagazap
+    nagazap: Nagazap
     setNagazap: React.Dispatch<React.SetStateAction<Nagazap>>
 }
 
 export const Logs: React.FC<LogsProps> = ({ nagazap, setNagazap }) => {
+    const { user } = useUser()
 
     const [loading, setLoading] = useState(false)
     const [filter, setFilter] = useState("")
 
     const refresh = async () => {
+        if (!user) return
         setLoading(true)
 
         try {
-            const response = await api.get("/whatsapp")
+            const response = await api.get("/nagazap", { params: { user_id: user.id, nagazap_id: nagazap.id } })
             setNagazap(response.data)
-            console.log(response.data)
         } catch (error) {
             console.log(error)
         } finally {

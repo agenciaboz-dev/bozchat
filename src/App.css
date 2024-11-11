@@ -88,6 +88,10 @@ img {
     object-fit: contain;
 }
 
+.MuiTab-root {
+    text-transform: none!important;
+}
+
 ::-webkit-scrollbar {
     width: 5px;
     height: 5px;

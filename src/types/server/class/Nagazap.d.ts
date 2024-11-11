@@ -2,9 +2,12 @@ import { Prisma } from "@prisma/client";
 import { OvenForm, WhatsappForm } from "../types/shared/Meta/WhatsappBusiness/WhatsappForm";
 import { UploadedFile } from "express-fileupload";
 import { FailedMessageLog, SentMessageLog } from "../types/shared/Meta/WhatsappBusiness/Logs";
+import { WithoutFunctions } from "./helpers";
 import { User } from "./User";
+import { BusinessInfo } from "../types/shared/Meta/WhatsappBusiness/BusinessInfo";
+import { TemplateForm, TemplateFormResponse } from "../types/shared/Meta/WhatsappBusiness/TemplatesInfo";
 export type NagaMessagePrisma = Prisma.NagazapMessageGetPayload<{}>;
-export type NagaMessageForm = Omit<Prisma.NagazapMessageGetPayload<{}>, "id">;
+export type NagaMessageForm = Omit<Prisma.NagazapMessageGetPayload<{}>, "id" | "nagazap_id">;
 export declare const nagazap_include: {
     user: true;
 };
@@ -44,21 +47,26 @@ export declare class Nagazap {
     paused: boolean;
     sentMessages: SentMessageLog[];
     failedMessages: FailedMessageLog[];
+    displayName: string | null;
+    displayPhone: string | null;
     userId: string;
     user: User;
     static initialize(): Promise<void>;
     static new(data: NagazapForm): Promise<Nagazap>;
+    static getByBusinessId(business_id: string): Promise<Nagazap>;
+    static getById(id: number): Promise<Nagazap>;
     static getByUserId(user_id: string): Promise<Nagazap[]>;
     static getAll(): Promise<Nagazap[]>;
     static shouldBake(): Promise<void>;
     constructor(data: NagazapPrisma);
     getMessages(): Promise<NagaMessage[]>;
+    update(data: Partial<WithoutFunctions<Nagazap>>): Promise<this>;
     updateToken(token: string): Promise<void>;
     buildHeaders(options?: BuildHeadersOptions): {
         Authorization: string;
         "Content-Type": string;
     };
-    getInfo(): Promise<any>;
+    getInfo(): Promise<BusinessInfo | undefined>;
     saveMessage(data: NagaMessageForm): Promise<NagaMessage>;
     addToBlacklist(number: string): Promise<void>;
     removeFromBlacklist(number: string): Promise<void>;
@@ -79,6 +87,7 @@ export declare class Nagazap {
     clearOven(): Promise<void>;
     log(data: any): Promise<void>;
     errorLog(data: any, number: string): Promise<void>;
+    createTemplate(data: TemplateForm): Promise<TemplateFormResponse>;
     emit(): void;
 }
 export {};

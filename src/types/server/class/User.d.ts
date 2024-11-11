@@ -1,6 +1,7 @@
 import { Prisma } from "@prisma/client";
 import { LoginForm } from "../types/shared/LoginForm";
 import { WithoutFunctions } from "./helpers";
+import { Washima } from "./Washima/Washima";
 export type UserPrisma = Prisma.UserGetPayload<{}>;
 export type UserForm = Omit<WithoutFunctions<User>, "id" | "admin">;
 export declare class User {
@@ -17,4 +18,8 @@ export declare class User {
     constructor(data: UserPrisma);
     load(data: UserPrisma): void;
     update(data: Partial<User>): Promise<void>;
+    getWashimas(): Washima[];
+    getWashimasCount(): Promise<number>;
+    getUnrepliedCount(): Promise<number>;
+    getTotalStorage(): Promise<string>;
 }

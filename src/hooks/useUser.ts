@@ -13,7 +13,7 @@ export const useUser = () => {
 
     const onLogin = (user: User) => {
         setUser(user)
-        navigate('/washima')
+        navigate("/")
     }
 
     const logout = () => {

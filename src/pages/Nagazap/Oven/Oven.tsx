@@ -7,6 +7,7 @@ import { api } from "../../../api"
 import { WhatsappForm } from "../../../types/server/Meta/WhatsappBusiness/WhatsappForm"
 import { Batch } from "./Batch"
 import { useIo } from "../../../hooks/useIo"
+import { useUser } from "../../../hooks/useUser"
 
 interface OvenProps {
     nagazap?: Nagazap
@@ -24,22 +25,23 @@ export const Oven: React.FC<OvenProps> = ({ nagazap, setNagazap }) => {
     }
 
     const io = useIo()
+    const { user } = useUser()
 
     const [frequency, setFrequency] = useState(nagazap?.frequency || "")
     const [batchSize, setBatchSize] = useState(nagazap?.batchSize || 0)
     const [loading, setLoading] = useState(false)
-    const [frequencyUnit, setFrequencyUnit] = useState<"mili" | "seg" | "min" | "hour">("mili")
     const [batches, setBatches] = useState<WhatsappForm[][]>([])
 
     const textfield_size = 250
 
     const refresh = async () => {
+        if (!nagazap || !user) return
+
         setLoading(true)
 
         try {
-            const response = await api.get("/whatsapp")
+            const response = await api.get("/nagazap", { params: { nagazap_id: nagazap.id, user_id: user.id } })
             setNagazap(response.data)
-            console.log(response.data)
         } catch (error) {
             console.log(error)
         } finally {
@@ -48,18 +50,13 @@ export const Oven: React.FC<OvenProps> = ({ nagazap, setNagazap }) => {
     }
 
     const save = async (type: "frequency" | "batchSize", value: string | number) => {
-        if (loading) return
+        if (loading || !nagazap) return
         setLoading(true)
         try {
             let data: any = {}
             data[type] = value
-            if (type == "frequency" && frequencyUnit !== "mili") {
-                console.log(frequencyUnit)
-                data[type] = ((value as number) * (frequencyUnit === "seg" ? 1000 : frequencyUnit === "min" ? 60000 : 3600000)).toString()
-            }
-            const response = await api.patch("/whatsapp", data)
+            const response = await api.patch("/nagazap", data, { params: { nagazap_id: nagazap.id } })
             setNagazap(response.data)
-            setFrequencyUnit("mili")
         } catch (error) {
             console.log(error)
         } finally {
@@ -80,11 +77,11 @@ export const Oven: React.FC<OvenProps> = ({ nagazap, setNagazap }) => {
     }, [nagazap])
 
     const onStatusToggleClick = async (option: "start" | "pause") => {
-        if (loading) return
+        if (loading || !nagazap) return
         setLoading(true)
 
         try {
-            const response = await api.get("/whatsapp/" + option)
+            const response = await api.get("/nagazap/" + option, { params: { nagazap_id: nagazap.id } })
             setNagazap(response.data)
         } catch (error) {
             console.log(error)
@@ -94,11 +91,11 @@ export const Oven: React.FC<OvenProps> = ({ nagazap, setNagazap }) => {
     }
 
     const onClearOvenClick = async () => {
-        if (loading) return
+        if (loading || !nagazap) return
         setLoading(true)
 
         try {
-            const response = await api.get("/whatsapp/clearOven")
+            const response = await api.get("/nagazap/clearOven", { params: { nagazap_id: nagazap.id } })
             setNagazap(response.data)
         } catch (error) {
             console.log(error)
@@ -121,37 +118,26 @@ export const Oven: React.FC<OvenProps> = ({ nagazap, setNagazap }) => {
                     </Box>
                     <Box sx={{ gap: "1vw" }}>
                         {!!batches.length && (
-                            <IconButton sx={{ width: 45 }} onClick={onClearOvenClick} disabled={loading} color="error">
+                            <IconButton sx={{ alignSelf: "center" }} onClick={onClearOvenClick} disabled={loading} color="error">
                                 {<DeleteForever />}
                             </IconButton>
                         )}
-                        <IconButton sx={{ width: 45 }} onClick={() => onStatusToggleClick(nagazap.paused ? "start" : "pause")}>
+                        <IconButton sx={{ alignSelf: "center" }} onClick={() => onStatusToggleClick(nagazap.paused ? "start" : "pause")}>
                             {nagazap.paused ? <PlayCircle color="success" /> : <PauseCircle color="warning" />}
                         </IconButton>
                         <TextField
-                            label="Frequência"
+                            label="Intervalo entre fornadas"
                             value={frequency}
                             onChange={(event) => setFrequency(event.target.value)}
                             InputProps={{
                                 sx: { width: textfield_size },
                                 endAdornment: (
                                     <>
-                                        <TextField
-                                            select
-                                            variant="standard"
-                                            value={frequencyUnit}
-                                            // @ts-ignore
-                                            onChange={(event) => setFrequencyUnit(event.target.value)}
-                                            InputProps={{ sx: { marginLeft: "auto" } }}
-                                        >
-                                            <MenuItem value={"mili"}>Mili</MenuItem>
-                                            <MenuItem value={"seg"}>Segundos</MenuItem>
-                                            <MenuItem value="min">Minutos</MenuItem>
-                                            <MenuItem value="hour">Horas</MenuItem>
-                                        </TextField>
+                                        Minutos
                                         <IconButton
-                                            disabled={frequency == nagazap?.frequency && frequencyUnit == "mili"}
+                                            disabled={frequency == nagazap?.frequency}
                                             onClick={() => save("frequency", frequency)}
+                                            sx={{ alignSelf: "center" }}
                                         >
                                             <Save />
                                         </IconButton>
@@ -160,20 +146,24 @@ export const Oven: React.FC<OvenProps> = ({ nagazap, setNagazap }) => {
                             }}
                         />
                         <TextField
-                            label="Fornada"
+                            label="Mensagens por fornada"
                             value={batchSize}
                             type="number"
                             onChange={(event) => setBatchSize(Number(event.target.value))}
                             InputProps={{
                                 sx: { width: textfield_size },
                                 endAdornment: (
-                                    <IconButton disabled={batchSize == nagazap?.batchSize} onClick={() => save("batchSize", batchSize)}>
+                                    <IconButton
+                                        disabled={batchSize == nagazap?.batchSize}
+                                        onClick={() => save("batchSize", batchSize)}
+                                        sx={{ alignSelf: "center" }}
+                                    >
                                         <Save />
                                     </IconButton>
                                 ),
                             }}
                         />
-                        <IconButton onClick={refresh} disabled={loading}>
+                        <IconButton onClick={refresh} disabled={loading} sx={{ alignSelf: "center" }}>
                             {loading ? <CircularProgress size="1.5rem" color="secondary" /> : <Refresh />}
                         </IconButton>
                     </Box>
