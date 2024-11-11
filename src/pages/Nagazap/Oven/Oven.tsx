@@ -126,7 +126,7 @@ export const Oven: React.FC<OvenProps> = ({ nagazap, setNagazap }) => {
                             {nagazap.paused ? <PlayCircle color="success" /> : <PauseCircle color="warning" />}
                         </IconButton>
                         <TextField
-                            label="Frequência"
+                            label="Intervalo entre fornadas"
                             value={frequency}
                             onChange={(event) => setFrequency(event.target.value)}
                             InputProps={{
@@ -146,7 +146,7 @@ export const Oven: React.FC<OvenProps> = ({ nagazap, setNagazap }) => {
                             }}
                         />
                         <TextField
-                            label="Fornada"
+                            label="Mensagens por fornada"
                             value={batchSize}
                             type="number"
                             onChange={(event) => setBatchSize(Number(event.target.value))}
