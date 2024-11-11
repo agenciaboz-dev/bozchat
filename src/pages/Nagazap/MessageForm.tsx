@@ -105,11 +105,20 @@ export const MessageFormScreen: React.FC<MessageFormProps> = ({ nagazap }) => {
                                         formik.setFieldValue("template", templates.find((item) => item.name == event.target.value) || null)
                                     }
                                     select
-                                    SelectProps={{ MenuProps: { MenuListProps: { sx: { bgcolor: "background.default" } } } }}
+                                    SelectProps={{
+                                        SelectDisplayProps: { style: { display: "flex", alignItems: "center", gap: "0.5vw" } },
+                                        MenuProps: { MenuListProps: { sx: { bgcolor: "background.default" } } },
+                                    }}
                                 >
                                     <MenuItem value={""} sx={{ display: "none" }} />
                                     {templates.map((item) => (
-                                        <MenuItem key={item.id} value={item.name} sx={{ gap: "0.5vw" }} title={item.status}>
+                                        <MenuItem
+                                            key={item.id}
+                                            value={item.name}
+                                            sx={{ gap: "0.5vw" }}
+                                            title={item.status}
+                                            disabled={item.status !== "APPROVED"}
+                                        >
                                             {item.status === "PENDING" && <WatchLater color="warning" />}
                                             {item.status === "APPROVED" && <Check color="success" />}
                                             {item.status === "REJECTED" && <Error color="error" />}
