@@ -3,7 +3,7 @@ import { Box, IconButton, useMediaQuery } from "@mui/material"
 import { Title2 } from "../../components/Title"
 import { GeneralStat } from "../../types/GeneralStat"
 import { GeneralStatsList } from "./GeneralStatsList"
-import { Announcement, Backup, Check, CheckCircle, Loop, Replay } from "@mui/icons-material"
+import { Announcement, Backup, Check, Loop, Replay } from "@mui/icons-material"
 import { api } from "../../api"
 import { useUser } from "../../hooks/useUser"
 
