@@ -104,26 +104,6 @@ export const TemplateForm: React.FC<TemplateFormProps> = ({ nagazap }) => {
             <Box sx={{ height: "64vh" }}>
                 <form onSubmit={formik.handleSubmit}>
                     <Grid container columns={3} spacing={"1vw"}>
-                        <Grid item xs={1}>
-                            <Paper
-                                sx={{
-                                    flexDirection: "column",
-                                    gap: "1vw",
-                                    padding: "0.5vw",
-                                    position: "relative",
-                                    borderRadius: "0.5vw",
-                                    borderTopLeftRadius: 0,
-                                    color: "secondary.main",
-                                    marginBottom: "2vw",
-                                }}
-                            >
-                                <TemplateHeader component={templateHeader} />
-                                <TemplateBody component={templateBody} />
-                                <TemplateFooter component={templateFooter} />
-                                <TemplateButtons component={templateButtons} />
-                                <TrianguloFudido alignment="left" color={"#2a323c"} />
-                            </Paper>
-                        </Grid>
                         <Grid item xs={2}>
                             <Box
                                 sx={{
@@ -148,6 +128,26 @@ export const TemplateForm: React.FC<TemplateFormProps> = ({ nagazap }) => {
                                     {loading ? <CircularProgress size="1.5rem" color="secondary" /> : "Concluir"}
                                 </Button>
                             </Box>
+                        </Grid>
+                        <Grid item xs={1}>
+                            <Paper
+                                sx={{
+                                    flexDirection: "column",
+                                    gap: "1vw",
+                                    padding: "0.5vw",
+                                    position: "relative",
+                                    borderRadius: "0.5vw",
+                                    borderTopLeftRadius: 0,
+                                    color: "secondary.main",
+                                    marginBottom: "2vw",
+                                }}
+                            >
+                                <TemplateHeader component={templateHeader} />
+                                <TemplateBody component={templateBody} />
+                                <TemplateFooter component={templateFooter} />
+                                <TemplateButtons component={templateButtons} />
+                                <TrianguloFudido alignment="left" color={"#2a323c"} />
+                            </Paper>
                         </Grid>
                     </Grid>
                 </form>
