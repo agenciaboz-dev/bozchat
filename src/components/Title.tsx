@@ -15,7 +15,13 @@ export const Title: React.FC<{ title: string; children?: React.ReactNode; icon?:
         </Box>
     )
 }
-export const Title2: React.FC<{ name: string; right?: React.ReactNode; left?: React.ReactNode }> = ({ name, right, left }) => {
+export const Title2: React.FC<{ name: string; right?: React.ReactNode; left?: React.ReactNode; space?: boolean; center?: boolean }> = ({
+    name,
+    right,
+    left,
+    space,
+    center,
+}) => {
     const isMobile = useMediaQuery("(orientation: portrait)")
     const colors = useColors()
     return (
@@ -31,17 +37,19 @@ export const Title2: React.FC<{ name: string; right?: React.ReactNode; left?: Re
                 alignItems: "center",
             }}
         >
-            {left ? <Box sx={{}}>{left}</Box> : null}
+            {left ? <Box>{left}</Box> : isMobile && !space ? <Box sx={{ flex: 0.1 }}></Box> : null}
             <p
                 style={{
                     flex: 1,
                     color: colors.primary,
-                    textAlign: "center",
+                    // textAlign: isMobile ? "center" : center ? undefined : undefined,
+                    textAlign: center ? undefined : isMobile ? "center" : undefined,
                 }}
             >
                 {name}
             </p>
-            {right}
+            {right ? <Box>{right}</Box> : isMobile && space ? <Box sx={{ flex: 0.1 }}></Box> : null}
+            {/* {right} */}
         </Box>
     )
 }
