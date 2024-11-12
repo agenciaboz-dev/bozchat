@@ -1,11 +1,12 @@
 import React, { useEffect, useState } from "react"
-import { Box, CircularProgress, Grid, IconButton } from "@mui/material"
+import { Box, CircularProgress, Grid, IconButton, TextField, ToggleButton, ToggleButtonGroup } from "@mui/material"
 import { Subroute } from "../Subroute"
 import { api } from "../../../api"
 import { NagaMessage, Nagazap } from "../../../types/server/class/Nagazap"
 import { MessageContainer } from "./MessageContainer"
-import { Refresh } from "@mui/icons-material"
+import { List, Refresh, Search, ViewList, ViewQuilt } from "@mui/icons-material"
 import { useIo } from "../../../hooks/useIo"
+import Masonry, { ResponsiveMasonry } from "react-responsive-masonry"
 
 interface MessagesScreenProps {
     nagazap: Nagazap
@@ -18,6 +19,7 @@ export const MessagesScreen: React.FC<MessagesScreenProps> = ({ nagazap }) => {
     const [messages, setMessages] = useState<NagaMessage[]>([])
     const [filter, setFilter] = useState("")
     const [filteredMessages, setFilteredMessages] = useState<NagaMessage[]>(messages)
+    const [layoutType, setLayoutType] = useState<"masonry" | "list">("masonry")
 
     const fetchMessages = async () => {
         setLoading(true)
@@ -66,8 +68,30 @@ export const MessagesScreen: React.FC<MessagesScreenProps> = ({ nagazap }) => {
                 </IconButton>
             }
         >
-            <Grid container columns={1} spacing={"1vw"} sx={{ height: "64vh", gap: "0.5vw" }}>
-                {messages
+            <Box sx={{ gap: "1vw" }}>
+                <TextField
+                    placeholder="Digite o nome, número ou texto da mensagem"
+                    label="Buscar mensagens"
+                    InputProps={{ startAdornment: <Search />, sx: { gap: "0.5vw" } }}
+                    onChange={(ev) => onSearch(ev.target.value)}
+                />
+                <ToggleButtonGroup value={layoutType} onChange={(_, value) => setLayoutType(value)} exclusive>
+                    <ToggleButton value="masonry">
+                        <ViewQuilt />
+                    </ToggleButton>
+                    <ToggleButton value="list">
+                        <ViewList />
+                    </ToggleButton>
+                </ToggleButtonGroup>
+            </Box>
+            <Masonry
+                columnsCount={layoutType === "list" ? 1 : 3}
+                gutter="1vw"
+                style={{ height: "0vh", gap: "1vw", maxWidth: layoutType === "list" ? "24.5vw" : undefined }}
+                sequential
+            >
+                {/* @ts-ignore */}
+                {filteredMessages
                     .filter(
                         (message) =>
                             message?.from?.includes(filter) ||
@@ -78,7 +102,7 @@ export const MessagesScreen: React.FC<MessagesScreenProps> = ({ nagazap }) => {
                     .map((item) => (
                         <MessageContainer key={item.id} message={item} />
                     ))}
-            </Grid>
+            </Masonry>
         </Subroute>
     )
 }

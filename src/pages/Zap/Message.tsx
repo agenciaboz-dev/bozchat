@@ -155,7 +155,7 @@ export const Message: React.FC<MessageProps> = ({ message, isGroup, washima, pre
                     }}
                 >
                     {/*//* MESSAGE AUTHOR  */}
-                    {show_author && is_deleted && <MessageAuthor message={message} />}
+                    {show_author && is_deleted && <MessageAuthor author={message.author} />}
                     <Box
                         sx={{
                             position: "relative",
@@ -182,7 +182,7 @@ export const Message: React.FC<MessageProps> = ({ message, isGroup, washima, pre
                         )}
 
                         {/*//* MESSAGE AUTHOR  */}
-                        {show_author && message.type !== "revoked" && <MessageAuthor message={message} />}
+                        {show_author && message.type !== "revoked" && <MessageAuthor author={message.author} />}
 
                         {is_deleted && <DeletedMessage message={message} />}
                         {message.hasMedia && !is_deleted && (

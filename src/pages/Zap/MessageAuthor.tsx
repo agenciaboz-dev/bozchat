@@ -1,20 +1,19 @@
 import React, { useEffect, useState } from "react"
 import { Box, useTheme } from "@mui/material"
-import { WashimaMessage } from "../../types/server/class/Washima/WashimaMessage"
 import Inputmask from "inputmask"
 import { washima_colors } from "../../style/colors"
 
 interface MessageAuthorProps {
-    message: WashimaMessage
+    author?: string | null
 }
 
 const authors_colors: { author: string; color: string }[] = []
 const random_colors = washima_colors
 
-export const MessageAuthor: React.FC<MessageAuthorProps> = ({ message }) => {
+export const MessageAuthor: React.FC<MessageAuthorProps> = ({ author }) => {
     const theme = useTheme()
 
-    const author_split = message.author?.split(" - ") || []
+    const author_split = author?.split(" - ") || []
     const author_name = author_split?.length > 0 ? (author_split[0] === "undefined" ? "" : author_split[0]) : ""
     const author_phone =
         // @ts-ignore
@@ -23,12 +22,12 @@ export const MessageAuthor: React.FC<MessageAuthorProps> = ({ message }) => {
     const [authorColor, setAuthorColor] = useState("")
 
     useEffect(() => {
-        if (message.author) {
-            if (!authors_colors.find((item) => item.author === message.author)) {
-                authors_colors.push({ author: message.author, color: random_colors[authors_colors.length] })
+        if (author) {
+            if (!authors_colors.find((item) => item.author === author)) {
+                authors_colors.push({ author: author, color: random_colors[authors_colors.length] })
             }
 
-            const color_index = authors_colors.findIndex((item) => item.author === message.author)
+            const color_index = authors_colors.findIndex((item) => item.author === author)
             setAuthorColor(authors_colors[color_index].color)
         }
     }, [])
