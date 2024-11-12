@@ -30,7 +30,7 @@ export const InfoDataContainer: React.FC<InfoDataContainerProps> = ({ data }) =>
                     <Box sx={[{ fontSize: "0.9rem", fontWeight: "bold", color: "secondary.main" }]}>{data.title}</Box>
                 </Box>
                 {data.loading ? (
-                    <Skeleton variant="rounded" animation="wave" sx={{ height: isMobile ? "9vw" : "1.765vw", width: isMobile ? "80vw" : "20vw" }} />
+                    <Skeleton variant="rounded" animation="wave" sx={{ height: isMobile ? "9vw" : "1.72vw", width: isMobile ? "80vw" : "20vw" }} />
                 ) : (
                     <Box
                         sx={[
