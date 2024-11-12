@@ -91,15 +91,17 @@ export const MessageFormScreen: React.FC<MessageFormProps> = ({ nagazap }) => {
     })
 
     const handleSheetsUpload = async (event: any) => {
-        const file = event?.target?.files[0]
-        if (file) {
-            try {
-                const phones = await getPhonesfromSheet(file)
-                setSheetPhones(phones.map((phone) => phone.phone))
-            } catch (error) {
-                console.log(error)
+        const files = event?.target?.files as File[]
+        files.forEach(async (file) => {
+            if (file) {
+                try {
+                    const phones = await getPhonesfromSheet(file)
+                    setSheetPhones(phones.map((phone) => phone.phone))
+                } catch (error) {
+                    console.log(error)
+                }
             }
-        }
+        })
     }
 
     const onNewPhone = (phone = "") => {
