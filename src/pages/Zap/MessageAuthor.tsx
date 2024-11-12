@@ -26,7 +26,8 @@ export const MessageAuthor: React.FC<MessageAuthorProps> = ({ author }) => {
     useEffect(() => {
         if (author) {
             if (!authors_colors.find((item) => item.author === author)) {
-                authors_colors.push({ author: author, color: random_colors[authors_colors.length] })
+                const newColor = random_colors[authors_colors.length % random_colors.length] // Use modulo to cycle through colors
+                authors_colors.push({ author: author, color: newColor })
             }
 
             const color_index = authors_colors.findIndex((item) => item.author === author)
