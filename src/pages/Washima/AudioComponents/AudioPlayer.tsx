@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState } from "react"
-import { Avatar, Box, CircularProgress, IconButton, Paper, Skeleton, Slider, useMediaQuery } from "@mui/material"
+import { Avatar, Box, CircularProgress, IconButton, Paper, Skeleton, Slider, SxProps, useMediaQuery } from "@mui/material"
 import { Headphones, Pause, PlayArrow } from "@mui/icons-material"
 import { useAudioPlayer, useGlobalAudioPlayer } from "react-use-audio-player"
 import { formatTimeDuration } from "../../../tools/formatTimeDuration"
@@ -13,9 +13,10 @@ interface AudioPlayerProps {
     chat_id?: string
     loading?: boolean
     message?: WashimaMessage
+    containerSx?: SxProps
 }
 
-export const AudioPlayer: React.FC<AudioPlayerProps> = ({ media, washima, chat_id, loading, message }) => {
+export const AudioPlayer: React.FC<AudioPlayerProps> = ({ media, washima, chat_id, loading, message, containerSx }) => {
     const player = useAudioPlayer()
     const test = useRef(0)
     const isMobile = useMediaQuery("(orientation: portrait)")
@@ -66,8 +67,12 @@ export const AudioPlayer: React.FC<AudioPlayerProps> = ({ media, washima, chat_i
     }, [media])
 
     return (
-        <Box sx={{ width: isMobile ? "60vw" : "19.5vw", gap: "0.5vw", alignItems: "center" }}>
-            <Avatar sx={{ bgcolor: "warning.main", width: isMobile ? "12vw" : "3.5vw", height: isMobile ? "12vw" : "3.5vw" }} src={profilePicUrl} imgProps={{ draggable: false }}>
+        <Box sx={{ width: isMobile ? "60vw" : "19.5vw", gap: "0.5vw", alignItems: "center", ...containerSx }}>
+            <Avatar
+                sx={{ bgcolor: "warning.main", width: isMobile ? "12vw" : "3.5vw", height: isMobile ? "12vw" : "3.5vw" }}
+                src={profilePicUrl}
+                imgProps={{ draggable: false }}
+            >
                 <Headphones sx={{ borderRadius: 100, width: isMobile ? "6vw" : "2vw", height: isMobile ? "6vw" : "2vw" }} color="secondary" />
             </Avatar>
             {/* <CircularProgress size={"3.5vw"} /> */}
