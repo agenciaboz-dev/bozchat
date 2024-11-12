@@ -47,7 +47,6 @@ export const Logs: React.FC<LogsProps> = ({ nagazap, setNagazap, setShowInformat
                 <IconButton
                     onClick={() => {
                         refresh()
-                        setShowInformations(false)
                     }}
                     disabled={loading}
                 >
