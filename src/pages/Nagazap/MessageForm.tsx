@@ -18,7 +18,7 @@ import {
 import { Subroute } from "./Subroute"
 import { useFormik } from "formik"
 import { OvenForm } from "../../types/server/Meta/WhatsappBusiness/WhatsappForm"
-import { Check, CloudUpload, DeleteForever, Error, PlusOne, Refresh, WatchLater } from "@mui/icons-material"
+import { ArrowBack, Check, CloudUpload, DeleteForever, Error, PlusOne, Refresh, WatchLater } from "@mui/icons-material"
 import { api } from "../../api"
 import { TemplateComponent, TemplateInfo } from "../../types/server/Meta/WhatsappBusiness/TemplatesInfo"
 // import { Avatar } from "@files-ui/react"
@@ -157,14 +157,16 @@ export const MessageFormScreen: React.FC<MessageFormProps> = ({ nagazap, setShow
     return (
         <Subroute
             title="Enviar mensagem"
-            right={
-                <IconButton
-                    onClick={() => {
-                        setShowInformations(false)
-                    }}
-                >
-                    <Refresh />
-                </IconButton>
+            left={
+                isMobile ? (
+                    <IconButton
+                        onClick={() => {
+                            setShowInformations(false)
+                        }}
+                    >
+                        <ArrowBack />
+                    </IconButton>
+                ) : undefined
             }
         >
             <form onSubmit={formik.handleSubmit}>

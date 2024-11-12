@@ -1,19 +1,21 @@
-import React, { useEffect, useState } from "react"
-import { Box, CircularProgress, Grid, IconButton, TextField, ToggleButton, ToggleButtonGroup } from "@mui/material"
+import React, { Dispatch, SetStateAction, useEffect, useState } from "react"
+import { Box, CircularProgress, Grid, IconButton, TextField, ToggleButton, ToggleButtonGroup, useMediaQuery } from "@mui/material"
 import { Subroute } from "../Subroute"
 import { api } from "../../../api"
 import { NagaMessage, Nagazap } from "../../../types/server/class/Nagazap"
 import { MessageContainer } from "./MessageContainer"
-import { List, Refresh, Search, ViewList, ViewQuilt } from "@mui/icons-material"
+import { ArrowBack, List, Refresh, Search, ViewList, ViewQuilt } from "@mui/icons-material"
 import { useIo } from "../../../hooks/useIo"
 import Masonry, { ResponsiveMasonry } from "react-responsive-masonry"
 
 interface MessagesScreenProps {
     nagazap: Nagazap
+    setShowInformations: Dispatch<SetStateAction<boolean>>
 }
 
-export const MessagesScreen: React.FC<MessagesScreenProps> = ({ nagazap }) => {
+export const MessagesScreen: React.FC<MessagesScreenProps> = ({ nagazap, setShowInformations }) => {
     const io = useIo()
+    const isMobile = useMediaQuery("(orientation: portrait)")
 
     const [loading, setLoading] = useState(false)
     const [messages, setMessages] = useState<NagaMessage[]>([])
@@ -66,6 +68,17 @@ export const MessagesScreen: React.FC<MessagesScreenProps> = ({ nagazap }) => {
                 <IconButton onClick={fetchMessages} disabled={loading}>
                     {loading ? <CircularProgress size="1.5rem" color="secondary" /> : <Refresh />}
                 </IconButton>
+            }
+            left={
+                isMobile ? (
+                    <IconButton
+                        onClick={() => {
+                            setShowInformations(false)
+                        }}
+                    >
+                        <ArrowBack />
+                    </IconButton>
+                ) : null
             }
         >
             <Box sx={{ gap: "1vw" }}>

@@ -1,5 +1,5 @@
 import React, { Dispatch, SetStateAction, useState } from "react"
-import { Box, Button, CircularProgress, Grid, IconButton, TextField, useTheme } from "@mui/material"
+import { Box, Button, CircularProgress, Grid, IconButton, TextField, useMediaQuery, useTheme } from "@mui/material"
 import { Subroute } from "./Subroute"
 import { useFormik } from "formik"
 import { Nagazap, NagazapForm as NagazapFormType } from "../../types/server/class/Nagazap"
@@ -8,7 +8,7 @@ import { textFieldStyle } from "../../style/textfield"
 import { api } from "../../api"
 import { AxiosError } from "axios"
 import { HandledError } from "../../types/server/class/HandledError"
-import { Refresh } from "@mui/icons-material"
+import { ArrowBack, Refresh } from "@mui/icons-material"
 
 interface NagazapFormProps {
     onSuccess: (nagazap: Nagazap) => void
@@ -18,6 +18,7 @@ interface NagazapFormProps {
 export const NagazapForm: React.FC<NagazapFormProps> = ({ onSuccess, setShowInformations }) => {
     const { user } = useUser()
     const theme = useTheme()
+    const isMobile = useMediaQuery("(orientation: portrait)")
 
     const PrimaryText: React.FC<{ children: React.ReactNode }> = ({ children }) => (
         <span style={{ color: theme.palette.primary.main }}>{children}</span>
@@ -51,14 +52,16 @@ export const NagazapForm: React.FC<NagazapFormProps> = ({ onSuccess, setShowInfo
     return (
         <Subroute
             title="Adicionar conta"
-            right={
-                <IconButton
-                    onClick={() => {
-                        setShowInformations(false)
-                    }}
-                >
-                    <Refresh />
-                </IconButton>
+            left={
+                isMobile ? (
+                    <IconButton
+                        onClick={() => {
+                            setShowInformations(false)
+                        }}
+                    >
+                        <ArrowBack />
+                    </IconButton>
+                ) : undefined
             }
         >
             <Box sx={{ flex: 1, flexDirection: "column", gap: 3, color: "secondary.main" }}>

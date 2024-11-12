@@ -1,9 +1,9 @@
 import React, { useEffect, useState } from "react"
-import { Box, CircularProgress, Grid, IconButton } from "@mui/material"
+import { Box, CircularProgress, Grid, IconButton, useMediaQuery } from "@mui/material"
 import { Nagazap } from "../../../types/server/class/Nagazap"
 import { Subroute } from "../Subroute"
 import { api } from "../../../api"
-import { Refresh } from "@mui/icons-material"
+import { ArrowBack, Refresh } from "@mui/icons-material"
 import { LogsList } from "./LogsList"
 import { useUser } from "../../../hooks/useUser"
 
@@ -15,6 +15,7 @@ interface LogsProps {
 
 export const Logs: React.FC<LogsProps> = ({ nagazap, setNagazap, setShowInformations }) => {
     const { user } = useUser()
+    const isMobile = useMediaQuery("(orientation: portrait)")
 
     const [loading, setLoading] = useState(false)
     const [filter, setFilter] = useState("")
@@ -52,6 +53,17 @@ export const Logs: React.FC<LogsProps> = ({ nagazap, setNagazap, setShowInformat
                 >
                     {loading ? <CircularProgress size="1.5rem" color="secondary" /> : <Refresh />}
                 </IconButton>
+            }
+            left={
+                isMobile ? (
+                    <IconButton
+                        onClick={() => {
+                            setShowInformations(false)
+                        }}
+                    >
+                        <ArrowBack />
+                    </IconButton>
+                ) : undefined
             }
         >
             <Grid container columns={2} spacing={3}>

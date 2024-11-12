@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from "react"
-import { Box, CircularProgress, Grid, IconButton, MenuItem, TextField } from "@mui/material"
+import { Box, CircularProgress, Grid, IconButton, MenuItem, TextField, useMediaQuery } from "@mui/material"
 import { Subroute } from "../Subroute"
 import { Nagazap } from "../../../types/server/class/Nagazap"
-import { DeleteForever, Pause, PauseCircle, PlayArrow, PlayCircle, Refresh, Save } from "@mui/icons-material"
+import { ArrowBack, DeleteForever, Pause, PauseCircle, PlayArrow, PlayCircle, Refresh, Save } from "@mui/icons-material"
 import { api } from "../../../api"
 import { WhatsappForm } from "../../../types/server/Meta/WhatsappBusiness/WhatsappForm"
 import { Batch } from "./Batch"
@@ -27,6 +27,7 @@ export const Oven: React.FC<OvenProps> = ({ nagazap, setNagazap, setShowInformat
 
     const io = useIo()
     const { user } = useUser()
+    const isMobile = useMediaQuery("(orientation: portrait)")
 
     const [frequency, setFrequency] = useState(nagazap?.frequency || "")
     const [batchSize, setBatchSize] = useState(nagazap?.batchSize || 0)
@@ -112,6 +113,17 @@ export const Oven: React.FC<OvenProps> = ({ nagazap, setNagazap, setShowInformat
     return nagazap ? (
         <Subroute
             title="Forno"
+            left={
+                isMobile ? (
+                    <IconButton
+                        onClick={() => {
+                            setShowInformations(false)
+                        }}
+                    >
+                        <ArrowBack />
+                    </IconButton>
+                ) : undefined
+            }
             right={
                 <Box sx={{ flex: 1, justifyContent: "space-between", marginLeft: "0.5vw" }}>
                     <Box sx={{ alignItems: "center" }}>
@@ -167,7 +179,6 @@ export const Oven: React.FC<OvenProps> = ({ nagazap, setNagazap, setShowInformat
                         <IconButton
                             onClick={() => {
                                 refresh()
-                                setShowInformations(false)
                             }}
                             disabled={loading}
                             sx={{ alignSelf: "center" }}

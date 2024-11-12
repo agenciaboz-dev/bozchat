@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react"
-import { Box, Button, CircularProgress, Grid, IconButton, Paper, Tab, Tabs, TextField } from "@mui/material"
+import { Box, Button, CircularProgress, Grid, IconButton, Paper, Tab, Tabs, TextField, useMediaQuery } from "@mui/material"
 import { Nagazap } from "../../../types/server/class/Nagazap"
 import { Subroute } from "../Subroute"
 import { useFormik } from "formik"
@@ -16,7 +16,7 @@ import { TemplateComponentForm } from "./TemplateComponentForm"
 import { api } from "../../../api"
 import { AxiosError } from "axios"
 import { useSnackbar } from "burgos-snackbar"
-import { Refresh } from "@mui/icons-material"
+import { ArrowBack, Refresh } from "@mui/icons-material"
 
 interface TemplateFormProps {
     nagazap: Nagazap
@@ -25,6 +25,7 @@ interface TemplateFormProps {
 
 export const TemplateForm: React.FC<TemplateFormProps> = ({ nagazap, setShowInformations }) => {
     const { snackbar } = useSnackbar()
+    const isMobile = useMediaQuery("(orientation: portrait)")
 
     const [loading, setLoading] = useState(false)
     const [templateHeader, setTemplateHeader] = useState<TemplateComponentType>({ type: "HEADER", format: "TEXT", text: "Título" })
@@ -104,14 +105,16 @@ export const TemplateForm: React.FC<TemplateFormProps> = ({ nagazap, setShowInfo
     return (
         <Subroute
             title="Novo Template"
-            right={
-                <IconButton
-                    onClick={() => {
-                        setShowInformations(false)
-                    }}
-                >
-                    <Refresh />
-                </IconButton>
+            left={
+                isMobile ? (
+                    <IconButton
+                        onClick={() => {
+                            setShowInformations(false)
+                        }}
+                    >
+                        <ArrowBack />
+                    </IconButton>
+                ) : undefined
             }
         >
             <Box sx={{ height: "64vh" }}>

@@ -2,7 +2,7 @@ import React, { Dispatch, SetStateAction, useEffect, useState } from "react"
 import { Box, CircularProgress, Grid, IconButton, Paper, useMediaQuery } from "@mui/material"
 import { Subroute } from "../Subroute"
 import { api } from "../../../api"
-import { AccountBox, Business, Facebook, LocalPhone, Refresh, Security, WhatsApp } from "@mui/icons-material"
+import { AccountBox, ArrowBack, Business, Facebook, LocalPhone, Refresh, Security, WhatsApp } from "@mui/icons-material"
 import { Nagazap } from "../../../types/server/class/Nagazap"
 import { BusinessInfo } from "../../../types/server/Meta/WhatsappBusiness/BusinessInfo"
 import { GeneralStat } from "../../../types/GeneralStat"
@@ -73,12 +73,22 @@ export const Info: React.FC<InfoProps> = ({ nagazap, setShowInformations }) => {
                 <IconButton
                     onClick={() => {
                         fetchInfo()
-                        setShowInformations(false)
                     }}
                     disabled={loading}
                 >
                     {loading ? <CircularProgress size="1.5rem" color="secondary" /> : <Refresh />}
                 </IconButton>
+            }
+            left={
+                isMobile ? (
+                    <IconButton
+                        onClick={() => {
+                            setShowInformations(false)
+                        }}
+                    >
+                        <ArrowBack />
+                    </IconButton>
+                ) : null
             }
         >
             <Grid container columns={isMobile ? 1 : 2}>

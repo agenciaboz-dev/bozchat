@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from "react"
-import { Box, CircularProgress, Grid, IconButton, Paper } from "@mui/material"
+import { Box, CircularProgress, Grid, IconButton, Paper, useMediaQuery } from "@mui/material"
 import { Nagazap } from "../../../types/server/class/Nagazap"
 import { Subroute } from "../Subroute"
-import { DeleteForever, Refresh } from "@mui/icons-material"
+import { ArrowBack, DeleteForever, Refresh } from "@mui/icons-material"
 import { api } from "../../../api"
 import { useUser } from "../../../hooks/useUser"
 
@@ -14,6 +14,7 @@ interface BlacklistProps {
 
 export const Blacklist: React.FC<BlacklistProps> = ({ nagazap, setNagazap, setShowInformations }) => {
     const { user } = useUser()
+    const isMobile = useMediaQuery("(orientation: portrait)")
 
     const [loading, setLoading] = useState(false)
     const [blacklist, setBlacklist] = useState<string[]>([])
@@ -59,12 +60,22 @@ export const Blacklist: React.FC<BlacklistProps> = ({ nagazap, setNagazap, setSh
                 <IconButton
                     onClick={() => {
                         refresh()
-                        setShowInformations(false)
                     }}
                     disabled={loading}
                 >
                     {loading ? <CircularProgress size="1.5rem" color="secondary" /> : <Refresh />}
                 </IconButton>
+            }
+            left={
+                isMobile ? (
+                    <IconButton
+                        onClick={() => {
+                            setShowInformations(false)
+                        }}
+                    >
+                        <ArrowBack />
+                    </IconButton>
+                ) : undefined
             }
         >
             <Grid container columns={6} spacing={2}>

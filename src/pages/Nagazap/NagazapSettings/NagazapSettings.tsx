@@ -14,17 +14,20 @@ interface NagazapSettingsProps {
 }
 
 export const NagazapSettings: React.FC<NagazapSettingsProps> = ({ nagazap, setNagazap, fetchNagazaps, setShowInformations }) => {
+    const isMobile = useMediaQuery("(orientation: portrait)")
     return (
         <Subroute
             title="Configurações"
-            right={
-                <IconButton
-                    onClick={() => {
-                        setShowInformations(false)
-                    }}
-                >
-                    <Refresh />
-                </IconButton>
+            left={
+                isMobile ? (
+                    <IconButton
+                        onClick={() => {
+                            setShowInformations(false)
+                        }}
+                    >
+                        <ArrowBack />
+                    </IconButton>
+                ) : undefined
             }
         >
             <Box sx={{ flexDirection: "column", gap: "1vw" }}>
