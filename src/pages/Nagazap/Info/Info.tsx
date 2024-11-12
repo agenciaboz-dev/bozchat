@@ -8,7 +8,7 @@ import { BusinessInfo } from "../../../types/server/Meta/WhatsappBusiness/Busine
 import { GeneralStat } from "../../../types/GeneralStat"
 import { InfoDataContainer } from "./InfoDataContainer"
 import { GeneralStatistics } from "./GeneralStatistics"
-// import { MessagesChart } from "./MessagesChart"
+import { MessagesChart } from "./MessagesChart"
 
 interface InfoProps {
     nagazap: Nagazap
@@ -92,7 +92,7 @@ export const Info: React.FC<InfoProps> = ({ nagazap }) => {
 
             <Box sx={{ gap: "1vw" }}>
                 <GeneralStatistics nagazap={nagazap} />
-                {/* <MessagesChart messages={nagazap.sentMessages} /> */}
+                <MessagesChart messages={nagazap.sentMessages} />
             </Box>
         </Subroute>
     )
