@@ -105,7 +105,7 @@ export const MessagesScreen: React.FC<MessagesScreenProps> = ({ nagazap, setShow
             <Masonry
                 columnsCount={layoutType === "list" ? 1 : 3}
                 gutter="1vw"
-                style={{ height: "0vh", gap: "1vw", maxWidth: layoutType === "list" ? "24.5vw" : undefined }}
+                style={{ height: "0vh", gap: "1vw", maxWidth: layoutType === "list" ? (isMobile ? undefined : "24.5vw") : undefined }}
                 sequential
             >
                 {/* @ts-ignore */}
