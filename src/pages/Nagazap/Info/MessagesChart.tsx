@@ -1,5 +1,5 @@
 import React from "react"
-import { Box, useTheme } from "@mui/material"
+import { Box, useMediaQuery, useTheme } from "@mui/material"
 import { SentMessageLog } from "../../../types/server/Meta/WhatsappBusiness/Logs"
 import { parseISO, format } from "date-fns"
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from "recharts"
@@ -33,9 +33,16 @@ const formatMessagesByDate = (messages: SentMessageLog[]): MessageCountByDate[] 
 export const MessagesChart: React.FC<MessagesChartProps> = ({ messages }) => {
     const { palette } = useTheme()
     const formattedData = formatMessagesByDate(messages)
+    const isMobile = useMediaQuery("(orientation: portrait)")
 
     return (
-        <ResponsiveContainer style={{ flex: 0.5 }} height={330}>
+        <ResponsiveContainer
+            style={{
+                flex: isMobile ? undefined : 0.5,
+                padding: isMobile ? "20px 20px 0 0" : undefined,
+            }}
+            height={330}
+        >
             <LineChart data={formattedData}>
                 <CartesianGrid strokeDasharray="3 3" />
                 <XAxis dataKey="date" />

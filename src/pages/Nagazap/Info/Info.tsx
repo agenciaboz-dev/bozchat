@@ -113,7 +113,7 @@ export const Info: React.FC<InfoProps> = ({ nagazap, setShowInformations }) => {
                 </Grid>
             </Grid>
 
-            <Box sx={{ gap: "1vw" }}>
+            <Box sx={{ gap: "1vw", flexDirection: isMobile ? "column" : "row" }}>
                 <GeneralStatistics nagazap={nagazap} />
                 <MessagesChart messages={nagazap.sentMessages} />
             </Box>
