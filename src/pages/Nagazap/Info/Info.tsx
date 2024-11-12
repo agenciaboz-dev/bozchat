@@ -105,7 +105,7 @@ export const Info: React.FC<InfoProps> = ({ nagazap, setShowInformations }) => {
 
             <Box sx={{ gap: "1vw" }}>
                 <GeneralStatistics nagazap={nagazap} />
-                <MessagesChart messages={nagazap.sentMessages} />
+                <MessagesChart messages={nagazap.sentMessages} blacklist={nagazap.blacklist} />
             </Box>
         </Subroute>
     )
