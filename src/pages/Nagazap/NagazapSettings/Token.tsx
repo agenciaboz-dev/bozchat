@@ -1,5 +1,5 @@
 import React, { useState } from "react"
-import { Box, Button, CircularProgress, Paper, Switch, TextField } from "@mui/material"
+import { Box, Button, CircularProgress, Paper, Switch, TextField, useMediaQuery } from "@mui/material"
 import { Nagazap } from "../../../types/server/class/Nagazap"
 import { useFormik } from "formik"
 import { api } from "../../../api"
@@ -13,6 +13,7 @@ interface TokenProps {
 
 export const Token: React.FC<TokenProps> = ({ nagazap }) => {
     const { snackbar } = useSnackbar()
+    const isMobile = useMediaQuery("(orientation: portrait)")
 
     const [loading, setLoading] = useState(false)
     const [locked, setLocked] = useState(true)
@@ -54,7 +55,7 @@ export const Token: React.FC<TokenProps> = ({ nagazap }) => {
                     value={formik.values.token}
                     onChange={formik.handleChange}
                     multiline
-                    maxRows={2}
+                    maxRows={isMobile ? 5 : 2}
                     disabled={locked}
                 />
                 <Button type="submit" variant="contained" sx={{ alignSelf: "flex-end" }} disabled={nagazap.token === formik.values.token}>
