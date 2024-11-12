@@ -30,6 +30,13 @@ export const TemplateComponentForm: React.FC<TemplateComponentFormProps> = ({ co
                     setComponent({ ...component, file: undefined })
                     return
                 }
+                
+                if (file.type !== "image/jpeg" && file.type !== "image/png") {
+                    setImageError("Tipo de arquivo não suportado. Envie uma imagem .png ou .jpeg")
+                    setComponent({ ...component, file: undefined })
+                    return
+                }
+
                 setComponent({ ...component, file })
             }
         },
