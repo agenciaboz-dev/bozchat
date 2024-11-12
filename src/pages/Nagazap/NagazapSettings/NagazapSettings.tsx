@@ -1,10 +1,10 @@
 import React, { Dispatch, SetStateAction } from "react"
-import { Box, IconButton } from "@mui/material"
+import { Box, IconButton, useMediaQuery } from "@mui/material"
 import { Nagazap } from "../../../types/server/class/Nagazap"
 import { Subroute } from "../Subroute"
 import { Token } from "./Token"
 import { DeleteNagazap } from "./DeleteNagazap"
-import { Refresh } from "@mui/icons-material"
+import { ArrowBack, Refresh } from "@mui/icons-material"
 
 interface NagazapSettingsProps {
     nagazap: Nagazap
