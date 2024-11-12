@@ -1,5 +1,5 @@
-import React, { useEffect, useState } from "react"
-import { Box, CircularProgress, Grid, IconButton, TextField, ToggleButton, ToggleButtonGroup } from "@mui/material"
+import React, { useCallback, useEffect, useState } from "react"
+import { Box, CircularProgress, debounce, Grid, IconButton, TextField, ToggleButton, ToggleButtonGroup } from "@mui/material"
 import { Subroute } from "../Subroute"
 import { api } from "../../../api"
 import { NagaMessage, Nagazap } from "../../../types/server/class/Nagazap"
@@ -41,6 +41,8 @@ export const MessagesScreen: React.FC<MessagesScreenProps> = ({ nagazap }) => {
         setFilter(text)
     }
 
+    const debouncedSearch = useCallback(debounce(onSearch, 300), [onSearch])
+
     useEffect(() => {
         fetchMessages()
     }, [])
@@ -73,7 +75,7 @@ export const MessagesScreen: React.FC<MessagesScreenProps> = ({ nagazap }) => {
                     placeholder="Digite o nome, número ou texto da mensagem"
                     label="Buscar mensagens"
                     InputProps={{ startAdornment: <Search />, sx: { gap: "0.5vw" } }}
-                    onChange={(ev) => onSearch(ev.target.value)}
+                    onChange={(ev) => debouncedSearch(ev.target.value)}
                 />
                 <ToggleButtonGroup value={layoutType} onChange={(_, value) => setLayoutType(value)} exclusive>
                     <ToggleButton value="masonry">
