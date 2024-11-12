@@ -21,7 +21,7 @@ export const MessagesScreen: React.FC<MessagesScreenProps> = ({ nagazap, setShow
     const [messages, setMessages] = useState<NagaMessage[]>([])
     const [filter, setFilter] = useState("")
     const [filteredMessages, setFilteredMessages] = useState<NagaMessage[]>(messages)
-    const [layoutType, setLayoutType] = useState<"masonry" | "list">("masonry")
+    const [layoutType, setLayoutType] = useState<"masonry" | "list">(isMobile ? "list" : "masonry")
 
     const fetchMessages = async () => {
         setLoading(true)
@@ -88,14 +88,16 @@ export const MessagesScreen: React.FC<MessagesScreenProps> = ({ nagazap, setShow
                     InputProps={{ startAdornment: <Search />, sx: { gap: "0.5vw" } }}
                     onChange={(ev) => onSearch(ev.target.value)}
                 />
-                <ToggleButtonGroup value={layoutType} onChange={(_, value) => setLayoutType(value)} exclusive>
-                    <ToggleButton value="masonry">
-                        <ViewQuilt />
-                    </ToggleButton>
-                    <ToggleButton value="list">
-                        <ViewList />
-                    </ToggleButton>
-                </ToggleButtonGroup>
+                {!isMobile ? (
+                    <ToggleButtonGroup value={layoutType} onChange={(_, value) => setLayoutType(value)} exclusive>
+                        <ToggleButton value="masonry">
+                            <ViewQuilt />
+                        </ToggleButton>
+                        <ToggleButton value="list">
+                            <ViewList />
+                        </ToggleButton>
+                    </ToggleButtonGroup>
+                ) : null}
             </Box>
             <Masonry
                 columnsCount={layoutType === "list" ? 1 : 3}
