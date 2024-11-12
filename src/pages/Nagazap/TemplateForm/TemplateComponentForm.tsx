@@ -1,7 +1,8 @@
-import React, { useCallback, useRef } from "react"
-import { Box, Button, MenuItem, TextField } from "@mui/material"
+import React, { useCallback, useRef, useState } from "react"
+import { Box, Button, IconButton, MenuItem, TextField } from "@mui/material"
 import { ButtonType, TemplateComponent } from "../../../types/server/Meta/WhatsappBusiness/TemplatesInfo"
 import { ButtonForm } from "./TemplateButtons/ButtonForm"
+import { Clear } from "@mui/icons-material"
 
 interface TemplateComponentFormProps {
     component: TemplateComponent
@@ -11,12 +12,32 @@ interface TemplateComponentFormProps {
 export const TemplateComponentForm: React.FC<TemplateComponentFormProps> = ({ component, setComponent }) => {
     const inputRef = useRef<HTMLInputElement>(null)
 
+    const [imageError, setImageError] = useState("")
+
+    const clearImage = () => {
+        setImageError("")
+        setComponent({ ...component, file: undefined })
+    }
+
     const handleFileChange = useCallback(
         (event: React.ChangeEvent<HTMLInputElement>) => {
-            const files = event.target.files
-            if (files) {
-                console.log(files)
-                setComponent({ ...component, file: files[0] })
+            setImageError("")
+            const files = Array.from(event.target.files as FileList)
+            if (files?.length > 0) {
+                const file = files[0]
+                if (file.size / 1024 / 1024 > 5) {
+                    setImageError("Arquivo muito grande, máximo de 5 MB")
+                    setComponent({ ...component, file: undefined })
+                    return
+                }
+                
+                if (file.type !== "image/jpeg" && file.type !== "image/png") {
+                    setImageError("Tipo de arquivo não suportado. Envie uma imagem .png ou .jpeg")
+                    setComponent({ ...component, file: undefined })
+                    return
+                }
+
+                setComponent({ ...component, file })
             }
         },
         [component]
@@ -52,13 +73,21 @@ export const TemplateComponentForm: React.FC<TemplateComponentFormProps> = ({ co
             )}
             {/* IMAGEM */}
             {component.format === "IMAGE" && (
-                <>
-                    <input type="file" ref={inputRef} style={{ display: "none" }} accept={"image/*"} onChange={handleFileChange} />
-
+                <Box sx={{ gap: "1vw", alignItems: "center" }}>
+                    <input type="file" ref={inputRef} style={{ display: "none" }} accept={"image/jpeg,image/png"} onChange={handleFileChange} />
                     <Button variant="outlined" onClick={() => inputRef.current?.click()}>
-                        Enviar imagem
+                        Escolher imagem
                     </Button>
-                </>
+
+                    <Box sx={{ color: imageError ? "error.main" : "secondary.main" }}>
+                        {imageError || (component.file ? component.file.name : "Envie um arquivo de no máximo 5 MB, extensão .png ou .jpeg")}
+                    </Box>
+                    {component.file && (
+                        <IconButton onClick={clearImage} sx={{ padding: 0 }}>
+                            <Clear />
+                        </IconButton>
+                    )}
+                </Box>
             )}
 
             {/* BOTOES */}

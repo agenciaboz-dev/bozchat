@@ -2,6 +2,7 @@ import { Prisma } from "@prisma/client";
 import { LoginForm } from "../types/shared/LoginForm";
 import { WithoutFunctions } from "./helpers";
 import { Washima } from "./Washima/Washima";
+import { Nagazap } from "./Nagazap";
 export type UserPrisma = Prisma.UserGetPayload<{}>;
 export type UserForm = Omit<WithoutFunctions<User>, "id" | "admin">;
 export declare class User {
@@ -22,4 +23,13 @@ export declare class User {
     getWashimasCount(): Promise<number>;
     getUnrepliedCount(): Promise<number>;
     getTotalStorage(): Promise<string>;
+    getNagazapsCount(): Promise<number>;
+    getNagazaps(): Promise<Nagazap[]>;
+    getNagazapsTemplatesCount(): Promise<number>;
+    getNagazapsLogsCount(): Promise<{
+        success: number;
+        error: number;
+    }>;
+    getBakingMessagesCount(): Promise<number>;
+    getBlacklistedCount(): Promise<number>;
 }

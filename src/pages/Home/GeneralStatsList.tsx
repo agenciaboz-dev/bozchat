@@ -10,14 +10,12 @@ interface GeneralStatsListProps {
 export const GeneralStatsList: React.FC<GeneralStatsListProps> = ({ list }) => {
     const isMobile = useMediaQuery("(orientation: portrait)")
     return (
-        <Box sx={{}}>
-            <Grid container columns={isMobile ? 1 : 2} spacing={"1vw"}>
-                {list.map((stat) => (
-                    <Grid item xs={1} key={stat.title}>
-                        <DataContainer stat={stat} />
-                    </Grid>
-                ))}
-            </Grid>
-        </Box>
+        <Grid container columns={isMobile ? 1 : 2} spacing={"1vw"}>
+            {list.map((stat) => (
+                <Grid item xs={1} key={stat.title}>
+                    <DataContainer stat={stat} />
+                </Grid>
+            ))}
+        </Grid>
     )
 }

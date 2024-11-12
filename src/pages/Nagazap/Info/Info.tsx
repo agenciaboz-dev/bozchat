@@ -1,13 +1,14 @@
 import React, { Dispatch, SetStateAction, useEffect, useState } from "react"
-import { Box, CircularProgress, Grid, IconButton, Paper, Skeleton, useMediaQuery } from "@mui/material"
+import { Box, CircularProgress, Grid, IconButton, Paper, useMediaQuery } from "@mui/material"
 import { Subroute } from "../Subroute"
 import { api } from "../../../api"
-import { AccountBox, Business, Facebook, Fingerprint, LocalOffer, LocalPhone, Refresh, Security, WhatsApp } from "@mui/icons-material"
+import { AccountBox, Business, Facebook, LocalPhone, Refresh, Security, WhatsApp } from "@mui/icons-material"
 import { Nagazap } from "../../../types/server/class/Nagazap"
 import { BusinessInfo } from "../../../types/server/Meta/WhatsappBusiness/BusinessInfo"
 import { GeneralStat } from "../../../types/GeneralStat"
 import { InfoDataContainer } from "./InfoDataContainer"
-import { Token } from "../NagazapSettings/Token"
+import { GeneralStatistics } from "./GeneralStatistics"
+// import { MessagesChart } from "./MessagesChart"
 
 interface InfoProps {
     nagazap: Nagazap
@@ -101,6 +102,11 @@ export const Info: React.FC<InfoProps> = ({ nagazap, setShowInformations }) => {
                     </Box>
                 </Grid>
             </Grid>
+
+            <Box sx={{ gap: "1vw" }}>
+                <GeneralStatistics nagazap={nagazap} />
+                {/* <MessagesChart messages={nagazap.sentMessages} /> */}
+            </Box>
         </Subroute>
     )
 }
