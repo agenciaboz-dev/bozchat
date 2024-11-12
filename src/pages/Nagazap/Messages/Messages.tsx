@@ -7,6 +7,7 @@ import { MessageContainer } from "./MessageContainer"
 import { List, Refresh, Search, ViewList, ViewQuilt } from "@mui/icons-material"
 import { useIo } from "../../../hooks/useIo"
 import Masonry, { ResponsiveMasonry } from "react-responsive-masonry"
+import { MessageSkeleton } from "./MessageSkeleton"
 
 interface MessagesScreenProps {
     nagazap: Nagazap
@@ -93,17 +94,17 @@ export const MessagesScreen: React.FC<MessagesScreenProps> = ({ nagazap }) => {
                 sequential
             >
                 {/* @ts-ignore */}
-                {filteredMessages
-                    .filter(
-                        (message) =>
-                            message?.from?.includes(filter) ||
-                            message?.name?.toLowerCase()?.includes(filter) ||
-                            message?.text?.toLowerCase()?.includes(filter)
-                    )
-                    .sort((a, b) => Number(b.timestamp) - Number(a.timestamp))
-                    .map((item) => (
-                        <MessageContainer key={item.id} message={item} />
-                    ))}
+                {loading
+                    ? new Array(20).fill(1).map((_, index) => <MessageSkeleton key={index} />)
+                    : filteredMessages
+                          .filter(
+                              (message) =>
+                                  message?.from?.includes(filter) ||
+                                  message?.name?.toLowerCase()?.includes(filter) ||
+                                  message?.text?.toLowerCase()?.includes(filter)
+                          )
+                          .sort((a, b) => Number(b.timestamp) - Number(a.timestamp))
+                          .map((item) => <MessageContainer key={item.id} message={item} />)}
             </Masonry>
         </Subroute>
     )
