@@ -9,14 +9,12 @@ interface GeneralStatsListProps {
 
 export const GeneralStatsList: React.FC<GeneralStatsListProps> = ({ list }) => {
     return (
-        <Box sx={{}}>
-            <Grid container columns={2} spacing={"1vw"}>
-                {list.map((stat) => (
-                    <Grid item xs={1} key={stat.title}>
-                        <DataContainer stat={stat} />
-                    </Grid>
-                ))}
-            </Grid>
-        </Box>
+        <Grid container columns={2} spacing={"1vw"}>
+            {list.map((stat) => (
+                <Grid item xs={1} key={stat.title}>
+                    <DataContainer stat={stat} />
+                </Grid>
+            ))}
+        </Grid>
     )
 }
