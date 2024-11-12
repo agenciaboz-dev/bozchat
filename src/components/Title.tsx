@@ -2,11 +2,7 @@ import { Box, lighten, useMediaQuery } from "@mui/material";
 import ApiIcon from "@mui/icons-material/Api"
 import { useColors } from "../hooks/useColors";
 
-export const Title: React.FC<{ title: string; children?: React.ReactNode; icon?: React.ReactNode }> = ({
-    title,
-    children,
-    icon,
-}) => {
+export const Title: React.FC<{ title: string; children?: React.ReactNode; icon?: React.ReactNode }> = ({ title, children, icon }) => {
     const isMobile = useMediaQuery("(orientation: portrait)")
 
     return (
@@ -19,7 +15,7 @@ export const Title: React.FC<{ title: string; children?: React.ReactNode; icon?:
         </Box>
     )
 }
-export const Title2: React.FC<{ name: string; right?: React.ReactNode }> = ({ name, right }) => {
+export const Title2: React.FC<{ name: string; right?: React.ReactNode; left?: React.ReactNode }> = ({ name, right, left }) => {
     const isMobile = useMediaQuery("(orientation: portrait)")
     const colors = useColors()
     return (
@@ -35,7 +31,16 @@ export const Title2: React.FC<{ name: string; right?: React.ReactNode }> = ({ na
                 alignItems: "center",
             }}
         >
-            <p style={{ color: colors.primary }}>{name}</p>
+            {left ? <Box sx={{}}>{left}</Box> : null}
+            <p
+                style={{
+                    flex: 1,
+                    color: colors.primary,
+                    textAlign: "center",
+                }}
+            >
+                {name}
+            </p>
             {right}
         </Box>
     )

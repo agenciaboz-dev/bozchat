@@ -6,9 +6,10 @@ interface SubrouteProps {
     children?: React.ReactNode
     title: string
     right?: React.ReactNode
+    left?: React.ReactNode
 }
 
-export const Subroute: React.FC<SubrouteProps> = ({ children, title, right }) => {
+export const Subroute: React.FC<SubrouteProps> = ({ children, title, right, left }) => {
     return (
         <Paper
             sx={{
@@ -21,7 +22,7 @@ export const Subroute: React.FC<SubrouteProps> = ({ children, title, right }) =>
                 overflowY: "auto",
             }}
         >
-            <Title2 name={title} right={right} />
+            <Title2 name={title} right={right ? right : undefined} left={left ? left : undefined} />
             {children}
         </Paper>
     )
