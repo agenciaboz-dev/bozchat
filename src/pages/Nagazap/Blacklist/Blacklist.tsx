@@ -5,6 +5,7 @@ import { Subroute } from "../Subroute"
 import { DeleteForever, Refresh } from "@mui/icons-material"
 import { api } from "../../../api"
 import { useUser } from "../../../hooks/useUser"
+import { BlacklistLog } from "../../../types/server/Meta/WhatsappBusiness/Logs"
 
 interface BlacklistProps {
     nagazap: Nagazap
@@ -16,7 +17,7 @@ export const Blacklist: React.FC<BlacklistProps> = ({ nagazap, setNagazap, setSh
     const { user } = useUser()
 
     const [loading, setLoading] = useState(false)
-    const [blacklist, setBlacklist] = useState<string[]>([])
+    const [blacklist, setBlacklist] = useState<BlacklistLog[]>([])
 
     const handleDelete = async (number: string) => {
         try {
@@ -68,11 +69,11 @@ export const Blacklist: React.FC<BlacklistProps> = ({ nagazap, setNagazap, setSh
             }
         >
             <Grid container columns={6} spacing={2}>
-                {blacklist.map((number, index) => (
+                {blacklist.map((item, index) => (
                     <Grid item xs={1} key={index}>
                         <Paper sx={{ padding: "0.5vw", alignItems: "center", justifyContent: "space-between" }}>
-                            <Box>{number}</Box>
-                            <IconButton onClick={() => handleDelete(number)}>
+                            <Box>{item.number}</Box>
+                            <IconButton onClick={() => handleDelete(item.number)}>
                                 <DeleteForever />
                             </IconButton>
                         </Paper>
