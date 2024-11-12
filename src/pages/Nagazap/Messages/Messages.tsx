@@ -67,6 +67,7 @@ export const MessagesScreen: React.FC<MessagesScreenProps> = ({ nagazap, setShow
     return (
         <Subroute
             title="Mensagens"
+            space={isMobile ? true : undefined}
             right={
                 <IconButton onClick={fetchMessages} disabled={loading}>
                     {loading ? <CircularProgress size="1.5rem" color="secondary" /> : <Refresh />}

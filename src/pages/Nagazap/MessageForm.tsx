@@ -157,6 +157,7 @@ export const MessageFormScreen: React.FC<MessageFormProps> = ({ nagazap, setShow
     return (
         <Subroute
             title="Enviar mensagem"
+            space={isMobile ? true : undefined}
             left={
                 isMobile ? (
                     <IconButton

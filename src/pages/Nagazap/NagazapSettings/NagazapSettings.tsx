@@ -18,6 +18,7 @@ export const NagazapSettings: React.FC<NagazapSettingsProps> = ({ nagazap, setNa
     return (
         <Subroute
             title="Configurações"
+            space={isMobile ? true : undefined}
             left={
                 isMobile ? (
                     <IconButton
