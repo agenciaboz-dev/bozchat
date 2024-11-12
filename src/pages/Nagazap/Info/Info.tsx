@@ -1,5 +1,5 @@
 import React, { Dispatch, SetStateAction, useEffect, useState } from "react"
-import { Box, CircularProgress, Grid, IconButton, Paper, Skeleton } from "@mui/material"
+import { Box, CircularProgress, Grid, IconButton, Paper, Skeleton, useMediaQuery } from "@mui/material"
 import { Subroute } from "../Subroute"
 import { api } from "../../../api"
 import { AccountBox, Business, Facebook, Fingerprint, LocalOffer, LocalPhone, Refresh, Security, WhatsApp } from "@mui/icons-material"
@@ -82,7 +82,12 @@ export const Info: React.FC<InfoProps> = ({ nagazap, setShowInformations }) => {
         >
             <Grid container columns={isMobile ? 1 : 2}>
                 <Grid item xs={1}>
-                    <Box sx={{ flexDirection: "column", gap: "0.5vw" }}>
+                    <Box
+                        sx={{
+                            flexDirection: "column",
+                            gap: isMobile ? "1vw" : "0.5vw",
+                        }}
+                    >
                         {infos.map((info) => (
                             <InfoDataContainer key={info.title} data={info} />
                         ))}
