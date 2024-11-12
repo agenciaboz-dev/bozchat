@@ -79,7 +79,7 @@ export const MessageContainer: React.FC<MessageContainerProps> = ({ message }) =
                     sx={{
                         fontSize: "0.6vw",
                         marginLeft: "auto",
-                        position: message.type === "audio" ? "absolute" : undefined,
+                        position: message.type === "audio" || message.type === "sticker" || message.type === "reaction" ? "absolute" : undefined,
                         right: "0.5vw",
                         bottom: "0.5vw",
                     }}
