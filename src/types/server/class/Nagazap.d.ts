@@ -1,7 +1,7 @@
 import { Prisma } from "@prisma/client";
 import { OvenForm, WhatsappForm } from "../types/shared/Meta/WhatsappBusiness/WhatsappForm";
 import { UploadedFile } from "express-fileupload";
-import { FailedMessageLog, SentMessageLog } from "../types/shared/Meta/WhatsappBusiness/Logs";
+import { BlacklistLog, FailedMessageLog, SentMessageLog } from "../types/shared/Meta/WhatsappBusiness/Logs";
 import { WithoutFunctions } from "./helpers";
 import { User } from "./User";
 import { BusinessInfo } from "../types/shared/Meta/WhatsappBusiness/BusinessInfo";
@@ -42,7 +42,7 @@ export declare class Nagazap {
     businessId: string;
     lastUpdated: string;
     stack: WhatsappForm[];
-    blacklist: string[];
+    blacklist: BlacklistLog[];
     frequency: string;
     batchSize: number;
     lastMessageTime: string;
@@ -80,6 +80,7 @@ export declare class Nagazap {
         userId: string;
     }>;
     constructor(data: NagazapPrisma);
+    loadBlacklist(saved_list: any[]): BlacklistLog[];
     getMessages(): Promise<NagaMessage[]>;
     update(data: Partial<WithoutFunctions<Nagazap>>): Promise<this>;
     updateToken(token: string): Promise<void>;

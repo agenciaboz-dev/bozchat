@@ -48,7 +48,7 @@ export const GeneralStatistics: React.FC<GeneralStatisticsProps> = ({ nagazap })
     }, [nagazap])
 
     return (
-        <Box sx={{ flex: 0.5 }}>
+        <Box sx={{ flex: 1 }}>
             <GeneralStatsList list={generalStatistics} />
         </Box>
     )

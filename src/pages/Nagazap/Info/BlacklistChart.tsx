@@ -1,11 +1,11 @@
 import React from "react"
-import { Box, useMediaQuery, useTheme } from "@mui/material"
+import { Box, useTheme } from "@mui/material"
 import { BlacklistLog, SentMessageLog } from "../../../types/server/Meta/WhatsappBusiness/Logs"
 import { parseISO, format } from "date-fns"
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer, AreaChart, Area } from "recharts"
 
-interface MessagesChartProps {
-    messages: SentMessageLog[]
+interface BlacklistChartProps {
+    blacklist: BlacklistLog[]
 }
 
 interface dataCountByDate {
@@ -13,32 +13,31 @@ interface dataCountByDate {
     Quantidade?: number
 }
 
-const formatMessagesByDate = (messages: SentMessageLog[]): dataCountByDate[] => {
-    const messageCountByDate: Record<string, number> = {}
+const formatBlacklistByDate = (blacklist: BlacklistLog[]): dataCountByDate[] => {
+    const blacklistCountByDate: Record<string, number> = {}
 
-    messages.forEach((msg) => {
+    blacklist.forEach((msg) => {
         const date = format(parseISO(new Date(parseInt(msg.timestamp)).toISOString()), "yyyy-MM-dd")
 
-        if (messageCountByDate[date]) {
-            messageCountByDate[date] += 1
+        if (blacklistCountByDate[date]) {
+            blacklistCountByDate[date] += 1
         } else {
-            messageCountByDate[date] = 1
+            blacklistCountByDate[date] = 1
         }
     })
 
-    return Object.entries(messageCountByDate).map(([date, Quantidade]) => ({ date, Quantidade }))
+    return Object.entries(blacklistCountByDate).map(([date, Quantidade]) => ({ date, Quantidade }))
 }
 
-export const MessagesChart: React.FC<MessagesChartProps> = ({ messages }) => {
+export const BlacklistChart: React.FC<BlacklistChartProps> = ({ blacklist }) => {
     const { palette } = useTheme()
-    const messagesData = formatMessagesByDate(messages)
-    const isMobile = useMediaQuery("(orientation: portrait)")
+    const blacklistData = formatBlacklistByDate(blacklist)
 
     return (
         <Box sx={{ flexDirection: "column", gap: "0.5vw" }}>
-            <Box sx={{ color: "secondary.main", fontWeight: "bold", paddingLeft: "2vw" }}>Mensagens enviadas</Box>
+            <Box sx={{ color: "secondary.main", fontWeight: "bold", paddingLeft: "2vw" }}>Parar promoções</Box>
             <ResponsiveContainer style={{ flex: 1 }} height={290}>
-                <AreaChart data={messagesData} margin={{ left: -20 }} style={{ flex: 1 }}>
+                <AreaChart data={blacklistData} margin={{ left: -20 }} style={{ flex: 1 }}>
                     <CartesianGrid strokeDasharray="3 3" />
                     <XAxis dataKey="date" tickFormatter={(value) => new Date(value).toLocaleDateString("pt-br")} />
                     <YAxis />
@@ -48,8 +47,8 @@ export const MessagesChart: React.FC<MessagesChartProps> = ({ messages }) => {
                         dataKey={"Quantidade"}
                         strokeOpacity={0}
                         fillOpacity={0.5}
-                        fill={palette.primary.main}
-                        dot={{ fill: palette.primary.main, r: 5, opacity: 0.6 }}
+                        fill={palette.error.main}
+                        dot={{ fill: palette.error.main, r: 5, opacity: 0.6 }}
                     />
                 </AreaChart>
             </ResponsiveContainer>
