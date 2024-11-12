@@ -28,7 +28,7 @@ export const Title2: React.FC<{ name: string; right?: React.ReactNode }> = ({ na
                 color: lighten(colors.text.secondary, 0.3),
                 fontWeight: "bold",
                 borderBottom: "1px solid",
-                paddingBottom: isMobile ? "3vw" : "0.5vw",
+                paddingBottom: isMobile ? "2vw" : "0.5vw",
                 width: "100%",
                 fontSize: isMobile ? "6vw" : "1.1vw",
                 justifyContent: isMobile ? "center" : "space-between",

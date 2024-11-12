@@ -160,16 +160,16 @@ export const Message: React.FC<MessageProps> = ({ message, isGroup, washima, pre
                         sx={{
                             position: "relative",
                             padding: isMobile ? "3vw" : `${is_image || is_video ? "0.25vw" : "0.5vw"}`,
-                            paddingX: is_document ? "0.5vw" : undefined,
+                            paddingX: is_document ? (isMobile ? "3vw" : "0.5vw") : undefined,
                             flexDirection: is_document ? "row" : "column",
                             alignSelf: message.fromMe ? "flex-end" : "flex-start",
                             textAlign: message.fromMe ? "end" : "start",
-                            borderRadius: "0.75vw",
+                            borderRadius: isMobile ? "3vw" : "0.75vw",
                             borderTopRightRadius: show_triangle && message.fromMe ? "0" : undefined,
                             borderTopLeftRadius: show_triangle && !message.fromMe ? "0" : undefined,
                             bgcolor: is_sticker ? "transparent" : message.fromMe ? primary : secondary,
-                            marginTop: !same_as_previous && !day_changing ? "0.5vw" : undefined,
-                            gap: is_document ? "0.5vw" : is_sticker ? "0.2vw" : undefined,
+                            marginTop: !same_as_previous && !day_changing ? (isMobile ? "2vw" : "0.5vw") : undefined,
+                            gap: is_document ? (isMobile ? "3vw" : "0.5vw") : is_sticker ? "0.2vw" : undefined,
                             alignItems: is_document ? "center" : undefined,
                             opacity: is_deleted ? 0.3 : undefined,
                         }}
@@ -189,14 +189,18 @@ export const Message: React.FC<MessageProps> = ({ message, isGroup, washima, pre
                             <Box sx={{}}>
                                 {is_image &&
                                     (loading ? (
-                                        <Skeleton variant="rounded" animation="wave" sx={{ width: "20vw", height: "20vw", borderRadius: "1vw" }} />
+                                        <Skeleton
+                                            variant="rounded"
+                                            animation="wave"
+                                            sx={{ width: isMobile ? "60vw" : "20vw", height: isMobile ? "70vw" : "20vw", borderRadius: "1vw" }}
+                                        />
                                     ) : (
                                         <PhotoView src={mediaObj?.source}>
                                             <MenuItem sx={{ padding: 0, borderRadius: "0.75vw" }}>
                                                 <img
                                                     style={{
-                                                        width: "20vw",
-                                                        maxHeight: "20vw",
+                                                        width: isMobile ? "60vw" : "20vw",
+                                                        maxHeight: isMobile ? "70vw" : "20vw",
                                                         objectFit: "cover",
                                                         borderRadius: "0.75vw",
                                                     }}
@@ -209,10 +213,15 @@ export const Message: React.FC<MessageProps> = ({ message, isGroup, washima, pre
                                     ))}
                                 {is_sticker &&
                                     (loading ? (
-                                        <CircularProgress size={"10vw"} sx={{}} />
+                                        <CircularProgress size={isMobile ? "30vw" : "10vw"} sx={{}} />
                                     ) : (
                                         <img
-                                            style={{ width: "10vw", height: "10vw", objectFit: "contain", borderRadius: "0.75vw" }}
+                                            style={{
+                                                width: isMobile ? "30vw" : "10vw",
+                                                height: isMobile ? "30vw" : "10vw",
+                                                objectFit: "contain",
+                                                borderRadius: "0.75vw",
+                                            }}
                                             // onClick={() => picture.open(mediaObj?.source || "")}
                                             src={mediaObj?.source}
                                             draggable={false}
@@ -220,9 +229,18 @@ export const Message: React.FC<MessageProps> = ({ message, isGroup, washima, pre
                                     ))}
                                 {is_video &&
                                     (loading ? (
-                                        <Skeleton variant="rounded" animation="wave" sx={{ width: "20vw", height: "20vw", borderRadius: "1vw" }} />
+                                        <Skeleton
+                                            variant="rounded"
+                                            animation="wave"
+                                            sx={{ width: isMobile ? "60vw" : "20vw", height: isMobile ? "70vw" : "20vw", borderRadius: "1vw" }}
+                                        />
                                     ) : mediaObj ? (
-                                        <video style={{ width: "20vw", height: "20vw" }} src={mediaObj.source} controls muted={false} />
+                                        <video
+                                            style={{ width: isMobile ? "60vw" : "20vw", height: isMobile ? "70vw" : "20vw" }}
+                                            src={mediaObj.source}
+                                            controls
+                                            muted={false}
+                                        />
                                     ) : (
                                         <Box sx={{ flexDirection: "column", alignItems: "center", color: "error.main" }}>
                                             erro ao baixar vídeo
@@ -243,12 +261,17 @@ export const Message: React.FC<MessageProps> = ({ message, isGroup, washima, pre
                                         <Skeleton
                                             variant="rounded"
                                             animation="wave"
-                                            sx={{ width: "3vw", height: "3.42vw", borderRadius: "0.2vw", flexDirection: "row" }}
+                                            sx={{
+                                                width: isMobile ? "10vw" : "3vw",
+                                                height: isMobile ? "10vw" : "3.42vw",
+                                                borderRadius: "0.2vw",
+                                                flexDirection: "row",
+                                            }}
                                         />
                                     ) : (
                                         <Avatar
                                             sx={{
-                                                width: "3vw",
+                                                width: isMobile ? "10vw" : "3vw",
                                                 height: "auto",
                                                 objectFit: "contain",
                                                 borderRadius: 0,
@@ -279,14 +302,14 @@ export const Message: React.FC<MessageProps> = ({ message, isGroup, washima, pre
                                     style={{
                                         padding: is_image ? "0 0.25vw" : undefined,
                                         wordBreak: "break-word",
-                                        whiteSpace: "pre-line",
+                                        whiteSpace: isMobile && is_document ? "nowrap" : "pre-line",
                                         color: isLink ? theme.palette.success.light : undefined,
                                         textAlign: "left",
                                         WebkitLineClamp: 2,
                                         WebkitBoxOrient: "vertical",
                                         overflow: "hidden",
                                         textOverflow: "ellipsis",
-                                        width: is_document ? "16vw" : undefined,
+                                        width: is_document ? (isMobile ? "47vw" : "16vw") : undefined,
                                     }}
                                     onClick={isLink ? () => window.open(message.body, "_new") : undefined}
                                 >
@@ -303,8 +326,8 @@ export const Message: React.FC<MessageProps> = ({ message, isGroup, washima, pre
                             <Box
                                 sx={{
                                     position: "absolute",
-                                    left: message.fromMe ? "-4vw" : undefined,
-                                    right: !message.fromMe ? "-4vw" : undefined,
+                                    left: message.fromMe ? (isMobile ? "-15vw" : "-4vw") : undefined,
+                                    right: !message.fromMe ? (isMobile ? "-15vw" : "-4vw") : undefined,
                                     top: 0,
                                     bottom: 0,
                                     alignItems: "center",

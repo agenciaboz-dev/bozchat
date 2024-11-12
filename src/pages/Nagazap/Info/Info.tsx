@@ -1,5 +1,5 @@
-import React, { useEffect, useState } from "react"
-import { Box, CircularProgress, Grid, IconButton, Paper } from "@mui/material"
+import React, { Dispatch, SetStateAction, useEffect, useState } from "react"
+import { Box, CircularProgress, Grid, IconButton, Paper, useMediaQuery } from "@mui/material"
 import { Subroute } from "../Subroute"
 import { api } from "../../../api"
 import { AccountBox, Business, Facebook, LocalPhone, Refresh, Security, WhatsApp } from "@mui/icons-material"
@@ -12,11 +12,13 @@ import { MessagesChart } from "./MessagesChart"
 
 interface InfoProps {
     nagazap: Nagazap
+    setShowInformations: Dispatch<SetStateAction<boolean>>
 }
 
-export const Info: React.FC<InfoProps> = ({ nagazap }) => {
+export const Info: React.FC<InfoProps> = ({ nagazap, setShowInformations }) => {
     const [loading, setLoading] = useState(true)
     const [info, setInfo] = useState<BusinessInfo | null>(null)
+    const isMobile = useMediaQuery("(orientation: portrait)")
 
     const infos: (GeneralStat & { copy?: boolean })[] = [
         { title: "Business Account", value: info?.name, icon: AccountBox, loading: !info },
@@ -68,14 +70,25 @@ export const Info: React.FC<InfoProps> = ({ nagazap }) => {
         <Subroute
             title="Informações"
             right={
-                <IconButton onClick={fetchInfo} disabled={loading}>
+                <IconButton
+                    onClick={() => {
+                        fetchInfo()
+                        setShowInformations(false)
+                    }}
+                    disabled={loading}
+                >
                     {loading ? <CircularProgress size="1.5rem" color="secondary" /> : <Refresh />}
                 </IconButton>
             }
         >
-            <Grid container columns={2}>
+            <Grid container columns={isMobile ? 1 : 2}>
                 <Grid item xs={1}>
-                    <Box sx={{ flexDirection: "column", gap: "0.5vw" }}>
+                    <Box
+                        sx={{
+                            flexDirection: "column",
+                            gap: isMobile ? "1vw" : "0.5vw",
+                        }}
+                    >
                         {infos.map((info) => (
                             <InfoDataContainer key={info.title} data={info} />
                         ))}

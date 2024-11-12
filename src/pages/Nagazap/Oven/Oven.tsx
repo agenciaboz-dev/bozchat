@@ -12,9 +12,10 @@ import { useUser } from "../../../hooks/useUser"
 interface OvenProps {
     nagazap?: Nagazap
     setNagazap: React.Dispatch<React.SetStateAction<Nagazap>>
+    setShowInformations: React.Dispatch<React.SetStateAction<boolean>>
 }
 
-export const Oven: React.FC<OvenProps> = ({ nagazap, setNagazap }) => {
+export const Oven: React.FC<OvenProps> = ({ nagazap, setNagazap, setShowInformations }) => {
     function chunkArray<T>(array: T[], chunkSize: number): T[][] {
         const result: T[][] = []
         for (let i = 0; i < array.length; i += chunkSize) {
@@ -163,7 +164,14 @@ export const Oven: React.FC<OvenProps> = ({ nagazap, setNagazap }) => {
                                 ),
                             }}
                         />
-                        <IconButton onClick={refresh} disabled={loading} sx={{ alignSelf: "center" }}>
+                        <IconButton
+                            onClick={() => {
+                                refresh()
+                                setShowInformations(false)
+                            }}
+                            disabled={loading}
+                            sx={{ alignSelf: "center" }}
+                        >
                             {loading ? <CircularProgress size="1.5rem" color="secondary" /> : <Refresh />}
                         </IconButton>
                     </Box>

@@ -112,7 +112,7 @@ export const ChatContainer: React.FC<ChatProps> = ({ chat, onChatClick, washima,
             ref={ref}
             disabled={chat.isReadOnly}
             sx={{
-                padding: isMobile ? "2vw 0" : "1vw",
+                padding: isMobile ? "2vw 1vw" : "1vw",
                 alignItems: "center",
                 backgroundColor: active ? "action.hover" : "background.default",
                 gap: isMobile ? "3vw" : "1vw",
@@ -127,7 +127,7 @@ export const ChatContainer: React.FC<ChatProps> = ({ chat, onChatClick, washima,
                 "&:hover": {
                     // outline: "2px solid",
                 },
-                width: "100%",
+                width: isMobile ? "95vw" : "100%",
                 flex: 1,
             }}
             onClick={handleClick}

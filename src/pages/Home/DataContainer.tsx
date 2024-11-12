@@ -1,16 +1,28 @@
 import React from "react"
 import { GeneralStat } from "../../types/GeneralStat"
-import { Box, CircularProgress, Paper } from "@mui/material"
+import { Box, CircularProgress, Paper, useMediaQuery } from "@mui/material"
 
 interface DataContainerProps {
     stat: GeneralStat
 }
 
 export const DataContainer: React.FC<DataContainerProps> = ({ stat }) => {
+    const isMobile = useMediaQuery("(orientation: portrait)")
     const Icon = stat.icon
 
     return (
-        <Paper sx={[{ flexDirection: "row", justifyContent: "space-between", alignItems: "center", flex: 1, padding: "1vw", height: "5.7rem" }]}>
+        <Paper
+            sx={[
+                {
+                    flexDirection: "row",
+                    justifyContent: "space-between",
+                    alignItems: "center",
+                    flex: 1,
+                    padding: isMobile ? "3vw" : "1vw",
+                    height: isMobile ? "4.6rem" : "5.7rem",
+                },
+            ]}
+        >
             <Box sx={{ flexDirection: "column", justifyContent: "space-between", height: "100%" }}>
                 <Box sx={[{ fontSize: "0.9rem", fontWeight: "bold", color: "secondary.main" }]}>{stat.title}</Box>
                 {stat.loading ? (
@@ -28,12 +40,12 @@ export const DataContainer: React.FC<DataContainerProps> = ({ stat }) => {
                         justifyContent: "center",
                         alignItems: "center",
                         borderRadius: 10,
-                        width: "2.5vw",
-                        height: "2.5vw",
+                        width: isMobile ? "8vw" : "2.5vw",
+                        height: isMobile ? "8vw" : "2.5vw",
                     },
                 ]}
             >
-                <Icon color="secondary" sx={{ width: "1.5vw", height: "1.5vw" }} />
+                <Icon color="secondary" sx={{ width: isMobile ? "6vw" : "1.5vw", height: isMobile ? "6vw" : "1.5vw" }} />
             </Paper>
         </Paper>
     )

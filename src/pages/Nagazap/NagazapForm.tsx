@@ -1,5 +1,5 @@
-import React, { useState } from "react"
-import { Box, Button, CircularProgress, Grid, TextField, useTheme } from "@mui/material"
+import React, { Dispatch, SetStateAction, useState } from "react"
+import { Box, Button, CircularProgress, Grid, IconButton, TextField, useTheme } from "@mui/material"
 import { Subroute } from "./Subroute"
 import { useFormik } from "formik"
 import { Nagazap, NagazapForm as NagazapFormType } from "../../types/server/class/Nagazap"
@@ -8,12 +8,14 @@ import { textFieldStyle } from "../../style/textfield"
 import { api } from "../../api"
 import { AxiosError } from "axios"
 import { HandledError } from "../../types/server/class/HandledError"
+import { Refresh } from "@mui/icons-material"
 
 interface NagazapFormProps {
     onSuccess: (nagazap: Nagazap) => void
+    setShowInformations: Dispatch<SetStateAction<boolean>>
 }
 
-export const NagazapForm: React.FC<NagazapFormProps> = ({ onSuccess }) => {
+export const NagazapForm: React.FC<NagazapFormProps> = ({ onSuccess, setShowInformations }) => {
     const { user } = useUser()
     const theme = useTheme()
 
@@ -47,7 +49,18 @@ export const NagazapForm: React.FC<NagazapFormProps> = ({ onSuccess }) => {
     })
 
     return (
-        <Subroute title="Adicionar conta">
+        <Subroute
+            title="Adicionar conta"
+            right={
+                <IconButton
+                    onClick={() => {
+                        setShowInformations(false)
+                    }}
+                >
+                    <Refresh />
+                </IconButton>
+            }
+        >
             <Box sx={{ flex: 1, flexDirection: "column", gap: 3, color: "secondary.main" }}>
                 <p>
                     Para cadastrar uma conta no Nagazap, é preciso ter uma <PrimaryText>MBA (Meta Business Account)</PrimaryText> ativa com um App
