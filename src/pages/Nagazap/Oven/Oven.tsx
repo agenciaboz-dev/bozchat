@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react"
 import { Box, CircularProgress, Grid, IconButton, MenuItem, TextField, useMediaQuery } from "@mui/material"
 import { Subroute } from "../Subroute"
 import { Nagazap } from "../../../types/server/class/Nagazap"
-import { ArrowBack, DeleteForever, Pause, PauseCircle, PlayArrow, PlayCircle, Refresh, Save } from "@mui/icons-material"
+import { Cake, ArrowBack, DeleteForever, Pause, PauseCircle, PlayArrow, PlayCircle, Refresh, Save } from "@mui/icons-material"
 import { api } from "../../../api"
 import { WhatsappForm } from "../../../types/server/Meta/WhatsappBusiness/WhatsappForm"
 import { Batch } from "./Batch"
@@ -195,10 +195,21 @@ export const Oven: React.FC<OvenProps> = ({ nagazap, setNagazap, setShowInformat
                         <Batch batch={batch} nagazap={nagazap} index={index} />
                     </Grid>
                 ))}
-                <Grid item xs={4}>
-                    {!batches.length && <Box sx={{ color: "secondary.main" }}>Nenhuma fornada em preparo</Box>}
-                </Grid>
             </Grid>
+            {!batches.length && (
+                <Box
+                    sx={{
+                        color: "secondary.main",
+                        justifyContent: "center",
+                        alignItems: "center",
+                        flex: 1,
+                        flexDirection: "column",
+                        fontSize: "2rem",
+                    }}
+                >
+                    <Cake sx={{ width: "15vw", height: "auto" }} />o forno está vazio
+                </Box>
+            )}
         </Subroute>
     ) : null
 }

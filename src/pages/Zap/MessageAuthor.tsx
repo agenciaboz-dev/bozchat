@@ -18,15 +18,20 @@ export const MessageAuthor: React.FC<MessageAuthorProps> = ({ author }) => {
     const author_split = author?.split(" - ") || []
     const author_name = author_split?.length > 0 ? (author_split[0] === "undefined" ? "" : author_split[0]) : ""
     const author_phone =
-        // @ts-ignore
-        author_split?.length > 1 ? new Inputmask({ mask: "+99 (99) 9999-9999", placeholder: "", greedy: false }).format(author_split[1]) : ""
+        author_split?.length > 1
+            ? // @ts-ignore
+              new Inputmask({ mask: "+99 (99) 9999-9999", placeholder: "", greedy: false }).format(
+                  author_split[1].length === 10 ? "55" + author_split[1] : author_split[1]
+              )
+            : ""
 
     const [authorColor, setAuthorColor] = useState("")
 
     useEffect(() => {
         if (author) {
             if (!authors_colors.find((item) => item.author === author)) {
-                authors_colors.push({ author: author, color: random_colors[authors_colors.length] })
+                const newColor = random_colors[authors_colors.length % random_colors.length] // Use modulo to cycle through colors
+                authors_colors.push({ author: author, color: newColor })
             }
 
             const color_index = authors_colors.findIndex((item) => item.author === author)

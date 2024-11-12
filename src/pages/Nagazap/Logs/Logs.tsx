@@ -65,10 +65,12 @@ export const Logs: React.FC<LogsProps> = ({ nagazap, setNagazap, setShowInformat
                 ) : undefined
             }
         >
-            <Grid container columns={isMobile ? 1 : 2} spacing={3}>
-                <LogsList list={nagazap.sentMessages.filter((log) => log.data.contacts[0].wa_id.slice(2).includes(filter))} type="success" />
-                <LogsList list={nagazap.failedMessages.filter((log) => log.number.slice(2).includes(filter))} type="error" />
-            </Grid>
+            <Box sx={{ flexDirection: "column", height: "64vh" }}>
+                <Grid container columns={isMobile ? 1 : 2} spacing={3}>
+                    <LogsList list={nagazap.sentMessages.filter((log) => log.data.contacts[0].wa_id.slice(2).includes(filter))} type="success" />
+                    <LogsList list={nagazap.failedMessages.filter((log) => log.number.slice(2).includes(filter))} type="error" />
+                </Grid>
+            </Box>
         </Subroute>
     ) : null
 }
