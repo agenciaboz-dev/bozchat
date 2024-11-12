@@ -35,20 +35,22 @@ export const Info: React.FC<InfoProps> = ({ nagazap, setShowInformations }) => {
         { title: "Nome do Whatsapp Business", value: info?.phone_numbers.data[0].verified_name, icon: WhatsApp, loading: !info },
         {
             title: "Número do Whatsapp Business",
+            value: info?.phone_numbers.data[0].display_phone_number,
+            icon: LocalPhone,
+            loading: !info,
+        },
+        {
+            title: "Confiabilidade do número",
             value: (
-                <Box sx={{ alignItems: "center", gap: "1vw" }}>
-                    {info?.phone_numbers.data[0].display_phone_number}
-                    <Tooltip title="Confiabilidade do número">
-                        <HealthAndSafety
-                            sx={{
-                                borderRadius: "100%",
-                                color: getMuiColor(info?.phone_numbers.data[0].quality_rating.toLowerCase()),
-                            }}
-                        />
-                    </Tooltip>
+                <Box
+                    sx={{
+                        color: getMuiColor(info?.phone_numbers.data[0].quality_rating.toLowerCase()),
+                    }}
+                >
+                    {info?.phone_numbers.data[0].quality_rating}
                 </Box>
             ),
-            icon: LocalPhone,
+            icon: Security,
             loading: !info,
         },
     ]

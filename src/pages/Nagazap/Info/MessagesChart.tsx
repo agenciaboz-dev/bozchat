@@ -34,21 +34,24 @@ export const MessagesChart: React.FC<MessagesChartProps> = ({ messages }) => {
     const messagesData = formatMessagesByDate(messages)
 
     return (
-        <ResponsiveContainer style={{ flex: 1 }} height={330}>
-            <AreaChart data={messagesData} margin={{ left: -20 }} style={{ flex: 1 }}>
-                <CartesianGrid strokeDasharray="3 3" />
-                <XAxis dataKey="date" tickFormatter={(value) => new Date(value).toLocaleDateString("pt-br")} />
-                <YAxis />
-                <Tooltip />
-                <Area
-                    type={"monotone"}
-                    dataKey={"Quantidade"}
-                    strokeOpacity={0}
-                    fillOpacity={0.5}
-                    fill={palette.primary.main}
-                    dot={{ fill: palette.primary.main, r: 5, opacity: 0.6 }}
-                />
-            </AreaChart>
-        </ResponsiveContainer>
+        <Box sx={{ flexDirection: "column", gap: "0.5vw" }}>
+            <Box sx={{ color: "secondary.main", fontWeight: "bold", paddingLeft: "2vw" }}>Mensagens enviadas</Box>
+            <ResponsiveContainer style={{ flex: 1 }} height={290}>
+                <AreaChart data={messagesData} margin={{ left: -20 }} style={{ flex: 1 }}>
+                    <CartesianGrid strokeDasharray="3 3" />
+                    <XAxis dataKey="date" tickFormatter={(value) => new Date(value).toLocaleDateString("pt-br")} />
+                    <YAxis />
+                    <Tooltip />
+                    <Area
+                        type={"monotone"}
+                        dataKey={"Quantidade"}
+                        strokeOpacity={0}
+                        fillOpacity={0.5}
+                        fill={palette.primary.main}
+                        dot={{ fill: palette.primary.main, r: 5, opacity: 0.6 }}
+                    />
+                </AreaChart>
+            </ResponsiveContainer>
+        </Box>
     )
 }
