@@ -15,6 +15,7 @@ export const Batch: React.FC<BatchProps> = ({ batch, nagazap, index }) => {
         <Paper sx={{ flexDirection: "column", padding: "1vw", gap: "1vw", height: "100%", opacity: nagazap.paused ? 0.4 : 1 }}>
             <Title2
                 name={`${index + 1}`}
+                center
                 right={
                     nagazap.paused ? null : (
                         <Box sx={{ fontSize: "0.9rem" }}>
