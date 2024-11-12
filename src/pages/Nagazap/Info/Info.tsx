@@ -1,14 +1,15 @@
 import React, { Dispatch, SetStateAction, useEffect, useState } from "react"
-import { Box, CircularProgress, Grid, IconButton, Paper, useMediaQuery } from "@mui/material"
+import { Box, CircularProgress, Grid, IconButton, Paper, Tooltip, useMediaQuery } from "@mui/material"
 import { Subroute } from "../Subroute"
 import { api } from "../../../api"
-import { AccountBox, Business, Facebook, LocalPhone, Refresh, Security, WhatsApp } from "@mui/icons-material"
+import { AccountBox, Business, Facebook, HealthAndSafety, LocalPhone, Refresh, Security, WhatsApp } from "@mui/icons-material"
 import { Nagazap } from "../../../types/server/class/Nagazap"
 import { BusinessInfo } from "../../../types/server/Meta/WhatsappBusiness/BusinessInfo"
 import { GeneralStat } from "../../../types/GeneralStat"
 import { InfoDataContainer } from "./InfoDataContainer"
 import { GeneralStatistics } from "./GeneralStatistics"
 import { MessagesChart } from "./MessagesChart"
+import { BlacklistChart } from "./BlacklistChart"
 
 interface InfoProps {
     nagazap: Nagazap
@@ -20,23 +21,34 @@ export const Info: React.FC<InfoProps> = ({ nagazap, setShowInformations }) => {
     const [info, setInfo] = useState<BusinessInfo | null>(null)
     const isMobile = useMediaQuery("(orientation: portrait)")
 
+    const getMuiColor = (value?: string) => {
+        const colors = [
+            { text: "green", value: "success.main" },
+            { text: "yellow", value: "warning.main" },
+            { text: "red", value: "error.main" },
+        ]
+        return colors.find((item) => item.text === value)?.value
+    }
+
     const infos: (GeneralStat & { copy?: boolean })[] = [
         { title: "Business Account", value: info?.name, icon: AccountBox, loading: !info },
         { title: "Nome do Whatsapp Business", value: info?.phone_numbers.data[0].verified_name, icon: WhatsApp, loading: !info },
-        { title: "Número do Whatsapp Business", value: info?.phone_numbers.data[0].display_phone_number, icon: LocalPhone, loading: !info },
         {
-            title: "Confiabilidade do número",
+            title: "Número do Whatsapp Business",
             value: (
-                <Paper
-                    sx={{
-                        borderRadius: "100%",
-                        width: "1.5rem",
-                        height: "1.5rem",
-                        bgcolor: info?.phone_numbers.data[0].quality_rating.toLowerCase(),
-                    }}
-                />
+                <Box sx={{ alignItems: "center", gap: "1vw" }}>
+                    {info?.phone_numbers.data[0].display_phone_number}
+                    <Tooltip title="Confiabilidade do número">
+                        <HealthAndSafety
+                            sx={{
+                                borderRadius: "100%",
+                                color: getMuiColor(info?.phone_numbers.data[0].quality_rating.toLowerCase()),
+                            }}
+                        />
+                    </Tooltip>
+                </Box>
             ),
-            icon: Security,
+            icon: LocalPhone,
             loading: !info,
         },
     ]
@@ -81,7 +93,7 @@ export const Info: React.FC<InfoProps> = ({ nagazap, setShowInformations }) => {
                 </IconButton>
             }
         >
-            <Grid container columns={isMobile ? 1 : 2}>
+            <Grid container columns={isMobile ? 1 : 4} sx={{ height: "64vh" }}>
                 <Grid item xs={1}>
                     <Box
                         sx={{
@@ -101,12 +113,18 @@ export const Info: React.FC<InfoProps> = ({ nagazap, setShowInformations }) => {
                         ))}
                     </Box>
                 </Grid>
-            </Grid>
 
-            <Box sx={{ gap: "1vw" }}>
-                <GeneralStatistics nagazap={nagazap} />
-                <MessagesChart messages={nagazap.sentMessages} blacklist={nagazap.blacklist} />
-            </Box>
+                <Grid item xs={2}>
+                    <MessagesChart messages={nagazap.sentMessages} />
+                </Grid>
+
+                <Grid item xs={2}>
+                    <GeneralStatistics nagazap={nagazap} />
+                </Grid>
+                <Grid item xs={2}>
+                    <BlacklistChart blacklist={nagazap.blacklist} />
+                </Grid>
+            </Grid>
         </Subroute>
     )
 }
