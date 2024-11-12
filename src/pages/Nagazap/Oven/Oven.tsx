@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react"
-import { Box, CircularProgress, Grid, IconButton, MenuItem, TextField, useMediaQuery } from "@mui/material"
+import { Box, Button, CircularProgress, Grid, Icon, IconButton, MenuItem, TextField, useMediaQuery } from "@mui/material"
 import { Subroute } from "../Subroute"
 import { Nagazap } from "../../../types/server/class/Nagazap"
 import { Cake, ArrowBack, DeleteForever, Pause, PauseCircle, PlayArrow, PlayCircle, Refresh, Save } from "@mui/icons-material"
@@ -125,71 +125,155 @@ export const Oven: React.FC<OvenProps> = ({ nagazap, setNagazap, setShowInformat
                 ) : undefined
             }
             right={
-                <Box sx={{ flex: 1, justifyContent: "space-between", marginLeft: "0.5vw" }}>
-                    <Box sx={{ alignItems: "center" }}>
-                        <Box sx={{ bgcolor: nagazap.paused ? "warning.main" : "success.main", borderRadius: "100%", width: "1vw", height: "1vw" }} />
+                !isMobile ? (
+                    <Box
+                        sx={{
+                            flex: 1,
+                            justifyContent: "space-between",
+                            // marginLeft: "0.5vw",
+                            // border: "red solid 1px",
+                        }}
+                    >
+                        {/* <Box sx={{ alignItems: "center" }}>
+                            <Box
+                                sx={{ bgcolor: nagazap.paused ? "warning.main" : "success.main", borderRadius: "100%", width: "1vw", height: "1vw" }}
+                            />
+                        </Box> */}
+                        <Box sx={{ gap: "1vw" }}>
+                            {!!batches.length && (
+                                <IconButton sx={{ alignSelf: "center" }} onClick={onClearOvenClick} disabled={loading} color="error">
+                                    {<DeleteForever />}
+                                </IconButton>
+                            )}
+                            <IconButton sx={{ alignSelf: "center" }} onClick={() => onStatusToggleClick(nagazap.paused ? "start" : "pause")}>
+                                {nagazap.paused ? <PlayCircle color="success" /> : <PauseCircle color="warning" />}
+                            </IconButton>
+                            <TextField
+                                label="Intervalo entre fornadas"
+                                value={frequency}
+                                onChange={(event) => setFrequency(event.target.value)}
+                                InputProps={{
+                                    sx: { width: textfield_size },
+                                    endAdornment: (
+                                        <>
+                                            Minutos
+                                            <IconButton
+                                                disabled={frequency == nagazap?.frequency}
+                                                onClick={() => save("frequency", frequency)}
+                                                sx={{ alignSelf: "center" }}
+                                            >
+                                                <Save />
+                                            </IconButton>
+                                        </>
+                                    ),
+                                }}
+                            />
+                            <TextField
+                                label="Mensagens por fornada"
+                                value={batchSize}
+                                type="number"
+                                onChange={(event) => setBatchSize(Number(event.target.value))}
+                                InputProps={{
+                                    sx: { width: textfield_size },
+                                    endAdornment: (
+                                        <IconButton
+                                            disabled={batchSize == nagazap?.batchSize}
+                                            onClick={() => save("batchSize", batchSize)}
+                                            sx={{ alignSelf: "center" }}
+                                        >
+                                            <Save />
+                                        </IconButton>
+                                    ),
+                                }}
+                            />
+                            <IconButton
+                                onClick={() => {
+                                    refresh()
+                                }}
+                                disabled={loading}
+                                sx={{ alignSelf: "center" }}
+                            >
+                                {loading ? <CircularProgress size="1.5rem" color="secondary" /> : <Refresh />}
+                            </IconButton>
+                        </Box>
                     </Box>
-                    <Box sx={{ gap: "1vw" }}>
-                        {!!batches.length && (
+                ) : (
+                    <IconButton
+                        onClick={() => {
+                            refresh()
+                        }}
+                        disabled={loading}
+                        sx={{ alignSelf: "center" }}
+                    >
+                        {loading ? <CircularProgress size="1.5rem" color="secondary" /> : <Refresh />}
+                    </IconButton>
+                )
+            }
+        >
+            {isMobile ? (
+                <Box sx={{ gap: "2vw", flexDirection: "column", paddingBlock: "5vw" }}>
+                    <TextField
+                        label="Intervalo entre fornadas"
+                        value={frequency}
+                        onChange={(event) => setFrequency(event.target.value)}
+                        InputProps={{
+                            endAdornment: (
+                                <>
+                                    Minutos
+                                    <IconButton
+                                        disabled={frequency == nagazap?.frequency}
+                                        onClick={() => save("frequency", frequency)}
+                                        sx={{ alignSelf: "center" }}
+                                    >
+                                        <Save />
+                                    </IconButton>
+                                </>
+                            ),
+                        }}
+                    />
+                    <TextField
+                        label="Mensagens por fornada"
+                        value={batchSize}
+                        type="number"
+                        onChange={(event) => setBatchSize(Number(event.target.value))}
+                        InputProps={{
+                            endAdornment: (
+                                <IconButton
+                                    disabled={batchSize == nagazap?.batchSize}
+                                    onClick={() => save("batchSize", batchSize)}
+                                    sx={{ alignSelf: "center" }}
+                                >
+                                    <Save />
+                                </IconButton>
+                            ),
+                        }}
+                    />
+                    <Box sx={{ justifyContent: "space-around", gap: "2vw" }}>
+                        {/* {!!batches.length && (
                             <IconButton sx={{ alignSelf: "center" }} onClick={onClearOvenClick} disabled={loading} color="error">
                                 {<DeleteForever />}
                             </IconButton>
                         )}
                         <IconButton sx={{ alignSelf: "center" }} onClick={() => onStatusToggleClick(nagazap.paused ? "start" : "pause")}>
                             {nagazap.paused ? <PlayCircle color="success" /> : <PauseCircle color="warning" />}
-                        </IconButton>
-                        <TextField
-                            label="Intervalo entre fornadas"
-                            value={frequency}
-                            onChange={(event) => setFrequency(event.target.value)}
-                            InputProps={{
-                                sx: { width: textfield_size },
-                                endAdornment: (
-                                    <>
-                                        Minutos
-                                        <IconButton
-                                            disabled={frequency == nagazap?.frequency}
-                                            onClick={() => save("frequency", frequency)}
-                                            sx={{ alignSelf: "center" }}
-                                        >
-                                            <Save />
-                                        </IconButton>
-                                    </>
-                                ),
-                            }}
-                        />
-                        <TextField
-                            label="Mensagens por fornada"
-                            value={batchSize}
-                            type="number"
-                            onChange={(event) => setBatchSize(Number(event.target.value))}
-                            InputProps={{
-                                sx: { width: textfield_size },
-                                endAdornment: (
-                                    <IconButton
-                                        disabled={batchSize == nagazap?.batchSize}
-                                        onClick={() => save("batchSize", batchSize)}
-                                        sx={{ alignSelf: "center" }}
-                                    >
-                                        <Save />
-                                    </IconButton>
-                                ),
-                            }}
-                        />
-                        <IconButton
-                            onClick={() => {
-                                refresh()
-                            }}
-                            disabled={loading}
-                            sx={{ alignSelf: "center" }}
+                        </IconButton> */}
+                        {!!batches.length ? (
+                            <Button variant="outlined" color="error" onClick={onClearOvenClick} sx={{ flex: 1 }}>
+                                {<DeleteForever />}
+                            </Button>
+                        ) : null}
+                        <Button
+                            variant="outlined"
+                            color={nagazap.paused ? "success" : "warning"}
+                            onClick={() => onStatusToggleClick(nagazap.paused ? "start" : "pause")}
+                            sx={{ flex: 1 }}
                         >
-                            {loading ? <CircularProgress size="1.5rem" color="secondary" /> : <Refresh />}
-                        </IconButton>
+                            {nagazap.paused ? <PlayCircle color="success" /> : <PauseCircle color="warning" />}{" "}
+                        </Button>
                     </Box>
                 </Box>
-            }
-        >
-            <Grid container columns={4} spacing={2}>
+            ) : null}
+            <Grid container columns={isMobile ? 1 : 4} spacing={2}>
                 {batches.map((batch, index) => (
                     <Grid item xs={1} key={index}>
                         <Batch batch={batch} nagazap={nagazap} index={index} />
