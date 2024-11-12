@@ -89,7 +89,7 @@ export const NagazapScreen: React.FC<NagazapProps> = ({}) => {
     }, [])
 
     return (
-        <Box sx={{ ...backgroundStyle }}>
+        <Box sx={{ ...backgroundStyle, overflow: "auto" }}>
             <Header />
             <Box sx={{ padding: "2vw", flex: 1 }}>
                 {!showInformations ? (
