@@ -21,7 +21,9 @@ export const MessageContainer: React.FC<MessageContainerProps> = ({ message }) =
             sx={{
                 flexDirection: "column",
                 height: "100%",
-                flex: 1,
+                flex: isMobile ? undefined : 1,
+                width: "fit-content",
+                // width: isMobile ? "100vw" : undefined,
             }}
         >
             {/* <Box style={{ wordBreak: "break-all", whiteSpace: "pre-line", color: "text.secondary" }}>{message.text}</Box> */}
@@ -29,7 +31,7 @@ export const MessageContainer: React.FC<MessageContainerProps> = ({ message }) =
             <Paper
                 sx={{
                     flexDirection: "column",
-                    gap: isMobile ? "5vw" : "0.5vw",
+                    gap: isMobile ? "2vw" : "0.5vw",
                     padding: isMobile ? "4vw" : "0.5vw",
                     position: "relative",
                     borderRadius: "0.5vw",
@@ -44,9 +46,9 @@ export const MessageContainer: React.FC<MessageContainerProps> = ({ message }) =
                         <Avatar
                             variant="rounded"
                             sx={{
-                                width: message.type === "image" ? "100%" : "30%",
+                                width: message.type === "image" ? "100%" : "40%",
                                 height: "auto",
-                                maxHeight: "20vw",
+                                maxHeight: isMobile ? "80vw" : "20vw",
                                 alignSelf: "center",
                             }}
                             src={message.text}
@@ -70,14 +72,14 @@ export const MessageContainer: React.FC<MessageContainerProps> = ({ message }) =
 
                 {message.type === "audio" && (
                     <AudioPlayer
-                        containerSx={{ width: "100%", height: "3vw" }}
+                        containerSx={{ width: undefined, height: isMobile ? undefined : "3vw", paddingBottom: isMobile ? "4vw" : undefined }}
                         media={{ source: message.text, ext: message.text.split(".")[message.text.split(".").length - 1] }}
                     />
                 )}
 
                 <Box
                     sx={{
-                        fontSize: "0.6vw",
+                        fontSize: isMobile ? "3vw" : "0.6vw",
                         marginLeft: "auto",
                         position: message.type === "audio" || message.type === "sticker" || message.type === "reaction" ? "absolute" : undefined,
                         right: "0.5vw",
