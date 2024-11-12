@@ -41,7 +41,7 @@ export const MessagesChart: React.FC<MessagesChartProps> = ({ messages }) => {
                     <CartesianGrid strokeDasharray="3 3" />
                     <XAxis dataKey="date" tickFormatter={(value) => new Date(value).toLocaleDateString("pt-br")} />
                     <YAxis />
-                    <Tooltip />
+                    <Tooltip labelFormatter={(value) => new Date(value).toLocaleDateString("pt-br")} />
                     <Area
                         type={"monotone"}
                         dataKey={"Quantidade"}
