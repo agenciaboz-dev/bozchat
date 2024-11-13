@@ -4,7 +4,7 @@ import { useLocation, useNavigate } from "react-router-dom"
 import colors from "../../style/colors"
 
 interface ToolButtonProps {
-    label: string
+    label: React.ReactNode
     route: string
     setShowInformations: Dispatch<SetStateAction<boolean>>
 }
