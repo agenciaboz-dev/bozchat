@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react"
 import { Box, CircularProgress, Grid, IconButton, MenuItem, TextField } from "@mui/material"
 import { Subroute } from "../Subroute"
 import { Nagazap } from "../../../types/server/class/Nagazap"
-import { DeleteForever, Pause, PauseCircle, PlayArrow, PlayCircle, Refresh, Save } from "@mui/icons-material"
+import { Cake, DeleteForever, Pause, PauseCircle, PlayArrow, PlayCircle, Refresh, Save } from "@mui/icons-material"
 import { api } from "../../../api"
 import { WhatsappForm } from "../../../types/server/Meta/WhatsappBusiness/WhatsappForm"
 import { Batch } from "./Batch"
@@ -12,9 +12,10 @@ import { useUser } from "../../../hooks/useUser"
 interface OvenProps {
     nagazap?: Nagazap
     setNagazap: React.Dispatch<React.SetStateAction<Nagazap>>
+    setShowInformations: React.Dispatch<React.SetStateAction<boolean>>
 }
 
-export const Oven: React.FC<OvenProps> = ({ nagazap, setNagazap }) => {
+export const Oven: React.FC<OvenProps> = ({ nagazap, setNagazap, setShowInformations }) => {
     function chunkArray<T>(array: T[], chunkSize: number): T[][] {
         const result: T[][] = []
         for (let i = 0; i < array.length; i += chunkSize) {
@@ -163,7 +164,14 @@ export const Oven: React.FC<OvenProps> = ({ nagazap, setNagazap }) => {
                                 ),
                             }}
                         />
-                        <IconButton onClick={refresh} disabled={loading} sx={{ alignSelf: "center" }}>
+                        <IconButton
+                            onClick={() => {
+                                refresh()
+                                setShowInformations(false)
+                            }}
+                            disabled={loading}
+                            sx={{ alignSelf: "center" }}
+                        >
                             {loading ? <CircularProgress size="1.5rem" color="secondary" /> : <Refresh />}
                         </IconButton>
                     </Box>
@@ -176,10 +184,21 @@ export const Oven: React.FC<OvenProps> = ({ nagazap, setNagazap }) => {
                         <Batch batch={batch} nagazap={nagazap} index={index} />
                     </Grid>
                 ))}
-                <Grid item xs={4}>
-                    {!batches.length && <Box sx={{ color: "secondary.main" }}>Nenhuma fornada em preparo</Box>}
-                </Grid>
             </Grid>
+            {!batches.length && (
+                <Box
+                    sx={{
+                        color: "secondary.main",
+                        justifyContent: "center",
+                        alignItems: "center",
+                        flex: 1,
+                        flexDirection: "column",
+                        fontSize: "2rem",
+                    }}
+                >
+                    <Cake sx={{ width: "15vw", height: "auto" }} />o forno está vazio
+                </Box>
+            )}
         </Subroute>
     ) : null
 }

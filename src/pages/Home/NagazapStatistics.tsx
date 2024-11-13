@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react"
-import { Box, IconButton } from "@mui/material"
+import { Box, IconButton, useMediaQuery } from "@mui/material"
 import { Title2 } from "../../components/Title"
-import { AlarmOnSharp, Block, Check, Close, DocumentScanner, Error, Loop, Replay, WhatsApp } from "@mui/icons-material"
+import { AlarmOnSharp, Block, Check, Close, DocumentScanner, Replay, WhatsApp } from "@mui/icons-material"
 import { useUser } from "../../hooks/useUser"
 import { GeneralStat } from "../../types/GeneralStat"
 import { GeneralStatsList } from "./GeneralStatsList"
@@ -10,6 +10,7 @@ import { api } from "../../api"
 interface NagazapStatisticsProps {}
 
 export const NagazapStatistics: React.FC<NagazapStatisticsProps> = ({}) => {
+    const isMobile = useMediaQuery("(orientation: portrait)")
     const { user } = useUser()
 
     const [nagazapsCount, setNagazapsCount] = useState<number>()
@@ -87,7 +88,7 @@ export const NagazapStatistics: React.FC<NagazapStatisticsProps> = ({}) => {
     }, [])
 
     return (
-        <Box sx={{ flex: 1, flexDirection: "column", gap: "1vw" }}>
+        <Box sx={{ flex: isMobile ? undefined : 1, flexDirection: "column", gap: "1vw" }}>
             <Title2
                 name="Nagazap"
                 right={

@@ -1,5 +1,5 @@
-import React, { useEffect, useState } from "react"
-import { Box, CircularProgress, Grid, IconButton, TextField, ToggleButton, ToggleButtonGroup } from "@mui/material"
+import React, { useCallback, useEffect, useState } from "react"
+import { Box, CircularProgress, debounce, Grid, IconButton, TextField, ToggleButton, ToggleButtonGroup } from "@mui/material"
 import { Subroute } from "../Subroute"
 import { api } from "../../../api"
 import { NagaMessage, Nagazap } from "../../../types/server/class/Nagazap"
@@ -7,6 +7,7 @@ import { MessageContainer } from "./MessageContainer"
 import { List, Refresh, Search, ViewList, ViewQuilt } from "@mui/icons-material"
 import { useIo } from "../../../hooks/useIo"
 import Masonry, { ResponsiveMasonry } from "react-responsive-masonry"
+import { MessageSkeleton } from "./MessageSkeleton"
 
 interface MessagesScreenProps {
     nagazap: Nagazap
@@ -41,6 +42,8 @@ export const MessagesScreen: React.FC<MessagesScreenProps> = ({ nagazap }) => {
         setFilter(text)
     }
 
+    const debouncedSearch = useCallback(debounce(onSearch, 300), [onSearch])
+
     useEffect(() => {
         fetchMessages()
     }, [])
@@ -73,7 +76,7 @@ export const MessagesScreen: React.FC<MessagesScreenProps> = ({ nagazap }) => {
                     placeholder="Digite o nome, número ou texto da mensagem"
                     label="Buscar mensagens"
                     InputProps={{ startAdornment: <Search />, sx: { gap: "0.5vw" } }}
-                    onChange={(ev) => onSearch(ev.target.value)}
+                    onChange={(ev) => debouncedSearch(ev.target.value)}
                 />
                 <ToggleButtonGroup value={layoutType} onChange={(_, value) => setLayoutType(value)} exclusive>
                     <ToggleButton value="masonry">
@@ -91,17 +94,17 @@ export const MessagesScreen: React.FC<MessagesScreenProps> = ({ nagazap }) => {
                 sequential
             >
                 {/* @ts-ignore */}
-                {filteredMessages
-                    .filter(
-                        (message) =>
-                            message?.from?.includes(filter) ||
-                            message?.name?.toLowerCase()?.includes(filter) ||
-                            message?.text?.toLowerCase()?.includes(filter)
-                    )
-                    .sort((a, b) => Number(b.timestamp) - Number(a.timestamp))
-                    .map((item) => (
-                        <MessageContainer key={item.id} message={item} />
-                    ))}
+                {loading
+                    ? new Array(20).fill(1).map((_, index) => <MessageSkeleton key={index} />)
+                    : filteredMessages
+                          .filter(
+                              (message) =>
+                                  message?.from?.includes(filter) ||
+                                  message?.name?.toLowerCase()?.includes(filter) ||
+                                  message?.text?.toLowerCase()?.includes(filter)
+                          )
+                          .sort((a, b) => Number(b.timestamp) - Number(a.timestamp))
+                          .map((item) => <MessageContainer key={item.id} message={item} />)}
             </Masonry>
         </Subroute>
     )

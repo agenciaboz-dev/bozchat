@@ -208,8 +208,8 @@ export const WashimaChat: React.FC<WashimaChatProps> = ({ washima, chat, onClose
                 flex: 1,
                 justifyContent: isMobile ? "flex-end" : "center",
                 bgcolor: "background.paper",
-                height: "90vh",
-                padding: "1vw",
+                // height: isMobile ? "77vh" : "90vh",
+                padding: isMobile ? "2vw" : "1vw",
                 color: "secondary.main",
                 gap: "1vw",
                 flexDirection: "column",
@@ -217,7 +217,14 @@ export const WashimaChat: React.FC<WashimaChatProps> = ({ washima, chat, onClose
                 position: "relative",
             }}
         >
-            <Box sx={{ gap: "2vw", alignItems: "center", height: isMobile ? "7vh" : "5vh", padding: isMobile ? "2vw" : "" }}>
+            <Box
+                sx={{
+                    gap: isMobile ? "3vw" : "2vw",
+                    alignItems: "center",
+                    // height: isMobile ? "7vh" : "5vh",
+                    padding: isMobile ? "2vw" : "",
+                }}
+            >
                 {loading ? (
                     <Skeleton variant="circular" animation="wave" sx={{ width: isMobile ? "12vw" : "3vw", height: isMobile ? "12vw" : "3vw" }} />
                 ) : (
@@ -253,14 +260,14 @@ export const WashimaChat: React.FC<WashimaChatProps> = ({ washima, chat, onClose
                 onScroll={handleScroll}
                 sx={{
                     width: "100%",
-                    height: "70vh",
+                    height: isMobile ? "60vh" : "70vh",
                     bgcolor: "background.default",
                     overflowY: "auto",
                     borderRadius: isMobile ? "0 3vw 0 3vw" : "0 1.5vw 0 1.5vw",
-                    padding: "2vw",
+                    padding: isMobile ? "4vw" : "2vw",
                     color: "text.secondary",
                     flexDirection: "column",
-                    gap: isMobile ? "2.5vw" : "0.25vw",
+                    gap: isMobile ? "1vw" : "0.25vw",
                     position: "relative",
 
                     "::-webkit-scrollbar-thumb": {

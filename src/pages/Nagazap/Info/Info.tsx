@@ -1,36 +1,54 @@
-import React, { useEffect, useState } from "react"
-import { Box, CircularProgress, Grid, IconButton, Paper } from "@mui/material"
+import React, { Dispatch, SetStateAction, useEffect, useState } from "react"
+import { Box, CircularProgress, Grid, IconButton, Paper, Tooltip, useMediaQuery } from "@mui/material"
 import { Subroute } from "../Subroute"
 import { api } from "../../../api"
-import { AccountBox, Business, Facebook, LocalPhone, Refresh, Security, WhatsApp } from "@mui/icons-material"
+import { AccountBox, Business, Facebook, HealthAndSafety, LocalPhone, Refresh, Security, WhatsApp } from "@mui/icons-material"
 import { Nagazap } from "../../../types/server/class/Nagazap"
 import { BusinessInfo } from "../../../types/server/Meta/WhatsappBusiness/BusinessInfo"
 import { GeneralStat } from "../../../types/GeneralStat"
 import { InfoDataContainer } from "./InfoDataContainer"
+import { GeneralStatistics } from "./GeneralStatistics"
+import { MessagesChart } from "./MessagesChart"
+import { BlacklistChart } from "./BlacklistChart"
 
 interface InfoProps {
     nagazap: Nagazap
+    setShowInformations: Dispatch<SetStateAction<boolean>>
 }
 
-export const Info: React.FC<InfoProps> = ({ nagazap }) => {
+export const Info: React.FC<InfoProps> = ({ nagazap, setShowInformations }) => {
     const [loading, setLoading] = useState(true)
     const [info, setInfo] = useState<BusinessInfo | null>(null)
+    const isMobile = useMediaQuery("(orientation: portrait)")
+
+    const getMuiColor = (value?: string) => {
+        const colors = [
+            { text: "green", value: "success.main" },
+            { text: "yellow", value: "warning.main" },
+            { text: "red", value: "error.main" },
+        ]
+        return colors.find((item) => item.text === value)?.value
+    }
 
     const infos: (GeneralStat & { copy?: boolean })[] = [
         { title: "Business Account", value: info?.name, icon: AccountBox, loading: !info },
         { title: "Nome do Whatsapp Business", value: info?.phone_numbers.data[0].verified_name, icon: WhatsApp, loading: !info },
-        { title: "Número do Whatsapp Business", value: info?.phone_numbers.data[0].display_phone_number, icon: LocalPhone, loading: !info },
+        {
+            title: "Número do Whatsapp Business",
+            value: info?.phone_numbers.data[0].display_phone_number,
+            icon: LocalPhone,
+            loading: !info,
+        },
         {
             title: "Confiabilidade do número",
             value: (
-                <Paper
+                <Box
                     sx={{
-                        borderRadius: "100%",
-                        width: "1.5rem",
-                        height: "1.5rem",
-                        bgcolor: info?.phone_numbers.data[0].quality_rating.toLowerCase(),
+                        color: getMuiColor(info?.phone_numbers.data[0].quality_rating.toLowerCase()),
                     }}
-                />
+                >
+                    {info?.phone_numbers.data[0].quality_rating}
+                </Box>
             ),
             icon: Security,
             loading: !info,
@@ -66,14 +84,25 @@ export const Info: React.FC<InfoProps> = ({ nagazap }) => {
         <Subroute
             title="Informações"
             right={
-                <IconButton onClick={fetchInfo} disabled={loading}>
+                <IconButton
+                    onClick={() => {
+                        fetchInfo()
+                        setShowInformations(false)
+                    }}
+                    disabled={loading}
+                >
                     {loading ? <CircularProgress size="1.5rem" color="secondary" /> : <Refresh />}
                 </IconButton>
             }
         >
-            <Grid container columns={2}>
+            <Grid container columns={isMobile ? 1 : 4} sx={{ height: "64vh" }}>
                 <Grid item xs={1}>
-                    <Box sx={{ flexDirection: "column", gap: "0.5vw" }}>
+                    <Box
+                        sx={{
+                            flexDirection: "column",
+                            gap: isMobile ? "1vw" : "0.5vw",
+                        }}
+                    >
                         {infos.map((info) => (
                             <InfoDataContainer key={info.title} data={info} />
                         ))}
@@ -85,6 +114,17 @@ export const Info: React.FC<InfoProps> = ({ nagazap }) => {
                             <InfoDataContainer key={info.title} data={info} />
                         ))}
                     </Box>
+                </Grid>
+
+                <Grid item xs={2}>
+                    <MessagesChart messages={nagazap.sentMessages} />
+                </Grid>
+
+                <Grid item xs={2}>
+                    <GeneralStatistics nagazap={nagazap} />
+                </Grid>
+                <Grid item xs={2}>
+                    <BlacklistChart blacklist={nagazap.blacklist} />
                 </Grid>
             </Grid>
         </Subroute>

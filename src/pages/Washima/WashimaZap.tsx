@@ -60,53 +60,60 @@ export const WashimaZap: React.FC<WashimaZapProps> = ({ washima, onEdit }) => {
 
     return (
         <Box sx={{ flex: 1 }}>
-            <Box
-                ref={chatListRef}
-                sx={{
-                    flex: 0.5,
-                    flexDirection: "column",
-                    alignItems: isMobile ? "center" : "",
-                    padding: "2vw",
-                    height: "90vh",
-                    overflowX: isMobile ? "hidden" : "auto",
-                    overflowY: loading ? "hidden" : "auto",
-                    gap: "1vw",
-                    color: "primary.main",
-                    "::-webkit-scrollbar-thumb": {
-                        backgroundColor: "primary.main",
-                    },
-                }}
-            >
-                <Box sx={{ alignItems: "center", justifyContent: "space-between" }}>
-                    <p
-                        style={{
-                            fontSize: isMobile ? "6vw" : "",
-                            fontWeight: "bold",
-                            textAlign: isMobile ? "center" : "initial",
-                        }}
-                    >
-                        {washima.info.pushname}
-                    </p>
+            {!isMobile || (isMobile && !chat) ? (
+                <Box
+                    ref={chatListRef}
+                    sx={{
+                        flex: isMobile ? 1 : 0.5,
+                        flexDirection: "column",
+                        alignItems: isMobile ? "center" : "",
+                        padding: "2vw",
+                        height: !isMobile ? "90vh" : "72vh",
+                        overflowX: isMobile ? "hidden" : "auto",
+                        overflowY: loading ? "hidden" : "auto",
+                        gap: "1vw",
+                        color: "primary.main",
+                        "::-webkit-scrollbar-thumb": {
+                            backgroundColor: "primary.main",
+                        },
+                        width: isMobile ? "100vw" : undefined,
+                    }}
+                >
+                    <Box sx={{ alignItems: "center", justifyContent: "space-between" }}>
+                        <p
+                            style={{
+                                fontSize: isMobile ? "6vw" : "",
+                                fontWeight: "bold",
+                                textAlign: isMobile ? "center" : "initial",
+                            }}
+                        >
+                            {washima.info.pushname}
+                        </p>
 
-                    <IconButton onClick={() => onEdit()} sx={{ padding: 0 }}>
-                        <Settings />
-                    </IconButton>
+                        <IconButton onClick={() => onEdit()} sx={{ padding: 0 }}>
+                            <Settings />
+                        </IconButton>
+                    </Box>
+
+                    <WashimaSearch handleSearch={debouncedSearch} />
+
+                    <ChatList
+                        onChatClick={(chat) => setChat(chat)}
+                        washima={washima}
+                        lastWashima={lastWashima}
+                        loading={loading}
+                        setLoading={setLoading}
+                        currentChat={chat}
+                        setOnSearch={setOnSearch}
+                        setOnStartSearch={setOnStartSearch}
+                    />
                 </Box>
-
-                <WashimaSearch handleSearch={debouncedSearch} />
-
-                <ChatList
-                    onChatClick={(chat) => setChat(chat)}
-                    washima={washima}
-                    lastWashima={lastWashima}
-                    loading={loading}
-                    setLoading={setLoading}
-                    currentChat={chat}
-                    setOnSearch={setOnSearch}
-                    setOnStartSearch={setOnStartSearch}
-                />
-            </Box>
-            <WashimaChat washima={washima} chat={chat} onClose={() => setChat(null)} />
+            ) : null}
+            {!isMobile ? (
+                <WashimaChat washima={washima} chat={chat} onClose={() => setChat(null)} />
+            ) : (
+                chat && <WashimaChat washima={washima} chat={chat} onClose={() => setChat(null)} />
+            )}
         </Box>
     )
 }

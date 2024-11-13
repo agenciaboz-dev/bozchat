@@ -1,5 +1,5 @@
 import React from 'react'
-import { Avatar, Box, IconButton, Menu, MenuItem, Paper } from "@mui/material"
+import { Avatar, Box, IconButton, Menu, MenuItem, Paper, useMediaQuery } from "@mui/material"
 import { Menu as MenuIcon } from "@mui/icons-material"
 import { useMenu } from "../hooks/useMenu"
 import { useUser } from "../hooks/useUser"
@@ -10,6 +10,8 @@ export const Header: React.FC<HeaderProps> = ({}) => {
     const menu = useMenu()
     const { user, logout } = useUser()
     const splitted_name = user?.name.split(" ").slice(0, 2) || []
+
+    const isMobile = useMediaQuery("(orientation: portrait)")
 
     const [menuAchor, setMenuAnchor] = React.useState<null | HTMLElement>(null)
     const handleClickMenu = (event: React.MouseEvent<HTMLButtonElement>) => {
@@ -30,7 +32,7 @@ export const Header: React.FC<HeaderProps> = ({}) => {
                 borderRadius: 0,
             }}
         >
-            <img src="/wagazap.svg" style={{ width: "4vw", height: "4vw" }} draggable={false} />
+            <img src="/wagazap.svg" style={{ width: isMobile ? "16vw" : "4vw", height: isMobile ? "16vw" : "4vw" }} draggable={false} />
             <IconButton sx={{ position: "absolute", left: "2vw" }} onClick={() => menu.drawer.toogle()}>
                 <MenuIcon />
             </IconButton>
