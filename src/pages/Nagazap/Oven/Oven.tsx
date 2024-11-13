@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from "react"
-import { Box, CircularProgress, Grid, IconButton, MenuItem, TextField } from "@mui/material"
+import { Box, CircularProgress, Grid, IconButton, MenuItem, TextField, Tooltip } from "@mui/material"
 import { Subroute } from "../Subroute"
 import { Nagazap } from "../../../types/server/class/Nagazap"
-import { Cake, DeleteForever, Pause, PauseCircle, PlayArrow, PlayCircle, Refresh, Save } from "@mui/icons-material"
+import { Cake, DeleteForever, HourglassFull, Pause, PauseCircle, PlayArrow, PlayCircle, Refresh, Save, WifiTethering } from "@mui/icons-material"
 import { api } from "../../../api"
 import { WhatsappForm } from "../../../types/server/Meta/WhatsappBusiness/WhatsappForm"
 import { Batch } from "./Batch"
@@ -115,7 +115,9 @@ export const Oven: React.FC<OvenProps> = ({ nagazap, setNagazap, setShowInformat
             right={
                 <Box sx={{ flex: 1, justifyContent: "space-between", marginLeft: "0.5vw" }}>
                     <Box sx={{ alignItems: "center" }}>
-                        <Box sx={{ bgcolor: nagazap.paused ? "warning.main" : "success.main", borderRadius: "100%", width: "1vw", height: "1vw" }} />
+                        <Tooltip title={nagazap.paused ? "O forno está pausado." : "O forno está ligado, mensagens aqui serão enviadas."} arrow>
+                            {nagazap.paused ? <HourglassFull color="warning" /> : <WifiTethering color="success" />}
+                        </Tooltip>
                     </Box>
                     <Box sx={{ gap: "1vw" }}>
                         {!!batches.length && (

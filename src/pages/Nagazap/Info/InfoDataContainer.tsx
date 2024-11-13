@@ -1,5 +1,5 @@
 import React from "react"
-import { Box, IconButton, Skeleton, Typography, useMediaQuery } from "@mui/material"
+import { Box, IconButton, Skeleton, Tooltip, Typography, useMediaQuery } from "@mui/material"
 import { GeneralStat } from "../../../types/GeneralStat"
 import { CopyAll } from "@mui/icons-material"
 
@@ -40,18 +40,21 @@ export const InfoDataContainer: React.FC<InfoDataContainerProps> = ({ data }) =>
                             },
                         ]}
                     >
-                        <Typography
-                            sx={{
-                                fontSize: "1.5rem",
-                                fontWeight: "bold",
-                                color: "primary.main",
-                                whiteSpace: "nowrap",
-                                overflow: "hidden",
-                                textOverflow: "ellipsis",
-                            }}
-                        >
-                            {data.value}
-                        </Typography>
+                        <Tooltip title={data.value} placement="bottom" arrow>
+                            <Typography
+                                sx={{
+                                    fontSize: "1.5rem",
+                                    fontWeight: "bold",
+                                    color: "primary.main",
+                                    whiteSpace: "nowrap",
+                                    overflow: "hidden",
+                                    textOverflow: "ellipsis",
+                                    maxWidth: "15vw",
+                                }}
+                            >
+                                {data.value}
+                            </Typography>
+                        </Tooltip>
 
                         {data.copy && !!data.value && (
                             <IconButton onClick={() => navigator.clipboard.writeText(data.value!.toString())}>
