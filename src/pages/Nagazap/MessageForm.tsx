@@ -186,7 +186,7 @@ export const MessageFormScreen: React.FC<MessageFormProps> = ({ nagazap, setShow
                     <Grid container columns={isMobile ? 1 : 3} spacing={"1vw"}>
                         <Grid item xs={1}>
                             <Box sx={{ flexDirection: "column", gap: isMobile ? "5vw" : "1vw" }}>
-                                <Typography sx={{ fontWeight: 600, color: "secondary.main" }}>Adicionar telefones:</Typography>
+                                <Typography sx={{ fontWeight: 600, color: "secondary.main" }}>Adicionar contatos:</Typography>
                                 <Grid container columns={1}>
                                     <Grid item xs={1}>
                                         <Button
