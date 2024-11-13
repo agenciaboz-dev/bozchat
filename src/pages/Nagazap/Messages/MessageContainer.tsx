@@ -1,5 +1,5 @@
 import React from "react"
-import { Avatar, Box, Grid, Paper, Typography, useMediaQuery } from "@mui/material"
+import { Avatar, Box, Grid, MenuItem, Paper, Typography, useMediaQuery } from "@mui/material"
 import { NagaMessage } from "../../../types/server/class/Nagazap"
 import { useFormatMessageTime } from "../../../hooks/useFormatMessageTime"
 import { Title2 } from "../../../components/Title"
@@ -43,16 +43,17 @@ export const MessageContainer: React.FC<MessageContainerProps> = ({ message }) =
                 <MessageAuthor author={message.name + " - " + message.from} />
                 {(message.type === "image" || message.type === "sticker") && (
                     <PhotoView src={message.text}>
-                        <Avatar
-                            variant="rounded"
-                            sx={{
-                                width: message.type === "image" ? "100%" : "40%",
-                                height: "auto",
-                                maxHeight: isMobile ? "80vw" : "20vw",
-                                alignSelf: "center",
-                            }}
-                            src={message.text}
-                        />
+                        <MenuItem sx={{ padding: 0, justifyContent: "center", pointerEvents: message.type === "sticker" ? "none" : undefined }}>
+                            <Avatar
+                                variant="rounded"
+                                sx={{
+                                    width: message.type === "image" ? "100%" : "40%",
+                                    height: "auto",
+                                    maxHeight: isMobile ? "80vw" : "20vw",
+                                }}
+                                src={message.text}
+                            />
+                        </MenuItem>
                     </PhotoView>
                 )}
                 {(message.type === "text" || message.type === "button" || message.type === "reaction") && (

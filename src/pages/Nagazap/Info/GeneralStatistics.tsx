@@ -27,7 +27,7 @@ export const GeneralStatistics: React.FC<GeneralStatisticsProps> = ({ nagazap })
             value: templates?.filter((template) => template.status === "PENDING").length,
             loading: templates === undefined,
         },
-        { title: "Mensagens enviadas com sucesso", icon: Check, value: nagazap.sentMessages.length },
+        { title: "Mensagens enviadas", icon: Check, value: nagazap.sentMessages.length },
         { title: "Mensagens não enviadas", icon: Close, value: nagazap.failedMessages.length },
         { title: "Mensagens no forno", icon: AlarmOnSharp, value: nagazap.stack.length },
         { title: "Números na lista negra", icon: Block, value: nagazap.blacklist.length },
