@@ -74,9 +74,9 @@ export const TemplateComponentForm: React.FC<TemplateComponentFormProps> = ({ co
             )}
             {/* IMAGEM */}
             {component.format === "IMAGE" && (
-                <Box sx={{ gap: isMobile ? "3vw" : "1vw", alignItems: "center" }}>
+                <Box sx={{ gap: isMobile ? "1vw" : "1vw", alignItems: "center", flexDirection: isMobile ? "column" : "row" }}>
                     <input type="file" ref={inputRef} style={{ display: "none" }} accept={"image/jpeg,image/png"} onChange={handleFileChange} />
-                    <Button variant="outlined" onClick={() => inputRef.current?.click()}>
+                    <Button sx={{ display: "flex", flex: 1, width: "100%" }} variant="outlined" onClick={() => inputRef.current?.click()}>
                         Escolher imagem
                     </Button>
 

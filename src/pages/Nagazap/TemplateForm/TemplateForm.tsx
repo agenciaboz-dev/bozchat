@@ -105,6 +105,7 @@ export const TemplateForm: React.FC<TemplateFormProps> = ({ nagazap, setShowInfo
     return (
         <Subroute
             title="Novo Template"
+            space
             left={
                 isMobile ? (
                     <IconButton
@@ -126,7 +127,7 @@ export const TemplateForm: React.FC<TemplateFormProps> = ({ nagazap, setShowInfo
                                     flexDirection: "column",
                                     gap: isMobile ? "3vw" : "1vw",
                                     paddingBottom: "2vw",
-                                    height: "68vh",
+                                    height: isMobile ? undefined : "68vh",
                                     overflowY: "auto",
                                     marginTop: "-1vw",
                                     paddingTop: "1vw",
