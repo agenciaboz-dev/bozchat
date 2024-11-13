@@ -232,7 +232,7 @@ export const MessageFormScreen: React.FC<MessageFormProps> = ({ nagazap, setShow
                                                 fontSize: "0.8rem",
                                                 gap: "0.5vw",
                                                 paddingLeft: "0.5vw",
-                                                minHeight: "56px",
+                                                minHeight: isMobile ? undefined : "56px",
                                             }}
                                             onClick={() => onNewPhone()}
                                             fullWidth
@@ -367,10 +367,10 @@ export const MessageFormScreen: React.FC<MessageFormProps> = ({ nagazap, setShow
                                                             src={imageSrc}
                                                             sx={{
                                                                 width: "100%",
-                                                                maxWidth: maxSize,
-                                                                maxHeight: maxSize,
+                                                                maxWidth: isMobile ? undefined : maxSize,
+                                                                maxHeight: isMobile ? undefined : maxSize,
                                                                 objectFit: "cover",
-                                                                height: imageSrc == undefined ? maxSize : "auto",
+                                                                height: imageSrc == undefined ? (isMobile ? "60vw" : maxSize) : "auto",
                                                                 bgcolor: "background.default",
                                                                 margin: "   ",
                                                             }}
