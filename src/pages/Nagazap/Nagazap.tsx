@@ -164,8 +164,26 @@ export const NagazapScreen: React.FC<NagazapProps> = ({}) => {
                             </Box>
                         ) : nagazap ? (
                             <Routes>
+                                <Route path="/form" element={<NagazapForm onSuccess={onAddNagazap} setShowInformations={setShowInformations} />} />
                                 <Route index element={<Info nagazap={nagazap} setShowInformations={setShowInformations} />} />
                                 <Route path="/messages" element={<MessagesScreen nagazap={nagazap} setShowInformations={setShowInformations} />} />
+                                <Route path="/template-form" element={<TemplateForm nagazap={nagazap} setShowInformations={setShowInformations} />} />
+                                <Route
+                                    path="/message-form"
+                                    element={<MessageFormScreen nagazap={nagazap} setShowInformations={setShowInformations} />}
+                                />
+                                <Route
+                                    path="/oven"
+                                    element={<Oven nagazap={nagazap} setNagazap={setNagazap} setShowInformations={setShowInformations} />}
+                                />
+                                <Route
+                                    path="/logs"
+                                    element={<Logs nagazap={nagazap} setNagazap={setNagazap} setShowInformations={setShowInformations} />}
+                                />
+                                <Route
+                                    path="/blacklist"
+                                    element={<Blacklist nagazap={nagazap} setNagazap={setNagazap} setShowInformations={setShowInformations} />}
+                                />
                                 <Route
                                     path="/settings"
                                     element={
@@ -177,24 +195,6 @@ export const NagazapScreen: React.FC<NagazapProps> = ({}) => {
                                         />
                                     }
                                 />
-                                <Route
-                                    path="/oven"
-                                    element={<Oven nagazap={nagazap} setNagazap={setNagazap} setShowInformations={setShowInformations} />}
-                                />
-                                <Route
-                                    path="/blacklist"
-                                    element={<Blacklist nagazap={nagazap} setNagazap={setNagazap} setShowInformations={setShowInformations} />}
-                                />
-                                <Route
-                                    path="/logs"
-                                    element={<Logs nagazap={nagazap} setNagazap={setNagazap} setShowInformations={setShowInformations} />}
-                                />
-                                <Route path="/template-form" element={<TemplateForm nagazap={nagazap} setShowInformations={setShowInformations} />} />
-                                <Route
-                                    path="/message-form"
-                                    element={<MessageFormScreen nagazap={nagazap} setShowInformations={setShowInformations} />}
-                                />
-                                <Route path="/form" element={<NagazapForm onSuccess={onAddNagazap} setShowInformations={setShowInformations} />} />
                             </Routes>
                         ) : (
                             <Routes>
