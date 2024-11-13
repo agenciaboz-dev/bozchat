@@ -7,9 +7,9 @@ export const Title: React.FC<{ title: string; children?: React.ReactNode; icon?:
 
     return (
         <Box sx={{ flexDirection: "column", gap: "1vw", padding: isMobile ? "5vw 0" : "1vw 0" }}>
-            <Box sx={{ alignItems: "center", justifyContent: "center", gap: "0.5vw" }}>
+            <Box sx={{ alignItems: "center", justifyContent: "center", gap: isMobile ? "2vw" : "0.5vw" }}>
                 {icon ? icon : <ApiIcon />}
-                <p style={{ textAlign: "center", fontWeight: "800", fontSize: "1.2vw" }}>{title}</p>
+                <p style={{ textAlign: "center", fontWeight: "800", fontSize: isMobile ? "5vw" : "1.2vw" }}>{title}</p>
             </Box>
             <Box sx={{ flexDirection: "column" }}>{children}</Box>
         </Box>
@@ -42,14 +42,12 @@ export const Title2: React.FC<{ name: string; right?: React.ReactNode; left?: Re
                 style={{
                     flex: isMobile ? 1 : undefined,
                     color: colors.primary,
-                    // textAlign: isMobile ? "center" : center ? undefined : undefined,
                     textAlign: center ? undefined : isMobile ? "center" : undefined,
-                    // border: "red solid 1px",
                 }}
             >
                 {name}
             </p>
-            {right ? <Box>{right}</Box> : isMobile && space ? <Box sx={{ flex: 0.1 }}></Box> : null}
+            {right ? right : isMobile && space ? <Box sx={{ flex: 0.1 }}></Box> : null}
             {/* {right} */}
         </Box>
     )
