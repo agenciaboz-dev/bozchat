@@ -118,10 +118,14 @@ export const TemplateForm: React.FC<TemplateFormProps> = ({ nagazap, setShowInfo
                 ) : undefined
             }
         >
-            <Box sx={{ height: "64vh" }}>
+            <Box
+                sx={{
+                    height: isMobile ? undefined : "64vh",
+                }}
+            >
                 <form onSubmit={formik.handleSubmit}>
                     <Grid container columns={isMobile ? 1 : 3} spacing={"1vw"}>
-                        <Grid item xs={2}>
+                        <Grid item xs={isMobile ? 1 : 2}>
                             <Box
                                 sx={{
                                     flexDirection: "column",
@@ -150,8 +154,8 @@ export const TemplateForm: React.FC<TemplateFormProps> = ({ nagazap, setShowInfo
                             <Paper
                                 sx={{
                                     flexDirection: "column",
-                                    gap: "1vw",
-                                    padding: "0.5vw",
+                                    gap: isMobile ? "2vw" : "1vw",
+                                    padding: isMobile ? "3vw" : "0.5vw",
                                     position: "relative",
                                     borderRadius: "0.5vw",
                                     borderTopLeftRadius: 0,
