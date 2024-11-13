@@ -129,7 +129,13 @@ export const NagazapScreen: React.FC<NagazapProps> = ({}) => {
                                         label="Selecione uma conta"
                                         SelectProps={{ MenuProps: { MenuListProps: { sx: { bgcolor: "background.default" } } } }}
                                     >
-                                        <MenuItem sx={{ fontWeight: "bold", gap: "1vw" }} onClick={onNewNagazapPress}>
+                                        <MenuItem
+                                            sx={{ fontWeight: "bold", gap: "1vw" }}
+                                            onClick={() => {
+                                                onNewNagazapPress()
+                                                setShowInformations(true)
+                                            }}
+                                        >
                                             <AddCircle />
                                             Adicionar conta
                                         </MenuItem>
@@ -174,7 +180,6 @@ export const NagazapScreen: React.FC<NagazapProps> = ({}) => {
                             </Box>
                         ) : nagazap ? (
                             <Routes>
-                                <Route path="/form" element={<NagazapForm onSuccess={onAddNagazap} setShowInformations={setShowInformations} />} />
                                 <Route index element={<Info nagazap={nagazap} setShowInformations={setShowInformations} />} />
                                 <Route path="/messages" element={<MessagesScreen nagazap={nagazap} setShowInformations={setShowInformations} />} />
                                 <Route path="/template-form" element={<TemplateForm nagazap={nagazap} setShowInformations={setShowInformations} />} />
@@ -205,6 +210,7 @@ export const NagazapScreen: React.FC<NagazapProps> = ({}) => {
                                         />
                                     }
                                 />
+                                <Route path="/form" element={<NagazapForm onSuccess={onAddNagazap} setShowInformations={setShowInformations} />} />
                             </Routes>
                         ) : (
                             <Routes>
