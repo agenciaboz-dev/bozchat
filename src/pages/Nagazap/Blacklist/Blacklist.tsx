@@ -79,7 +79,7 @@ export const Blacklist: React.FC<BlacklistProps> = ({ nagazap, setNagazap, setSh
                 ) : undefined
             }
         >
-            <Grid container columns={6} spacing={2}>
+            <Grid container columns={isMobile ? 1 : 6} spacing={2}>
                 {blacklist.map((item, index) => (
                     <Grid item xs={1} key={index}>
                         <Paper sx={{ padding: "0.5vw", alignItems: "center", justifyContent: "space-between" }}>
