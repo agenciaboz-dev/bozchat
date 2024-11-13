@@ -8,6 +8,7 @@ import { WhatsappForm } from "../../../types/server/Meta/WhatsappBusiness/Whatsa
 import { Batch } from "./Batch"
 import { useIo } from "../../../hooks/useIo"
 import { useUser } from "../../../hooks/useUser"
+import { OvenStatus } from "./OvenStatus"
 
 interface OvenProps {
     nagazap?: Nagazap
@@ -135,9 +136,8 @@ export const Oven: React.FC<OvenProps> = ({ nagazap, setNagazap, setShowInformat
                         }}
                     >
                         <Box sx={{ alignItems: "center" }}>
-                            <Tooltip title={nagazap.paused ? "O forno está pausado." : "O forno está ligado, mensagens aqui serão enviadas."} arrow>
-                                {nagazap.paused ? <HourglassFull color="warning" /> : <WifiTethering color="success" />}
-                            </Tooltip>
+                        <OvenStatus nagazap={nagazap} />
+
                         </Box>
                         <Box sx={{ gap: "1vw" }}>
                             {!!batches.length && (
@@ -274,7 +274,6 @@ export const Oven: React.FC<OvenProps> = ({ nagazap, setNagazap, setShowInformat
                 </Box>
             ) : null}
             <Grid container columns={isMobile ? 1 : 4} spacing={2}>
-                {/* <Grid container columns={4} spacing={2}> */}
                 {batches.map((batch, index) => (
                     <Grid item xs={1} key={index}>
                         <Batch batch={batch} nagazap={nagazap} index={index} />

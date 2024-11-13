@@ -22,6 +22,7 @@ import { NagazapForm } from "./NagazapForm"
 import { WagaLoading } from "../../components/WagaLoading"
 import { TemplateForm } from "./TemplateForm/TemplateForm"
 import { NagazapSettings } from "./NagazapSettings/NagazapSettings"
+import { OvenStatus } from "./Oven/OvenStatus"
 
 interface NagazapProps {}
 
@@ -146,7 +147,16 @@ export const NagazapScreen: React.FC<NagazapProps> = ({}) => {
                                         <ToolButton label="Mensagens" route="/messages" setShowInformations={setShowInformations} />
                                         <ToolButton label="Criar template" route="/template-form" setShowInformations={setShowInformations} />
                                         <ToolButton label="Enviar mensagem" route="/message-form" setShowInformations={setShowInformations} />
-                                        <ToolButton label="Forno" route="/oven" setShowInformations={setShowInformations} />
+                                        <ToolButton
+                                            label={
+                                                <Box sx={{ gap: "0.5vw" }}>
+                                                    Forno
+                                                    <OvenStatus nagazap={nagazap} small_icon />
+                                                </Box>
+                                            }
+                                            route="/oven"
+                                            setShowInformations={setShowInformations}
+                                        />
                                         <ToolButton label="Logs" route="/logs" setShowInformations={setShowInformations} />
                                         <ToolButton label="Lista negra" route="/blacklist" setShowInformations={setShowInformations} />
                                         <ToolButton label="Configurações" route="/settings" setShowInformations={setShowInformations} />
