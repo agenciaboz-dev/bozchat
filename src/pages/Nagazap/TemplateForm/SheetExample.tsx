@@ -1,5 +1,5 @@
 import React from "react"
-import { Box, Typography } from "@mui/material"
+import { Box, Typography, useMediaQuery } from "@mui/material"
 
 interface SheetExampleProps {}
 
@@ -16,11 +16,12 @@ const SheetLine: React.FC<{ children: React.ReactNode }> = ({ children }) => {
 }
 
 export const SheetExample: React.FC<SheetExampleProps> = ({}) => {
+    const isMobile = useMediaQuery("(orientation: portrait)")
     return (
         <Box
             sx={{
                 width: "100%",
-                maxWidth: "23vw",
+                maxWidth: isMobile ? undefined : "23vw",
                 display: "flex",
                 flexDirection: "row",
                 backgroundColor: "background.main",
