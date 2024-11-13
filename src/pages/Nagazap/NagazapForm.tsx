@@ -77,7 +77,7 @@ export const NagazapForm: React.FC<NagazapFormProps> = ({ onSuccess, setShowInfo
                 </p>
                 <form onSubmit={formik.handleSubmit}>
                     <Box sx={{ fontWeight: "bold", color: "primary.main" }}>Formulário</Box>
-                    <Grid container columns={3} spacing={3}>
+                    <Grid container columns={isMobile ? 1 : 3} spacing={3}>
                         <Grid item xs={1}>
                             <TextField
                                 label="App Id"
