@@ -55,7 +55,7 @@ export const Token: React.FC<TokenProps> = ({ nagazap }) => {
                     value={formik.values.token}
                     onChange={formik.handleChange}
                     multiline
-                    maxRows={isMobile ? 5 : 2}
+                    maxRows={isMobile ? 7 : 2}
                     disabled={locked}
                 />
                 <Button type="submit" variant="contained" sx={{ alignSelf: "flex-end" }} disabled={nagazap.token === formik.values.token}>
