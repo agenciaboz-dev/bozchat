@@ -1,5 +1,5 @@
 import React from "react"
-import { Box, IconButton, MenuItem, TextField } from "@mui/material"
+import { Box, IconButton, MenuItem, TextField, useMediaQuery } from "@mui/material"
 import { ButtonType, TemplateButton, TemplateComponent } from "../../../../types/server/Meta/WhatsappBusiness/TemplatesInfo"
 import { Delete } from "@mui/icons-material"
 
@@ -11,8 +11,9 @@ interface ButtonFormProps {
 }
 
 export const ButtonForm: React.FC<ButtonFormProps> = ({ component, button, index, setComponent }) => {
+    const isMobile = useMediaQuery("(orientation: portrait)")
     return (
-        <Box sx={{ flexDirection: "column", gap: "0.5vw" }}>
+        <Box sx={{ flexDirection: "column", gap: isMobile ? "3vw" : "0.5vw" }}>
             {!!index && <hr style={{ marginBottom: "0.5vw" }} />}
             <TextField
                 label="Texto"

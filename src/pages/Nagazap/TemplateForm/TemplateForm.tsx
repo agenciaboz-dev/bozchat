@@ -119,12 +119,12 @@ export const TemplateForm: React.FC<TemplateFormProps> = ({ nagazap, setShowInfo
         >
             <Box sx={{ height: "64vh" }}>
                 <form onSubmit={formik.handleSubmit}>
-                    <Grid container columns={3} spacing={"1vw"}>
+                    <Grid container columns={isMobile ? 1 : 3} spacing={"1vw"}>
                         <Grid item xs={2}>
                             <Box
                                 sx={{
                                     flexDirection: "column",
-                                    gap: "1vw",
+                                    gap: isMobile ? "3vw" : "1vw",
                                     paddingBottom: "2vw",
                                     height: "68vh",
                                     overflowY: "auto",

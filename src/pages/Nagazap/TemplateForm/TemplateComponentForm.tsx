@@ -1,5 +1,5 @@
 import React, { useCallback, useRef, useState } from "react"
-import { Box, Button, IconButton, MenuItem, TextField } from "@mui/material"
+import { Box, Button, IconButton, MenuItem, TextField, useMediaQuery } from "@mui/material"
 import { ButtonType, TemplateComponent } from "../../../types/server/Meta/WhatsappBusiness/TemplatesInfo"
 import { ButtonForm } from "./TemplateButtons/ButtonForm"
 import { Clear } from "@mui/icons-material"
@@ -11,6 +11,7 @@ interface TemplateComponentFormProps {
 
 export const TemplateComponentForm: React.FC<TemplateComponentFormProps> = ({ component, setComponent }) => {
     const inputRef = useRef<HTMLInputElement>(null)
+    const isMobile = useMediaQuery("(orientation: portrait)")
 
     const [imageError, setImageError] = useState("")
 
@@ -30,7 +31,7 @@ export const TemplateComponentForm: React.FC<TemplateComponentFormProps> = ({ co
                     setComponent({ ...component, file: undefined })
                     return
                 }
-                
+
                 if (file.type !== "image/jpeg" && file.type !== "image/png") {
                     setImageError("Tipo de arquivo não suportado. Envie uma imagem .png ou .jpeg")
                     setComponent({ ...component, file: undefined })
@@ -44,7 +45,7 @@ export const TemplateComponentForm: React.FC<TemplateComponentFormProps> = ({ co
     )
 
     return (
-        <Box sx={{ flexDirection: "column", gap: "1vw" }}>
+        <Box sx={{ flexDirection: "column", gap: isMobile ? "3vw" : "1vw" }}>
             {component.type === "HEADER" && (
                 <TextField
                     label="Tipo"
@@ -73,7 +74,7 @@ export const TemplateComponentForm: React.FC<TemplateComponentFormProps> = ({ co
             )}
             {/* IMAGEM */}
             {component.format === "IMAGE" && (
-                <Box sx={{ gap: "1vw", alignItems: "center" }}>
+                <Box sx={{ gap: isMobile ? "3vw" : "1vw", alignItems: "center" }}>
                     <input type="file" ref={inputRef} style={{ display: "none" }} accept={"image/jpeg,image/png"} onChange={handleFileChange} />
                     <Button variant="outlined" onClick={() => inputRef.current?.click()}>
                         Escolher imagem
@@ -92,7 +93,7 @@ export const TemplateComponentForm: React.FC<TemplateComponentFormProps> = ({ co
 
             {/* BOTOES */}
             {component.type === "BUTTONS" && (
-                <Box sx={{ flexDirection: "column", gap: "1vw" }}>
+                <Box sx={{ flexDirection: "column", gap: isMobile ? "3vw" : "1vw" }}>
                     {component.buttons?.map((button, index) => (
                         <ButtonForm key={index} component={component} setComponent={setComponent} button={button} index={index} />
                     ))}
