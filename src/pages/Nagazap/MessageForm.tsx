@@ -33,6 +33,8 @@ import { TrianguloFudido } from "../Zap/TrianguloFudido"
 import ThemeContext from "../../contexts/themeContext"
 import { object } from "yup"
 import { Clear } from "@mui/icons-material"
+import { SheetExample } from "./TemplateForm/SheetExample"
+import AddCircleIcon from "@mui/icons-material/AddCircle"
 
 interface MessageFormProps {
     nagazap: Nagazap
@@ -60,8 +62,7 @@ export const MessageFormScreen: React.FC<MessageFormProps> = ({ nagazap, setShow
     const [imageError, setImageError] = useState("")
     const [loading, setLoading] = useState(false)
     const [sheetPhones, setSheetPhones] = useState<string[]>([])
-    const [maxHeight, setMaxHeight] = useState(0)
-
+    const [isImageRequired, setIsImageRequired] = useState(false)
 
     const fetchTemplates = async () => {
         try {
@@ -73,7 +74,7 @@ export const MessageFormScreen: React.FC<MessageFormProps> = ({ nagazap, setShow
     }
 
     const formik = useFormik<OvenForm>({
-        initialValues: { to: [], template: null },
+        initialValues: { to: [""], template: null },
         async onSubmit(values, formikHelpers) {
             if (loading) return
             console.log(values)
@@ -156,6 +157,14 @@ export const MessageFormScreen: React.FC<MessageFormProps> = ({ nagazap, setShow
     }, [])
 
     useEffect(() => {
+        if (formik.values.template?.components[0].format == "IMAGE") {
+            setIsImageRequired(true)
+        } else {
+            setIsImageRequired(false)
+        }
+    }, [formik.values.template])
+
+    useEffect(() => {
         console.log(formik.values.template)
     }, [formik.values.template])
 
@@ -173,9 +182,68 @@ export const MessageFormScreen: React.FC<MessageFormProps> = ({ nagazap, setShow
             }
         >
             <form onSubmit={formik.handleSubmit}>
-                <Box sx={{ height: "100%", overflow: "hidden" }}>
+                <Box sx={{ height: "64vh" }}>
                     <Grid container columns={isMobile ? 1 : 3} spacing={"1vw"}>
-                        <Grid item xs={2}>
+                        <Grid item xs={1}>
+                            <Box sx={{ flexDirection: "column", gap: isMobile ? "5vw" : "1vw" }}>
+                                <Typography sx={{ fontWeight: 600, color: "secondary.main" }}>Adicionar telefones:</Typography>
+                                <Grid container columns={1}>
+                                    <Grid item xs={1}>
+                                        <Button
+                                            component="label"
+                                            variant="outlined"
+                                            sx={{ borderStyle: "dashed", height: "100%", gap: "1vw" }}
+                                            fullWidth
+                                        >
+                                            <CloudUpload />
+                                            {!!sheetPhones.length ? `${sheetPhones.length} números importados` : "Importar planilha"}
+                                            <input onChange={handleSheetsUpload} style={{ display: "none" }} type="file" multiple />
+                                        </Button>
+                                    </Grid>
+                                </Grid>
+                                <Grid container columns={isMobile ? 1 : 2} spacing={2}>
+                                    {formik.values.to.map((number, index) => (
+                                        <Grid item xs={1} key={index}>
+                                            <TextField
+                                                label="Número"
+                                                name={`to[${index}]`}
+                                                value={number}
+                                                onChange={formik.handleChange}
+                                                InputProps={{
+                                                    sx: { gap: "0.5vw" },
+                                                    startAdornment: (
+                                                        <IconButton color="secondary" onClick={() => onDeleteMessage(index)} sx={{ padding: 0 }}>
+                                                            <DeleteForever />
+                                                        </IconButton>
+                                                    ),
+                                                }}
+                                            />
+                                        </Grid>
+                                    ))}
+                                    <Grid item xs={1}>
+                                        <Button
+                                            variant="outlined"
+                                            sx={{
+                                                borderStyle: "dashed",
+                                                height: "100%",
+                                                fontSize: "0.8rem",
+                                                gap: "0.5vw",
+                                                paddingLeft: "0.5vw",
+                                                minHeight: "56px",
+                                            }}
+                                            onClick={() => onNewPhone()}
+                                            fullWidth
+                                        >
+                                            <AddCircleIcon fontSize="small" />
+                                            Adicionar Contato
+                                        </Button>
+                                    </Grid>
+                                </Grid>
+                                <Typography sx={{ color: "secondary.main" }}>Segue abaixo um modelo de como deve ser a planilha:</Typography>
+                                <SheetExample />
+                            </Box>
+                        </Grid>
+                        <Grid item xs={1}>
                             <Box
                                 sx={{
                                     flexDirection: "column",
@@ -183,9 +251,7 @@ export const MessageFormScreen: React.FC<MessageFormProps> = ({ nagazap, setShow
                                 }}
                             >
                                 <Box sx={{ flexDirection: "column", gap: isMobile ? "5vw" : "1vw" }}>
-                                    <Typography sx={{ color: "secondary.main" }}>
-                                        Por favor, selecione o template desejado para o envio da mensagem:
-                                    </Typography>
+                                    <Typography sx={{ color: "secondary.main", fontWeight: 600 }}>Selecionar templates:</Typography>
                                     <TextField
                                         label="Template"
                                         value={formik.values.template?.name || ""}
@@ -215,95 +281,64 @@ export const MessageFormScreen: React.FC<MessageFormProps> = ({ nagazap, setShow
                                             </MenuItem>
                                         ))}
                                     </TextField>
+                                    <Typography sx={{ color: "secondary.main" }}>
+                                        Por favor, selecione o template desejado para o envio da mensagem:
+                                    </Typography>
                                 </Box>
                                 {formik.values.template?.components.map((component) => {
                                     if (component.format == "IMAGE") {
-                                        return (<Box sx={{ gap: isMobile ? "5vw" : "1vw", alignItems: "center" }}>
-                                            <input
-                                                type="file"
-                                                ref={inputRef}
-                                                style={{ display: "none" }}
-                                                accept={"image/jpeg,image/png"}
-                                                onChange={handleImageChange}
-                                            />
-                                                        
-                                                        <Button variant="contained" onClick={() => inputRef.current?.click()} sx={{ maxWidth: "16vw", minHeight: "56px", }}>
-                                                {loading ? <CircularProgress size="1.5rem" color="inherit" /> : "Selecionar imagem"}
-                                            </Button>
-                                            <Typography sx={{ color: imageError ? "error.main" : "secondary.main" }}>
-                                                {imageError ||
-                                                    (image ? image.name : "Selecione uma imagem de até 5 MB para ser adicionada a mensagem")}
-                                            </Typography>
-                                            {image && (
-                                                <IconButton onClick={clearImage} sx={{ padding: 0 }}>
-                                                    <Clear />
-                                                </IconButton>
-                                            )}
-                                        </Box>)
+                                        return (
+                                            <Box sx={{ flexDirection: "column", gap: isMobile ? "5vw" : "1vw" }}>
+                                                <input
+                                                    type="file"
+                                                    ref={inputRef}
+                                                    style={{ display: "none" }}
+                                                    accept={"image/jpeg,image/png"}
+                                                    onChange={handleImageChange}
+                                                />
+
+                                                <Button variant="contained" onClick={() => inputRef.current?.click()}>
+                                                    {"Selecionar imagem"}
+                                                </Button>
+                                                <Box sx={{ gap: isMobile ? "5vw" : "0.5vw" }}>
+                                                    <Typography
+                                                        sx={{
+                                                            color: imageError ? "error.main" : "secondary.main",
+                                                            maxWidth: !image ? undefined : "22vw",
+                                                            overflow: !image ? undefined : "hidden",
+                                                            whiteSpace: !image ? undefined : "nowrap",
+                                                            textOverflow: "ellipsis",
+                                                        }}
+                                                    >
+                                                        {imageError ||
+                                                            (image ? image.name : "Selecione uma imagem de até 5 MB para ser adicionada a mensagem")}
+                                                    </Typography>
+                                                    {image && (
+                                                        <IconButton onClick={clearImage} sx={{ padding: 0 }}>
+                                                            <Clear />
+                                                        </IconButton>
+                                                    )}
+                                                </Box>
+                                            </Box>
+                                        )
                                     } else {
                                         return null
                                     }
                                 })}
-                                {formik.values.template && (
-                                    <Box sx={{ flexDirection: "column", gap: isMobile ? "5vw" : "1vw" }}>
-                                        <Typography sx={{ color: "secondary.main" }}>
-                                            Importe a planilha contendo os números para os quais deseja enviar a mensagem ou adicione manualmente.
-                                        </Typography>
-                                        <Grid container columns={isMobile ? 1 : 3} spacing={2}>
-                                            <Grid item xs={1}>
-                                                <Button
-                                                    component="label"
-                                                    variant="outlined"
-                                                    sx={{ borderStyle: "dashed", height: "100%", gap: "1vw" }}
-                                                    fullWidth
-                                                >
-                                                    <CloudUpload />
-                                                    {!!sheetPhones.length ? `${sheetPhones.length} números importados` : "Importar planilha"}
-                                                    <input onChange={handleSheetsUpload} style={{ display: "none" }} type="file" multiple />
-                                                </Button>
-                                            </Grid>
-                                            {formik.values.to.map((number, index) => (
-                                                <Grid item xs={1} key={index}>
-                                                    <TextField
-                                                        label="Número"
-                                                        name={`to[${index}]`}
-                                                        value={number}
-                                                        onChange={formik.handleChange}
-                                                        InputProps={{
-                                                            sx: { gap: "0.5vw" },
-                                                            startAdornment: (
-                                                                <IconButton
-                                                                    color="secondary"
-                                                                    onClick={() => onDeleteMessage(index)}
-                                                                    sx={{ padding: 0 }}
-                                                                >
-                                                                    <DeleteForever />
-                                                                </IconButton>
-                                                            ),
-                                                        }}
-                                                    />
-                                                </Grid>
-                                            ))}
-                                            <Grid item xs={1}>
-                                                <Button
-                                                    variant="outlined"
-                                                    sx={{
-                                                        borderStyle: "dashed",
-                                                        height: "100%",
-                                                        minHeight: "56px",
-                                                    }}
-                                                    onClick={() => onNewPhone()}
-                                                    fullWidth
-                                                >
-                                                    <PlusOne />
-                                                </Button>
-                                            </Grid>
-                                        </Grid>
-                                    </Box>
-                                )}
-                                
+                                <Button
+                                    type="submit"
+                                    fullWidth
+                                    variant="contained"
+                                    disabled={
+                                        (!formik.values.to.length && !sheetPhones.length) || !formik.values.template || (isImageRequired && !image)
+                                    }
+                                    sx={{ marginTop: isMobile ? "5vw" : "1vw" }}
+                                >
+                                    {loading ? <CircularProgress size="1.5rem" color="inherit" /> : "Adicionar a fila"}
+                                </Button>
                             </Box>
                         </Grid>
+
                         <Grid item xs={1}>
                             {formik.values.template?.components.length && (
                                 <>
@@ -319,7 +354,7 @@ export const MessageFormScreen: React.FC<MessageFormProps> = ({ nagazap, setShow
                                         }}
                                     >
                                         <TrianguloFudido alignment="left" color="#2a323c" />
-                                        {formik.values.template?.components.map((component, index) => {
+                                        {formik.values.template?.components.map((component) => {
                                             if (component.format == "IMAGE") {
                                                 const imageSrc = image ? URL.createObjectURL(image) : undefined
                                                 return (
@@ -377,15 +412,6 @@ export const MessageFormScreen: React.FC<MessageFormProps> = ({ nagazap, setShow
                                             return null
                                         })}
                                     </Paper>
-                                    <Button
-                                        type="submit"
-                                        fullWidth
-                                        variant="contained"
-                                        disabled={(!formik.values.to.length && !sheetPhones.length) || !formik.values.template}
-                                        sx={{ marginTop: isMobile ? "5vw" : "1vw" }}
-                                    >
-                                        {loading ? <CircularProgress size="1.5rem" color="inherit" /> : "enviar"}
-                                    </Button>
                                 </>
                             )}
                         </Grid>
