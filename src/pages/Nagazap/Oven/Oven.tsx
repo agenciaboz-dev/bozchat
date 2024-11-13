@@ -197,15 +197,20 @@ export const Oven: React.FC<OvenProps> = ({ nagazap, setNagazap, setShowInformat
                         </Box>
                     </Box>
                 ) : (
-                    <IconButton
-                        onClick={() => {
-                            refresh()
-                        }}
-                        disabled={loading}
-                        sx={{ alignSelf: "center" }}
-                    >
-                        {loading ? <CircularProgress size="1.5rem" color="secondary" /> : <Refresh />}
-                    </IconButton>
+                    <Box>
+                        <Box sx={{ alignSelf: "center" }}>
+                            <OvenStatus nagazap={nagazap} />
+                        </Box>
+                        <IconButton
+                            onClick={() => {
+                                refresh()
+                            }}
+                            disabled={loading}
+                            sx={{ alignSelf: "center" }}
+                        >
+                            {loading ? <CircularProgress size="1.5rem" color="secondary" /> : <Refresh />}
+                        </IconButton>
+                    </Box>
                 )
             }
         >

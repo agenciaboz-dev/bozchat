@@ -1,5 +1,5 @@
 import React from "react"
-import { Box, Tooltip } from "@mui/material"
+import { Box, Tooltip, useMediaQuery } from "@mui/material"
 import { Nagazap } from "../../../types/server/class/Nagazap"
 import { HourglassFull, WifiTethering } from "@mui/icons-material"
 import Lottie from "lottie-react"
@@ -11,5 +11,10 @@ interface OvenStatusProps {
 }
 
 export const OvenStatus: React.FC<OvenStatusProps> = ({ nagazap, small_icon }) => {
-    return !nagazap.paused && <Lottie animationData={animation} loop={true} style={{ width: small_icon ? "1vw" : "3vw" }} />
+    const isMobile = useMediaQuery("(orientation: portrait)")
+    return (
+        !nagazap.paused && (
+            <Lottie animationData={animation} loop={true} style={{ width: small_icon ? (isMobile ? "3vw" : "0.9vw") : isMobile ? "8vw" : "2.6vw" }} />
+        )
+    )
 }
