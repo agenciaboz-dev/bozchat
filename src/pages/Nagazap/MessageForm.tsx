@@ -399,7 +399,7 @@ export const MessageFormScreen: React.FC<MessageFormProps> = ({ nagazap, setShow
                                                                 key={`${button.text}-${index}`}
                                                                 variant="text"
                                                                 fullWidth
-                                                                sx={{ textTransform: "none", gap: "1vw" }}
+                                                                sx={{ textTransform: "none" }}
                                                                 startIcon={icons.find((item) => item.type === button.type)?.icon}
                                                                 onClick={() => button.type === "URL" && window.open(button.url, "_blank")}
                                                             >
