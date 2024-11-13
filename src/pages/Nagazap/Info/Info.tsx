@@ -125,12 +125,19 @@ export const Info: React.FC<InfoProps> = ({ nagazap, setShowInformations }) => {
                         ))}
                     </Box>
                 </Grid>
-                <Grid item xs={2}>
-                    <GeneralStatistics nagazap={nagazap} />
-                </Grid>
+                {isMobile ? (
+                    <Grid item xs={2}>
+                        <GeneralStatistics nagazap={nagazap} />
+                    </Grid>
+                ) : null}
                 <Grid item xs={2}>
                     <MessagesChart messages={nagazap.sentMessages} />
                 </Grid>
+                {!isMobile ? (
+                    <Grid item xs={2}>
+                        <GeneralStatistics nagazap={nagazap} />
+                    </Grid>
+                ) : null}
                 <Grid item xs={2}>
                     <BlacklistChart blacklist={nagazap.blacklist} />
                 </Grid>
