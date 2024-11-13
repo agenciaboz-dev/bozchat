@@ -40,10 +40,11 @@ export const Title2: React.FC<{ name: string; right?: React.ReactNode; left?: Re
             {left ? <Box>{left}</Box> : isMobile && !space ? <Box sx={{ flex: 0.1 }}></Box> : null}
             <p
                 style={{
-                    flex: 1,
+                    flex: isMobile ? 1 : undefined,
                     color: colors.primary,
                     // textAlign: isMobile ? "center" : center ? undefined : undefined,
                     textAlign: center ? undefined : isMobile ? "center" : undefined,
+                    // border: "red solid 1px",
                 }}
             >
                 {name}

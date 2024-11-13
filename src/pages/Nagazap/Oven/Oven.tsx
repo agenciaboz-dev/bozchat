@@ -136,8 +136,7 @@ export const Oven: React.FC<OvenProps> = ({ nagazap, setNagazap, setShowInformat
                         }}
                     >
                         <Box sx={{ alignItems: "center" }}>
-                        <OvenStatus nagazap={nagazap} />
-
+                            <OvenStatus nagazap={nagazap} />
                         </Box>
                         <Box sx={{ gap: "1vw" }}>
                             {!!batches.length && (
