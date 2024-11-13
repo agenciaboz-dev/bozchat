@@ -114,7 +114,7 @@ export const NagazapScreen: React.FC<NagazapProps> = ({}) => {
                         }}
                         elevation={5}
                     >
-                        <Title title="Nagazap" icon={<Hub />}>
+                        <Title title="Nagazap" icon={<Hub sx={{ width: isMobile ? "7vw" : undefined, height: isMobile ? "7vw" : undefined }} />}>
                             <Box
                                 sx={{
                                     flexDirection: "column",
