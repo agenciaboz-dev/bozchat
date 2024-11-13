@@ -253,6 +253,7 @@ export const MessageFormScreen: React.FC<MessageFormProps> = ({ nagazap, setShow
                                 <Box sx={{ flexDirection: "column", gap: isMobile ? "5vw" : "1vw" }}>
                                     <Typography sx={{ color: "secondary.main", fontWeight: 600 }}>Selecionar templates:</Typography>
                                     <TextField
+                                        fullWidth
                                         label="Template"
                                         value={formik.values.template?.name || ""}
                                         onChange={(event) =>
@@ -263,7 +264,6 @@ export const MessageFormScreen: React.FC<MessageFormProps> = ({ nagazap, setShow
                                             SelectDisplayProps: { style: { display: "flex", alignItems: "center", gap: "0.5vw" } },
                                             MenuProps: { MenuListProps: { sx: { bgcolor: "background.default" } } },
                                         }}
-                                        sx={{ maxWidth: isMobile ? "100%" : maxSize }}
                                     >
                                         <MenuItem value={""} sx={{ display: "none" }} />
                                         {templates.map((item) => (

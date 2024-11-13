@@ -20,7 +20,6 @@ export const SheetExample: React.FC<SheetExampleProps> = ({}) => {
         <Box
             sx={{
                 width: "100%",
-                maxWidth: "23vw",
                 display: "flex",
                 flexDirection: "row",
                 backgroundColor: "background.main",
