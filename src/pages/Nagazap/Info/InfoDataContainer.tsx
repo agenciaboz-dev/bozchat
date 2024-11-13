@@ -49,7 +49,7 @@ export const InfoDataContainer: React.FC<InfoDataContainerProps> = ({ data }) =>
                                     whiteSpace: "nowrap",
                                     overflow: "hidden",
                                     textOverflow: "ellipsis",
-                                    maxWidth: "15vw",
+                                    maxWidth: isMobile ? undefined : "15vw",
                                 }}
                             >
                                 {data.value}
