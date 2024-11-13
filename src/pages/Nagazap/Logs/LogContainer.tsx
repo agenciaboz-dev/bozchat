@@ -1,5 +1,5 @@
 import React from "react"
-import { Box } from "@mui/material"
+import { Box, useMediaQuery } from "@mui/material"
 import { SentMessageLog } from "../../../types/server/Meta/WhatsappBusiness/Logs"
 
 interface LogContainerProps {
@@ -9,6 +9,7 @@ interface LogContainerProps {
 export const LogContainer: React.FC<LogContainerProps> = ({ log }) => {
     const date = new Date(Number(log.timestamp)).toLocaleString("pt-br")
     const number = log.data.contacts[0].wa_id.slice(2)
+    const isMobile = useMediaQuery("(orientation: portrait)")
 
     return (
         <Box sx={{ alignItems: "center", gap: "1vw", justifyContent: "space-between" }}>
@@ -16,8 +17,8 @@ export const LogContainer: React.FC<LogContainerProps> = ({ log }) => {
                 <Box
                     sx={{
                         bgcolor: log.data.messages[0].message_status == "accepted" ? "success.main" : "warning.main",
-                        width: "1vw",
-                        height: "1vw",
+                        width: isMobile ? "3vw" : "1vw",
+                        height: isMobile ? "3vw" : "1vw",
                         borderRadius: "100%",
                     }}
                 />
