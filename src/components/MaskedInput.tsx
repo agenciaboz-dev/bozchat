@@ -1,7 +1,7 @@
 import React from "react"
 import { IMaskInput } from "react-imask"
 
-const MaskedInput = React.forwardRef<HTMLInputElement, any>((props, ref) => {
+const MaskedInputComponent = React.forwardRef<HTMLInputElement, any>((props, ref) => {
     return (
         <IMaskInput
             {...props}
@@ -10,4 +10,4 @@ const MaskedInput = React.forwardRef<HTMLInputElement, any>((props, ref) => {
     )
 })
 
-export default MaskedInput
+export default MaskedInputComponent

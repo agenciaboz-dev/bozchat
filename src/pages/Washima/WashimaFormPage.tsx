@@ -5,7 +5,7 @@ import { Washima, WashimaForm } from "../../types/server/class/Washima/Washima"
 import { useUser } from "../../hooks/useUser"
 import { useDarkMode } from "../../hooks/useDarkMode"
 import * as Yup from "yup"
-import MaskedInput from "../../components/MaskedInput"
+import MaskedInputComponent from "../../components/MaskedInput"
 import { api } from "../../api"
 import { QRCode } from "react-qrcode-logo"
 import { ArrowBackIos } from "@mui/icons-material"
@@ -179,7 +179,7 @@ export const WashimaFormPage: React.FC<WashimaFormPageProps> = ({ currentWashima
                             onChange={formik.handleChange}
                             error={!!formik.errors.number}
                             helperText={formik.errors.number}
-                            InputProps={{ inputComponent: MaskedInput, inputProps: { mask: "(00) 0 0000-0000" } }}
+                            InputProps={{ inputComponent: MaskedInputComponent, inputProps: { mask: "(00) 0 0000-0000" } }}
                             required
                             fullWidth
                         />
