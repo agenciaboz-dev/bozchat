@@ -102,7 +102,12 @@ export const WashimaPage: React.FC<WashimaProps> = ({}) => {
         <Box sx={backgroundStyle}>
             <Header />
             {isMobile ? (
-                <Box sx={{ flexDirection: "row" }}>
+                <Box
+                    sx={{
+                        flexDirection: "row",
+                        height: "6vh",
+                    }}
+                >
                     {/* <Button
                         variant="outlined"
                         color="primary"
@@ -146,7 +151,7 @@ export const WashimaPage: React.FC<WashimaProps> = ({}) => {
                     </Tabs>
                 </Box>
             ) : null}
-            <Box sx={{ flexDirection: "row", flex: 1, height: "90vh" }}>
+            <Box sx={{ flexDirection: "row", flex: 1, height: isMobile ? "84vh" : "90vh" }}>
                 {!isChat ? (
                     <Paper
                         sx={{
