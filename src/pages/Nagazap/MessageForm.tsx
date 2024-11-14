@@ -220,7 +220,7 @@ export const MessageFormScreen: React.FC<MessageFormProps> = ({ nagazap, setShow
                                                 sx: { gap: "0.5vw" },
                                                 startAdornment: (
                                                     <IconButton color="secondary" onClick={() => onDeleteMessage(index)} sx={{ padding: 0 }}>
-                                                        <Clear sx={{ width: "1vw", height: "1vw" }} />
+                                                        <Clear sx={{ width: isMobile ? "5vw" : "1vw", height: isMobile ? "5vw" : "1vw" }} />
                                                     </IconButton>
                                                 ),
                                                 inputComponent: MaskedInputComponent,
