@@ -114,57 +114,53 @@ export const TemplateForm: React.FC<TemplateFormProps> = ({ nagazap, setShowInfo
                 </IconButton>
             }
         >
-            <Box sx={{ height: "64vh" }}>
-                <form onSubmit={formik.handleSubmit}>
-                    <Grid container columns={3} spacing={"1vw"}>
-                        <Grid item xs={2}>
-                            <Box
-                                sx={{
-                                    flexDirection: "column",
-                                    gap: "1vw",
-                                    paddingBottom: "2vw",
-                                    height: "68vh",
-                                    overflowY: "auto",
-                                    marginTop: "-1vw",
-                                    paddingTop: "1vw",
-                                }}
-                            >
-                                <TextField label="Nome do template" value={formik.values.name} onChange={formik.handleChange} name="name" required />
-                                <Tabs value={currentType} onChange={(_, value) => setCurrentType(value)} variant="fullWidth">
-                                    <Tab value={"HEADER"} label="Cabeçalho" />
-                                    <Tab value={"BODY"} label="Corpo" />
-                                    <Tab value={"FOOTER"} label="Rodapé" />
-                                    <Tab value={"BUTTONS"} label="Botões" />
-                                </Tabs>
-                                <TemplateComponentForm component={currentComponent} setComponent={currentSetComponent} />
-                                <Button variant="contained" type="submit" sx={{ alignSelf: "flex-end" }}>
-                                    {loading ? <CircularProgress size="1.5rem" color="secondary" /> : "Concluir"}
-                                </Button>
-                            </Box>
-                        </Grid>
-                        <Grid item xs={1}>
-                            <Paper
-                                sx={{
-                                    flexDirection: "column",
-                                    gap: "1vw",
-                                    padding: "0.5vw",
-                                    position: "relative",
-                                    borderRadius: "0.5vw",
-                                    borderTopLeftRadius: 0,
-                                    color: "secondary.main",
-                                    marginBottom: "2vw",
-                                }}
-                            >
-                                <TemplateHeader component={templateHeader} />
-                                <TemplateBody component={templateBody} />
-                                <TemplateFooter component={templateFooter} />
-                                <TemplateButtons component={templateButtons} />
-                                <TrianguloFudido alignment="left" color={"#2a323c"} />
-                            </Paper>
-                        </Grid>
+            <form onSubmit={formik.handleSubmit}>
+                <Grid container columns={3} spacing={"1vw"}>
+                    <Grid item xs={2}>
+                        <Box
+                            sx={{
+                                flexDirection: "column",
+                                gap: "1vw",
+                                paddingBottom: "2vw",
+                                marginTop: "-1vw",
+                                paddingTop: "1vw",
+                            }}
+                        >
+                            <TextField label="Nome do template" value={formik.values.name} onChange={formik.handleChange} name="name" required />
+                            <Tabs value={currentType} onChange={(_, value) => setCurrentType(value)} variant="fullWidth">
+                                <Tab value={"HEADER"} label="Cabeçalho" />
+                                <Tab value={"BODY"} label="Corpo" />
+                                <Tab value={"FOOTER"} label="Rodapé" />
+                                <Tab value={"BUTTONS"} label="Botões" />
+                            </Tabs>
+                            <TemplateComponentForm component={currentComponent} setComponent={currentSetComponent} />
+                            <Button variant="contained" type="submit" sx={{ alignSelf: "flex-end" }}>
+                                {loading ? <CircularProgress size="1.5rem" color="secondary" /> : "Concluir"}
+                            </Button>
+                        </Box>
                     </Grid>
-                </form>
-            </Box>
+                    <Grid item xs={1}>
+                        <Paper
+                            sx={{
+                                flexDirection: "column",
+                                gap: "1vw",
+                                padding: "0.5vw",
+                                position: "relative",
+                                borderRadius: "0.5vw",
+                                borderTopLeftRadius: 0,
+                                color: "secondary.main",
+                                marginBottom: "2vw",
+                            }}
+                        >
+                            <TemplateHeader component={templateHeader} />
+                            <TemplateBody component={templateBody} />
+                            <TemplateFooter component={templateFooter} />
+                            <TemplateButtons component={templateButtons} />
+                            <TrianguloFudido alignment="left" color={"#2a323c"} />
+                        </Paper>
+                    </Grid>
+                </Grid>
+            </form>
         </Subroute>
     )
 }
