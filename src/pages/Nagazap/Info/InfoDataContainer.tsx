@@ -22,7 +22,7 @@ export const InfoDataContainer: React.FC<InfoDataContainerProps> = ({ data }) =>
             >
                 <Box
                     sx={{
-                        gap: "0.5vw",
+                        gap: isMobile ? "1vw" : "0.5vw",
                         alignItems: "center",
                     }}
                 >
