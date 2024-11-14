@@ -384,7 +384,12 @@ export const MessageFormScreen: React.FC<MessageFormProps> = ({ nagazap, setShow
                                             }
                                             if (component.buttons) {
                                                 return (
-                                                    <>
+                                                    <Box
+                                                        sx={{
+                                                            flexDirection: "column",
+                                                            gap: "0.5vw",
+                                                        }}
+                                                    >
                                                         {component.buttons?.map((button, index) => (
                                                             <Button
                                                                 key={`${button.text}-${index}`}
@@ -397,7 +402,7 @@ export const MessageFormScreen: React.FC<MessageFormProps> = ({ nagazap, setShow
                                                                 {button.text}
                                                             </Button>
                                                         ))}
-                                                    </>
+                                                    </Box>
                                                 )
                                             }
                                             return null
