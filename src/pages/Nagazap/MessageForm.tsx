@@ -16,8 +16,8 @@ import { Clear } from "@mui/icons-material"
 import { SheetExample } from "./TemplateForm/SheetExample"
 import AddCircleIcon from "@mui/icons-material/AddCircle"
 import { usePhoneMask } from "burgos-masks"
-import MaskedInputCerto from "../../components/MaskedInputCerto"
 import * as Yup from "yup"
+import MaskedInputComponent from "../../components/MaskedInput"
 
 interface MessageFormProps {
     nagazap: Nagazap
@@ -204,7 +204,7 @@ export const MessageFormScreen: React.FC<MessageFormProps> = ({ nagazap, setShow
                                                             <DeleteForever />
                                                         </IconButton>
                                                     ),
-                                                    inputComponent: MaskedInputCerto,
+                                                    inputComponent: MaskedInputComponent,
                                                     inputProps: { mask: phone_mask, inputMode: "numeric" },
                                                 }}
                                                 required
