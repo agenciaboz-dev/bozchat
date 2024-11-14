@@ -4,7 +4,7 @@ import { Box, Typography } from "@mui/material"
 interface SheetExampleProps {}
 
 const SheetColumn: React.FC<{ children: React.ReactNode }> = ({ children }) => {
-    return <Box sx={{ width: "50%", display: "flex", flexDirection: "column", border: "2px solid" }}>{children}</Box>
+    return <Box sx={{ width: "50%", display: "flex", flexDirection: "column", border: "1px solid" }}>{children}</Box>
 }
 
 const SheetLine: React.FC<{ children: React.ReactNode }> = ({ children }) => {
