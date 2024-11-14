@@ -296,7 +296,12 @@ export const MessageFormScreen: React.FC<MessageFormProps> = ({ nagazap, setShow
                                                 onChange={handleImageChange}
                                             />
 
-                                            <Button variant="outlined" onClick={() => inputRef.current?.click()}>
+                                            <Button
+                                                variant="outlined"
+                                                onClick={() => inputRef.current?.click()}
+                                                sx={{ borderStyle: "dashed", gap: "1vw" }}
+                                            >
+                                                <CloudUpload />
                                                 {"Selecionar imagem"}
                                             </Button>
                                             <Box sx={{ gap: isMobile ? "5vw" : "0.5vw" }}>
