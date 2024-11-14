@@ -43,8 +43,10 @@ export const MessageFormScreen: React.FC<MessageFormProps> = ({ nagazap, setShow
     const [loading, setLoading] = useState(false)
     const [sheetPhones, setSheetPhones] = useState<string[]>([])
     const [isImageRequired, setIsImageRequired] = useState(false)
-    const [invalidNumbers, setInvalidNumbers] = useState<Set<number>>(new Set())
-    const [invalidNumbersError, setInvalidNumbersError] = useState("")
+
+    const validateSchema = Yup.object().shape({
+        to: Yup.array().min(1, "campo obrigatório"),
+    })
 
     const fetchTemplates = async () => {
         try {
@@ -55,25 +57,10 @@ export const MessageFormScreen: React.FC<MessageFormProps> = ({ nagazap, setShow
         }
     }
 
-    const numbersValidation = (numbers: string[]): Set<number> => {
-        const invalidIndexes = new Set<number>()
-        numbers.forEach((number, index) => {
-            if (number.length !== 15 && number.length !== 16) {
-                invalidIndexes.add(index)
-            }
-        })
-        return invalidIndexes
-    }
-
     const formik = useFormik<OvenForm>({
         initialValues: { to: [""], template: null },
         async onSubmit(values) {
             if (loading) return
-            setInvalidNumbers(numbersValidation(formik.values.to))
-            if (invalidNumbers) {
-                setInvalidNumbersError("*Um mais números estão incorretos")
-                return
-            }
             console.log(values)
             const formData = new FormData()
             if (image) formData.append("file", image)
@@ -161,9 +148,9 @@ export const MessageFormScreen: React.FC<MessageFormProps> = ({ nagazap, setShow
         }
     }, [formik.values.template])
 
-    // useEffect(() => {
-    //     setInvalidNumbers(validarNumeros(formik.values.to))
-    // }, [formik.values.to])
+    useEffect(() => {
+        console.log(formik.values.to)
+    }, [formik.values.to])
 
     return (
         <Subroute
@@ -193,32 +180,27 @@ export const MessageFormScreen: React.FC<MessageFormProps> = ({ nagazap, setShow
                                 </Grid>
                             </Grid>
                             <Grid container columns={isMobile ? 1 : 2} spacing={2}>
-                                {formik.values.to.map((number, index) => {
-                                    const isError = invalidNumbers.has(index)
-                                    return (
-                                        <Grid item xs={1} key={index}>
-                                            <TextField
-                                                label="Número"
-                                                name={`to[${index}]`}
-                                                value={number}
-                                                onChange={formik.handleChange}
-                                                sx={{ borderColor: isError ? "error" : undefined }}
-                                                error={isError}
-                                                InputProps={{
-                                                    sx: { gap: "0.5vw" },
-                                                    startAdornment: (
-                                                        <IconButton color="secondary" onClick={() => onDeleteMessage(index)} sx={{ padding: 0 }}>
-                                                            <Clear sx={{ width: "1vw", height: "1vw" }} />
-                                                        </IconButton>
-                                                    ),
-                                                    inputComponent: MaskedInputComponent,
-                                                    inputProps: { mask: "(00) 0 0000-0000", inputMode: "numeric" },
-                                                }}
-                                                required
-                                            />
-                                        </Grid>
-                                    )
-                                })}
+                                {formik.values.to.map((number, index) => (
+                                    <Grid item xs={1} key={index}>
+                                        <TextField
+                                            label="Número"
+                                            name={`to[${index}]`}
+                                            value={number}
+                                            onChange={formik.handleChange}
+                                            InputProps={{
+                                                sx: { gap: "0.5vw" },
+                                                startAdornment: (
+                                                    <IconButton color="secondary" onClick={() => onDeleteMessage(index)} sx={{ padding: 0 }}>
+                                                        <Clear sx={{ width: "1vw", height: "1vw" }} />
+                                                    </IconButton>
+                                                ),
+                                                inputComponent: MaskedInputComponent,
+                                                inputProps: { mask: "(00) 0 0000-0000", inputMode: "numeric" },
+                                            }}
+                                            required
+                                        />
+                                    </Grid>
+                                ))}
                                 <Grid item xs={1}>
                                     <Button
                                         variant="outlined"
@@ -329,20 +311,15 @@ export const MessageFormScreen: React.FC<MessageFormProps> = ({ nagazap, setShow
                                     return null
                                 }
                             })}
-                            <Box sx={{ flexDirection: "column", gap: "0.2vw" }}>
-                                <Button
-                                    type="submit"
-                                    fullWidth
-                                    variant="contained"
-                                    disabled={
-                                        (!formik.values.to.length && !sheetPhones.length) || !formik.values.template || (isImageRequired && !image)
-                                    }
-                                    sx={{ marginTop: isMobile ? "5vw" : "1vw" }}
-                                >
-                                    {loading ? <CircularProgress size="1.5rem" color="inherit" /> : "Adicionar a fila"}
-                                </Button>
-                                <Typography color="error">{invalidNumbersError}</Typography>
-                            </Box>
+                            <Button
+                                type="submit"
+                                fullWidth
+                                variant="contained"
+                                disabled={(!formik.values.to.length && !sheetPhones.length) || !formik.values.template || (isImageRequired && !image)}
+                                sx={{ marginTop: isMobile ? "5vw" : "1vw" }}
+                            >
+                                {loading ? <CircularProgress size="1.5rem" color="inherit" /> : "Adicionar a fila"}
+                            </Button>
                         </Box>
                     </Grid>
 
@@ -400,7 +377,7 @@ export const MessageFormScreen: React.FC<MessageFormProps> = ({ nagazap, setShow
                                         }
                                         if (component.buttons) {
                                             return (
-                                                <Box sx={{ gap: "0.5vw", flexDirection: "column" }}>
+                                                <Box sx={{gap: '0.5vw', flexDirection: 'column'}}>
                                                     {component.buttons?.map((button, index) => (
                                                         <Button
                                                             key={`${button.text}-${index}`}
