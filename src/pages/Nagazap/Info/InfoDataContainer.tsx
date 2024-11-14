@@ -37,6 +37,7 @@ export const InfoDataContainer: React.FC<InfoDataContainerProps> = ({ data }) =>
                             {
                                 gap: "0.5vw",
                                 width: isMobile ? "90vw" : undefined,
+                                alignItems: "center",
                             },
                         ]}
                     >
@@ -57,8 +58,11 @@ export const InfoDataContainer: React.FC<InfoDataContainerProps> = ({ data }) =>
                         </Tooltip>
 
                         {data.copy && !!data.value && (
-                            <IconButton onClick={() => navigator.clipboard.writeText(data.value!.toString())}>
-                                <CopyAll />
+                            <IconButton
+                                onClick={() => navigator.clipboard.writeText(data.value!.toString())}
+                                sx={{ padding: 0, width: "2vw", height: "2vw" }}
+                            >
+                                <CopyAll sx={{ width: "1.5vw", height: "1.5vw" }} />
                             </IconButton>
                         )}
                     </Box>
