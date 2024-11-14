@@ -133,7 +133,9 @@ export const NagazapScreen: React.FC<NagazapProps> = ({}) => {
                                             sx={{ fontWeight: "bold", gap: "1vw" }}
                                             onClick={() => {
                                                 onNewNagazapPress()
-                                                setShowInformations(true)
+                                                if (isMobile) {
+                                                    setShowInformations(true)
+                                                }
                                             }}
                                         >
                                             <AddCircle />
