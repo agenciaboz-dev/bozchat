@@ -79,7 +79,13 @@ export const WashimaZap: React.FC<WashimaZapProps> = ({ washima, onEdit }) => {
                         width: isMobile ? "100vw" : undefined,
                     }}
                 >
-                    <Box sx={{ alignItems: "center", justifyContent: "space-between" }}>
+                    <Box
+                        sx={{
+                            alignItems: "center",
+                            justifyContent: "space-between",
+                            width: isMobile ? "90vw" : undefined,
+                        }}
+                    >
                         <p
                             style={{
                                 fontSize: isMobile ? "6vw" : "",
