@@ -10,6 +10,7 @@ import { InfoDataContainer } from "./InfoDataContainer"
 import { GeneralStatistics } from "./GeneralStatistics"
 import { MessagesChart } from "./MessagesChart"
 import { BlacklistChart } from "./BlacklistChart"
+import { useUser } from "../../../hooks/useUser"
 
 interface InfoProps {
     nagazap: Nagazap
@@ -17,6 +18,8 @@ interface InfoProps {
 }
 
 export const Info: React.FC<InfoProps> = ({ nagazap, setShowInformations }) => {
+    const { user } = useUser()
+
     const [loading, setLoading] = useState(true)
     const [info, setInfo] = useState<BusinessInfo | null>(null)
     const isMobile = useMediaQuery("(orientation: portrait)")
@@ -60,6 +63,7 @@ export const Info: React.FC<InfoProps> = ({ nagazap, setShowInformations }) => {
         { title: "App ID", value: nagazap.appId, icon: Facebook, copy: true },
         { title: "Phone ID", value: nagazap.phoneId, icon: LocalPhone, copy: true },
     ]
+    if (user?.admin) ids.push({ title: "Usuário do sistema", value: <Box>{nagazap.user.email}</Box>, icon: LocalPhone })
 
     const fetchInfo = async () => {
         setInfo(null)
