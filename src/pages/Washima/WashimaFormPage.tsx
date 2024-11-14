@@ -148,9 +148,11 @@ export const WashimaFormPage: React.FC<WashimaFormPageProps> = ({ currentWashima
             sx={{
                 flex: 1,
                 flexDirection: isMobile ? "column" : "row",
+                // overflow: "auto",
+                height: isMobile ? "84vh" : undefined,
             }}
         >
-            <Box sx={{ padding: "2vw", flexDirection: "column", gap: "1vw", flex: 0.5 }}>
+            <Box sx={{ padding: "2vw", flexDirection: "column", gap: isMobile ? "3vw" : "1vw", flex: isMobile ? undefined : 0.5 }}>
                 <>
                     <Box sx={{ fontSize: "1.5rem", color: "text.secondary", fontWeight: "bold", gap: "1vw" }}>
                         {showForm && (
@@ -161,7 +163,7 @@ export const WashimaFormPage: React.FC<WashimaFormPageProps> = ({ currentWashima
                         {currentWashima?.name || "Novo whatsapp"}
                     </Box>
 
-                    <Box sx={{ gap: "1vw" }}>
+                    <Box sx={{ gap: isMobile ? "2vw" : "1vw", flexDirection: isMobile ? "column" : "row" }}>
                         <TextField
                             label="Nome"
                             name="name"
@@ -188,27 +190,52 @@ export const WashimaFormPage: React.FC<WashimaFormPageProps> = ({ currentWashima
                     <Box
                         sx={{
                             marginLeft: isMobile ? undefined : "auto",
-                            gap: "1vw",
+                            gap: isMobile ? "2vw" : "1vw",
+                            flexDirection: isMobile ? "column" : "row",
                         }}
                     >
+                        {isMobile ? (
+                            <Button
+                                style={{ flex: 1 }}
+                                variant="contained"
+                                onClick={() => formik.handleSubmit()}
+                                disabled={restarting || fetchingMessages}
+                            >
+                                {loading ? <CircularProgress size={"1.5rem"} color="secondary" /> : "Salvar"}
+                            </Button>
+                        ) : null}
                         {currentWashima && (
-                            <>
-                                <Button variant="outlined" color="error" onClick={onDeletePress} disabled={restarting || fetchingMessages}>
+                            <Box sx={{ flex: 1, gap: isMobile ? "2vw" : "1vw" }}>
+                                <Button
+                                    sx={{ flex: isMobile ? 1 : undefined }}
+                                    variant="outlined"
+                                    color="error"
+                                    onClick={onDeletePress}
+                                    disabled={restarting || fetchingMessages}
+                                >
                                     Deletar
                                 </Button>
-                                <Button variant="outlined" color="warning" onClick={onRestartPress} disabled={fetchingMessages}>
+                                <Button
+                                    sx={{ flex: isMobile ? 1 : undefined }}
+                                    variant="outlined"
+                                    color="warning"
+                                    onClick={onRestartPress}
+                                    disabled={fetchingMessages}
+                                >
                                     {restarting ? <CircularProgress size={"1.5rem"} color="inherit" /> : "reiniciar"}
                                 </Button>
-                            </>
+                            </Box>
                         )}
-                        <Button
-                            style={{ flex: 1 }}
-                            variant="contained"
-                            onClick={() => formik.handleSubmit()}
-                            disabled={restarting || fetchingMessages}
-                        >
-                            {loading ? <CircularProgress size={"1.5rem"} color="secondary" /> : "Salvar"}
-                        </Button>
+                        {!isMobile ? (
+                            <Button
+                                style={{ flex: 1 }}
+                                variant="contained"
+                                onClick={() => formik.handleSubmit()}
+                                disabled={restarting || fetchingMessages}
+                            >
+                                {loading ? <CircularProgress size={"1.5rem"} color="secondary" /> : "Salvar"}
+                            </Button>
+                        ) : null}
                     </Box>
                 </>
                 {user?.admin &&
@@ -243,8 +270,10 @@ export const WashimaFormPage: React.FC<WashimaFormPageProps> = ({ currentWashima
                     )
                 ) : isMobile ? (
                     <Box sx={{ flexDirection: "column", alignItems: "center", justifyContent: "center" }}>
-                        <Box>O QRCode aparecerá aqui após cadastrar o número.</Box>
-                        <Box>Pode ser que o primeiro carregamento demore.</Box>
+                        <Box sx={{ whiteSpace: "break-spaces", width: "50%", textAlign: "center" }}>
+                            O QRCode aparecerá aqui após cadastrar o número. Pode ser que o primeiro carregamento demore.
+                        </Box>
+                        <Box></Box>
                     </Box>
                 ) : (
                     <>
