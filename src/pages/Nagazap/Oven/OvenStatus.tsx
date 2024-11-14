@@ -17,7 +17,12 @@ export const OvenStatus: React.FC<OvenStatusProps> = ({ nagazap, small_icon }) =
             <Lottie
                 animationData={animation}
                 loop={true}
-                style={{ width: small_icon ? (isMobile ? "3vw" : "2vw") : isMobile ? "8vw" : "3vw" , position: small_icon ? "absolute" : undefined, top: "-0.25vw", left: "-0.25vw" }}
+                style={{
+                    width: small_icon ? (isMobile ? "10vw" : "2vw") : isMobile ? "8vw" : "3vw",
+                    position: small_icon ? "absolute" : undefined,
+                    top: isMobile ? "0vw" : "-0.25vw",
+                    left: isMobile ? "15vw" : "-0.25vw",
+                }}
             />
         )
     )
