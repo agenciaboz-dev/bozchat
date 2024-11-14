@@ -35,10 +35,29 @@ export const MessagesChart: React.FC<MessagesChartProps> = ({ messages }) => {
     const isMobile = useMediaQuery("(orientation: portrait)")
 
     return (
-        <Box sx={{ flexDirection: "column", gap: "0.5vw" }}>
-            <Box sx={{ color: "secondary.main", fontWeight: "bold", paddingLeft: "2vw" }}>Mensagens enviadas</Box>
-            <ResponsiveContainer style={{ flex: 1 }} height={290}>
-                <AreaChart data={messagesData} margin={{ left: -20 }} style={{ flex: 1 }}>
+        <Box
+            sx={{
+                flexDirection: "column",
+                gap: isMobile ? "2vw" : "0.5vw",
+            }}
+        >
+            <Box
+                sx={{
+                    color: "secondary.main",
+                    fontWeight: "bold",
+                    paddingLeft: "2vw",
+                }}
+            >
+                Mensagens enviadas
+            </Box>
+            <ResponsiveContainer style={{ flex: 1, paddingRight: isMobile ? 20 : undefined }} height={290}>
+                <AreaChart
+                    data={messagesData}
+                    margin={{
+                        left: -20,
+                    }}
+                    style={{ flex: 1 }}
+                >
                     <CartesianGrid strokeDasharray="3 3" />
                     <XAxis dataKey="date" tickFormatter={(value) => new Date(value).toLocaleDateString("pt-br")} />
                     <YAxis />
