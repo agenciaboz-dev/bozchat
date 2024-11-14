@@ -1,41 +1,23 @@
-import React, { useCallback, useContext, useEffect, useRef, useState } from "react"
-import {
-    alpha,
-    Avatar,
-    Box,
-    BoxProps,
-    Button,
-    CircularProgress,
-    Grid,
-    IconButton,
-    MenuItem,
-    Paper,
-    TextField,
-    Typography,
-    useMediaQuery,
-    useTheme,
-} from "@mui/material"
+import React, { useCallback, useEffect, useRef, useState } from "react"
+import { Avatar, Box, Button, CircularProgress, Grid, IconButton, MenuItem, Paper, TextField, Typography, useMediaQuery } from "@mui/material"
 import { Subroute } from "./Subroute"
 import { useFormik } from "formik"
 import { OvenForm } from "../../types/server/Meta/WhatsappBusiness/WhatsappForm"
-import { Check, CloudUpload, DeleteForever, Error, PlusOne, Refresh, WatchLater } from "@mui/icons-material"
+import { Check, CloudUpload, DeleteForever, Error, Refresh, WatchLater } from "@mui/icons-material"
 import { api } from "../../api"
 import { TemplateComponent, TemplateInfo } from "../../types/server/Meta/WhatsappBusiness/TemplatesInfo"
-// import { Avatar } from "@files-ui/react"
 import { getPhonesfromSheet } from "../../tools/getPhonesFromSheet"
 import { useSnackbar } from "burgos-snackbar"
 import { Nagazap } from "../../types/server/class/Nagazap"
-import ReplyIcon from "@mui/icons-material/Reply"
 import { OpenInNew, Reply } from "@mui/icons-material"
 
-import OpenInNewIcon from "@mui/icons-material/OpenInNew"
 import { TrianguloFudido } from "../Zap/TrianguloFudido"
-import ThemeContext from "../../contexts/themeContext"
-import { object } from "yup"
 import { Clear } from "@mui/icons-material"
 import { SheetExample } from "./TemplateForm/SheetExample"
 import AddCircleIcon from "@mui/icons-material/AddCircle"
 import { usePhoneMask } from "burgos-masks"
+import MaskedInputCerto from "../../components/MaskedInputCerto"
+import * as Yup from "yup"
 
 interface MessageFormProps {
     nagazap: Nagazap
@@ -66,6 +48,10 @@ export const MessageFormScreen: React.FC<MessageFormProps> = ({ nagazap, setShow
     const [sheetPhones, setSheetPhones] = useState<string[]>([])
     const [isImageRequired, setIsImageRequired] = useState(false)
 
+    const validateSchema = Yup.object().shape({
+        to: Yup.array().min(1, "campo obrigatório"),
+    })
+
     const fetchTemplates = async () => {
         try {
             const response = await api.get("/nagazap/templates", { params: { nagazap_id: nagazap.id } })
@@ -77,7 +63,7 @@ export const MessageFormScreen: React.FC<MessageFormProps> = ({ nagazap, setShow
 
     const formik = useFormik<OvenForm>({
         initialValues: { to: [""], template: null },
-        async onSubmit(values, formikHelpers) {
+        async onSubmit(values) {
             if (loading) return
             console.log(values)
             const formData = new FormData()
@@ -167,8 +153,8 @@ export const MessageFormScreen: React.FC<MessageFormProps> = ({ nagazap, setShow
     }, [formik.values.template])
 
     useEffect(() => {
-        console.log(formik.values.template)
-    }, [formik.values.template])
+        console.log(formik.values.to)
+    }, [formik.values.to])
 
     return (
         <Subroute
@@ -218,9 +204,10 @@ export const MessageFormScreen: React.FC<MessageFormProps> = ({ nagazap, setShow
                                                             <DeleteForever />
                                                         </IconButton>
                                                     ),
-                                                    inputComponent: MaskedInput,
+                                                    inputComponent: MaskedInputCerto,
                                                     inputProps: { mask: phone_mask, inputMode: "numeric" },
                                                 }}
+                                                required
                                             />
                                         </Grid>
                                     ))}
