@@ -35,6 +35,7 @@ import { object } from "yup"
 import { Clear } from "@mui/icons-material"
 import { SheetExample } from "./TemplateForm/SheetExample"
 import AddCircleIcon from "@mui/icons-material/AddCircle"
+import { usePhoneMask } from "burgos-masks"
 
 interface MessageFormProps {
     nagazap: Nagazap
@@ -52,6 +53,7 @@ export const MessageFormScreen: React.FC<MessageFormProps> = ({ nagazap, setShow
     ]
 
     const maxSize = "23vw"
+    const phone_mask = usePhoneMask()
     const inputRef = useRef<HTMLInputElement>(null)
 
     const { snackbar } = useSnackbar()
@@ -216,6 +218,8 @@ export const MessageFormScreen: React.FC<MessageFormProps> = ({ nagazap, setShow
                                                             <DeleteForever />
                                                         </IconButton>
                                                     ),
+                                                    inputComponent: MaskedInput,
+                                                    inputProps: { mask: phone_mask, inputMode: "numeric" },
                                                 }}
                                             />
                                         </Grid>
