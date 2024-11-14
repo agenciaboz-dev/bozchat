@@ -1,5 +1,5 @@
 import React from "react"
-import { Box, Paper } from "@mui/material"
+import { Box, Paper, useMediaQuery } from "@mui/material"
 import { WhatsappForm } from "../../../types/server/Meta/WhatsappBusiness/WhatsappForm"
 import { Nagazap } from "../../../types/server/class/Nagazap"
 import { Title2 } from "../../../components/Title"
@@ -11,6 +11,7 @@ interface BatchProps {
 }
 
 export const Batch: React.FC<BatchProps> = ({ batch, nagazap, index }) => {
+    const isMobile = useMediaQuery("(orientation: portrait)")
     return nagazap ? (
         <Paper sx={{ flexDirection: "column", padding: "1vw", gap: "1vw", height: "100%", opacity: nagazap.paused ? 0.4 : 1 }}>
             <Title2
@@ -31,10 +32,10 @@ export const Batch: React.FC<BatchProps> = ({ batch, nagazap, index }) => {
                         {message.number}
                         <Box
                             sx={{
-                                fontSize: "0.6rem",
+                                fontSize: isMobile ? "0.75rem" : "0.6rem",
                                 alignSelf: "flex-end",
                                 opacity: 0.5,
-                                width: "7vw",
+                                width: isMobile ? undefined : "7vw",
                                 overflow: "hidden",
                                 textOverflow: "ellipsis",
                                 whiteSpace: "nowrap",
