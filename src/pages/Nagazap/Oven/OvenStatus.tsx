@@ -11,5 +11,13 @@ interface OvenStatusProps {
 }
 
 export const OvenStatus: React.FC<OvenStatusProps> = ({ nagazap, small_icon }) => {
-    return !nagazap.paused && <Lottie animationData={animation} loop={true} style={{ width: small_icon ? "1vw" : "3vw" }} />
+    return (
+        !nagazap.paused && (
+            <Lottie
+                animationData={animation}
+                loop={true}
+                style={{ width: small_icon ? "2vw" : "3vw", position: small_icon ? "absolute" : undefined, top: "-0.25vw", left: "-0.25vw" }}
+            />
+        )
+    )
 }

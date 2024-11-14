@@ -151,7 +151,9 @@ export const NagazapScreen: React.FC<NagazapProps> = ({}) => {
                                             label={
                                                 <Box sx={{ gap: "0.5vw" }}>
                                                     Forno
-                                                    <OvenStatus nagazap={nagazap} small_icon />
+                                                    <Box sx={{ position: "relative" }}>
+                                                        <OvenStatus nagazap={nagazap} small_icon />
+                                                    </Box>
                                                 </Box>
                                             }
                                             route="/oven"
