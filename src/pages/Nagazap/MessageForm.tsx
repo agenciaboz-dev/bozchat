@@ -61,11 +61,16 @@ export const MessageFormScreen: React.FC<MessageFormProps> = ({ nagazap, setShow
         initialValues: { to: [""], template: null },
         async onSubmit(values) {
             if (loading) return
-            console.log(values)
             const formData = new FormData()
             if (image) formData.append("file", image)
 
-            const data: OvenForm = { ...values, to: [...values.to, ...sheetPhones] }
+            const valid_numbers = values.to.filter((item) => !!item.replace(/\D/g, ""))
+            if (!valid_numbers.length) {
+                // display error
+                return
+            }
+
+            const data: OvenForm = { ...values, to: [...valid_numbers, ...sheetPhones] }
             formData.append("data", JSON.stringify(data))
 
             setLoading(true)
@@ -197,7 +202,6 @@ export const MessageFormScreen: React.FC<MessageFormProps> = ({ nagazap, setShow
                                                 inputComponent: MaskedInputComponent,
                                                 inputProps: { mask: "(00) 0 0000-0000", inputMode: "numeric" },
                                             }}
-                                            required
                                         />
                                     </Grid>
                                 ))}
@@ -377,7 +381,7 @@ export const MessageFormScreen: React.FC<MessageFormProps> = ({ nagazap, setShow
                                         }
                                         if (component.buttons) {
                                             return (
-                                                <Box sx={{gap: '0.5vw', flexDirection: 'column'}}>
+                                                <Box sx={{ gap: "0.5vw", flexDirection: "column" }}>
                                                     {component.buttons?.map((button, index) => (
                                                         <Button
                                                             key={`${button.text}-${index}`}
