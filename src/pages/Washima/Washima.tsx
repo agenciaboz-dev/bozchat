@@ -146,7 +146,7 @@ export const WashimaPage: React.FC<WashimaProps> = ({}) => {
                     </Tabs>
                 </Box>
             ) : null}
-            <Box sx={{ flexDirection: "row", flex: 1 }}>
+            <Box sx={{ flexDirection: "row", flex: 1, height: "90vh" }}>
                 {!isChat ? (
                     <Paper
                         sx={{

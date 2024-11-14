@@ -99,7 +99,7 @@ export const Signup: React.FC<SignupProps> = ({}) => {
                             // alignSelf: "flex-end",
                         }}
                     >
-                        {loading ? <CircularProgress size="1.5rem" color="secondary" /> : "entrar"}
+                        {loading ? <CircularProgress size="1.5rem" color="secondary" /> : "cadastrar"}
                     </Button>
                 </form>
             </Box>

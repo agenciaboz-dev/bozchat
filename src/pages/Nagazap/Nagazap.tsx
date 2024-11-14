@@ -92,7 +92,7 @@ export const NagazapScreen: React.FC<NagazapProps> = ({}) => {
     return (
         <Box sx={{ ...backgroundStyle, overflow: "auto" }}>
             <Header />
-            <Box sx={{ padding: "2vw", flex: 1 }}>
+            <Box sx={{ padding: "2vw", height: "90vh" }}>
                 {!showInformations ? (
                     <Paper
                         sx={{
@@ -157,7 +157,9 @@ export const NagazapScreen: React.FC<NagazapProps> = ({}) => {
                                             label={
                                                 <Box sx={{ gap: "0.5vw" }}>
                                                     Forno
-                                                    <OvenStatus nagazap={nagazap} small_icon />
+                                                    <Box sx={{ position: "relative" }}>
+                                                        <OvenStatus nagazap={nagazap} small_icon />
+                                                    </Box>
                                                 </Box>
                                             }
                                             route="/oven"

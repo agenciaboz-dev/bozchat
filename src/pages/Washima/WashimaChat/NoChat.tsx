@@ -25,7 +25,7 @@ export const NoChat: React.FC<NoChatProps> = ({}) => {
 
             <Box sx={{ position: "absolute", bottom: 0, gap: "0.5vw", paddingBottom: "1vw", alignItems: "center" }}>
                 <Lock sx={{ width: "0.7vw", height: "0.7vw" }} />
-                <Box fontSize={"0.8rem"}>Suas mensagens não são protegidas com criptografia nenhuma.</Box>
+                <Box fontSize={"0.8rem"}>Suas mensagens são protegidas no nosso banco de dados.</Box>
             </Box>
         </Paper>
     )

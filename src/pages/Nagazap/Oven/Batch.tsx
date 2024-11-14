@@ -27,8 +27,23 @@ export const Batch: React.FC<BatchProps> = ({ batch, nagazap, index }) => {
 
             <Box sx={{ flexDirection: "column" }}>
                 {batch.map((message, index) => (
-                    <Box key={index + message.number} sx={{ color: "secondary.main" }}>
+                    <Box key={index + message.number} sx={{ color: "secondary.main", justifyContent: "space-between" }}>
                         {message.number}
+                        <Box
+                            sx={{
+                                fontSize: "0.6rem",
+                                alignSelf: "flex-end",
+                                opacity: 0.5,
+                                width: "7vw",
+                                overflow: "hidden",
+                                textOverflow: "ellipsis",
+                                whiteSpace: "nowrap",
+                                justifyContent: "flex-end",
+                            }}
+                            title={message.template}
+                        >
+                            {message.template}
+                        </Box>
                     </Box>
                 ))}
             </Box>
