@@ -24,7 +24,7 @@ export const Header: React.FC<HeaderProps> = ({}) => {
     return (
         <Paper
             sx={{
-                height: "10%",
+                height: "10vh",
                 justifyContent: "center",
                 alignItems: "center",
                 position: "relative",
