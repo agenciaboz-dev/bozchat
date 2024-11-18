@@ -30,7 +30,7 @@ export const UserProvider: React.FC<UserProviderProps> = ({ children }) => {
         if (user) {
             const subscribed_notifications = [...washima_notifications, ...nagazap_notifications].filter((item) => {
                 const subscribed = localStorage.getItem(item.event)
-                return !!(subscribed && JSON.parse(subscribed))
+                return !!(!subscribed || JSON.parse(subscribed))
             })
 
             subscribed_notifications.forEach((notification) =>
