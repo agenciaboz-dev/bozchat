@@ -43,10 +43,25 @@ export const MessageFormScreen: React.FC<MessageFormProps> = ({ nagazap, setShow
     const [loading, setLoading] = useState(false)
     const [sheetPhones, setSheetPhones] = useState<string[]>([])
     const [isImageRequired, setIsImageRequired] = useState(false)
+    const [invalidNumbersError, setInvalidNumbersError] = useState("")
+    const [errorIndexes, setErrorIndexes] = useState<number[]>([])
 
-    const validateSchema = Yup.object().shape({
-        to: Yup.array().min(1, "campo obrigatório"),
-    })
+    const validatePhones = (phones: string[]) => {
+        const invalidIndexes = phones.reduce<number[]>((acumulador, phone, index) => {
+            if (phone.length !== 0 && phone.length !== 15 && phone.length !== 16) {
+                acumulador.push(index)
+            }
+            return acumulador
+        }, [])
+
+        setErrorIndexes(invalidIndexes)
+        if (invalidIndexes.length > 0) {
+            setInvalidNumbersError("Existem números com formato inválido.")
+        } else {
+            setInvalidNumbersError("")
+        }
+        return invalidIndexes.length === 0
+    }
 
     const fetchTemplates = async () => {
         try {
@@ -61,14 +76,20 @@ export const MessageFormScreen: React.FC<MessageFormProps> = ({ nagazap, setShow
         initialValues: { to: [""], template: null },
         async onSubmit(values) {
             if (loading) return
-            const formData = new FormData()
-            if (image) formData.append("file", image)
+
+            if (!validatePhones(values.to)) {
+                snackbar({ severity: "error", text: "Existem números com formato inválido." })
+                return
+            }
 
             const valid_numbers = values.to.filter((item) => !!item.replace(/\D/g, ""))
-            if (!valid_numbers.length) {
+            if (!valid_numbers.length && !sheetPhones) {
                 // display error
                 return
             }
+
+            const formData = new FormData()
+            if (image) formData.append("file", image)
 
             const data: OvenForm = { ...values, to: [...valid_numbers, ...sheetPhones] }
             formData.append("data", JSON.stringify(data))
@@ -153,6 +174,11 @@ export const MessageFormScreen: React.FC<MessageFormProps> = ({ nagazap, setShow
         }
     }, [formik.values.template])
 
+    // useEffect(() => {
+    //     if (errorIndexes) setInvalidNumbersError("Existem números com formato inválido.")
+    //     else setInvalidNumbersError("")
+    // }, [errorIndexes])
+
     useEffect(() => {
         console.log(formik.values.to)
     }, [formik.values.to])
@@ -217,7 +243,9 @@ export const MessageFormScreen: React.FC<MessageFormProps> = ({ nagazap, setShow
                                             value={number}
                                             onChange={formik.handleChange}
                                             InputProps={{
-                                                sx: { gap: "0.5vw" },
+                                                sx: {
+                                                    gap: "0.5vw",
+                                                },
                                                 startAdornment: (
                                                     <IconButton color="secondary" onClick={() => onDeleteMessage(index)} sx={{ padding: 0 }}>
                                                         <Clear sx={{ width: isMobile ? "5vw" : "1vw", height: isMobile ? "5vw" : "1vw" }} />
@@ -225,6 +253,16 @@ export const MessageFormScreen: React.FC<MessageFormProps> = ({ nagazap, setShow
                                                 ),
                                                 inputComponent: MaskedInputComponent,
                                                 inputProps: { mask: "(00) 0 0000-0000", inputMode: "numeric" },
+                                            }}
+                                            sx={{
+                                                "& .MuiOutlinedInput-root": {
+                                                    "& fieldset": {
+                                                        borderColor: errorIndexes.includes(index) ? "red" : "inherit",
+                                                    },
+                                                    "&:hover fieldset": {
+                                                        borderColor: errorIndexes.includes(index) ? "red" : "inherit",
+                                                    },
+                                                },
                                             }}
                                         />
                                     </Grid>
@@ -339,15 +377,20 @@ export const MessageFormScreen: React.FC<MessageFormProps> = ({ nagazap, setShow
                                     return null
                                 }
                             })}
-                            <Button
-                                type="submit"
-                                fullWidth
-                                variant="contained"
-                                disabled={(!formik.values.to.length && !sheetPhones.length) || !formik.values.template || (isImageRequired && !image)}
-                                sx={{ marginTop: isMobile ? "2vw" : "1vw" }}
-                            >
-                                {loading ? <CircularProgress size="1.5rem" color="inherit" /> : "Adicionar a fila"}
-                            </Button>
+                            <Box sx={{ flexDirection: "column", gap: "0.2vw" }}>
+                                <Button
+                                    type="submit"
+                                    fullWidth
+                                    variant="contained"
+                                    disabled={
+                                        (!formik.values.to.length && !sheetPhones.length) || !formik.values.template || (isImageRequired && !image)
+                                    }
+                                    sx={{ marginTop: isMobile ? "2vw" : "1vw" }}
+                                >
+                                    {loading ? <CircularProgress size="1.5rem" color="inherit" /> : "Adicionar a fila"}
+                                </Button>
+                                <Typography color="error">{invalidNumbersError}</Typography>
+                            </Box>
                         </Box>
                     </Grid>
 
