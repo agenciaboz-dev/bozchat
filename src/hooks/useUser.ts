@@ -6,7 +6,7 @@ import { useNavigate } from "react-router-dom"
 export const useUser = () => {
     const userContext = useContext(UserContext)
     const navigate = useNavigate()
-    const { user, setUser } = userContext
+    const { user, setUser, setTimestamp } = userContext
 
 
     const firstname = user?.name.split(" ")[0] || ""
@@ -26,5 +26,6 @@ export const useUser = () => {
         firstname,
         onLogin,
         logout,
+        setTimestamp,
     }
 }

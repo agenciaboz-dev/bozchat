@@ -16,7 +16,7 @@ import { useUser } from "./useUser"
 import { Badge, BadgeProps, styled } from "@mui/material"
 import ApiIcon from "@mui/icons-material/Api"
 import PaletteIcon from "@mui/icons-material/Palette"
-import { AccountTree, Hub } from "@mui/icons-material"
+import { AccountTree, Hub, Settings } from "@mui/icons-material"
 import { Menu } from "../types/Menu"
 
 export const useMenuList = () => {
@@ -40,25 +40,28 @@ export const useMenuList = () => {
 
     const menus: Menu[] = [
         {
-            id: 1,
             name: "Início",
             path: "/",
             icon: <HomeIcon />,
             onClick: () => navigate("/"),
         },
         {
-            id: 3,
             name: "Washima",
             path: "/washima",
             icon: <WhatsAppIcon />,
             onClick: () => navigate("/washima"),
         },
         {
-            id: 4,
             icon: <Hub />,
             name: "Nagazap",
             path: "/nagazap",
             onClick: () => navigate("/nagazap/"),
+        },
+        {
+            icon: <Settings />,
+            name: "Configurações",
+            path: "/settings",
+            onClick: () => navigate("/settings/"),
         },
     ]
     return menus

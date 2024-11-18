@@ -78,7 +78,7 @@ export const WashimaStatistics: React.FC<WashimaStatisticsProps> = ({}) => {
     const fetchStats = async () => {
         fetchWashimasCount()
         fetchUnreplied()
-        fetchStorage()
+        // fetchStorage()
     }
 
     useEffect(() => {
