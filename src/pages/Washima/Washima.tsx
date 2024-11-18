@@ -111,31 +111,6 @@ export const WashimaPage: React.FC<WashimaProps> = ({}) => {
                         height: "6vh",
                     }}
                 >
-                    {/* <Button
-                        variant="outlined"
-                        color="primary"
-                        fullWidth
-                        sx={{
-                            margin: "1vw",
-                            fontSize: "1rem",
-                        }}
-                        onClick={() => setIsChat(false)}
-                    >
-                        Washima
-                    </Button>
-                    <Button
-                        variant="outlined"
-                        color="primary"
-                        fullWidth
-                        sx={{
-                            margin: "1vw",
-                            fontSize: "1rem",
-                        }}
-                        onClick={() => setIsChat(true)}
-                    >
-                        Conversas
-                    </Button> */}
-
                     <Tabs value={isChat ? 1 : 0} onChange={handleChange} sx={{ flex: 1 }}>
                         <Tab
                             label="Washima"
