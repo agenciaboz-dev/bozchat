@@ -3,7 +3,7 @@ import React from "react"
 import { useIo } from "../hooks/useIo"
 import { User, UserNotification } from "../types/server/class/User"
 import { useNotification } from "../hooks/useNotification"
-import { washima_notifications } from "../pages/Settings/notifications_list"
+import { nagazap_notifications, washima_notifications } from "../pages/Settings/notifications_list"
 
 interface UserContextValue {
     user: User | null
@@ -28,14 +28,13 @@ export const UserProvider: React.FC<UserProviderProps> = ({ children }) => {
 
     useEffect(() => {
         if (user) {
-            const subscribed_notifications = washima_notifications.filter((item) => {
+            const subscribed_notifications = [...washima_notifications, ...nagazap_notifications].filter((item) => {
                 const subscribed = localStorage.getItem(item.event)
                 return !!(subscribed && JSON.parse(subscribed))
             })
 
             subscribed_notifications.forEach((notification) =>
                 io.on(`user:${user.id}:notify:${notification.event}`, (data: UserNotification) => {
-                    console.log("bateu aqui")
                     notify({
                         title: data.title,
                         body: data.body,
