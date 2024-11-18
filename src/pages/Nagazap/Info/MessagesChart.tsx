@@ -17,7 +17,9 @@ const formatMessagesByDate = (messages: SentMessageLog[]): dataCountByDate[] => 
     const messageCountByDate: Record<string, number> = {}
 
     messages.forEach((msg) => {
-        const date = format(parseISO(new Date(parseInt(msg.timestamp)).toISOString()), "yyyy-MM-dd")
+        const originalDate = new Date(Number(msg.timestamp))
+        const parsedDate = new Date(originalDate.getFullYear(), originalDate.getMonth() + 1, originalDate.getDate() + 1)
+        const date = format(parseISO(parsedDate.toISOString()), "yyyy-MM-dd")
 
         if (messageCountByDate[date]) {
             messageCountByDate[date] += 1

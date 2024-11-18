@@ -17,7 +17,9 @@ const formatBlacklistByDate = (blacklist: BlacklistLog[]): dataCountByDate[] => 
     const blacklistCountByDate: Record<string, number> = {}
 
     blacklist.forEach((msg) => {
-        const date = format(parseISO(new Date(parseInt(msg.timestamp)).toISOString()), "yyyy-MM-dd")
+        const originalDate = new Date(Number(msg.timestamp))
+        const parsedDate = new Date(originalDate.getFullYear(), originalDate.getMonth() + 1, originalDate.getDate() + 1)
+        const date = format(parseISO(parsedDate.toISOString()), "yyyy-MM-dd")
 
         if (blacklistCountByDate[date]) {
             blacklistCountByDate[date] += 1
