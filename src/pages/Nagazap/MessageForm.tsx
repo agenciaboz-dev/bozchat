@@ -413,7 +413,10 @@ export const MessageFormScreen: React.FC<MessageFormProps> = ({ nagazap, setShow
                                     fullWidth
                                     variant="contained"
                                     disabled={
-                                        (!formik.values.to.length && !sheetPhones.length) || !formik.values.template || (isImageRequired && !image)
+                                        formik.values.to[0] == "" ||
+                                        (!formik.values.to.length && !sheetPhones.length) ||
+                                        !formik.values.template ||
+                                        (isImageRequired && !image)
                                     }
                                     sx={{ marginTop: isMobile ? "2vw" : "1vw" }}
                                 >
