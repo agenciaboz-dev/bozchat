@@ -10,6 +10,9 @@ import { WashimaFormPage } from "./WashimaFormPage"
 import { useIo } from "../../hooks/useIo"
 import { WashimaZap } from "./WashimaZap"
 import { useUser } from "../../hooks/useUser"
+import { Chat } from "../../types/Chat"
+import { WashimaMessage } from "../../types/server/class/Washima/WashimaMessage"
+import { useNotification } from "../../hooks/useNotification"
 
 interface WashimaProps {}
 
@@ -17,7 +20,7 @@ export const WashimaPage: React.FC<WashimaProps> = ({}) => {
     const { darkMode } = useDarkMode()
     const { user } = useUser()
     const io = useIo()
-
+    const notify = useNotification()
     const isMobile = useMediaQuery("(orientation: portrait)")
 
     const [washimas, setWashimas] = useState<Washima[]>([])

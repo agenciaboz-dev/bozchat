@@ -31,7 +31,7 @@ export const MenuDrawer: React.FC<MenuDrawerProps> = ({}) => {
             </Box>
             <Box sx={{ flexDirection: "column", flex: 1 }}>
                 {drawer.menus.map((menu) => (
-                    <MenuButton sx={{ fontSize: isMobile ? "4vw" : "1vw" }} menu={menu} key={menu.id} />
+                    <MenuButton sx={{ fontSize: isMobile ? "4vw" : "1vw" }} menu={menu} key={menu.path} />
                 ))}
             </Box>
         </Drawer>

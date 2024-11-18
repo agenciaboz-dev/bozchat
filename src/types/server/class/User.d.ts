@@ -5,6 +5,10 @@ import { Washima } from "./Washima/Washima";
 import { Nagazap } from "./Nagazap";
 export type UserPrisma = Prisma.UserGetPayload<{}>;
 export type UserForm = Omit<WithoutFunctions<User>, "id" | "admin">;
+export interface UserNotification {
+    title: string;
+    body: string;
+}
 export declare class User {
     id: string;
     name: string;
@@ -13,6 +17,7 @@ export declare class User {
     admin: boolean;
     static new(data: UserForm): Promise<User>;
     static login(data: LoginForm): Promise<User | null>;
+    static getAll(): Promise<User[]>;
     static findById(id: string): Promise<User | null>;
     static findByEmail(email: string): Promise<User | null>;
     static getUsersFromWashimaId(washima_id: string): Promise<User[]>;
@@ -32,4 +37,5 @@ export declare class User {
     }>;
     getBakingMessagesCount(): Promise<number>;
     getBlacklistedCount(): Promise<number>;
+    notify(reason: string, data: UserNotification): void;
 }
