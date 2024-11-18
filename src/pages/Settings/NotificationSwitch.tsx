@@ -1,6 +1,6 @@
 import React, { useEffect } from "react"
 import { Box, Switch } from "@mui/material"
-import { useLocalStorage } from "@mantine/hooks"
+import { useLocalStorage, useMediaQuery } from "@mantine/hooks"
 import { useUser } from "../../hooks/useUser"
 
 interface NotificationSwitchProps {
@@ -8,6 +8,7 @@ interface NotificationSwitchProps {
 }
 
 export const NotificationSwitch: React.FC<NotificationSwitchProps> = ({ notification }) => {
+    const isMobile = useMediaQuery("(orientation: portrait)")
     const [subscribed, setSubscribed] = useLocalStorage({ key: notification.event, defaultValue: false })
 
     const { setTimestamp } = useUser()
@@ -17,7 +18,7 @@ export const NotificationSwitch: React.FC<NotificationSwitchProps> = ({ notifica
     }, [subscribed])
 
     return (
-        <Box sx={{ gap: "0.5vw", alignItems: "center", color: "secondary.main" }}>
+        <Box sx={{ gap: "0.5vw", alignItems: "center", color: "secondary.main", justifyContent: isMobile ? "space-between" : undefined }}>
             {notification.label}
             <Switch checked={subscribed} onChange={(_, value) => setSubscribed(value)} />
         </Box>
