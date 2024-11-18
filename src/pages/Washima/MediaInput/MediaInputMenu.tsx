@@ -4,6 +4,7 @@ import { Add, Description, Photo } from "@mui/icons-material"
 import { PhotoVideoConfirmationModal } from "./PhotoVideoConfirmationModal"
 import { Washima } from "../../../types/server/class/Washima/Washima"
 import { DocumentConfirmationModal } from "./DocumentConfirmationModal"
+import { useSnackbar } from "burgos-snackbar"
 
 interface MediaInputMenuProps {
     washima: Washima
@@ -14,6 +15,8 @@ export const MediaInputMenu: React.FC<MediaInputMenuProps> = ({ washima, chat_id
     const inputRef = useRef<HTMLInputElement>(null)
     const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null)
     const is_menu_open = Boolean(anchorEl)
+
+    const { snackbar } = useSnackbar()
 
     const [acceptedMimetypes, setAcceptedMimetypes] = React.useState("")
     const [selectedFiles, setSelectedFiles] = React.useState<File[]>([])
@@ -53,8 +56,16 @@ export const MediaInputMenu: React.FC<MediaInputMenuProps> = ({ washima, chat_id
 
     const handleFileChange = useCallback((event: React.ChangeEvent<HTMLInputElement>) => {
         const files = event.target.files
+        const isMkv = (file: File) => {
+            const splited = file.name.split(".")
+            return splited[splited.length - 1].toLowerCase() === "mkv"
+        }
+
         if (files) {
-            setSelectedFiles(Array.from(files))
+            const files_array = Array.from(files)
+            if (files_array.find((item) => isMkv(item))) snackbar({ severity: "warning", text: "arquivo .mkv não é suportado" })
+
+            setSelectedFiles(files_array.filter((item) => !isMkv(item)))
         }
     }, [])
 
