@@ -43,24 +43,54 @@ export const MessageFormScreen: React.FC<MessageFormProps> = ({ nagazap, setShow
     const [loading, setLoading] = useState(false)
     const [sheetPhones, setSheetPhones] = useState<string[]>([])
     const [isImageRequired, setIsImageRequired] = useState(false)
-    const [invalidNumbersError, setInvalidNumbersError] = useState("")
+    const [invalidNumbersError, setInvalidNumbersError] = useState(false)
+    const [invalidNumbersOnSheetError, setInvalidNumbersOnSheetError] = useState(false)
     const [errorIndexes, setErrorIndexes] = useState<number[]>([])
 
-    const validatePhones = (phones: string[]) => {
-        const invalidIndexes = phones.reduce<number[]>((acumulador, phone, index) => {
-            if (phone.length !== 0 && phone.length !== 15 && phone.length !== 16) {
-                acumulador.push(index)
+    // const validatePhones = (phones: string[], sheetPhone?: boolean) => {
+    //     const invalidIndexes = phones.reduce<number[]>((acumulador, phone, index) => {
+    //         const cleanPhone = phone.replace(/\D/g, "")
+
+    //         if (cleanPhone.length !== 0 && cleanPhone.length !== 10 && cleanPhone.length !== 11 && !sheetPhone) {
+    //             acumulador.push(index)
+    //         } else if (cleanPhone.length !== 0 && cleanPhone.length !== 10 && cleanPhone.length !== 11 && sheetPhone) {
+    //             setInvalidNumbersOnSheetError(true)
+    //         } else {
+    //             setInvalidNumbersOnSheetError(false)
+    //         }
+
+    //         return acumulador
+    //     }, [])
+
+    //     setErrorIndexes(invalidIndexes)
+    //     if (invalidIndexes.length > 0) {
+    //         setInvalidNumbersError(true)
+    //     } else {
+    //         setInvalidNumbersError(false)
+    //     }
+
+    //     return invalidIndexes.length === 0
+    // }
+
+    const validatePhones = (phones: string[], sheetPhones: string[]) => {
+        const invalidManualIndexes = phones.reduce<number[]>((acc, phone, index) => {
+            const cleanPhone = phone.replace(/\D/g, "")
+            if (cleanPhone.length !== 0 && cleanPhone.length !== 10 && cleanPhone.length !== 11) {
+                acc.push(index)
             }
-            return acumulador
+            return acc
         }, [])
 
-        setErrorIndexes(invalidIndexes)
-        if (invalidIndexes.length > 0) {
-            setInvalidNumbersError("Existem números com formato inválido.")
-        } else {
-            setInvalidNumbersError("")
-        }
-        return invalidIndexes.length === 0
+        const invalidSheetPhones = sheetPhones.some((phone) => {
+            const cleanPhone = phone.replace(/\D/g, "")
+            return cleanPhone.length !== 0 && cleanPhone.length !== 10 && cleanPhone.length !== 11
+        })
+
+        setErrorIndexes(invalidManualIndexes)
+        setInvalidNumbersError(invalidManualIndexes.length > 0)
+        setInvalidNumbersOnSheetError(invalidSheetPhones)
+
+        return invalidManualIndexes.length === 0 && !invalidSheetPhones
     }
 
     const fetchTemplates = async () => {
@@ -77,14 +107,13 @@ export const MessageFormScreen: React.FC<MessageFormProps> = ({ nagazap, setShow
         async onSubmit(values) {
             if (loading) return
 
-            if (!validatePhones(values.to)) {
+            if (!validatePhones(values.to, sheetPhones)) {
                 snackbar({ severity: "error", text: "Existem números com formato inválido." })
                 return
             }
 
             const valid_numbers = values.to.filter((item) => !!item.replace(/\D/g, ""))
             if (!valid_numbers.length && !sheetPhones) {
-                // display error
                 return
             }
 
@@ -108,6 +137,7 @@ export const MessageFormScreen: React.FC<MessageFormProps> = ({ nagazap, setShow
     })
 
     const handleSheetsUpload = async (event: any) => {
+        setInvalidNumbersOnSheetError(false)
         const files = Array.from(event?.target?.files as FileList)
 
         console.log(files)
@@ -116,7 +146,7 @@ export const MessageFormScreen: React.FC<MessageFormProps> = ({ nagazap, setShow
             if (file) {
                 try {
                     const phones = await getPhonesfromSheet(file)
-                    setSheetPhones(phones.map((phone) => phone.phone))
+                    setSheetPhones(phones.map((phone) => phone.phone.replace(/\D/g, "")))
                 } catch (error) {
                     console.log(error)
                 }
@@ -174,11 +204,6 @@ export const MessageFormScreen: React.FC<MessageFormProps> = ({ nagazap, setShow
         }
     }, [formik.values.template])
 
-    // useEffect(() => {
-    //     if (errorIndexes) setInvalidNumbersError("Existem números com formato inválido.")
-    //     else setInvalidNumbersError("")
-    // }, [errorIndexes])
-
     useEffect(() => {
         console.log(formik.values.to)
     }, [formik.values.to])
@@ -210,7 +235,12 @@ export const MessageFormScreen: React.FC<MessageFormProps> = ({ nagazap, setShow
                                         <Button
                                             component="label"
                                             variant="outlined"
-                                            sx={{ borderStyle: "dashed", height: "100%", gap: isMobile ? "2vw" : "1vw" }}
+                                            sx={{
+                                                borderStyle: "dashed",
+                                                borderColor: invalidNumbersOnSheetError ? "red" : undefined,
+                                                height: "100%",
+                                                gap: isMobile ? "2vw" : "1vw",
+                                            }}
                                             fullWidth
                                         >
                                             <CloudUpload />
@@ -389,7 +419,9 @@ export const MessageFormScreen: React.FC<MessageFormProps> = ({ nagazap, setShow
                                 >
                                     {loading ? <CircularProgress size="1.5rem" color="inherit" /> : "Adicionar a fila"}
                                 </Button>
-                                <Typography color="error">{invalidNumbersError}</Typography>
+                                {(invalidNumbersError || invalidNumbersOnSheetError) && (
+                                    <Typography color="error">Existem números com formato inválido.</Typography>
+                                )}
                             </Box>
                         </Box>
                     </Grid>
