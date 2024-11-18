@@ -2,13 +2,16 @@ import { createContext, useState } from "react"
 import React from "react"
 import { useMenuList } from "../hooks/useMenuList"
 import { Menu } from "../types/Menu"
+import { useDisclosure } from "@mantine/hooks"
 
 interface MenuContextValue {
-    drawer: {
-        open: boolean
-        setOpen: (open: boolean) => void
-        menus: Menu[]
+    opened: boolean
+    handlers: {
+        readonly open: () => void
+        readonly close: () => void
+        readonly toggle: () => void
     }
+    menus: Menu[]
 }
 
 interface MenuProviderProps {
@@ -22,13 +25,8 @@ export default MenuContext
 export const MenuProvider: React.FC<MenuProviderProps> = ({ children }) => {
     const menus = useMenuList()
 
-    const [openDrawer, setOpenDrawer] = useState(false)
+    // const [openDrawer, setOpenDrawer] = useState(false)
+    const [opened, handlers] = useDisclosure(false)
 
-    const drawer = {
-        open: openDrawer,
-        setOpen: setOpenDrawer,
-        menus,
-    }
-
-    return <MenuContext.Provider value={{ drawer }}>{children}</MenuContext.Provider>
+    return <MenuContext.Provider value={{ opened, handlers, menus }}>{children}</MenuContext.Provider>
 }

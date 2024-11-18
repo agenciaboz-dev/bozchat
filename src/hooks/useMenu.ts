@@ -5,10 +5,7 @@ export const useMenu = () => {
     const menuContext = useContext(MenuContext)
 
     const drawer = {
-        open: menuContext.drawer.open,
-        menus: menuContext.drawer.menus,
-        toogle: () => menuContext.drawer.setOpen(!menuContext.drawer.open),
-        close: () => menuContext.drawer.setOpen(false),
+        ...menuContext,
     }
 
     return { drawer }

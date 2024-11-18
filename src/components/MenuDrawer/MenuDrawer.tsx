@@ -18,8 +18,8 @@ export const MenuDrawer: React.FC<MenuDrawerProps> = ({}) => {
     return (
         <Drawer
             anchor={"left"}
-            open={drawer.open}
-            onClose={drawer.close}
+            open={drawer.opened}
+            onClose={drawer.handlers.close}
             PaperProps={{ sx: { width: isMobile ? "80vw" : "22vw", backgroundColor: "background.paper" } }}
             ModalProps={{ BackdropProps: { sx: backdropStyle } }}
         >
