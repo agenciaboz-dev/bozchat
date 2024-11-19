@@ -112,8 +112,7 @@ export const MessageFormScreen: React.FC<MessageFormProps> = ({ nagazap, setShow
     const handleSheetsUpload = async (event: any) => {
         setInvalidNumbersOnSheetError(false)
         const files = Array.from(event?.target?.files as FileList)
-
-        // console.log(files)
+        setInvalidSheetError("")
 
         files.forEach(async (file) => {
             if (file) {
@@ -211,21 +210,28 @@ export const MessageFormScreen: React.FC<MessageFormProps> = ({ nagazap, setShow
                             {!isMobile ? (
                                 <Grid container columns={1}>
                                     <Grid item xs={1}>
-                                        <Button
-                                            component="label"
-                                            variant="outlined"
-                                            sx={{
-                                                borderStyle: "dashed",
-                                                borderColor: invalidNumbersOnSheetError ? "red" : undefined,
-                                                height: "100%",
-                                                gap: isMobile ? "2vw" : "1vw",
-                                            }}
-                                            fullWidth
-                                        >
-                                            <CloudUpload />
-                                            {!!sheetPhones.length ? `${sheetPhones.length} números importados` : "Importar planilha"}
-                                            <input onChange={handleSheetsUpload} style={{ display: "none" }} type="file" multiple />
-                                        </Button>
+                                        <Box sx={{ flexDirection: "column", gap: "0.2vw" }}>
+                                            <Button
+                                                component="label"
+                                                variant="outlined"
+                                                sx={{
+                                                    borderStyle: invalidNumbersOnSheetError || invalidSheetError ? undefined : "dashed",
+                                                    borderColor: invalidNumbersOnSheetError || invalidSheetError ? "red" : undefined,
+                                                    height: "100%",
+                                                    gap: isMobile ? "2vw" : "1vw",
+                                                }}
+                                                fullWidth
+                                            >
+                                                <CloudUpload />
+                                                {!!sheetPhones.length ? `${sheetPhones.length} números importados` : "Importar planilha"}
+                                                <input onChange={handleSheetsUpload} style={{ display: "none" }} type="file" multiple />
+                                            </Button>
+                                            {invalidSheetError && (
+                                                <Typography color="error" fontSize="0.9rem">
+                                                    {invalidSheetError}
+                                                </Typography>
+                                            )}
+                                        </Box>
                                     </Grid>
                                 </Grid>
                             ) : null}
