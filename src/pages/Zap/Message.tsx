@@ -20,6 +20,7 @@ import { DateChip } from "../Washima/WashimaChat/DateChip"
 import { PhotoView } from "react-photo-view"
 import { DeletedMessage } from "./DeletedMessage"
 import { MessageAuthor } from "./MessageAuthor"
+import { MessageMenu } from "./MessageMenu"
 
 interface MessageProps {
     washima: Washima
@@ -179,6 +180,16 @@ export const Message: React.FC<MessageProps> = ({ message, isGroup, washima, pre
                                 alignment={message.fromMe ? "right" : "left"}
                             />
                         )}
+                        <Box
+                            sx={{
+                                position: "absolute",
+                                top: 0,
+                                right: 0,
+                                zIndex: 1000,
+                            }}
+                        >
+                            <MessageMenu showMenuButton={hovering} />
+                        </Box>
 
                         {/*//* MESSAGE AUTHOR  */}
                         {show_author && message.type !== "revoked" && <MessageAuthor author={message.author} />}
