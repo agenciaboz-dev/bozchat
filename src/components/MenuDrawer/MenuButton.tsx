@@ -37,7 +37,7 @@ export const MenuButton: React.FC<MenuButtonProps> = ({ menu, sx }) => {
 
     const handleMenuClick = (menu: Menu) => {
         if (!menu.submenus) {
-            drawer.close()
+            drawer.handlers.close()
             menu.onClick()
         } else {
             setCollapse((collapse) => !collapse)
@@ -46,7 +46,7 @@ export const MenuButton: React.FC<MenuButtonProps> = ({ menu, sx }) => {
 
     return (
         <>
-            <MenuItem key={menu.id} sx={buildStyle(active, menu)} onClick={() => handleMenuClick(menu)}>
+            <MenuItem key={menu.path} sx={buildStyle(active, menu)} onClick={() => handleMenuClick(menu)}>
                 <Icon />
                 {menu.name}
                 {menu.submenus && <KeyboardArrowDown sx={{ marginLeft: "auto", rotate: collapse ? "-180deg" : "", transition: "0.3s" }} />}
@@ -60,20 +60,19 @@ export const MenuButton: React.FC<MenuButtonProps> = ({ menu, sx }) => {
 
                         return (
                             <MenuItem
-                                key={menu.id}
+                                key={menu.path}
                                 sx={{
                                     ...buildStyle(active, menu),
-                                    paddingLeft: isMobile ? '14vw' : '3vw',
-                                    fontSize: isMobile ? '3.5vw' : '0.85vw',
-                                    whiteSpace: 'normal',
-                                    overflow: 'hidden',
+                                    paddingLeft: isMobile ? "14vw" : "3vw",
+                                    fontSize: isMobile ? "3.5vw" : "0.85vw",
+                                    whiteSpace: "normal",
+                                    overflow: "hidden",
                                 }}
                                 onClick={() => handleMenuClick(menu)}
                             >
                                 <Icon />
                                 {menu.name}
                             </MenuItem>
-
                         )
                     })}
                 </Box>

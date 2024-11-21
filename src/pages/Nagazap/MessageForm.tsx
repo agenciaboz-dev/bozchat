@@ -3,7 +3,7 @@ import { Avatar, Box, Button, CircularProgress, Grid, IconButton, MenuItem, Pape
 import { Subroute } from "./Subroute"
 import { useFormik } from "formik"
 import { OvenForm } from "../../types/server/Meta/WhatsappBusiness/WhatsappForm"
-import { ArrowBack, Check, CloudUpload, DeleteForever, Error, Refresh, WatchLater } from "@mui/icons-material"
+import { ArrowBack, Check, CloudUpload, Error, WatchLater } from "@mui/icons-material"
 import { api } from "../../api"
 import { TemplateInfo } from "../../types/server/Meta/WhatsappBusiness/TemplatesInfo"
 import { getPhonesfromSheet } from "../../tools/getPhonesFromSheet"
@@ -15,8 +15,6 @@ import { TrianguloFudido } from "../Zap/TrianguloFudido"
 import { Clear } from "@mui/icons-material"
 import { SheetExample } from "./TemplateForm/SheetExample"
 import AddCircleIcon from "@mui/icons-material/AddCircle"
-import { usePhoneMask } from "burgos-masks"
-import * as Yup from "yup"
 import MaskedInputComponent from "../../components/MaskedInput"
 
 interface MessageFormProps {
@@ -31,7 +29,6 @@ export const MessageFormScreen: React.FC<MessageFormProps> = ({ nagazap, setShow
     ]
 
     const maxSize = "23vw"
-    const phone_mask = usePhoneMask()
     const inputRef = useRef<HTMLInputElement>(null)
 
     const { snackbar } = useSnackbar()
@@ -46,31 +43,7 @@ export const MessageFormScreen: React.FC<MessageFormProps> = ({ nagazap, setShow
     const [invalidNumbersError, setInvalidNumbersError] = useState(false)
     const [invalidNumbersOnSheetError, setInvalidNumbersOnSheetError] = useState(false)
     const [errorIndexes, setErrorIndexes] = useState<number[]>([])
-
-    // const validatePhones = (phones: string[], sheetPhone?: boolean) => {
-    //     const invalidIndexes = phones.reduce<number[]>((acumulador, phone, index) => {
-    //         const cleanPhone = phone.replace(/\D/g, "")
-
-    //         if (cleanPhone.length !== 0 && cleanPhone.length !== 10 && cleanPhone.length !== 11 && !sheetPhone) {
-    //             acumulador.push(index)
-    //         } else if (cleanPhone.length !== 0 && cleanPhone.length !== 10 && cleanPhone.length !== 11 && sheetPhone) {
-    //             setInvalidNumbersOnSheetError(true)
-    //         } else {
-    //             setInvalidNumbersOnSheetError(false)
-    //         }
-
-    //         return acumulador
-    //     }, [])
-
-    //     setErrorIndexes(invalidIndexes)
-    //     if (invalidIndexes.length > 0) {
-    //         setInvalidNumbersError(true)
-    //     } else {
-    //         setInvalidNumbersError(false)
-    //     }
-
-    //     return invalidIndexes.length === 0
-    // }
+    const [invalidSheetError, setInvalidSheetError] = useState("")
 
     const validatePhones = (phones: string[], sheetPhones: string[]) => {
         const invalidManualIndexes = phones.reduce<number[]>((acc, phone, index) => {
@@ -139,11 +112,16 @@ export const MessageFormScreen: React.FC<MessageFormProps> = ({ nagazap, setShow
     const handleSheetsUpload = async (event: any) => {
         setInvalidNumbersOnSheetError(false)
         const files = Array.from(event?.target?.files as FileList)
-
-        console.log(files)
+        setInvalidSheetError("")
 
         files.forEach(async (file) => {
             if (file) {
+                if (file.name.split(".")[1] !== "xlsx") {
+                    setInvalidSheetError("Formato inválido, o arquivo de ser uma planilha do excel do tipo xlsx")
+                    snackbar({ severity: "error", text: "Formato inválido, o arquivo de ser uma planilha do excel do tipo xlsx" })
+                    return
+                }
+
                 try {
                     const phones = await getPhonesfromSheet(file)
                     setSheetPhones(phones.map((phone) => phone.phone.replace(/\D/g, "")))
@@ -232,21 +210,28 @@ export const MessageFormScreen: React.FC<MessageFormProps> = ({ nagazap, setShow
                             {!isMobile ? (
                                 <Grid container columns={1}>
                                     <Grid item xs={1}>
-                                        <Button
-                                            component="label"
-                                            variant="outlined"
-                                            sx={{
-                                                borderStyle: "dashed",
-                                                borderColor: invalidNumbersOnSheetError ? "red" : undefined,
-                                                height: "100%",
-                                                gap: isMobile ? "2vw" : "1vw",
-                                            }}
-                                            fullWidth
-                                        >
-                                            <CloudUpload />
-                                            {!!sheetPhones.length ? `${sheetPhones.length} números importados` : "Importar planilha"}
-                                            <input onChange={handleSheetsUpload} style={{ display: "none" }} type="file" multiple />
-                                        </Button>
+                                        <Box sx={{ flexDirection: "column", gap: "0.2vw" }}>
+                                            <Button
+                                                component="label"
+                                                variant="outlined"
+                                                sx={{
+                                                    borderStyle: invalidNumbersOnSheetError || invalidSheetError ? undefined : "dashed",
+                                                    borderColor: invalidNumbersOnSheetError || invalidSheetError ? "red" : undefined,
+                                                    height: "100%",
+                                                    gap: isMobile ? "2vw" : "1vw",
+                                                }}
+                                                fullWidth
+                                            >
+                                                <CloudUpload />
+                                                {!!sheetPhones.length ? `${sheetPhones.length} números importados` : "Importar planilha"}
+                                                <input onChange={handleSheetsUpload} style={{ display: "none" }} type="file" multiple />
+                                            </Button>
+                                            {invalidSheetError && (
+                                                <Typography color="error" fontSize="0.9rem">
+                                                    {invalidSheetError}
+                                                </Typography>
+                                            )}
+                                        </Box>
                                     </Grid>
                                 </Grid>
                             ) : null}
@@ -413,7 +398,10 @@ export const MessageFormScreen: React.FC<MessageFormProps> = ({ nagazap, setShow
                                     fullWidth
                                     variant="contained"
                                     disabled={
-                                        (!formik.values.to.length && !sheetPhones.length) || !formik.values.template || (isImageRequired && !image)
+                                        formik.values.to[0] == "" ||
+                                        (!formik.values.to.length && !sheetPhones.length) ||
+                                        !formik.values.template ||
+                                        (isImageRequired && !image)
                                     }
                                     sx={{ marginTop: isMobile ? "2vw" : "1vw" }}
                                 >

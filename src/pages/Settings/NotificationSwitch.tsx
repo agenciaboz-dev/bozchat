@@ -9,7 +9,7 @@ interface NotificationSwitchProps {
 
 export const NotificationSwitch: React.FC<NotificationSwitchProps> = ({ notification }) => {
     const isMobile = useMediaQuery("(orientation: portrait)")
-    const [subscribed, setSubscribed] = useLocalStorage({ key: notification.event, defaultValue: false })
+    const [subscribed, setSubscribed] = useLocalStorage({ key: notification.event, defaultValue: true })
 
     const { setTimestamp } = useUser()
 

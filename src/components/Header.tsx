@@ -33,7 +33,7 @@ export const Header: React.FC<HeaderProps> = ({}) => {
             }}
         >
             <img src="/wagazap.svg" style={{ width: isMobile ? "16vw" : "4vw", height: isMobile ? "16vw" : "4vw" }} draggable={false} />
-            <IconButton sx={{ position: "absolute", left: "2vw" }} onClick={() => menu.drawer.toogle()}>
+            <IconButton sx={{ position: "absolute", left: "2vw" }} onClick={() => menu.drawer.handlers.toggle()}>
                 <MenuIcon />
             </IconButton>
 
