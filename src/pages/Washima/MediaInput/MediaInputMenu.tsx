@@ -1,10 +1,11 @@
-import React, { useCallback, useEffect, useRef } from "react"
+import React, { useCallback, useEffect, useRef, useState } from "react"
 import { Box, IconButton, Menu, MenuItem } from "@mui/material"
 import { Add, Description, Photo } from "@mui/icons-material"
 import { PhotoVideoConfirmationModal } from "./PhotoVideoConfirmationModal"
 import { Washima } from "../../../types/server/class/Washima/Washima"
 import { DocumentConfirmationModal } from "./DocumentConfirmationModal"
 import { useSnackbar } from "burgos-snackbar"
+import { CameraDialog } from "./camera/CameraDialog"
 
 interface MediaInputMenuProps {
     washima: Washima
@@ -18,6 +19,7 @@ export const MediaInputMenu: React.FC<MediaInputMenuProps> = ({ washima, chat_id
 
     const { snackbar } = useSnackbar()
 
+    const [showCam, setShowCam] = useState(false)
     const [acceptedMimetypes, setAcceptedMimetypes] = React.useState("")
     const [selectedFiles, setSelectedFiles] = React.useState<File[]>([])
     const [mediaType, setMediaType] = React.useState<"image-video" | "document" | "">("")
@@ -37,6 +39,13 @@ export const MediaInputMenu: React.FC<MediaInputMenuProps> = ({ washima, chat_id
             onClick: () => {
                 openFilesChooser("*")
                 setMediaType("document")
+            },
+        },
+        {
+            label: "Câmera",
+            icon: <Photo />,
+            onClick: () => {
+                setShowCam(true)
             },
         },
     ]
@@ -129,6 +138,12 @@ export const MediaInputMenu: React.FC<MediaInputMenuProps> = ({ washima, chat_id
                 washima={washima}
                 chat_id={chat_id}
                 onDelete={onDeleteFile}
+            />
+            <CameraDialog
+                showCam={showCam}
+                onClose={() => {
+                    setShowCam(false)
+                }}
             />
         </Box>
     )
