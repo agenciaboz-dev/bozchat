@@ -110,6 +110,7 @@ export const PhotoVideoConfirmationModal: React.FC<PhotoVideoConfirmationModalPr
                         is_current={index === currentFileIndex}
                         onClick={() => setCurrentFileIndex(index)}
                         onDelete={() => (loading > 0 ? undefined : onDelete(index))}
+                        deleteButton
                     />
                 ))}
             </Box>

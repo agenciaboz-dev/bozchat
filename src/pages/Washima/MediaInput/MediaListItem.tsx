@@ -8,9 +8,10 @@ interface MediaListItemProps {
     onClick: () => void
     is_current?: boolean
     onDelete: () => void
+    deleteButton?: boolean
 }
 
-export const MediaListItem: React.FC<MediaListItemProps> = ({ file, is_current, onClick, onDelete }) => {
+export const MediaListItem: React.FC<MediaListItemProps> = ({ file, is_current, onClick, onDelete, deleteButton }) => {
     const type = file.type.split("/")[0]
     const documentType = file.name.split(".").pop()
     const url = file ? URL.createObjectURL(file) : ""
@@ -32,13 +33,15 @@ export const MediaListItem: React.FC<MediaListItemProps> = ({ file, is_current, 
                     src={documentIcon(documentType)}
                 />
             )}
-            <IconButton
-                sx={{ position: "absolute", right: "0.1vw", top: "0.1vw", borderRadius: "100%", padding: 0 }}
-                color="warning"
-                onClick={onDelete}
-            >
-                <Cancel />
-            </IconButton>
+            {deleteButton ? (
+                <IconButton
+                    sx={{ position: "absolute", right: "0.1vw", top: "0.1vw", borderRadius: "100%", padding: 0 }}
+                    color="warning"
+                    onClick={onDelete}
+                >
+                    <Cancel />
+                </IconButton>
+            ) : null}
         </MenuItem>
     )
 }
