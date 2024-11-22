@@ -144,6 +144,8 @@ export const MediaInputMenu: React.FC<MediaInputMenuProps> = ({ washima, chat_id
                 onClose={() => {
                     setShowCam(false)
                 }}
+                washima={washima}
+                chat_id={chat_id}
             />
         </Box>
     )

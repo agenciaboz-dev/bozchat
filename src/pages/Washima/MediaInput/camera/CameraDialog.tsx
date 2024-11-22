@@ -1,32 +1,36 @@
 import React, { useEffect, useRef, useState } from "react"
-import { Button, Box, Dialog, DialogContent, Typography, IconButton, TextField } from "@mui/material"
+import { Button, Box, Dialog, Typography, IconButton, TextField, CircularProgress } from "@mui/material"
 import { Close } from "@mui/icons-material"
 import SendIcon from "@mui/icons-material/Send"
+import { MediaListItem } from "../MediaListItem"
+import { Washima, WashimaMediaForm } from "../../../../types/server/class/Washima/Washima"
+import { file2base64 } from "../../../../tools/toBase64"
+import { useIo } from "../../../../hooks/useIo"
 
 interface CameraDialogProps {
     showCam: boolean
     onClose: () => void
-}
-
-interface RecordedVideo {
-    url: string
-    blob: Blob
+    washima: Washima
+    chat_id: string
 }
 
 interface SelectedMedia {
     type: "photo" | "video"
+    file: File
     url: string
 }
 
-export const CameraDialog: React.FC<CameraDialogProps> = ({ showCam, onClose }) => {
+export const CameraDialog: React.FC<CameraDialogProps> = ({ showCam, onClose, washima, chat_id }) => {
+    const io = useIo()
+
     const videoRef = useRef<HTMLVideoElement>(null)
     const photoRef = useRef<HTMLCanvasElement>(null)
     const mediaRecorderRef = useRef<MediaRecorder | null>(null)
     const streamRef = useRef<MediaStream | null>(null)
     const recordedChunksRef = useRef<Blob[]>([])
 
-    const [capturedPhotos, setCapturedPhotos] = useState<string[]>([])
-    const [recordedVideos, setRecordedVideos] = useState<RecordedVideo[]>([])
+    const [loading, setLoading] = useState(-1)
+    const [mediaFiles, setMediaFiles] = useState<File[]>([])
     const [isRecording, setIsRecording] = useState<boolean>(false)
     const [selectedMedia, setSelectedMedia] = useState<SelectedMedia | null>(null)
     const [error, setError] = useState<string | null>(null)
@@ -43,8 +47,8 @@ export const CameraDialog: React.FC<CameraDialogProps> = ({ showCam, onClose }) 
             if (videoRef.current) {
                 videoRef.current.srcObject = mediaStream
             }
-        } catch (err) {
-            console.error("Erro ao acessar a câmera: ", err)
+        } catch (error) {
+            console.error("Erro ao acessar a câmera: ", error)
             setError("Não foi possível acessar a câmera e o microfone.")
         }
     }
@@ -60,8 +64,12 @@ export const CameraDialog: React.FC<CameraDialogProps> = ({ showCam, onClose }) 
             const ctx = photoRef.current.getContext("2d")
             if (ctx) {
                 ctx.drawImage(videoRef.current, 0, 0, width, height)
-                const dataURL = photoRef.current.toDataURL("image/png")
-                setCapturedPhotos((prev) => [...prev, dataURL])
+                photoRef.current.toBlob((blob) => {
+                    if (blob) {
+                        const file = new File([blob], `photo-${Date.now()}.png`, { type: "image/png" })
+                        setMediaFiles((prev) => [...prev, file])
+                    }
+                }, "image/png")
             }
         }
     }
@@ -72,22 +80,11 @@ export const CameraDialog: React.FC<CameraDialogProps> = ({ showCam, onClose }) 
         }
     }
 
-    const handleStopRecording = () => {
-        if (mediaRecorderRef.current) {
-            const mimeType = mediaRecorderRef.current.mimeType
-            const blob = new Blob(recordedChunksRef.current, { type: mimeType })
-            const url = URL.createObjectURL(blob)
-            setRecordedVideos((prev) => [...prev, { url, blob }])
-            recordedChunksRef.current = []
-        }
-    }
-
     const startRecording = () => {
         if (streamRef.current) {
             recordedChunksRef.current = []
             let options: MediaRecorderOptions = {}
 
-            // Lista de MIME types com codecs de vídeo e áudio
             const mimeTypes = [
                 "video/webm; codecs=vp9,opus",
                 "video/webm; codecs=vp8,opus",
@@ -97,7 +94,6 @@ export const CameraDialog: React.FC<CameraDialogProps> = ({ showCam, onClose }) 
                 "video/mp4",
             ]
 
-            // Encontrar o primeiro MIME type suportado
             for (const mimeType of mimeTypes) {
                 if (MediaRecorder.isTypeSupported(mimeType)) {
                     options.mimeType = mimeType
@@ -119,17 +115,38 @@ export const CameraDialog: React.FC<CameraDialogProps> = ({ showCam, onClose }) 
                 mediaRecorder.start()
                 mediaRecorderRef.current = mediaRecorder
                 setIsRecording(true)
-            } catch (e) {
-                console.error("Erro ao iniciar a gravação: ", e)
+                console.log("Gravação iniciada")
+            } catch (error) {
+                console.error("Erro ao iniciar a gravação: ", error)
                 setError("Erro ao iniciar a gravação. Seu navegador pode não suportar os codecs necessários.")
             }
+        } else {
+            console.error("Stream de mídia não está disponível")
+            setError("Stream de mídia não está disponível.")
         }
     }
 
     const stopRecording = () => {
-        if (mediaRecorderRef.current) {
+        console.log("Botão 'Parar Gravação' clicado")
+        if (mediaRecorderRef.current && isRecording) {
+            console.log("Parando a gravação")
             mediaRecorderRef.current.stop()
+        } else {
+            console.log("MediaRecorder não está em gravação ou não está definido")
+        }
+    }
+
+    const handleStopRecording = () => {
+        console.log("Evento 'onstop' do MediaRecorder disparado")
+        if (mediaRecorderRef.current) {
+            const mimeType = mediaRecorderRef.current.mimeType
+            const blob = new Blob(recordedChunksRef.current, { type: mimeType })
+            const extension = mimeType.split("/")[1].split(";")[0] // Extrai a extensão correta
+            const file = new File([blob], `video-${Date.now()}.${extension}`, { type: mimeType })
+            setMediaFiles((prev) => [...prev, file])
+            recordedChunksRef.current = []
             setIsRecording(false)
+            console.log("Arquivo de vídeo adicionado à lista de mídias")
         }
     }
 
@@ -142,25 +159,85 @@ export const CameraDialog: React.FC<CameraDialogProps> = ({ showCam, onClose }) 
         if (videoRef.current) {
             videoRef.current.srcObject = null
         }
-        setCapturedPhotos([])
-        setRecordedVideos([])
+        setMediaFiles([])
         setIsRecording(false)
         setSelectedMedia(null)
         setError(null)
+        setLoading(-1)
     }
 
-    const downloadMedia = (type: "photo" | "video", url: string, filename: string) => {
+    const downloadMedia = (file: File) => {
+        const url = URL.createObjectURL(file)
         const a = document.createElement("a")
         a.style.display = "none"
         a.href = url
-        a.download = filename
+        a.download = file.name
         document.body.appendChild(a)
         a.click()
         window.URL.revokeObjectURL(url)
     }
 
+    const removeMedia = (fileToRemove: File) => {
+        setMediaFiles((prev) => prev.filter((file) => file !== fileToRemove))
+    }
+
+    // const handleDownload = (file: File) => {
+    //     downloadMedia(file)
+    // }
+
+    // const handleRemove = (file: File) => {
+    //     removeMedia(file)
+    // }
+
+    const onSubmit = async () => {
+        if (loading > 0) return
+        setLoading(1)
+
+        const medias: WashimaMediaForm[] = await Promise.all(
+            mediaFiles.map(async (file, index) => {
+                const base64 = await file2base64(file)
+                const data: WashimaMediaForm = { base64, mimetype: file.type, name: file.name, size: file.size }
+                return data
+            })
+        )
+
+        setLoading(medias.length)
+
+        if (medias.length === 1) {
+            io.emit("washima:message", washima.id, chat_id, caption, medias[0])
+            return
+        }
+
+        medias.forEach((media) => {
+            io.emit("washima:message", washima.id, chat_id, undefined, media)
+        })
+
+        if (caption) {
+            io.emit("washima:message", washima.id, chat_id, caption)
+            setCaption("")
+        }
+
+        handleClose()
+    }
+
+    const handleSelect = (file: File) => {
+        if (isRecording) {
+            stopRecording()
+        }
+        const url = URL.createObjectURL(file)
+        setSelectedMedia({ type: file.type.startsWith("image/") ? "photo" : "video", file, url })
+    }
+
     useEffect(() => {
-        if (showCam) {
+        return () => {
+            if (selectedMedia?.url) {
+                URL.revokeObjectURL(selectedMedia.url)
+            }
+        }
+    }, [selectedMedia])
+
+    useEffect(() => {
+        if (showCam && !selectedMedia) {
             getMediaStream()
         }
 
@@ -175,31 +252,33 @@ export const CameraDialog: React.FC<CameraDialogProps> = ({ showCam, onClose }) 
             setIsRecording(false)
             setError(null)
         }
-    }, [showCam])
+    }, [showCam, selectedMedia])
+
+    useEffect(() => {
+        if (selectedMedia && streamRef.current) {
+            streamRef.current.getTracks().forEach((track) => track.stop())
+            streamRef.current = null
+            if (videoRef.current) {
+                videoRef.current.srcObject = null
+            }
+        }
+    }, [selectedMedia])
 
     return (
-        // <>
         <Dialog
             open={showCam}
-            // onClose={handleClose}
-            // maxWidth="md"
-            // fullWidth
+            onClose={handleClose}
             PaperProps={{
                 sx: {
                     padding: "1vw",
-                    // borderRadius: "1vw",
-                    // gap: "1vw",
-                    // flexDirection: "column",
                     bgcolor: "background.default",
-                    maxWidth: "53vw",
-                    minWidth: "53vw",
-                    // overflow: "hidden",
-                    // minWidth: "60vw",
+                    maxWidth: "60vw",
+                    // minWidth: "53vw",
                 },
             }}
         >
             <Box sx={{ overflow: "hidden", flexDirection: "column", gap: "0.5vw" }}>
-                <Box sx={{ justifyContent: "space-between", alignItems: "center" }}>
+                <Box sx={{ justifyContent: "space-between", alignItems: "center", display: "flex" }}>
                     <Typography variant={"h6"}>Câmera</Typography>
                     <IconButton onClick={handleClose}>
                         <Close color="primary" />
@@ -210,32 +289,38 @@ export const CameraDialog: React.FC<CameraDialogProps> = ({ showCam, onClose }) 
                         <Typography color="error">{error}</Typography>
                     </Box>
                 )}
-                <Box sx={{ gap: "1vw" }}>
+                <Box sx={{ flexDirection: "column", gap: "1vw" }}>
                     <Box sx={{ flexDirection: "column", gap: "1vw" }}>
                         <Box
                             sx={{
-                                minWidth: "34.5vw",
-                                minHeight: "50vh",
-                                border: "red solid 1px",
+                                display: "flex",
+                                justifyContent: "center",
+                                alignItems: "center",
+                                width: "auto",
+                                height: "60vh",
+                                objectFit: "contain",
                             }}
                         >
                             {selectedMedia ? (
                                 <Box>
                                     {selectedMedia.type === "photo" ? (
-                                        <img src={selectedMedia.url} alt="Foto Capturada" style={{}} />
+                                        <img src={selectedMedia.url} alt="Foto Capturada" style={{ maxWidth: "100%", maxHeight: "100%" }} />
                                     ) : (
-                                        <video src={selectedMedia.url} controls style={{}} />
+                                        <video key="selectedVideo" src={selectedMedia.url} controls style={{ maxWidth: "100%", maxHeight: "100%" }} />
                                     )}
                                 </Box>
                             ) : (
-                                <Box sx={{}}>
+                                <Box sx={{ width: "100%", height: "100%" }}>
                                     <video
+                                        key="liveVideo"
                                         ref={videoRef}
                                         autoPlay
                                         playsInline
                                         muted
                                         style={{
-                                            margin: 0,
+                                            width: "100%",
+                                            height: "100%",
+                                            objectFit: "cover",
                                         }}
                                     />
                                 </Box>
@@ -244,7 +329,7 @@ export const CameraDialog: React.FC<CameraDialogProps> = ({ showCam, onClose }) 
                         </Box>
                         <Box>
                             {selectedMedia ? (
-                                <Box sx={{ justifyContent: "space-between", flex: 1 }}>
+                                <Box sx={{ justifyContent: "space-between", display: "flex", flex: 1 }}>
                                     <Button
                                         variant="contained"
                                         color="secondary"
@@ -255,23 +340,27 @@ export const CameraDialog: React.FC<CameraDialogProps> = ({ showCam, onClose }) 
                                     >
                                         Câmera
                                     </Button>
-                                    <Box sx={{ marginLeft: "auto", gap: "1vw" }}>
-                                        <Button variant="contained" color="error" onClick={() => {}}>
-                                            Remover midia
-                                        </Button>
+                                    <Box sx={{ display: "flex", marginLeft: "auto", gap: "1vw" }}>
                                         <Button
                                             variant="contained"
-                                            color="primary"
+                                            color="error"
                                             onClick={() => {
-                                                // downloadMedia()
+                                                removeMedia(selectedMedia.file)
+                                                if (selectedMedia) {
+                                                    setSelectedMedia(null)
+                                                    getMediaStream()
+                                                }
                                             }}
                                         >
-                                            Salvar midia
+                                            Remover Mídia
+                                        </Button>
+                                        <Button variant="contained" color="primary" onClick={() => downloadMedia(selectedMedia.file)}>
+                                            Salvar Mídia
                                         </Button>
                                     </Box>
                                 </Box>
                             ) : (
-                                <Box sx={{ marginLeft: "auto", gap: "1vw" }}>
+                                <Box sx={{ display: "flex", marginLeft: "auto", gap: "1vw" }}>
                                     <Button
                                         variant="contained"
                                         color="primary"
@@ -299,11 +388,15 @@ export const CameraDialog: React.FC<CameraDialogProps> = ({ showCam, onClose }) 
                         </Box>
                     </Box>
                     <Box sx={{ gap: "1vw" }}>
-                        {/* {capturedPhotos.length > 0 && ( */}
-                        <Box sx={{ flexDirection: "column", gap: "0.5vh" }}>
-                            <Typography variant="h6" sx={{ textAlign: "center" }}>
-                                Fotografias
-                            </Typography>
+                        <Box
+                            sx={{
+                                gap: "0.5vh",
+                                justifyContent: "center",
+                                maxWidth: "55vw",
+                                width: "55vw",
+                                height: "10vh",
+                            }}
+                        >
                             <Button
                                 sx={{ height: "10vh", width: "7vw", fontSize: "4rem" }}
                                 onClick={() => {
@@ -313,67 +406,33 @@ export const CameraDialog: React.FC<CameraDialogProps> = ({ showCam, onClose }) 
                             >
                                 +
                             </Button>
-                            <Box sx={{ flexDirection: "column", gap: "0.5vh", overflow: "scroll", maxHeight: "40vh" }}>
-                                {capturedPhotos.map((photo, index) => (
-                                    <Box sx={{}} key={`photo-${index}`}>
-                                        <img
-                                            src={photo}
-                                            alt={`Foto ${index + 1}`}
-                                            style={{
-                                                height: "10vh",
-                                                width: "7vw",
-                                                cursor: "pointer",
-                                            }}
-                                            onClick={() => setSelectedMedia({ type: "photo", url: photo })}
-                                        />
-                                        {/* <Box
-                                            sx={{
-                                                // mt: 1,
-                                                textAlign: "center",
-                                            }}
-                                        >
-                                            <Button variant="text" onClick={() => downloadMedia("photo", photo, `foto-${index + 1}.png`)}>
-                                                Baixar Foto
-                                            </Button>
-                                        </Box> */}
-                                    </Box>
+                            <Box
+                                sx={{
+                                    gap: "0.5vh",
+                                    overflow: "auto",
+                                    height: "10vh",
+                                    width: "48vw",
+                                }}
+                            >
+                                {mediaFiles.map((file, index) => (
+                                    <MediaListItem
+                                        key={`media-${index}`}
+                                        file={file}
+                                        onClick={() => {
+                                            if (file) {
+                                                handleSelect(file)
+                                            }
+                                        }}
+                                        onDelete={() => {
+                                            removeMedia(file)
+                                            setSelectedMedia(null)
+                                            getMediaStream()
+                                        }}
+                                        is_current={selectedMedia?.file === file}
+                                    />
                                 ))}
                             </Box>
                         </Box>
-                        {/* )} */}
-                        {/* {recordedVideos.length > 0 && ( */}
-                        <Box sx={{ flexDirection: "column", gap: "0.5vh" }}>
-                            <Typography variant="h6" sx={{ textAlign: "center" }}>
-                                Vídeos
-                            </Typography>
-                            <Button sx={{ height: "10vh", width: "7vw", fontSize: "4rem" }}>+</Button>
-                            <Box sx={{ flexDirection: "column", gap: "0.5vh", overflow: "scroll", maxHeight: "40vh" }}>
-                                {recordedVideos.map((video, index) => (
-                                    <Box key={`video-${index}`}>
-                                        <video
-                                            src={video.url}
-                                            style={{
-                                                cursor: "pointer",
-                                                height: "10vh",
-                                                width: "7vw",
-                                            }}
-                                            onClick={() => setSelectedMedia({ type: "video", url: video.url })}
-                                            muted
-                                        />
-                                        {/* <Box
-                                            sx={{
-                                                textAlign: "center",
-                                            }}
-                                        >
-                                            <Button variant="text" onClick={() => downloadMedia("video", video.url, `video-${index + 1}.webm`)}>
-                                                Baixar Vídeo
-                                            </Button>
-                                        </Box> */}
-                                    </Box>
-                                ))}
-                            </Box>
-                        </Box>
-                        {/* )} */}
                     </Box>
                 </Box>
                 <TextField
@@ -381,7 +440,6 @@ export const CameraDialog: React.FC<CameraDialogProps> = ({ showCam, onClose }) 
                     placeholder="Insira uma legenda"
                     value={caption}
                     onChange={(ev) => setCaption(ev.target.value)}
-                    // sx={textFieldStyle}
                     autoComplete="off"
                     InputProps={{
                         sx: { color: "primary.main", bgcolor: "background.default", paddingLeft: "0", paddingRight: "0" },
@@ -391,34 +449,16 @@ export const CameraDialog: React.FC<CameraDialogProps> = ({ showCam, onClose }) 
                                     color="primary"
                                     type="submit"
                                     onClick={() => {
-                                        // onSubmit()
+                                        onSubmit()
                                     }}
                                 >
-                                    {/* {loading > 0 ? <CircularProgress size="1.5rem" /> : <SendIcon />} */}
-                                    <SendIcon />
+                                    {loading > 0 ? <CircularProgress size="1.5rem" /> : <SendIcon />}
                                 </IconButton>
                             </Box>
                         ),
                     }}
-                />{" "}
+                />
             </Box>
         </Dialog>
     )
 }
-
-//     {selectedMedia && (
-//         <Box>
-//             <DialogTitle>{selectedMedia.type === "photo" ? "Foto Capturada" : "Vídeo Gravado"}</DialogTitle>
-//             <DialogContent>
-//                 {selectedMedia.type === "photo" ? (
-//                     <img src={selectedMedia.url} alt="Foto Capturada" style={{}} />
-//                 ) : (
-//                     <video src={selectedMedia.url} controls style={{}} />
-//                 )}
-//             </DialogContent>
-//             <DialogActions>
-//                 <Button onClick={() => setSelectedMedia(null)}>Fechar</Button>
-//             </DialogActions>
-//         </Box>
-//     )}
-// </>
