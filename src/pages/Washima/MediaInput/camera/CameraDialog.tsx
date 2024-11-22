@@ -273,7 +273,7 @@ export const CameraDialog: React.FC<CameraDialogProps> = ({ showCam, onClose, wa
                     padding: "1vw",
                     bgcolor: "background.default",
                     maxWidth: "60vw",
-                    // minWidth: "53vw",
+                    minWidth: "60vw",
                 },
             }}
         >
@@ -391,9 +391,8 @@ export const CameraDialog: React.FC<CameraDialogProps> = ({ showCam, onClose, wa
                         <Box
                             sx={{
                                 gap: "0.5vh",
-                                justifyContent: "center",
                                 maxWidth: "55vw",
-                                width: "55vw",
+                                minWidth: "55vw",
                                 height: "10vh",
                             }}
                         >
