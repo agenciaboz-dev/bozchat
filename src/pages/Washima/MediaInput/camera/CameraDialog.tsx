@@ -387,50 +387,54 @@ export const CameraDialog: React.FC<CameraDialogProps> = ({ showCam, onClose, wa
                             )}
                         </Box>
                     </Box>
-                    <Box sx={{ gap: "1vw" }}>
+                    <Box
+                        sx={{
+                            gap: "0.5vh",
+                            maxWidth: "55vw",
+                            minWidth: "55vw",
+                            height: "10vh",
+                            alignSelf: "center",
+                            overflow: "auto",
+                        }}
+                    >
+                        <Button
+                            sx={{
+                                height: "10vh",
+                                minWidth: "7vw",
+                                fontSize: "3.2rem",
+                            }}
+                            onClick={() => {
+                                setSelectedMedia(null)
+                                getMediaStream()
+                            }}
+                        >
+                            +
+                        </Button>
                         <Box
                             sx={{
                                 gap: "0.5vh",
-                                maxWidth: "55vw",
-                                minWidth: "55vw",
+                                overflow: "auto",
                                 height: "10vh",
+                                // width: "48vw",
                             }}
                         >
-                            <Button
-                                sx={{ height: "10vh", width: "7vw", fontSize: "4rem" }}
-                                onClick={() => {
-                                    setSelectedMedia(null)
-                                    getMediaStream()
-                                }}
-                            >
-                                +
-                            </Button>
-                            <Box
-                                sx={{
-                                    gap: "0.5vh",
-                                    overflow: "auto",
-                                    height: "10vh",
-                                    width: "48vw",
-                                }}
-                            >
-                                {mediaFiles.map((file, index) => (
-                                    <MediaListItem
-                                        key={`media-${index}`}
-                                        file={file}
-                                        onClick={() => {
-                                            if (file) {
-                                                handleSelect(file)
-                                            }
-                                        }}
-                                        onDelete={() => {
-                                            removeMedia(file)
-                                            setSelectedMedia(null)
-                                            getMediaStream()
-                                        }}
-                                        is_current={selectedMedia?.file === file}
-                                    />
-                                ))}
-                            </Box>
+                            {mediaFiles.map((file, index) => (
+                                <MediaListItem
+                                    key={`media-${index}`}
+                                    file={file}
+                                    onClick={() => {
+                                        if (file) {
+                                            handleSelect(file)
+                                        }
+                                    }}
+                                    onDelete={() => {
+                                        removeMedia(file)
+                                        setSelectedMedia(null)
+                                        getMediaStream()
+                                    }}
+                                    is_current={selectedMedia?.file === file}
+                                />
+                            ))}
                         </Box>
                     </Box>
                 </Box>
