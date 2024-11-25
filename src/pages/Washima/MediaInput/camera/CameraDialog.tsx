@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState } from "react"
-import { Button, Box, Dialog, Typography, IconButton, TextField, CircularProgress } from "@mui/material"
+import { Button, Box, Dialog, Typography, IconButton, TextField, CircularProgress, useMediaQuery } from "@mui/material"
 import { Close } from "@mui/icons-material"
 import SendIcon from "@mui/icons-material/Send"
 import { MediaListItem } from "../MediaListItem"
@@ -22,6 +22,7 @@ interface SelectedMedia {
 
 export const CameraDialog: React.FC<CameraDialogProps> = ({ showCam, onClose, washima, chat_id }) => {
     const io = useIo()
+    const isMobile = useMediaQuery("(orientation: portrait)")
 
     const videoRef = useRef<HTMLVideoElement>(null)
     const photoRef = useRef<HTMLCanvasElement>(null)
@@ -181,13 +182,6 @@ export const CameraDialog: React.FC<CameraDialogProps> = ({ showCam, onClose, wa
         setMediaFiles((prev) => prev.filter((file) => file !== fileToRemove))
     }
 
-    // const handleDownload = (file: File) => {
-    //     downloadMedia(file)
-    // }
-
-    // const handleRemove = (file: File) => {
-    //     removeMedia(file)
-    // }
 
     const onSubmit = async () => {
         if (loading > 0) return
@@ -270,43 +264,105 @@ export const CameraDialog: React.FC<CameraDialogProps> = ({ showCam, onClose, wa
             onClose={handleClose}
             PaperProps={{
                 sx: {
-                    padding: "1vw",
+                    padding: isMobile ? "3vw" : "1vw",
                     bgcolor: "background.default",
-                    maxWidth: "60vw",
+                    maxWidth: isMobile ? "100%" : "60vw",
                     minWidth: "60vw",
+                    minHeight: isMobile ? "100vh" : undefined,
+                    gap: isMobile ? "3vw" : "0.5vw",
                 },
             }}
         >
-            <Box sx={{ overflow: "hidden", flexDirection: "column", gap: "0.5vw" }}>
-                <Box sx={{ justifyContent: "space-between", alignItems: "center", display: "flex" }}>
-                    <Typography variant={"h6"}>Câmera</Typography>
-                    <IconButton onClick={handleClose}>
-                        <Close color="primary" />
-                    </IconButton>
+            <Box
+                sx={{
+                    justifyContent: "space-between",
+                    alignItems: "center",
+                }}
+            >
+                <Typography variant={"h6"}>Câmera</Typography>
+                <IconButton onClick={handleClose}>
+                    <Close color="primary" />
+                </IconButton>
+            </Box>
+            {error && (
+                <Box>
+                    <Typography color="error">{error}</Typography>
                 </Box>
-                {error && (
-                    <Box>
-                        <Typography color="error">{error}</Typography>
-                    </Box>
-                )}
-                <Box sx={{ flexDirection: "column", gap: "1vw" }}>
-                    <Box sx={{ flexDirection: "column", gap: "1vw" }}>
+            )}
+            <Box
+                sx={{
+                    overflow: "hidden",
+                    flexDirection: "column-reverse",
+                    gap: isMobile ? "3vw" : "0.5vw",
+                    flex: 1,
+                }}
+            >
+                <TextField
+                    label="Legenda"
+                    placeholder="Insira uma legenda"
+                    value={caption}
+                    onChange={(ev) => setCaption(ev.target.value)}
+                    autoComplete="off"
+                    InputProps={{
+                        sx: { color: "primary.main", bgcolor: "background.default", paddingLeft: "0", paddingRight: "0" },
+                        endAdornment: (
+                            <Box sx={{ marginRight: "0.5vw" }}>
+                                <IconButton
+                                    color="primary"
+                                    type="submit"
+                                    onClick={() => {
+                                        onSubmit()
+                                    }}
+                                >
+                                    {loading > 0 ? <CircularProgress size="1.5rem" /> : <SendIcon />}
+                                </IconButton>
+                            </Box>
+                        ),
+                    }}
+                />
+                <Box
+                    sx={{
+                        flexDirection: "column",
+                        gap: isMobile ? "3vw" : "1vw",
+                        flex: 1,
+                    }}
+                >
+                    <Box
+                        sx={{
+                            flexDirection: "column",
+                            gap: isMobile ? "3vw" : "1vw",
+                        }}
+                    >
                         <Box
                             sx={{
-                                display: "flex",
                                 justifyContent: "center",
                                 alignItems: "center",
                                 width: "auto",
-                                height: "60vh",
+                                height: isMobile ? "64vh" : "60vh",
                                 objectFit: "contain",
                             }}
                         >
                             {selectedMedia ? (
                                 <Box>
                                     {selectedMedia.type === "photo" ? (
-                                        <img src={selectedMedia.url} alt="Foto Capturada" style={{ maxWidth: "100%", maxHeight: "100%" }} />
+                                        <img
+                                            src={selectedMedia.url}
+                                            alt="Foto Capturada"
+                                            style={{
+                                                maxWidth: "100%",
+                                                maxHeight: "100%",
+                                            }}
+                                        />
                                     ) : (
-                                        <video key="selectedVideo" src={selectedMedia.url} controls style={{ maxWidth: "100%", maxHeight: "100%" }} />
+                                        <video
+                                            key="selectedVideo"
+                                            src={selectedMedia.url}
+                                            controls
+                                            style={{
+                                                maxWidth: "100%",
+                                                maxHeight: "100%",
+                                            }}
+                                        />
                                     )}
                                 </Box>
                             ) : (
@@ -329,7 +385,13 @@ export const CameraDialog: React.FC<CameraDialogProps> = ({ showCam, onClose, wa
                         </Box>
                         <Box>
                             {selectedMedia ? (
-                                <Box sx={{ justifyContent: "space-between", display: "flex", flex: 1 }}>
+                                <Box
+                                    sx={{
+                                        flex: isMobile ? 1 : undefined,
+                                        gap: isMobile ? "3vw" : "1vw",
+                                        marginLeft: "auto",
+                                    }}
+                                >
                                     <Button
                                         variant="contained"
                                         color="secondary"
@@ -340,7 +402,7 @@ export const CameraDialog: React.FC<CameraDialogProps> = ({ showCam, onClose, wa
                                     >
                                         Câmera
                                     </Button>
-                                    <Box sx={{ display: "flex", marginLeft: "auto", gap: "1vw" }}>
+                                    <Box sx={{ gap: isMobile ? "3vw" : "1vw" }}>
                                         <Button
                                             variant="contained"
                                             color="error"
@@ -360,7 +422,7 @@ export const CameraDialog: React.FC<CameraDialogProps> = ({ showCam, onClose, wa
                                     </Box>
                                 </Box>
                             ) : (
-                                <Box sx={{ display: "flex", marginLeft: "auto", gap: "1vw" }}>
+                                <Box sx={{ marginLeft: "auto", gap: isMobile ? "3vw" : "1vw" }}>
                                     <Button
                                         variant="contained"
                                         color="primary"
@@ -390,11 +452,11 @@ export const CameraDialog: React.FC<CameraDialogProps> = ({ showCam, onClose, wa
                     <Box
                         sx={{
                             gap: "0.5vh",
-                            maxWidth: "55vw",
-                            minWidth: "55vw",
+                            maxWidth: isMobile ? "100%" : "100%",
+                            minWidth: isMobile ? undefined : undefined,
                             height: "10vh",
                             alignSelf: "center",
-                            overflow: "auto",
+                            overflow: isMobile ? undefined : "auto",
                         }}
                     >
                         <Button
@@ -412,10 +474,10 @@ export const CameraDialog: React.FC<CameraDialogProps> = ({ showCam, onClose, wa
                         </Button>
                         <Box
                             sx={{
-                                gap: "0.5vh",
-                                overflow: "auto",
+                                gap: isMobile ? "3vw" : "0.5vh",
+                                overflow: isMobile ? "auto" : "auto",
                                 height: "10vh",
-                                // width: "48vw",
+                                flex: 1,
                             }}
                         >
                             {mediaFiles.map((file, index) => (
@@ -438,29 +500,6 @@ export const CameraDialog: React.FC<CameraDialogProps> = ({ showCam, onClose, wa
                         </Box>
                     </Box>
                 </Box>
-                <TextField
-                    label="Legenda"
-                    placeholder="Insira uma legenda"
-                    value={caption}
-                    onChange={(ev) => setCaption(ev.target.value)}
-                    autoComplete="off"
-                    InputProps={{
-                        sx: { color: "primary.main", bgcolor: "background.default", paddingLeft: "0", paddingRight: "0" },
-                        endAdornment: (
-                            <Box sx={{ marginRight: "0.5vw" }}>
-                                <IconButton
-                                    color="primary"
-                                    type="submit"
-                                    onClick={() => {
-                                        onSubmit()
-                                    }}
-                                >
-                                    {loading > 0 ? <CircularProgress size="1.5rem" /> : <SendIcon />}
-                                </IconButton>
-                            </Box>
-                        ),
-                    }}
-                />
             </Box>
         </Dialog>
     )
