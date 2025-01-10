@@ -10,11 +10,7 @@ interface MessageAuthorProps {
 const authors_colors: { author: string; color: string }[] = []
 const random_colors = washima_colors
 
-export const MessageAuthor: React.FC<MessageAuthorProps> = ({ author }) => {
-    const isMobile = useMediaQuery("(orientation: portrait)")
-
-    const theme = useTheme()
-
+export const getAuthorName = (author?: string | null) => {
     const author_split = author?.split(" - ") || []
     const author_name = author_split?.length > 0 ? (author_split[0] === "undefined" ? "" : author_split[0]) : ""
     const author_phone =
@@ -24,6 +20,15 @@ export const MessageAuthor: React.FC<MessageAuthorProps> = ({ author }) => {
                   author_split[1].length === 10 ? "55" + author_split[1] : author_split[1]
               )
             : ""
+    return {author_name, author_phone}
+}
+
+export const MessageAuthor: React.FC<MessageAuthorProps> = ({ author }) => {
+    const isMobile = useMediaQuery("(orientation: portrait)")
+
+    const theme = useTheme()
+
+    const {author_name, author_phone} = getAuthorName(author)
 
     const [authorColor, setAuthorColor] = useState("")
 
