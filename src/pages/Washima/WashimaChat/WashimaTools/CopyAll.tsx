@@ -24,7 +24,9 @@ export const CopyAllButton: React.FC<CopyAllProps> = ({ chat }) => {
             messages
                 .sort((a, b) => Number(a.timestamp) - Number(b.timestamp))
                 .forEach((message) => {
-                    const text = `${message.fromMe ? "Eu:" : message.author || chat.name + ":"} ${message.body}`
+                    const text = `${new Date(Number(message.timestamp * 1000)).toLocaleString("pt-br")} - ${
+                        message.fromMe ? "Eu:" : (message.author || chat.name) + ":"
+                    } ${message.body}`
                     texts.push(text)
                 })
 
