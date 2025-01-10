@@ -2,6 +2,7 @@ import React from "react"
 import { Box, IconButton, Skeleton, Tooltip, Typography, useMediaQuery } from "@mui/material"
 import { GeneralStat } from "../../../types/GeneralStat"
 import { CopyAll } from "@mui/icons-material"
+import { useClipboard } from "@mantine/hooks"
 
 interface InfoDataContainerProps {
     data: GeneralStat & { copy?: boolean }
@@ -10,6 +11,9 @@ interface InfoDataContainerProps {
 export const InfoDataContainer: React.FC<InfoDataContainerProps> = ({ data }) => {
     const isMobile = useMediaQuery("(orientation: portrait)")
     const Icon = data.icon
+
+    const clipboard = useClipboard({ timeout: 1000 })
+
     return (
         <Box sx={{}}>
             <Box
@@ -58,11 +62,8 @@ export const InfoDataContainer: React.FC<InfoDataContainerProps> = ({ data }) =>
                         </Tooltip>
 
                         {data.copy && !!data.value && (
-                            <IconButton
-                                onClick={() => navigator.clipboard.writeText(data.value!.toString())}
-                                sx={{ padding: 0, width: "2vw", height: "2vw" }}
-                            >
-                                <CopyAll sx={{ width: "1.5vw", height: "1.5vw" }} />
+                            <IconButton onClick={() => clipboard.copy(data.value?.toString())} sx={{ padding: 0, width: "2vw", height: "2vw" }}>
+                                <CopyAll sx={{ width: "1.5vw", height: "1.5vw" }} color={clipboard.copied ? "success" : undefined} />
                             </IconButton>
                         )}
                     </Box>
