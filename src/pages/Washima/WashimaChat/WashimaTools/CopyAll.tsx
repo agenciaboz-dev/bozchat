@@ -21,10 +21,12 @@ export const CopyAllButton: React.FC<CopyAllProps> = ({ chat }) => {
         try {
             const response = await api.get("/washima/tools/copy-chat", { params: { chat_id: chat.id._serialized } })
             const messages = response.data as WashimaMessage[]
-            messages.forEach((message) => {
-                const text = `${message.fromMe ? "Eu:" : chat.name + ":"} ${message.body}`
-                texts.push(text)
-            })
+            messages
+                .sort((a, b) => Number(a.timestamp) - Number(b.timestamp))
+                .forEach((message) => {
+                    const text = `${message.fromMe ? "Eu:" : chat.name + ":"} ${message.body}`
+                    texts.push(text)
+                })
 
             navigator.clipboard.writeText(texts.join("\n"))
             setCopied(true)
