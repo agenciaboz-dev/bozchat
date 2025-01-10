@@ -154,7 +154,13 @@ export const ChatContainer: React.FC<ChatProps> = ({ chat, onChatClick, washima,
                 {/*//*  title and date */}
                 <Box sx={{ justifyContent: "space-between", alignItems: "center", width: "100%", color: "secondary.main" }}>
                     <p
-                        style={{ fontWeight: "bold", overflow: "hidden", whiteSpace: "nowrap", textOverflow: "ellipsis", width: "75%" }}
+                        style={{
+                            fontWeight: "bold",
+                            overflow: "hidden",
+                            whiteSpace: "nowrap",
+                            textOverflow: "ellipsis",
+                            width: "70%",
+                        }}
                         title={chat.name}
                     >
                         {chat.name}

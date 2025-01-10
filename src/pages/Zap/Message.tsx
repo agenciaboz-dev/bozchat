@@ -20,6 +20,7 @@ import { DateChip } from "../Washima/WashimaChat/DateChip"
 import { PhotoView } from "react-photo-view"
 import { DeletedMessage } from "./DeletedMessage"
 import { MessageAuthor } from "./MessageAuthor"
+import { MessageMenu } from "./MessageMenu"
 
 interface MessageProps {
     washima: Washima
@@ -160,8 +161,8 @@ export const Message: React.FC<MessageProps> = ({ message, isGroup, washima, pre
                         sx={{
                             position: "relative",
                             padding: isMobile ? "3vw" : `${is_image || is_video ? "0.25vw" : "0.5vw"}`,
-                            paddingX: is_document ? (isMobile ? "3vw" : "0.5vw") : undefined,
-                            flexDirection: is_document ? "row" : "column",
+
+                            flexDirection: "column",
                             alignSelf: message.fromMe ? "flex-end" : "flex-start",
                             textAlign: message.fromMe ? "end" : "start",
                             borderRadius: isMobile ? "3vw" : "0.75vw",
@@ -169,8 +170,7 @@ export const Message: React.FC<MessageProps> = ({ message, isGroup, washima, pre
                             borderTopLeftRadius: show_triangle && !message.fromMe ? "0" : undefined,
                             bgcolor: is_sticker ? "transparent" : message.fromMe ? primary : secondary,
                             marginTop: !same_as_previous && !day_changing ? (isMobile ? "2vw" : "0.5vw") : undefined,
-                            gap: is_document ? (isMobile ? "3vw" : "0.5vw") : is_sticker ? "0.2vw" : undefined,
-                            alignItems: is_document ? "center" : undefined,
+                            gap: is_sticker ? "0.2vw" : undefined,
                             opacity: is_deleted ? 0.3 : undefined,
                         }}
                     >
@@ -180,144 +180,161 @@ export const Message: React.FC<MessageProps> = ({ message, isGroup, washima, pre
                                 alignment={message.fromMe ? "right" : "left"}
                             />
                         )}
+                        <Box
+                            sx={{
+                                position: "absolute",
+                                top: 0,
+                                right: 0,
+                                zIndex: 1000,
+                            }}
+                        >
+                            <MessageMenu showMenuButton={hovering} />
+                        </Box>
 
                         {/*//* MESSAGE AUTHOR  */}
                         {show_author && message.type !== "revoked" && <MessageAuthor author={message.author} />}
 
-                        {is_deleted && <DeletedMessage message={message} />}
-                        {message.hasMedia && !is_deleted && (
-                            <Box sx={{}}>
-                                {is_image &&
-                                    (loading ? (
-                                        <Skeleton
-                                            variant="rounded"
-                                            animation="wave"
-                                            sx={{ width: isMobile ? "60vw" : "20vw", height: isMobile ? "70vw" : "20vw", borderRadius: "1vw" }}
+                        <Box
+                            sx={{
+                                flexDirection: is_document ? "row" : "column",
+                                gap: is_document ? (isMobile ? "3vw" : "0.5vw") : is_sticker ? "0.2vw" : undefined,
+                                alignItems: is_document ? "center" : undefined,
+                                paddingX: is_document ? (isMobile ? "3vw" : "0.5vw") : undefined,
+                            }}
+                        >
+                            {is_deleted && <DeletedMessage message={message} />}
+                            {message.hasMedia && !is_deleted && (
+                                <Box sx={{}}>
+                                    {is_image &&
+                                        (loading ? (
+                                            <Skeleton
+                                                variant="rounded"
+                                                animation="wave"
+                                                sx={{ width: isMobile ? "60vw" : "20vw", height: isMobile ? "70vw" : "20vw", borderRadius: "1vw" }}
+                                            />
+                                        ) : (
+                                            <PhotoView src={mediaObj?.source}>
+                                                <MenuItem sx={{ padding: 0, borderRadius: "0.75vw" }}>
+                                                    <img
+                                                        style={{
+                                                            width: isMobile ? "60vw" : "20vw",
+                                                            maxHeight: isMobile ? "70vw" : "20vw",
+                                                            objectFit: "cover",
+                                                            borderRadius: "0.75vw",
+                                                        }}
+                                                        // onClick={() => picture.open(mediaObj?.source || "")}
+                                                        src={mediaObj?.source}
+                                                        draggable={false}
+                                                    />
+                                                </MenuItem>
+                                            </PhotoView>
+                                        ))}
+                                    {is_sticker &&
+                                        (loading ? (
+                                            <CircularProgress size={isMobile ? "30vw" : "10vw"} sx={{}} />
+                                        ) : (
+                                            <img
+                                                style={{
+                                                    width: isMobile ? "30vw" : "10vw",
+                                                    height: isMobile ? "30vw" : "10vw",
+                                                    objectFit: "contain",
+                                                    borderRadius: "0.75vw",
+                                                }}
+                                                // onClick={() => picture.open(mediaObj?.source || "")}
+                                                src={mediaObj?.source}
+                                                draggable={false}
+                                            />
+                                        ))}
+                                    {is_video &&
+                                        (loading ? (
+                                            <Skeleton
+                                                variant="rounded"
+                                                animation="wave"
+                                                sx={{ width: isMobile ? "60vw" : "20vw", height: isMobile ? "70vw" : "20vw", borderRadius: "1vw" }}
+                                            />
+                                        ) : mediaObj ? (
+                                            <video
+                                                style={{ width: isMobile ? "60vw" : "20vw", height: isMobile ? "70vw" : "20vw" }}
+                                                src={mediaObj.source}
+                                                controls
+                                                muted={false}
+                                            />
+                                        ) : (
+                                            <Box sx={{ flexDirection: "column", alignItems: "center", color: "error.main" }}>
+                                                erro ao baixar vídeo
+                                                <ErrorChip />
+                                            </Box>
+                                        ))}
+                                    {is_audio && (
+                                        <AudioPlayer
+                                            loading={loading || !mediaObj}
+                                            media={mediaObj}
+                                            washima={washima}
+                                            chat_id={message.from}
+                                            message={message}
                                         />
-                                    ) : (
-                                        <PhotoView src={mediaObj?.source}>
-                                            <MenuItem sx={{ padding: 0, borderRadius: "0.75vw" }}>
-                                                <img
-                                                    style={{
-                                                        width: isMobile ? "60vw" : "20vw",
-                                                        maxHeight: isMobile ? "70vw" : "20vw",
-                                                        objectFit: "cover",
-                                                        borderRadius: "0.75vw",
-                                                    }}
-                                                    // onClick={() => picture.open(mediaObj?.source || "")}
-                                                    src={mediaObj?.source}
-                                                    draggable={false}
-                                                />
-                                            </MenuItem>
-                                        </PhotoView>
-                                    ))}
-                                {is_sticker &&
-                                    (loading ? (
-                                        <CircularProgress size={isMobile ? "30vw" : "10vw"} sx={{}} />
-                                    ) : (
-                                        <img
-                                            style={{
-                                                width: isMobile ? "30vw" : "10vw",
-                                                height: isMobile ? "30vw" : "10vw",
-                                                objectFit: "contain",
-                                                borderRadius: "0.75vw",
-                                            }}
-                                            // onClick={() => picture.open(mediaObj?.source || "")}
-                                            src={mediaObj?.source}
-                                            draggable={false}
-                                        />
-                                    ))}
-                                {is_video &&
-                                    (loading ? (
-                                        <Skeleton
-                                            variant="rounded"
-                                            animation="wave"
-                                            sx={{ width: isMobile ? "60vw" : "20vw", height: isMobile ? "70vw" : "20vw", borderRadius: "1vw" }}
-                                        />
-                                    ) : mediaObj ? (
-                                        <video
-                                            style={{ width: isMobile ? "60vw" : "20vw", height: isMobile ? "70vw" : "20vw" }}
-                                            src={mediaObj.source}
-                                            controls
-                                            muted={false}
-                                        />
-                                    ) : (
-                                        <Box sx={{ flexDirection: "column", alignItems: "center", color: "error.main" }}>
-                                            erro ao baixar vídeo
-                                            <ErrorChip />
+                                    )}
+                                    {is_document &&
+                                        (loading ? (
+                                            <Skeleton
+                                                variant="rounded"
+                                                animation="wave"
+                                                sx={{
+                                                    width: isMobile ? "10vw" : "3vw",
+                                                    height: isMobile ? "10vw" : "3.42vw",
+                                                    borderRadius: "0.2vw",
+                                                    flexDirection: "row",
+                                                }}
+                                            />
+                                        ) : (
+                                            <Avatar
+                                                sx={{
+                                                    width: isMobile ? "10vw" : "3vw",
+                                                    height: "auto",
+                                                    objectFit: "contain",
+                                                    borderRadius: 0,
+                                                }}
+                                                imgProps={{ draggable: false }}
+                                                alt="icone"
+                                                src={
+                                                    documentIcon(attachmendMetaData?.filename?.split(".").pop()) ||
+                                                    "/icones-documentos-washima/icon-generic.svg"
+                                                }
+                                            />
+                                        ))}
+                                    {!valid_types.includes(message.type) && (
+                                        <Box sx={{ flexDirection: "column", alignItems: "center", color: "warning.main", margin: "auto" }}>
+                                            mídia não suportada
+                                            <TodoChip />
                                         </Box>
-                                    ))}
-                                {is_audio && (
-                                    <AudioPlayer
-                                        loading={loading || !mediaObj}
-                                        media={mediaObj}
-                                        washima={washima}
-                                        chat_id={message.from}
-                                        message={message}
-                                    />
-                                )}
-                                {is_document &&
-                                    (loading ? (
-                                        <Skeleton
-                                            variant="rounded"
-                                            animation="wave"
-                                            sx={{
-                                                width: isMobile ? "10vw" : "3vw",
-                                                height: isMobile ? "10vw" : "3.42vw",
-                                                borderRadius: "0.2vw",
-                                                flexDirection: "row",
-                                            }}
-                                        />
-                                    ) : (
-                                        <Avatar
-                                            sx={{
-                                                width: isMobile ? "10vw" : "3vw",
-                                                height: "auto",
-                                                objectFit: "contain",
-                                                borderRadius: 0,
-                                            }}
-                                            imgProps={{ draggable: false }}
-                                            alt="icone"
-                                            src={
-                                                documentIcon(attachmendMetaData?.filename?.split(".").pop()) ||
-                                                "/icones-documentos-washima/icon-generic.svg"
-                                            }
-                                        />
-                                    ))}
-
-                                {!valid_types.includes(message.type) && (
-                                    <Box sx={{ flexDirection: "column", alignItems: "center", color: "warning.main", margin: "auto" }}>
-                                        mídia não suportada
-                                        <TodoChip />
-                                    </Box>
-                                )}
-                            </Box>
-                        )}
-
-                        {/*//* MESSAGE BODY TEXT */}
-                        {!is_deleted && (
-                            <Box sx={{ flexDirection: "column" }}>
-                                <p
-                                    className={isLink ? "link" : undefined}
-                                    style={{
-                                        padding: is_image ? "0 0.25vw" : undefined,
-                                        wordBreak: "break-word",
-                                        whiteSpace: isMobile && is_document ? "nowrap" : "pre-line",
-                                        color: isLink ? theme.palette.success.light : undefined,
-                                        textAlign: "left",
-                                        WebkitLineClamp: 2,
-                                        WebkitBoxOrient: "vertical",
-                                        overflow: "hidden",
-                                        textOverflow: "ellipsis",
-                                        width: is_document ? (isMobile ? "47vw" : "16vw") : undefined,
-                                    }}
-                                    onClick={isLink ? () => window.open(message.body, "_new") : undefined}
-                                >
-                                    {attachmendMetaData ? attachmendMetaData.filename : message.body}
-                                </p>
-                                {attachmendMetaData && <p style={{ textAlign: "left" }}>{attachmendMetaData.size}</p>}
-                            </Box>
-                        )}
+                                    )}
+                                </Box>
+                            )}
+                            {/*//* MESSAGE BODY TEXT */}
+                            {!is_deleted && (
+                                <Box sx={{ flexDirection: "column" }}>
+                                    <p
+                                        className={isLink ? "link" : undefined}
+                                        style={{
+                                            padding: is_image ? "0 0.25vw" : undefined,
+                                            wordBreak: "break-word",
+                                            whiteSpace: isMobile && is_document ? "nowrap" : "pre-line",
+                                            color: isLink ? theme.palette.success.light : undefined,
+                                            textAlign: "left",
+                                            WebkitLineClamp: 2,
+                                            WebkitBoxOrient: "vertical",
+                                            overflow: "hidden",
+                                            textOverflow: "ellipsis",
+                                            width: is_document ? (isMobile ? "47vw" : "16vw") : undefined,
+                                        }}
+                                        onClick={isLink ? () => window.open(message.body, "_new") : undefined}
+                                    >
+                                        {attachmendMetaData ? attachmendMetaData.filename : message.body}
+                                    </p>
+                                    {attachmendMetaData && <p style={{ textAlign: "left" }}>{attachmendMetaData.size}</p>}
+                                </Box>
+                            )}
+                        </Box>
                         {/*//* TIME */}
                         <MessageDateContainer message={message} is_audio={is_audio} is_image={is_image} is_document={is_document} />
 
