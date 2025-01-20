@@ -70,7 +70,7 @@ export declare class Washima {
     static push(washima: Washima): void;
     static new(data: WashimaForm): Promise<Washima>;
     static delete(washima_id: string): Promise<Washima | undefined>;
-    static sendMessage(socket: Socket, washima_id: string, chat_id: string, message?: string, media?: WashimaMediaForm): Promise<void>;
+    static sendMessage(socket: Socket, washima_id: string, chat_id: string, message?: string, media?: WashimaMediaForm, replyMessage?: WashimaMessage): Promise<void>;
     static getContact(socket: Socket, washima_id: string, contact_id: string, message_id: string): Promise<void>;
     constructor(data: WashimaPrisma);
     initialize(queue?: Washima[]): Promise<void>;
@@ -85,7 +85,7 @@ export declare class Washima {
         group_updates?: undefined;
     } | undefined>;
     getMessage(message_id: string): Promise<WAWebJS.Message>;
-    sendMessage(chat_id: string, message?: string, media?: WashimaMediaForm): Promise<void>;
+    sendMessage(chat_id: string, message?: string, media?: WashimaMediaForm, replyMessage?: WashimaMessage): Promise<void>;
     getContact(contact_id: string): Promise<string>;
     getMedia(message: Message): Promise<WashimaMedia | undefined>;
     restart(): Promise<void>;

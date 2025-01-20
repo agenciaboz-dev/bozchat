@@ -1,5 +1,5 @@
-import React, { useEffect, useState } from "react"
-import { Box, CircularProgress, IconButton, TextField } from "@mui/material"
+import React, { useEffect, useRef, useState } from "react"
+import { Box, CircularProgress, IconButton, Paper, TextField, Typography } from "@mui/material"
 import { textFieldStyle } from "../../style/textfield"
 import SendIcon from "@mui/icons-material/Send"
 import { RecordAudioContainer } from "./AudioComponents/RecordAudioContainer"
@@ -7,6 +7,9 @@ import { Washima, WashimaMediaForm } from "../../types/server/class/Washima/Wash
 import { useIo } from "../../hooks/useIo"
 import { MediaInputMenu } from "./MediaInput/MediaInputMenu"
 import { useLocalStorage } from "@mantine/hooks"
+import { useWashimaInput } from "../../hooks/useWashimaInput"
+import { Close } from "@mui/icons-material"
+import { QuotedMessage } from "./QuotedMessage"
 
 interface WashimaInputProps {
     onSubmit: (message?: string, media?: WashimaMediaForm) => void
@@ -17,6 +20,8 @@ interface WashimaInputProps {
 
 export const WashimaInput: React.FC<WashimaInputProps> = ({ onSubmit, disabled, washima, chat_id }) => {
     const io = useIo()
+    const inputHelper = useWashimaInput()
+    const inputRef = useRef<HTMLInputElement>(null)
 
     const [signature] = useLocalStorage({ key: "washima:sign", defaultValue: "" })
     const [message, setMessage] = useState("")
@@ -38,6 +43,7 @@ export const WashimaInput: React.FC<WashimaInputProps> = ({ onSubmit, disabled, 
             const text = signature ? `*${signature}*\n${message}` : message
             onSubmit(text)
             setMessage("")
+            inputHelper.setReplyMessage(null)
         }
     }
 
@@ -51,6 +57,12 @@ export const WashimaInput: React.FC<WashimaInputProps> = ({ onSubmit, disabled, 
     }, [disabled])
 
     useEffect(() => {
+        if (inputHelper.replyMessage) {
+            inputRef.current?.focus()
+        }
+    }, [inputHelper.replyMessage])
+
+    useEffect(() => {
         io.on("washima:message:sent", () => {
             setLoading(false)
         })
@@ -62,7 +74,9 @@ export const WashimaInput: React.FC<WashimaInputProps> = ({ onSubmit, disabled, 
 
     return (
         <form onSubmit={(ev) => ev.preventDefault()}>
+            {inputHelper.replyMessage && <QuotedMessage />}
             <TextField
+                inputRef={inputRef}
                 placeholder="Envie uma mensagem"
                 name="message"
                 value={message}

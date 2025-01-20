@@ -15,6 +15,7 @@ import { Chat } from "../../../types/Chat"
 import { NoChat } from "./NoChat"
 import { PhotoProvider, PhotoView } from "react-photo-view"
 import { CopyAllButton } from "./WashimaTools/CopyAll"
+import { useWashimaInput } from "../../../hooks/useWashimaInput"
 
 interface WashimaChatProps {
     washima: Washima
@@ -50,6 +51,7 @@ export const WashimaChat: React.FC<WashimaChatProps> = ({ washima, chat, onClose
     const isMobile = useMediaQuery("(orientation: portrait)")
     const messagesBoxRef = useRef<HTMLDivElement>(null)
     const shouldScroll = useRef<boolean>(true)
+    const washimaInput = useWashimaInput()
 
     const [messages, setMessages] = useState<WashimaMessage[]>([])
     const [groupUpdates, setGroupUpdates] = useState<WashimaGroupUpdate[]>([])
@@ -78,7 +80,7 @@ export const WashimaChat: React.FC<WashimaChatProps> = ({ washima, chat, onClose
         console.log({ message, media })
         if ((message || media) && chat) {
             console.log("mandando")
-            io.emit("washima:message", washima.id, chat.id._serialized, message, media)
+            io.emit("washima:message", washima.id, chat.id._serialized, message, media, washimaInput.replyMessage)
         }
     }
 
@@ -260,7 +262,7 @@ export const WashimaChat: React.FC<WashimaChatProps> = ({ washima, chat, onClose
                 onScroll={handleScroll}
                 sx={{
                     width: "100%",
-                    height: isMobile ? "60vh" : "70vh",
+                    height: isMobile ? "60vh" : washimaInput.replyMessage ? "60vh" : "70vh",
                     bgcolor: "background.default",
                     overflowY: "auto",
                     borderRadius: isMobile ? "0 3vw 0 3vw" : "0 1.5vw 0 1.5vw",
@@ -299,7 +301,7 @@ export const WashimaChat: React.FC<WashimaChatProps> = ({ washima, chat, onClose
                     opacity: isScrolled ? 1 : 0,
                     pointerEvents: isScrolled ? "auto" : "none",
                     position: "absolute",
-                    bottom: "7vw",
+                    bottom: washimaInput.replyMessage ? "11vw" : "7vw",
                     right: "2vw",
                     borderRadius: "100%",
                     transition: "0.5s",

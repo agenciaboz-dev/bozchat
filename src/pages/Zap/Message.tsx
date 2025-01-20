@@ -21,6 +21,7 @@ import { PhotoView } from "react-photo-view"
 import { DeletedMessage } from "./DeletedMessage"
 import { MessageAuthor } from "./MessageAuthor"
 import { MessageMenu } from "./MessageMenu"
+import { QuotedMessage } from "../Washima/QuotedMessage"
 
 interface MessageProps {
     washima: Washima
@@ -137,7 +138,6 @@ export const Message: React.FC<MessageProps> = ({ message, isGroup, washima, pre
         }
     }
 
-
     useEffect(() => {
         if (hovering) {
             console.log(attachmendMetaData)
@@ -202,7 +202,7 @@ export const Message: React.FC<MessageProps> = ({ message, isGroup, washima, pre
                             />
                         )}
 
-                        {hovering && <MessageMenu from_me={message.fromMe} onClose={() => setHovering(false)} />}
+                        {hovering && <MessageMenu from_me={message.fromMe} onClose={() => setHovering(false)} message={message} />}
 
                         {/*//* MESSAGE AUTHOR  */}
                         {show_author && message.type !== "revoked" && (
@@ -214,6 +214,17 @@ export const Message: React.FC<MessageProps> = ({ message, isGroup, washima, pre
                                 }}
                             >
                                 <MessageAuthor author={message.author} />
+                            </Box>
+                        )}
+
+                        {message.replied_to && !is_deleted && (
+                            <Box
+                                sx={{
+                                    // margin: "-0.2vw",
+                                    marginBottom: "0.5vw",
+                                }}
+                            >
+                                <QuotedMessage message={message.replied_to} />
                             </Box>
                         )}
 

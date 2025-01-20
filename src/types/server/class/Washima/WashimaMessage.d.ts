@@ -33,6 +33,7 @@ export declare class WashimaMessage {
     ack?: MessageAck | null;
     edited: boolean;
     deleted: boolean;
+    replied_to?: WAWebJS.Message | null;
     static getChatMessages(chat_id: string, offset?: number, take?: number | null): Promise<WashimaMessage[]>;
     static getWashimaMessages(washima_id: string, body?: any): Promise<WashimaMessage[]>;
     static search(value: string): Promise<WashimaMessage[]>;

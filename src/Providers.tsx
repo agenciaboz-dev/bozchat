@@ -7,6 +7,7 @@ import { MenuDrawer } from "./components/MenuDrawer/MenuDrawer"
 import { MantineProvider } from "@mantine/core"
 import { IoProvider } from "./contexts/ioContext"
 import { PhotoProvider } from "react-photo-view"
+import { WashimaInputContextProvider } from "./contexts/washimaInputContext"
 
 interface ProvidersProps {
     children: React.ReactNode
@@ -17,18 +18,20 @@ export const Providers: React.FC<ProvidersProps> = ({ children }) => {
         <MantineProvider>
             <SnackbarProvider>
                 <ConfirmDialogProvider>
-                    <IoProvider>
-                        <UserProvider>
-                            <MenuProvider>
-                                <PhotoProvider>
-                                    <MenuDrawer />
-                                    <Snackbar />
-                                    <ConfirmDialog />
-                                    {children}
-                                </PhotoProvider>
-                            </MenuProvider>
-                        </UserProvider>
-                    </IoProvider>
+                    <WashimaInputContextProvider>
+                        <IoProvider>
+                            <UserProvider>
+                                <MenuProvider>
+                                    <PhotoProvider>
+                                        <MenuDrawer />
+                                        <Snackbar />
+                                        <ConfirmDialog />
+                                        {children}
+                                    </PhotoProvider>
+                                </MenuProvider>
+                            </UserProvider>
+                        </IoProvider>
+                    </WashimaInputContextProvider>
                 </ConfirmDialogProvider>
             </SnackbarProvider>
         </MantineProvider>

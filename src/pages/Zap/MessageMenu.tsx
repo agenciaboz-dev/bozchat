@@ -1,6 +1,8 @@
 import React, { useState } from "react"
 import { Box, IconButton, Menu, MenuItem, Paper, Typography } from "@mui/material"
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore"
+import { useWashimaInput } from "../../hooks/useWashimaInput"
+import { WashimaMessage } from "../../types/server/class/Washima/WashimaMessage"
 
 const MessageMenuButton: React.FC<{ onClick: (event: React.MouseEvent<HTMLElement>) => void }> = ({ onClick }) => {
     return (
@@ -33,9 +35,12 @@ const MessageMenuItem: React.FC<{ onClick: () => void; option: string }> = ({ on
 interface MessageMenuProps {
     from_me?: boolean
     onClose: () => void
+    message: WashimaMessage
 }
 
-export const MessageMenu: React.FC<MessageMenuProps> = ({ from_me, onClose }) => {
+export const MessageMenu: React.FC<MessageMenuProps> = ({ from_me, onClose, message }) => {
+    const washimaInput = useWashimaInput()
+
     const [menuIsOpen, setMenuIsOpen] = useState(false)
     const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null)
 
@@ -47,6 +52,11 @@ export const MessageMenu: React.FC<MessageMenuProps> = ({ from_me, onClose }) =>
     const handleCloseMenu = () => {
         setMenuIsOpen(false)
         onClose()
+    }
+
+    const onReplyPress = () => {
+        washimaInput.setReplyMessage(message)
+        handleCloseMenu()
     }
 
     return (
@@ -63,7 +73,7 @@ export const MessageMenu: React.FC<MessageMenuProps> = ({ from_me, onClose }) =>
                     },
                 }}
             >
-                {!from_me && <MessageMenuItem onClick={handleCloseMenu} option="Responder" />}
+                {!from_me && <MessageMenuItem onClick={onReplyPress} option="Responder" />}
             </Menu>
         </Box>
     )
