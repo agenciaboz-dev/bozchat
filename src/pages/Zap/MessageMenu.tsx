@@ -10,10 +10,8 @@ const MessageMenuButton: React.FC<{ onClick: (event: React.MouseEvent<HTMLElemen
         <IconButton
             onClick={onClick}
             sx={{
-                bgcolor: "#5e5e5e",
-                "&:hover": {
-                    bgcolor: "#5e5e5e",
-                },
+                padding: "0.2vw",
+                margin: "0.2vw",
             }}
         >
             <ExpandMoreIcon />
