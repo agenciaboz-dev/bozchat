@@ -10,6 +10,7 @@ import { MessageAck } from "../Zap/MessageAck"
 import { Chat } from "../../types/Chat"
 import { DeletedMessage } from "../Zap/DeletedMessage"
 import { WashimaMessage } from "../../types/server/class/Washima/WashimaMessage"
+import { MediaChip } from "../../components/MediaChip"
 
 interface ChatProps {
     washima: Washima
@@ -39,8 +40,6 @@ export const ChatContainer: React.FC<ChatProps> = ({ chat, onChatClick, washima,
         filename: string | undefined
         message_id: string
     }>()
-    const [formattedMediaType, setFormattedMediaType] = useState("")
-    const [MediaIcon, setMediaIcon] = useState<React.ReactElement | null>(null)
 
     const mocked_last_message: WashimaMessage = {
         ...chat.lastMessage,
@@ -76,31 +75,7 @@ export const ChatContainer: React.FC<ChatProps> = ({ chat, onChatClick, washima,
         }
     }
 
-    const formatMediaType = (mimetype: string) => {
-        const icon_style = { width: "1vw", height: "1vw" }
-        const values = {
-            image: { label: "Imagem", icon: <PhotoCamera sx={icon_style} /> },
-            video: { label: "Vídeo", icon: <Videocam sx={icon_style} /> },
-            audio: { label: "Áudio", icon: <Headphones sx={icon_style} /> },
-        }
-        const type = mimetype.split("/")[0]
 
-        const match = Object.entries(values).find(([key, value]) => key === type)
-        if (match) {
-            setFormattedMediaType(match[1].label)
-            setMediaIcon(match[1].icon)
-            return
-        }
-
-        setFormattedMediaType("mídia")
-        setMediaIcon(<AttachFile sx={icon_style} />)
-    }
-
-    useEffect(() => {
-        if (mediaMetaData?.mimetype) {
-            formatMediaType(mediaMetaData.mimetype)
-        }
-    }, [mediaMetaData])
 
     useEffect(() => {
         fetchProfilePic()
@@ -192,24 +167,7 @@ export const ChatContainer: React.FC<ChatProps> = ({ chat, onChatClick, washima,
                     title={chat.lastMessage?.body}
                 >
                     {chat.lastMessage && <MessageAck message={mocked_last_message} />}
-                    {chat.lastMessage?.hasMedia && (
-                        <Chip
-                            sx={{
-                                // marginLeft: chat.lastMessage?.body ? "1vw" : undefined,
-                                padding: "0.2vw",
-                                height: "auto",
-                                color: "inherit",
-                                "& .MuiChip-label": {
-                                    display: "block",
-                                    whiteSpace: "normal",
-                                },
-                            }}
-                            label={formattedMediaType || `Mídia`}
-                            color="default"
-                            // @ts-ignore
-                            icon={MediaIcon}
-                        />
-                    )}
+                    {chat.lastMessage?.hasMedia && mediaMetaData?.mimetype && <MediaChip mimetype={mediaMetaData.mimetype} />}
                     {chat.lastMessage?.type === "revoked" ? (
                         <DeletedMessage message={{ ...mocked_last_message, deleted: true }} />
                     ) : (

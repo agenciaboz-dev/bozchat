@@ -5,6 +5,8 @@ import { useWashimaInput } from "../../hooks/useWashimaInput"
 import { WashimaMessage } from "../../types/server/class/Washima/WashimaMessage"
 import { api } from "../../api"
 import { saveAs } from "file-saver"
+import { motion } from "framer-motion"
+import { animationVariants } from "../../tools/animationVariants"
 
 const MessageMenuButton: React.FC<{ onClick: (event: React.MouseEvent<HTMLElement>) => void }> = ({ onClick }) => {
     return (
@@ -84,33 +86,35 @@ export const MessageMenu: React.FC<MessageMenuProps> = ({ from_me, onClose, mess
     }
 
     return (
-        <Box
-            sx={{
-                position: "absolute",
-                top: 0,
-                left: from_me ? (isMobile ? "-15vw" : "-2.5vw") : undefined,
-                right: !from_me ? (isMobile ? "-15vw" : "-2.5vw") : undefined,
-            }}
-        >
-            <MessageMenuButton onClick={handleToggleMenu} />
-
-            <Menu
-                anchorEl={anchorEl}
-                open={menuIsOpen}
-                onClose={handleCloseMenu}
-                MenuListProps={{
-                    sx: {
-                        bgcolor: "#5e5e5e",
-                    },
+        <motion.div initial="initial" animate={"animate"} variants={animationVariants({ opacityOnly: true })}>
+            <Box
+                sx={{
+                    position: "absolute",
+                    top: 0,
+                    left: from_me ? (isMobile ? "-15vw" : "-2.5vw") : undefined,
+                    right: !from_me ? (isMobile ? "-15vw" : "-2.5vw") : undefined,
                 }}
             >
-                {!from_me && !is_deleted && <MessageMenuItem onClick={onReplyPress}>Responder</MessageMenuItem>}
-                {!is_deleted && message.hasMedia && (
-                    <MessageMenuItem onClick={downloadMedia}>
-                        {downloading ? <CircularProgress size={"1rem"} color="secondary" /> : "Baixar"}
-                    </MessageMenuItem>
-                )}
-            </Menu>
-        </Box>
+                <MessageMenuButton onClick={handleToggleMenu} />
+
+                <Menu
+                    anchorEl={anchorEl}
+                    open={menuIsOpen}
+                    onClose={handleCloseMenu}
+                    MenuListProps={{
+                        sx: {
+                            bgcolor: "#5e5e5e",
+                        },
+                    }}
+                >
+                    {!is_deleted && <MessageMenuItem onClick={onReplyPress}>Responder</MessageMenuItem>}
+                    {!is_deleted && message.hasMedia && (
+                        <MessageMenuItem onClick={downloadMedia}>
+                            {downloading ? <CircularProgress size={"1rem"} color="secondary" /> : "Baixar"}
+                        </MessageMenuItem>
+                    )}
+                </Menu>
+            </Box>
+        </motion.div>
     )
 }

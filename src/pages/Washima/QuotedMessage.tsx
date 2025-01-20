@@ -1,8 +1,11 @@
-import React from "react"
+import React, { useState } from "react"
 import { Box, IconButton, Paper, Typography } from "@mui/material"
 import { useWashimaInput } from "../../hooks/useWashimaInput"
 import { Close } from "@mui/icons-material"
 import { WashimaMessage } from "../../types/server/class/Washima/WashimaMessage"
+import { MediaChip } from "../../components/MediaChip"
+import { api } from "../../api"
+import { useVisibleCallback } from "burgos-use-visible-callback"
 
 interface QuotedMessageProps {
     message?: WashimaMessage
@@ -10,6 +13,29 @@ interface QuotedMessageProps {
 
 export const QuotedMessage: React.FC<QuotedMessageProps> = ({ message }) => {
     const washimaInput = useWashimaInput()
+    const current_message = message || washimaInput.replyMessage
+    const ref = useVisibleCallback(() => {
+        if (current_message?.hasMedia) {
+            fetchMediaMetadata()
+        }
+    }, {})
+
+    const [mediaMetaData, setMediaMetaData] = useState<{
+        mimetype: string | undefined
+        filename: string | undefined
+        message_id: string
+    }>()
+
+    const fetchMediaMetadata = async () => {
+        try {
+            const response = await api.get("/washima/media-metadata", {
+                params: { washima_id: current_message?.washima_id, message_id: current_message?.sid },
+            })
+            setMediaMetaData(response.data)
+        } catch (error) {
+            console.log(error)
+        }
+    }
 
     return (
         <Paper
@@ -24,11 +50,12 @@ export const QuotedMessage: React.FC<QuotedMessageProps> = ({ message }) => {
                 textAlign: "left",
                 bgcolor: "#00000055",
             }}
+            ref={ref}
         >
-            <Box sx={{ flexDirection: "column", flex: 1 }}>
+            <Box sx={{ flexDirection: "column", flex: 1, gap: "0.2vw" }}>
                 <Typography sx={{ fontSize: "0.7rem", fontWeight: "bold" }}>Respondendo:</Typography>
                 <Typography sx={{ fontSize: "0.8rem" }}>
-                    {message ? (message.hasMedia ? "media" : message.body) : washimaInput.replyMessage?.body}
+                    {mediaMetaData?.mimetype ? <MediaChip mimetype={mediaMetaData?.mimetype} /> : current_message?.body}
                 </Typography>
             </Box>
             {!message && (
