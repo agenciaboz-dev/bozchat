@@ -6,6 +6,7 @@ import { RecordAudioContainer } from "./AudioComponents/RecordAudioContainer"
 import { Washima, WashimaMediaForm } from "../../types/server/class/Washima/Washima"
 import { useIo } from "../../hooks/useIo"
 import { MediaInputMenu } from "./MediaInput/MediaInputMenu"
+import { useLocalStorage } from "@mantine/hooks"
 
 interface WashimaInputProps {
     onSubmit: (message?: string, media?: WashimaMediaForm) => void
@@ -17,6 +18,7 @@ interface WashimaInputProps {
 export const WashimaInput: React.FC<WashimaInputProps> = ({ onSubmit, disabled, washima, chat_id }) => {
     const io = useIo()
 
+    const [signature] = useLocalStorage({ key: "washima:sign", defaultValue: "" })
     const [message, setMessage] = useState("")
     const [textDisabled, setTextDisabled] = useState(disabled)
     const [loading, setLoading] = useState(false)
@@ -33,7 +35,8 @@ export const WashimaInput: React.FC<WashimaInputProps> = ({ onSubmit, disabled, 
     const handleSubmit = () => {
         setLoading(true)
         if (message) {
-            onSubmit(message)
+            const text = signature ? `*${signature}*\n${message}` : message
+            onSubmit(text)
             setMessage("")
         }
     }
