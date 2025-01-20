@@ -137,6 +137,7 @@ export const Message: React.FC<MessageProps> = ({ message, isGroup, washima, pre
         }
     }
 
+
     useEffect(() => {
         if (hovering) {
             console.log(attachmendMetaData)
@@ -175,6 +176,8 @@ export const Message: React.FC<MessageProps> = ({ message, isGroup, washima, pre
                 >
                     {/*//* MESSAGE AUTHOR  */}
                     {show_author && is_deleted && <MessageAuthor author={message.author} />}
+
+                    {/* //* MESSAGE CONTAINER */}
                     <Box
                         sx={{
                             position: "relative",
@@ -198,19 +201,21 @@ export const Message: React.FC<MessageProps> = ({ message, isGroup, washima, pre
                                 alignment={message.fromMe ? "right" : "left"}
                             />
                         )}
-                        {/* <Box
-                            sx={{
-                                position: "absolute",
-                                top: 0,
-                                right: 0,
-                                zIndex: 1000,
-                            }}
-                        >
-                            <MessageMenu showMenuButton={hovering} />
-                        </Box> */}
+
+                        {hovering && <MessageMenu from_me={message.fromMe} onClose={() => setHovering(false)} />}
 
                         {/*//* MESSAGE AUTHOR  */}
-                        {show_author && message.type !== "revoked" && <MessageAuthor author={message.author} />}
+                        {show_author && message.type !== "revoked" && (
+                            <Box
+                                sx={{
+                                    paddingRight: message.fromMe && isGroup && hovering ? "1.5vw" : undefined,
+                                    paddingLeft: !message.fromMe && isGroup && hovering ? "1.5vw" : undefined,
+                                    transition: "0.3s",
+                                }}
+                            >
+                                <MessageAuthor author={message.author} />
+                            </Box>
+                        )}
 
                         <Box
                             sx={{
@@ -334,6 +339,9 @@ export const Message: React.FC<MessageProps> = ({ message, isGroup, washima, pre
                                     <p
                                         className={isLink ? "link" : undefined}
                                         style={{
+                                            paddingRight: message.fromMe && !isGroup && hovering ? "2vw" : undefined,
+                                            paddingLeft: !message.fromMe && !isGroup && hovering ? "2vw" : undefined,
+                                            transition: "0.3s",
                                             padding: is_image ? "0 0.25vw" : undefined,
                                             wordBreak: "break-word",
                                             whiteSpace: isMobile && is_document ? "nowrap" : "pre-line",

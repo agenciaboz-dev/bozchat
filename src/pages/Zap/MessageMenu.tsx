@@ -2,11 +2,8 @@ import React, { useState } from "react"
 import { Box, IconButton, Menu, MenuItem, Paper, Typography } from "@mui/material"
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore"
 
-const MessageMenuButton: React.FC<{ onClick: (event: React.MouseEvent<HTMLElement>) => void; showMenuButton: boolean }> = ({
-    onClick,
-    showMenuButton,
-}) => {
-    return showMenuButton ? (
+const MessageMenuButton: React.FC<{ onClick: (event: React.MouseEvent<HTMLElement>) => void }> = ({ onClick }) => {
+    return (
         <IconButton
             onClick={onClick}
             sx={{
@@ -16,7 +13,7 @@ const MessageMenuButton: React.FC<{ onClick: (event: React.MouseEvent<HTMLElemen
         >
             <ExpandMoreIcon />
         </IconButton>
-    ) : null
+    )
 }
 
 const MessageMenuItem: React.FC<{ onClick: () => void; option: string }> = ({ onClick, option }) => {
@@ -34,10 +31,11 @@ const MessageMenuItem: React.FC<{ onClick: () => void; option: string }> = ({ on
 }
 
 interface MessageMenuProps {
-    showMenuButton: boolean
+    from_me?: boolean
+    onClose: () => void
 }
 
-export const MessageMenu: React.FC<MessageMenuProps> = ({ showMenuButton }) => {
+export const MessageMenu: React.FC<MessageMenuProps> = ({ from_me, onClose }) => {
     const [menuIsOpen, setMenuIsOpen] = useState(false)
     const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null)
 
@@ -48,11 +46,12 @@ export const MessageMenu: React.FC<MessageMenuProps> = ({ showMenuButton }) => {
 
     const handleCloseMenu = () => {
         setMenuIsOpen(false)
+        onClose()
     }
 
     return (
-        <>
-            <MessageMenuButton onClick={handleToggleMenu} showMenuButton={showMenuButton} />
+        <Box sx={{ position: "absolute", top: 0, right: from_me ? 0 : undefined, left: from_me ? undefined : 0 }}>
+            <MessageMenuButton onClick={handleToggleMenu} />
 
             <Menu
                 anchorEl={anchorEl}
@@ -64,10 +63,8 @@ export const MessageMenu: React.FC<MessageMenuProps> = ({ showMenuButton }) => {
                     },
                 }}
             >
-                <MessageMenuItem onClick={handleCloseMenu} option="Deletar" />
-                <MessageMenuItem onClick={handleCloseMenu} option="Responder" />
-                <MessageMenuItem onClick={handleCloseMenu} option="Editar" />
+                {!from_me && <MessageMenuItem onClick={handleCloseMenu} option="Responder" />}
             </Menu>
-        </>
+        </Box>
     )
 }
