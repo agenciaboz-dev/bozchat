@@ -27,7 +27,9 @@ export const QuotedMessage: React.FC<QuotedMessageProps> = ({ message }) => {
         >
             <Box sx={{ flexDirection: "column", flex: 1 }}>
                 <Typography sx={{ fontSize: "0.7rem", fontWeight: "bold" }}>Respondendo:</Typography>
-                <Typography sx={{ fontSize: "0.8rem" }}>{message?.body || washimaInput.replyMessage?.body}</Typography>
+                <Typography sx={{ fontSize: "0.8rem" }}>
+                    {message ? (message.hasMedia ? "media" : message.body) : washimaInput.replyMessage?.body}
+                </Typography>
             </Box>
             {!message && (
                 <IconButton sx={{ padding: "0.3vw", margin: "0.3vw" }} onClick={() => washimaInput.setReplyMessage(null)}>

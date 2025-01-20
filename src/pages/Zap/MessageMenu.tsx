@@ -1,32 +1,34 @@
 import React, { useState } from "react"
-import { Box, IconButton, Menu, MenuItem, Paper, Typography } from "@mui/material"
+import { Box, CircularProgress, IconButton, Menu, MenuItem, MenuItemProps, Paper, Typography, useMediaQuery } from "@mui/material"
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore"
 import { useWashimaInput } from "../../hooks/useWashimaInput"
 import { WashimaMessage } from "../../types/server/class/Washima/WashimaMessage"
+import { api } from "../../api"
+import { saveAs } from "file-saver"
 
 const MessageMenuButton: React.FC<{ onClick: (event: React.MouseEvent<HTMLElement>) => void }> = ({ onClick }) => {
     return (
         <IconButton
             onClick={onClick}
             sx={{
-                padding: "0.2vw",
+                padding: "0",
                 margin: "0.2vw",
             }}
         >
-            <ExpandMoreIcon />
+            <ExpandMoreIcon sx={{ width: "2vw", height: "2vw" }} />
         </IconButton>
     )
 }
 
-const MessageMenuItem: React.FC<{ onClick: () => void; option: string }> = ({ onClick, option }) => {
+const MessageMenuItem: React.FC<MenuItemProps> = (props) => {
     return (
-        <MenuItem onClick={onClick}>
+        <MenuItem onClick={props.onClick}>
             <Typography
                 sx={{
-                    color: "#d9d9d9",
+                    color: "secondary.main",
                 }}
             >
-                {option}
+                {props.children}
             </Typography>
         </MenuItem>
     )
@@ -40,9 +42,12 @@ interface MessageMenuProps {
 
 export const MessageMenu: React.FC<MessageMenuProps> = ({ from_me, onClose, message }) => {
     const washimaInput = useWashimaInput()
+    const isMobile = useMediaQuery("(orientation: portrait)")
+    const is_deleted = message.type === "revoked" || message.deleted
 
     const [menuIsOpen, setMenuIsOpen] = useState(false)
     const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null)
+    const [downloading, setDownloading] = useState(false)
 
     const handleToggleMenu = (event: React.MouseEvent<HTMLElement>) => {
         setAnchorEl(event.currentTarget)
@@ -59,8 +64,34 @@ export const MessageMenu: React.FC<MessageMenuProps> = ({ from_me, onClose, mess
         handleCloseMenu()
     }
 
+    const downloadMedia = async () => {
+        if (!message.hasMedia || downloading || is_deleted) return
+
+        try {
+            setDownloading(true)
+
+            const response = await api.get("/washima/media", {
+                params: { washima_id: message.washima_id, message_id: message.sid },
+                responseType: "blob",
+            })
+            const blob = response.data
+            saveAs(blob, message.id.id + "." + response.headers["content-type"].split("/")[1])
+        } catch (error) {
+            console.log(error)
+        } finally {
+            setDownloading(false)
+        }
+    }
+
     return (
-        <Box sx={{ position: "absolute", top: 0, right: from_me ? 0 : undefined, left: from_me ? undefined : 0 }}>
+        <Box
+            sx={{
+                position: "absolute",
+                top: 0,
+                left: from_me ? (isMobile ? "-15vw" : "-2.5vw") : undefined,
+                right: !from_me ? (isMobile ? "-15vw" : "-2.5vw") : undefined,
+            }}
+        >
             <MessageMenuButton onClick={handleToggleMenu} />
 
             <Menu
@@ -73,7 +104,12 @@ export const MessageMenu: React.FC<MessageMenuProps> = ({ from_me, onClose, mess
                     },
                 }}
             >
-                {!from_me && <MessageMenuItem onClick={onReplyPress} option="Responder" />}
+                {!from_me && !is_deleted && <MessageMenuItem onClick={onReplyPress}>Responder</MessageMenuItem>}
+                {!is_deleted && message.hasMedia && (
+                    <MessageMenuItem onClick={downloadMedia}>
+                        {downloading ? <CircularProgress size={"1rem"} color="secondary" /> : "Baixar"}
+                    </MessageMenuItem>
+                )}
             </Menu>
         </Box>
     )

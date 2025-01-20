@@ -202,21 +202,14 @@ export const Message: React.FC<MessageProps> = ({ message, isGroup, washima, pre
                             />
                         )}
 
-                        {hovering && <MessageMenu from_me={message.fromMe} onClose={() => setHovering(false)} message={message} />}
-
                         {/*//* MESSAGE AUTHOR  */}
                         {show_author && message.type !== "revoked" && (
-                            <Box
-                                sx={{
-                                    paddingRight: message.fromMe && isGroup && hovering ? "1.5vw" : undefined,
-                                    paddingLeft: !message.fromMe && isGroup && hovering ? "1.5vw" : undefined,
-                                    transition: "0.3s",
-                                }}
-                            >
+                            <Box sx={{}}>
                                 <MessageAuthor author={message.author} />
                             </Box>
                         )}
 
+                        {/* //* QUOTED MESSAGE COMPONENT */}
                         {message.replied_to && !is_deleted && (
                             <Box
                                 sx={{
@@ -350,9 +343,6 @@ export const Message: React.FC<MessageProps> = ({ message, isGroup, washima, pre
                                     <p
                                         className={isLink ? "link" : undefined}
                                         style={{
-                                            paddingRight: message.fromMe && !isGroup && hovering ? "2vw" : undefined,
-                                            paddingLeft: !message.fromMe && !isGroup && hovering ? "2vw" : undefined,
-                                            transition: "0.3s",
                                             padding: is_image ? "0 0.25vw" : undefined,
                                             wordBreak: "break-word",
                                             whiteSpace: isMobile && is_document ? "nowrap" : "pre-line",
@@ -375,23 +365,8 @@ export const Message: React.FC<MessageProps> = ({ message, isGroup, washima, pre
                         {/*//* TIME */}
                         <MessageDateContainer message={message} is_audio={is_audio} is_image={is_image} is_document={is_document} />
 
-                        {/*//* DOWNLOAD BUTTON */}
-                        {hovering && message.hasMedia && (
-                            <Box
-                                sx={{
-                                    position: "absolute",
-                                    left: message.fromMe ? (isMobile ? "-15vw" : "-4vw") : undefined,
-                                    right: !message.fromMe ? (isMobile ? "-15vw" : "-4vw") : undefined,
-                                    top: 0,
-                                    bottom: 0,
-                                    alignItems: "center",
-                                }}
-                            >
-                                <IconButton onClick={downloadMedia}>
-                                    {downloading ? <CircularProgress size={"1.5rem"} /> : <Download fontSize="large" />}
-                                </IconButton>
-                            </Box>
-                        )}
+                        {/* //* MENU BUTTON */}
+                        {hovering && <MessageMenu from_me={message.fromMe} onClose={() => setHovering(false)} message={message} />}
                     </Box>
                 </Box>
             </Box>
