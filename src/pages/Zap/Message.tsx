@@ -180,7 +180,7 @@ export const Message: React.FC<MessageProps> = ({ message, isGroup, washima, pre
                                 alignment={message.fromMe ? "right" : "left"}
                             />
                         )}
-                        <Box
+                        {/* <Box
                             sx={{
                                 position: "absolute",
                                 top: 0,
@@ -189,7 +189,7 @@ export const Message: React.FC<MessageProps> = ({ message, isGroup, washima, pre
                             }}
                         >
                             <MessageMenu showMenuButton={hovering} />
-                        </Box>
+                        </Box> */}
 
                         {/*//* MESSAGE AUTHOR  */}
                         {show_author && message.type !== "revoked" && <MessageAuthor author={message.author} />}
