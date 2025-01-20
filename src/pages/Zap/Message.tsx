@@ -150,7 +150,7 @@ export const Message: React.FC<MessageProps> = ({ message, isGroup, washima, pre
             {day_changing && <DateChip timestamp={message.timestamp * 1000} />}
             <Box sx={{ flexDirection: message.fromMe ? "row-reverse" : "row", alignItems: "center", gap: "1vw", position: "relative" }}>
                 {/* //* HOVERING OVERLAY */}
-                {hovering && (
+                {/* {hovering && (
                     <Box
                         sx={{
                             position: "absolute",
@@ -165,7 +165,7 @@ export const Message: React.FC<MessageProps> = ({ message, isGroup, washima, pre
                             marginTop: !same_as_previous && !day_changing ? (isMobile ? "2vw" : "0.5vw") : undefined,
                         }}
                     />
-                )}
+                )} */}
 
                 <Box
                     ref={visibleCallbackRef}
