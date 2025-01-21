@@ -47,7 +47,7 @@ export const Message: React.ForwardRefRenderFunction<HTMLDivElement, MessageProp
     const secondary = "#5e5e5e"
 
     const same_as_previous =
-        !!previousItem && (message.author ? previousItem?.author === message.author : (previousItem as WashimaMessage).fromMe === message.fromMe)
+        !!previousItem && (message.author ? previousItem?.author === message.author : (previousItem as WashimaMessage).from === message.from)
     const day_changing =
         !previousItem || new Date(previousItem.timestamp * 1000).toLocaleDateString() !== new Date(message.timestamp * 1000).toLocaleDateString()
     const show_triangle = !same_as_previous || day_changing
@@ -57,7 +57,6 @@ export const Message: React.ForwardRefRenderFunction<HTMLDivElement, MessageProp
     const [mediaObj, setMediaObj] = useState<{ source: string; ext: string; size: string }>()
     const [attachmendMetaData, setAttachmendMetaData] = useState<WashimaMedia | null>(null)
     const [loading, setLoading] = useState(message.hasMedia)
-    const [downloading, setDownloading] = useState(false)
     const [hovering, setHovering] = useState(false)
     const [componentIsOnScreen, setComponentIsOnScreen] = useState(false)
 
@@ -83,25 +82,6 @@ export const Message: React.ForwardRefRenderFunction<HTMLDivElement, MessageProp
         return !!pattern.test(str)
     }
     const isLink = isURL(message.body)
-
-    const downloadMedia = async () => {
-        if (!message.hasMedia || downloading || is_deleted) return
-
-        try {
-            setDownloading(true)
-
-            const response = await api.get("/washima/media", {
-                params: { washima_id: washima.id, message_id: message.id._serialized },
-                responseType: "blob",
-            })
-            const blob = response.data
-            saveAs(blob, message.id.id + "." + response.headers["content-type"].split("/")[1])
-        } catch (error) {
-            console.log(error)
-        } finally {
-            setDownloading(false)
-        }
-    }
 
     const fetchMedia = async () => {
         if (!message.hasMedia || !valid_types.includes(message.type) || is_deleted) return
@@ -149,7 +129,7 @@ export const Message: React.ForwardRefRenderFunction<HTMLDivElement, MessageProp
     }, [hovering])
 
     return (
-        <Box sx={{ display: "contents" }} onPointerEnter={() => setHovering(true)} onPointerLeave={() => setHovering(false)}>
+        <Box sx={{ flexDirection: "column" }} onPointerEnter={() => setHovering(true)} onPointerLeave={() => setHovering(false)}>
             {/*//* DATE CHIP */}
             {day_changing && <DateChip timestamp={message.timestamp * 1000} />}
             <Box

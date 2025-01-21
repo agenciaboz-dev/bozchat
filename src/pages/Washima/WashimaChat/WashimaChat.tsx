@@ -57,7 +57,7 @@ export const WashimaChat: React.FC<WashimaChatProps> = ({ washima, chat, onClose
     const [groupUpdates, setGroupUpdates] = useState<WashimaGroupUpdate[]>([])
 
     const messages_and_group_updates = useMemo(
-        () => [...messages, ...groupUpdates]?.sort((a, b) => Number(b.timestamp) - Number(a.timestamp)),
+        () => [...messages, ...groupUpdates].sort((a, b) => Number(b.timestamp) - Number(a.timestamp)),
         [messages, groupUpdates]
     )
 
