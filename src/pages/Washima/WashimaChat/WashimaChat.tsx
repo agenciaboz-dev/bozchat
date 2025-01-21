@@ -55,6 +55,7 @@ export const WashimaChat: React.FC<WashimaChatProps> = ({ washima, chat, onClose
 
     const [messages, setMessages] = useState<WashimaMessage[]>([])
     const [groupUpdates, setGroupUpdates] = useState<WashimaGroupUpdate[]>([])
+    const [loadingMessageId, setLoadingMessageId] = useState<string | null>(null)
 
     const messages_and_group_updates = useMemo(
         () => [...messages, ...groupUpdates].sort((a, b) => Number(b.timestamp) - Number(a.timestamp)),
@@ -119,6 +120,7 @@ export const WashimaChat: React.FC<WashimaChatProps> = ({ washima, chat, onClose
 
         try {
             const params = { washima_id: washima.id, chat_id: chat.id._serialized, is_group: chat.isGroup, offset }
+            console.log(offset)
             const response = await api.get("/washima/chat", { params: params })
             const data = response.data as { messages: WashimaMessage[]; profilePic: string; group_updates?: WashimaGroupUpdate[] }
             if (data.messages) {
@@ -150,9 +152,23 @@ export const WashimaChat: React.FC<WashimaChatProps> = ({ washima, chat, onClose
         setGroupUpdates([])
     }
 
-    const scrollToMessage = (sid: string) => {
-        document.getElementById(`message:${sid}`)?.scrollIntoView({ behavior: "smooth" })
+    const scrollToMessage = async (sid: string) => {
+        setLoadingMessageId(sid)
     }
+
+    useEffect(() => {
+        if (loadingMessageId) {
+            const element = document.getElementById(`message:${loadingMessageId}`)
+            if (element) {
+                element.scrollIntoView({ behavior: "smooth" })
+                setLoading(false)
+                setLoadingMessageId(null)
+            } else {
+                setLoading(true)
+                fetchMessages(messages.length).then(() => {})
+            }
+        }
+    }, [loadingMessageId, messages.length])
 
     useEffect(() => {
         io.on("washima:message:update", (updated_message: WashimaMessage, updated_chat_id: string) => {
