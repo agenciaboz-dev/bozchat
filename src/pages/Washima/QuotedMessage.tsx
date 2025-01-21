@@ -47,8 +47,10 @@ export const QuotedMessage: React.FC<QuotedMessageProps> = ({ message }) => {
                 color: "secondary.main",
                 maxHeight: "7.9vh",
                 overflow: "auto",
+                overflowX: "hidden",
                 textAlign: "left",
                 bgcolor: "#00000055",
+                whiteSpace: "break-spaces",
             }}
             ref={ref}
         >
