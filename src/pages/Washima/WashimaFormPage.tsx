@@ -59,7 +59,9 @@ export const WashimaFormPage: React.FC<WashimaFormPageProps> = ({ currentWashima
         },
         validationSchema: Yup.object().shape({
             name: Yup.string().required("campo obrigatório").min(3, "aí você tá de sacanagem né"),
-            number: Yup.string().required("campo obrigatório").length(16, "número inválido"),
+            number: Yup.string()
+                .required("campo obrigatório")
+                .test("len", "número inválido", (val) => val?.length === 15 || val?.length === 16),
             users: Yup.array().min(1, "selecione pelo menos um usuário"),
         }),
         enableReinitialize: true,
