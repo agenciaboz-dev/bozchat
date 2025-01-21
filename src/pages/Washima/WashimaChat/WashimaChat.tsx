@@ -28,23 +28,6 @@ interface AlwaysScrollToBottomProps {
     shouldScroll: React.MutableRefObject<boolean>
 }
 
-const AlwaysScrollToBottom: React.FC<AlwaysScrollToBottomProps> = ({ loading, shouldScroll }) => {
-    const elementRef = useRef<HTMLDivElement>(null)
-    useEffect(() => {
-        if (!loading) {
-            elementRef.current?.scrollIntoView()
-        }
-    }, [loading])
-
-    useEffect(() => {
-        if (shouldScroll.current) {
-            elementRef.current?.scrollIntoView({ behavior: "smooth" })
-            shouldScroll.current = false
-        }
-    }, [shouldScroll.current])
-
-    return <div ref={elementRef} />
-}
 
 export const WashimaChat: React.FC<WashimaChatProps> = ({ washima, chat, onClose }) => {
     const io = useIo()
@@ -171,6 +154,12 @@ export const WashimaChat: React.FC<WashimaChatProps> = ({ washima, chat, onClose
     }, [loadingMessageId, messages.length])
 
     useEffect(() => {
+        if (chat?.lastMessage) {
+            setLoadingMessageId(chat.lastMessage.id._serialized)
+        }
+    }, [chat?.lastMessage])
+
+    useEffect(() => {
         io.on("washima:message:update", (updated_message: WashimaMessage, updated_chat_id: string) => {
             const index = messages.findIndex((item) => item.sid === updated_message.sid)
             if (chat?.id._serialized === updated_chat_id && index > -1) {
@@ -196,15 +185,16 @@ export const WashimaChat: React.FC<WashimaChatProps> = ({ washima, chat, onClose
             io.on("washima:message", (data: { chat: Chat; message: WashimaMessage }, washima_id: string) => {
                 if (washima_id === washima.id && data.message && data.chat.id._serialized === chat.id._serialized) {
                     console.log(data.message)
-                    if (!isScrolled) shouldScroll.current = true
                     setMessages((values) => [...values, data.message])
+                    if (data.message.fromMe) {
+                        messagesBoxRef.current?.scrollTo({ top: 0, behavior: "smooth" })
+                    }
                 }
             })
 
             io.on("washima:group:update", (update: WashimaGroupUpdate) => {
                 if (update.chat_id === chat.id._serialized) {
                     console.log(update)
-                    if (!isScrolled) shouldScroll.current = true
                     setGroupUpdates((values) => [...values.filter((item) => item.sid !== update.sid), update])
                     if (update.type === "picture") {
                         fetchProfilePic()
@@ -311,7 +301,6 @@ export const WashimaChat: React.FC<WashimaChatProps> = ({ washima, chat, onClose
                         <GroupUpdateItem key={item.sid} chat={chat} update={item as WashimaGroupUpdate} washima={washima} profilePic={profilePic} />
                     )
                 )}
-                {/* <AlwaysScrollToBottom loading={loading} shouldScroll={shouldScroll} /> */}
                 {loading && <LinearProgress sx={{ position: "absolute", bottom: 0, left: 0, right: 0 }} />}
             </Box>
             <WashimaInput onSubmit={onSubmit} disabled={!chat} washima={washima} chat_id={chat.id._serialized} />
