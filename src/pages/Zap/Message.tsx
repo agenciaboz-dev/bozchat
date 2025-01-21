@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react"
+import React, { forwardRef, useEffect, useState } from "react"
 import { Avatar, Box, Chip, CircularProgress, Icon, IconButton, MenuItem, Skeleton, alpha } from "@mui/material"
 import { useMuiTheme } from "../../hooks/useMuiTheme"
 import { useMediaQuery } from "@mui/material"
@@ -29,9 +29,13 @@ interface MessageProps {
     previousItem?: WashimaMessage | WashimaGroupUpdate
     isGroup?: boolean
     onVisible?: () => void
+    scrollTo: (sid: string) => void
 }
 
-export const Message: React.FC<MessageProps> = ({ message, isGroup, washima, previousItem, onVisible }) => {
+export const Message: React.ForwardRefRenderFunction<HTMLDivElement, MessageProps> = (
+    { message, isGroup, washima, previousItem, onVisible, scrollTo },
+    ref
+) => {
     const visibleCallbackRef = useVisibleCallback(() => {
         setComponentIsOnScreen(true)
         fetchMedia()
@@ -148,7 +152,11 @@ export const Message: React.FC<MessageProps> = ({ message, isGroup, washima, pre
         <Box sx={{ display: "contents" }} onPointerEnter={() => setHovering(true)} onPointerLeave={() => setHovering(false)}>
             {/*//* DATE CHIP */}
             {day_changing && <DateChip timestamp={message.timestamp * 1000} />}
-            <Box sx={{ flexDirection: message.fromMe ? "row-reverse" : "row", alignItems: "center", gap: "1vw", position: "relative" }}>
+            <Box
+                ref={ref}
+                id={`message:${message.sid}`}
+                sx={{ flexDirection: message.fromMe ? "row-reverse" : "row", alignItems: "center", gap: "1vw", position: "relative" }}
+            >
                 {/* //* HOVERING OVERLAY */}
                 {/* {hovering && (
                     <Box
@@ -211,14 +219,16 @@ export const Message: React.FC<MessageProps> = ({ message, isGroup, washima, pre
 
                         {/* //* QUOTED MESSAGE COMPONENT */}
                         {message.replied_to && !is_deleted && (
-                            <Box
+                            <MenuItem
                                 sx={{
-                                    // margin: "-0.2vw",
+                                    padding: 0,
                                     marginBottom: "0.5vw",
+                                    maxWidth: "25vw",
                                 }}
+                                onClick={() => scrollTo(message.replied_to!.sid)}
                             >
                                 <QuotedMessage message={message.replied_to} />
-                            </Box>
+                            </MenuItem>
                         )}
 
                         <Box
@@ -373,3 +383,5 @@ export const Message: React.FC<MessageProps> = ({ message, isGroup, washima, pre
         </Box>
     )
 }
+
+export default forwardRef(Message)

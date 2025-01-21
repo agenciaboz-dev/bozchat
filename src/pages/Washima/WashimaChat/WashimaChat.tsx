@@ -3,7 +3,6 @@ import { Avatar, Box, IconButton, LinearProgress, Paper, Skeleton, useMediaQuery
 import { Washima, WashimaMediaForm, WashimaProfilePic } from "../../../types/server/class/Washima/Washima"
 import CancelIcon from "@mui/icons-material/Cancel"
 import { api } from "../../../api"
-import { Message } from "../../Zap/Message"
 import { useIo } from "../../../hooks/useIo"
 import { WashimaInput } from "../WashimaInput"
 import { KeyboardDoubleArrowDown, Lock } from "@mui/icons-material"
@@ -16,6 +15,7 @@ import { NoChat } from "./NoChat"
 import { PhotoProvider, PhotoView } from "react-photo-view"
 import { CopyAllButton } from "./WashimaTools/CopyAll"
 import { useWashimaInput } from "../../../hooks/useWashimaInput"
+import Message from "../../Zap/Message"
 
 interface WashimaChatProps {
     washima: Washima
@@ -57,7 +57,7 @@ export const WashimaChat: React.FC<WashimaChatProps> = ({ washima, chat, onClose
     const [groupUpdates, setGroupUpdates] = useState<WashimaGroupUpdate[]>([])
 
     const messages_and_group_updates = useMemo(
-        () => [...messages, ...groupUpdates]?.sort((a, b) => Number(a.timestamp) - Number(b.timestamp)),
+        () => [...messages, ...groupUpdates]?.sort((a, b) => Number(b.timestamp) - Number(a.timestamp)),
         [messages, groupUpdates]
     )
 
@@ -67,10 +67,9 @@ export const WashimaChat: React.FC<WashimaChatProps> = ({ washima, chat, onClose
 
     const handleScroll = () => {
         if (messagesBoxRef.current) {
-            const { scrollTop, scrollHeight, clientHeight } = messagesBoxRef.current
-            const maxScrollTop = scrollHeight - clientHeight
+            const { scrollTop } = messagesBoxRef.current
 
-            const isAtBottom = Math.abs(scrollTop - maxScrollTop) < 1 // Allow small margin
+            const isAtBottom = scrollTop === 0 // Allow small margin
 
             setIsScrolled(!isAtBottom)
         }
@@ -149,6 +148,10 @@ export const WashimaChat: React.FC<WashimaChatProps> = ({ washima, chat, onClose
         setProfilePic("")
         setMessages([])
         setGroupUpdates([])
+    }
+
+    const scrollToMessage = (sid: string) => {
+        document.getElementById(`message:${sid}`)?.scrollIntoView({ behavior: "smooth" })
     }
 
     useEffect(() => {
@@ -268,7 +271,7 @@ export const WashimaChat: React.FC<WashimaChatProps> = ({ washima, chat, onClose
                     borderRadius: isMobile ? "0 3vw 0 3vw" : "0 1.5vw 0 1.5vw",
                     padding: isMobile ? "4vw" : "2vw",
                     color: "text.secondary",
-                    flexDirection: "column",
+                    flexDirection: "column-reverse",
                     gap: isMobile ? "1vw" : "0.25vw",
                     position: "relative",
 
@@ -284,14 +287,15 @@ export const WashimaChat: React.FC<WashimaChatProps> = ({ washima, chat, onClose
                             message={item as WashimaMessage}
                             isGroup={chat?.isGroup}
                             washima={washima}
-                            previousItem={messages_and_group_updates[index - 1]}
+                            previousItem={messages_and_group_updates[index + 1]}
                             onVisible={index % 5 === 4 ? () => fetchMessages(messages.length) : undefined}
+                            scrollTo={scrollToMessage}
                         />
                     ) : (
-                        <GroupUpdateItem chat={chat} update={item as WashimaGroupUpdate} washima={washima} profilePic={profilePic} />
+                        <GroupUpdateItem key={item.sid} chat={chat} update={item as WashimaGroupUpdate} washima={washima} profilePic={profilePic} />
                     )
                 )}
-                <AlwaysScrollToBottom loading={loading} shouldScroll={shouldScroll} />
+                {/* <AlwaysScrollToBottom loading={loading} shouldScroll={shouldScroll} /> */}
                 {loading && <LinearProgress sx={{ position: "absolute", bottom: 0, left: 0, right: 0 }} />}
             </Box>
             <WashimaInput onSubmit={onSubmit} disabled={!chat} washima={washima} chat_id={chat.id._serialized} />
@@ -307,7 +311,7 @@ export const WashimaChat: React.FC<WashimaChatProps> = ({ washima, chat, onClose
                     transition: "0.5s",
                 }}
             >
-                <IconButton onClick={() => messagesBoxRef.current?.scrollTo({ behavior: "smooth", top: 987987987 })}>
+                <IconButton onClick={() => messagesBoxRef.current?.scrollTo({ behavior: "smooth", top: 0 })}>
                     <KeyboardDoubleArrowDown />
                 </IconButton>
             </Paper>

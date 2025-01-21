@@ -3,6 +3,7 @@ import { Box, Chip } from "@mui/material"
 import { GroupUpdateType, WashimaGroupUpdate } from "../../../types/server/class/Washima/WashimaGroupUpdate"
 import { Washima } from "../../../types/server/class/Washima/Washima"
 import { GroupWelcomeBox } from "./GroupWelcomeBox"
+import { Chat } from "../../../types/Chat"
 
 interface GroupUpdateItemProps {
     update: WashimaGroupUpdate
