@@ -17,6 +17,7 @@ import { api } from "../../../api"
 import { AxiosError } from "axios"
 import { useSnackbar } from "burgos-snackbar"
 import { ArrowBack, Refresh } from "@mui/icons-material"
+import normalize from "../../../tools/normalize"
 
 interface TemplateFormProps {
     nagazap: Nagazap
@@ -119,18 +120,28 @@ export const TemplateForm: React.FC<TemplateFormProps> = ({ nagazap, setShowInfo
             }
         >
             <form onSubmit={formik.handleSubmit}>
-                <Grid container columns={isMobile? 1:3} spacing={"1vw"}>
+                <Grid container columns={isMobile ? 1 : 3} spacing={"1vw"}>
                     <Grid item xs={isMobile ? 1 : 2}>
                         <Box
                             sx={{
                                 flexDirection: "column",
-                                gap: isMobile ? "3vw" :  "1vw",
+                                gap: isMobile ? "3vw" : "1vw",
                                 paddingBottom: "2vw",
                                 marginTop: "-1vw",
                                 paddingTop: "1vw",
                             }}
                         >
-                            <TextField label="Nome do template" value={formik.values.name} onChange={formik.handleChange} name="name" required />
+                            <TextField
+                                label="Nome do template"
+                                value={formik.values.name}
+                                onChange={(ev) => {
+                                    const event = ev
+                                    event.target.value = normalize(ev.target.value).replace(/\s/, "_")
+                                    formik.handleChange(event)
+                                }}
+                                name="name"
+                                required
+                            />
                             <Tabs value={currentType} onChange={(_, value) => setCurrentType(value)} variant="fullWidth">
                                 <Tab value={"HEADER"} label="Cabeçalho" />
                                 <Tab value={"BODY"} label="Corpo" />
@@ -147,8 +158,8 @@ export const TemplateForm: React.FC<TemplateFormProps> = ({ nagazap, setShowInfo
                         <Paper
                             sx={{
                                 flexDirection: "column",
-                                gap:  isMobile ? "2vw" : "1vw",
-                                padding:  isMobile ? "3vw" : "0.5vw",
+                                gap: isMobile ? "2vw" : "1vw",
+                                padding: isMobile ? "3vw" : "0.5vw",
                                 position: "relative",
                                 borderRadius: "0.5vw",
                                 borderTopLeftRadius: 0,
