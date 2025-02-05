@@ -17,7 +17,7 @@ import { api } from "../../../api"
 import { AxiosError } from "axios"
 import { useSnackbar } from "burgos-snackbar"
 import { ArrowBack, Refresh } from "@mui/icons-material"
-import normalize from "../../../tools/normalize"
+import normalize, { meta_normalize } from "../../../tools/normalize"
 
 interface TemplateFormProps {
     nagazap: Nagazap
@@ -136,7 +136,7 @@ export const TemplateForm: React.FC<TemplateFormProps> = ({ nagazap, setShowInfo
                                 value={formik.values.name}
                                 onChange={(ev) => {
                                     const event = ev
-                                    event.target.value = normalize(ev.target.value).replace(/\s/, "_")
+                                    event.target.value = meta_normalize(ev.target.value)
                                     formik.handleChange(event)
                                 }}
                                 name="name"
