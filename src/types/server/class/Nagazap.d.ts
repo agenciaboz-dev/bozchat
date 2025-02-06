@@ -110,6 +110,7 @@ export declare class Nagazap {
     log(data: any): Promise<void>;
     errorLog(data: any, number: string): Promise<void>;
     createTemplate(data: TemplateForm): Promise<TemplateFormResponse>;
+    exportTemplateModel(data: TemplateForm): Promise<string>;
     uploadTemplateMedia(file: UploadedFile): Promise<any>;
     downloadMedia(media_id: string): Promise<string>;
     emit(): void;

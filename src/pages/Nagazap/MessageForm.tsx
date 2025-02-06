@@ -5,7 +5,7 @@ import { useFormik } from "formik"
 import { OvenForm } from "../../types/server/Meta/WhatsappBusiness/WhatsappForm"
 import { ArrowBack, Check, CloudUpload, Error, WatchLater } from "@mui/icons-material"
 import { api } from "../../api"
-import { TemplateInfo } from "../../types/server/Meta/WhatsappBusiness/TemplatesInfo"
+import { TemplateInfo, TemplateUpdateHook } from "../../types/server/Meta/WhatsappBusiness/TemplatesInfo"
 import { getPhonesfromSheet } from "../../tools/getPhonesFromSheet"
 import { useSnackbar } from "burgos-snackbar"
 import { Nagazap } from "../../types/server/class/Nagazap"
@@ -189,12 +189,12 @@ export const MessageFormScreen: React.FC<MessageFormProps> = ({ nagazap, setShow
     }, [formik.values.to])
 
     useEffect(() => {
-        io.on("template:update", (updated_template: TemplateInfo) => {
-            const index = templates.findIndex((item) => item.id === updated_template.id)
+        io.on("template:update", (updated_template: TemplateUpdateHook) => {
+            const index = templates.findIndex((item) => item.id === updated_template.message_template_id.toString())
             if (index !== -1) {
                 const updated_templates = [...templates]
                 const template = updated_templates[index]
-                template.status = updated_template.status
+                template.status = updated_template.event
                 setTemplates(updated_templates)
             }
         })

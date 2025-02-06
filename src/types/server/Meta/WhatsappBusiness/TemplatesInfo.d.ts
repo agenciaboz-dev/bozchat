@@ -22,6 +22,14 @@ export interface TemplateParam {
     example: string
 }
 
+export interface TemplateUpdateHook {
+    event: TemplateStatus
+    message_template_id: number
+    message_template_name: string
+    message_template_language: string
+    reason: string | null
+}
+
 export interface TemplateComponent {
     type: "HEADER" | "FOOTER" | "BODY" | "BUTTONS"
     format?: "IMAGE" | "TEXT"
