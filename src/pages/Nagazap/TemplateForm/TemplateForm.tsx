@@ -41,7 +41,7 @@ export const TemplateForm: React.FC<TemplateFormProps> = ({ nagazap, setShowInfo
     const [templateButtons, setTemplateButtons] = useState<TemplateComponentType>({
         type: "BUTTONS",
         buttons: [
-            { type: "URL", url: "https://wagazap.nandoburgos.dev", text: "Ir para o site" },
+            { type: "URL", url: "https://wagazap.boz.app.br", text: "Ir para o site" },
             { type: "QUICK_REPLY", text: "Parar promoções" },
         ],
     })
@@ -64,6 +64,8 @@ export const TemplateForm: React.FC<TemplateFormProps> = ({ nagazap, setShowInfo
             ? setTemplateFooter
             : setTemplateButtons
 
+    const [templateVariables, setTemplateVariables] = useState<string[]>([])
+
     const formik = useFormik<TemplateFormType>({
         initialValues: {
             language: "pt_BR",
@@ -83,6 +85,7 @@ export const TemplateForm: React.FC<TemplateFormProps> = ({ nagazap, setShowInfo
 
             const data: TemplateFormType = {
                 ...values,
+                parameter_format: "NAMED",
                 components: [{ ...templateHeader, file: undefined }, templateBody, templateFooter, templateButtons],
             }
             console.log(data)
@@ -92,6 +95,7 @@ export const TemplateForm: React.FC<TemplateFormProps> = ({ nagazap, setShowInfo
                 const response = await api.post("/nagazap/template", formData, { params: { nagazap_id: nagazap.id } })
                 console.log(response.data)
                 snackbar({ severity: "success", text: "Criação do template solicitada, aguardar aprovação" })
+                resetForm()
             } catch (error) {
                 console.log(error)
                 if (error instanceof AxiosError && error.response?.data) {
@@ -102,6 +106,26 @@ export const TemplateForm: React.FC<TemplateFormProps> = ({ nagazap, setShowInfo
             }
         },
     })
+
+    const resetForm = () => {
+        setTemplateHeader({ type: "HEADER", format: "TEXT", text: "Título" })
+        setTemplateBody({
+            type: "BODY",
+            text: "Mensagem principal, corpo do template",
+        })
+        setTemplateFooter({
+            type: "FOOTER",
+            text: "Rodapé da mensagem",
+        })
+        setTemplateButtons({
+            type: "BUTTONS",
+            buttons: [
+                { type: "URL", url: "https://wagazap.boz.app.br", text: "Ir para o site" },
+                { type: "QUICK_REPLY", text: "Parar promoções" },
+            ],
+        })
+        formik.resetForm()
+    }
 
     return (
         <Subroute
@@ -148,7 +172,12 @@ export const TemplateForm: React.FC<TemplateFormProps> = ({ nagazap, setShowInfo
                                 <Tab value={"FOOTER"} label="Rodapé" />
                                 <Tab value={"BUTTONS"} label="Botões" />
                             </Tabs>
-                            <TemplateComponentForm component={currentComponent} setComponent={currentSetComponent} />
+                            <TemplateComponentForm
+                                component={currentComponent}
+                                setComponent={currentSetComponent}
+                                templateVariables={templateVariables}
+                                setTemplateVariables={setTemplateVariables}
+                            />
                             <Button variant="contained" type="submit" sx={{ alignSelf: "flex-end" }}>
                                 {loading ? <CircularProgress size="1.5rem" color="secondary" /> : "Concluir"}
                             </Button>

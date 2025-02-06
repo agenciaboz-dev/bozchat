@@ -7,5 +7,5 @@ interface TextHeaderProps {
 }
 
 export const TextHeader: React.FC<TextHeaderProps> = ({ component }) => {
-    return <pre style={{ fontWeight: "bold" }}>{component.text}</pre>
+    return <pre style={{ fontWeight: "bold", whiteSpace: "break-spaces" }}>{component.text}</pre>
 }

@@ -1,15 +1,18 @@
-import React, { useCallback, useRef, useState } from "react"
+import React, { useCallback, useEffect, useRef, useState } from "react"
 import { Box, Button, IconButton, MenuItem, TextField, useMediaQuery } from "@mui/material"
 import { ButtonType, TemplateComponent } from "../../../types/server/Meta/WhatsappBusiness/TemplatesInfo"
 import { ButtonForm } from "./TemplateButtons/ButtonForm"
 import { Clear } from "@mui/icons-material"
+import { TemplateVariables } from "./TemplateVariables"
 
 interface TemplateComponentFormProps {
     component: TemplateComponent
     setComponent: React.Dispatch<React.SetStateAction<TemplateComponent>>
+    templateVariables: string[]
+    setTemplateVariables: React.Dispatch<React.SetStateAction<string[]>>
 }
 
-export const TemplateComponentForm: React.FC<TemplateComponentFormProps> = ({ component, setComponent }) => {
+export const TemplateComponentForm: React.FC<TemplateComponentFormProps> = ({ component, setComponent, templateVariables, setTemplateVariables }) => {
     const inputRef = useRef<HTMLInputElement>(null)
     const isMobile = useMediaQuery("(orientation: portrait)")
 
@@ -44,6 +47,21 @@ export const TemplateComponentForm: React.FC<TemplateComponentFormProps> = ({ co
         [component]
     )
 
+    useEffect(() => {
+        const regex = /{{(.*?)}}/g
+        let match: RegExpExecArray | undefined | null
+
+        if (component.text) {
+            while ((match = regex.exec(component.text)) !== null) {
+                if (match && !!match.length) {
+                    if (!templateVariables.includes(match[1])) {
+                        setComponent({ ...component, text: component.text.replace(match[0], "") })
+                    }
+                }
+            }
+        }
+    }, [templateVariables, component.text])
+
     return (
         <Box sx={{ flexDirection: "column", gap: isMobile ? "3vw" : "1vw" }}>
             {component.type === "HEADER" && (
@@ -64,13 +82,25 @@ export const TemplateComponentForm: React.FC<TemplateComponentFormProps> = ({ co
 
             {/* TEXTO */}
             {((component.type === "HEADER" && component.format === "TEXT") || (component.type !== "HEADER" && component.type !== "BUTTONS")) && (
-                <TextField
-                    maxRows={5}
-                    label="Texto"
-                    multiline
-                    value={component.text}
-                    onChange={(ev) => setComponent({ ...component, text: ev.target.value })}
-                />
+                <>
+                    <TextField
+                        maxRows={5}
+                        label="Texto"
+                        multiline
+                        value={component.text}
+                        onChange={(ev) => setComponent({ ...component, text: ev.target.value })}
+                    />
+
+                    {/* VARIABLES */}
+                    {((component.type === "HEADER" && component.format === "TEXT") || component.type === "BODY") && (
+                        <TemplateVariables
+                            variables={templateVariables}
+                            setVariables={setTemplateVariables}
+                            component={component}
+                            setComponent={setComponent}
+                        />
+                    )}
+                </>
             )}
             {/* IMAGEM */}
             {component.format === "IMAGE" && (
