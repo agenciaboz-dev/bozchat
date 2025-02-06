@@ -16,6 +16,7 @@ import { Clear } from "@mui/icons-material"
 import { SheetExample } from "./TemplateForm/SheetExample"
 import AddCircleIcon from "@mui/icons-material/AddCircle"
 import MaskedInputComponent from "../../components/MaskedInput"
+import { useIo } from "../../hooks/useIo"
 
 interface MessageFormProps {
     nagazap: Nagazap
@@ -23,6 +24,7 @@ interface MessageFormProps {
 }
 
 export const MessageFormScreen: React.FC<MessageFormProps> = ({ nagazap, setShowInformations }) => {
+    const io = useIo()
     const icons = [
         { type: "QUICK_REPLY", icon: <Reply /> },
         { type: "URL", icon: <OpenInNew /> },
@@ -185,6 +187,22 @@ export const MessageFormScreen: React.FC<MessageFormProps> = ({ nagazap, setShow
     useEffect(() => {
         console.log(formik.values.to)
     }, [formik.values.to])
+
+    useEffect(() => {
+        io.on("template:update", (updated_template: TemplateInfo) => {
+            const index = templates.findIndex((item) => item.id === updated_template.id)
+            if (index !== -1) {
+                const updated_templates = [...templates]
+                const template = updated_templates[index]
+                template.status = updated_template.status
+                setTemplates(updated_templates)
+            }
+        })
+
+        return () => {
+            io.off("template:update")
+        }
+    }, [templates])
 
     return (
         <Subroute
