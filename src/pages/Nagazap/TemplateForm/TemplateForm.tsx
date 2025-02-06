@@ -16,8 +16,8 @@ import { TemplateComponentForm } from "./TemplateComponentForm"
 import { api } from "../../../api"
 import { AxiosError } from "axios"
 import { useSnackbar } from "burgos-snackbar"
-import { ArrowBack, Refresh } from "@mui/icons-material"
-import normalize, { meta_normalize } from "../../../tools/normalize"
+import { ArrowBack } from "@mui/icons-material"
+import { meta_normalize } from "../../../tools/normalize"
 
 interface TemplateFormProps {
     nagazap: Nagazap
@@ -94,7 +94,11 @@ export const TemplateForm: React.FC<TemplateFormProps> = ({ nagazap, setShowInfo
             try {
                 const response = await api.post("/nagazap/template", formData, { params: { nagazap_id: nagazap.id } })
                 console.log(response.data)
-                snackbar({ severity: "success", text: "Criação do template solicitada, aguardar aprovação" })
+                snackbar({
+                    severity: "success",
+                    text: "Criação do template solicitada, aguardar aprovação. Um modelo de planilha será baixado agora.",
+                })
+                window.open(`${api.getUri()}/${response.data.csv_model}`, "_new")
                 resetForm()
             } catch (error) {
                 console.log(error)
@@ -125,6 +129,7 @@ export const TemplateForm: React.FC<TemplateFormProps> = ({ nagazap, setShowInfo
             ],
         })
         formik.resetForm()
+        setTemplateVariables([])
     }
 
     return (
