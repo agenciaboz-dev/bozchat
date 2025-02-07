@@ -147,6 +147,11 @@ export const TemplateForm: React.FC<TemplateFormProps> = ({ nagazap, setShowInfo
                     </IconButton>
                 ) : undefined
             }
+            right={
+                <Button variant="contained" onClick={() => formik.handleSubmit()} sx={{ alignSelf: "flex-end" }}>
+                    {loading ? <CircularProgress size="1.5rem" color="secondary" /> : "Concluir"}
+                </Button>
+            }
         >
             <form onSubmit={formik.handleSubmit}>
                 <Grid container columns={isMobile ? 1 : 3} spacing={"1vw"}>
@@ -183,9 +188,6 @@ export const TemplateForm: React.FC<TemplateFormProps> = ({ nagazap, setShowInfo
                                 templateVariables={templateVariables}
                                 setTemplateVariables={setTemplateVariables}
                             />
-                            <Button variant="contained" type="submit" sx={{ alignSelf: "flex-end" }}>
-                                {loading ? <CircularProgress size="1.5rem" color="secondary" /> : "Concluir"}
-                            </Button>
                         </Box>
                     </Grid>
                     <Grid item xs={1}>
