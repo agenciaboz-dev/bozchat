@@ -88,7 +88,7 @@ export const WashimaStatistics: React.FC<WashimaStatisticsProps> = ({}) => {
     return (
         <Box sx={{ flex: isMobile ? undefined : 1, flexDirection: "column", gap: "1vw" }}>
             <Title2
-                name="Washima"
+                name="Business"
                 right={
                     <IconButton onClick={fetchStats}>
                         <Replay />

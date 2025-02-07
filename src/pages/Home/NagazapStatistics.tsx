@@ -90,7 +90,7 @@ export const NagazapStatistics: React.FC<NagazapStatisticsProps> = ({}) => {
     return (
         <Box sx={{ flex: isMobile ? undefined : 1, flexDirection: "column", gap: "1vw" }}>
             <Title2
-                name="Nagazap"
+                name="Broadcast"
                 right={
                     <IconButton onClick={fetchStats}>
                         <Replay />
