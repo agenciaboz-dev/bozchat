@@ -2,7 +2,7 @@ name: wagazap
 
 services:
   app:
-    image: nandoburgos/wagazap
+    image: agenciaboz/wagazap
     container_name: wagazap
     ports:
       - "8084:8084"
