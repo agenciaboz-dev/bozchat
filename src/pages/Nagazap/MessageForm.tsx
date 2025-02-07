@@ -125,8 +125,10 @@ export const MessageFormScreen: React.FC<MessageFormProps> = ({ nagazap, setShow
             if (file) {
                 const extension = file.name.split(".")[1]
                 if (extension !== "xlsx" && extension !== "csv") {
-                    setInvalidSheetError("Formato inválido, o arquivo de ser uma planilha do excel do tipo xlsx")
-                    snackbar({ severity: "error", text: "Formato inválido, o arquivo de ser uma planilha do excel do tipo xlsx" })
+                    const text = "Formato inválido, o arquivo ter extensão .xlsx ou .csv"
+                    setInvalidSheetError(text)
+                    snackbar({ severity: "error", text })
+                    resetSheet()
                     return
                 }
 
@@ -134,7 +136,10 @@ export const MessageFormScreen: React.FC<MessageFormProps> = ({ nagazap, setShow
                     const data = await getDataFromSheet(file, extension)
                     console.log(data)
                     if (!variables.every((variable) => data.every((item) => item[variable]))) {
-                        snackbar({ severity: "error", text: "Planilha inválida: não contém todos os campos necessários para esse template." })
+                        const text = "Planilha inválida: não contém todos os campos necessários para esse template."
+                        setInvalidSheetError(text)
+                        snackbar({ severity: "error", text })
+                        resetSheet()
                         return
                     }
 
@@ -312,8 +317,7 @@ export const MessageFormScreen: React.FC<MessageFormProps> = ({ nagazap, setShow
                                 <Button
                                     variant="outlined"
                                     sx={{
-                                        borderStyle: invalidNumbersOnSheetError || invalidSheetError ? undefined : "dashed",
-                                        borderColor: invalidNumbersOnSheetError || invalidSheetError ? "red" : undefined,
+                                        borderStyle: "dashed",
                                         height: "100%",
                                         gap: isMobile ? "2vw" : "1vw",
                                     }}
