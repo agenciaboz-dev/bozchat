@@ -47,6 +47,7 @@ export const MessageFormScreen: React.FC<MessageFormProps> = ({ nagazap, setShow
     const [invalidNumbersOnSheetError, setInvalidNumbersOnSheetError] = useState(false)
     const [errorIndexes, setErrorIndexes] = useState<number[]>([])
     const [invalidSheetError, setInvalidSheetError] = useState("")
+    const [sheetName, setSheetName] = useState("")
 
     const validatePhones = (sheetPhones: string[]) => {
         const invalidSheetPhones = sheetPhones.some((phone) => {
@@ -132,7 +133,13 @@ export const MessageFormScreen: React.FC<MessageFormProps> = ({ nagazap, setShow
                 try {
                     const data = await getDataFromSheet(file, extension)
                     console.log(data)
+                    if (!variables.every((variable) => data.every((item) => item[variable]))) {
+                        snackbar({ severity: "error", text: "Planilha inválida: não contém todos os campos necessários para esse template." })
+                        return
+                    }
+
                     setSheetData(data.map((item) => ({ ...item, telefone: item.telefone.replace(/\D/g, "") })))
+                    setSheetName(file.name)
                 } catch (error) {
                     console.log(error)
                 }
@@ -178,6 +185,11 @@ export const MessageFormScreen: React.FC<MessageFormProps> = ({ nagazap, setShow
         setImage(undefined)
     }
 
+    const resetSheet = () => {
+        setSheetData([])
+        setSheetName("")
+    }
+
     const downloadTemplateSheet = async () => {
         try {
             const response = await api.post("/nagazap/template-sheet", formik.values.template, {
@@ -200,7 +212,7 @@ export const MessageFormScreen: React.FC<MessageFormProps> = ({ nagazap, setShow
             setIsImageRequired(false)
         }
 
-        setSheetData([])
+        resetSheet()
         clearImage()
     }, [formik.values.template])
 
@@ -307,6 +319,7 @@ export const MessageFormScreen: React.FC<MessageFormProps> = ({ nagazap, setShow
                                     }}
                                     fullWidth
                                     onClick={downloadTemplateSheet}
+                                    disabled={!formik.values.template}
                                 >
                                     <Download />
                                     Baixar planilha de exemplo
@@ -327,6 +340,7 @@ export const MessageFormScreen: React.FC<MessageFormProps> = ({ nagazap, setShow
                                                 gap: isMobile ? "2vw" : "1vw",
                                             }}
                                             fullWidth
+                                            disabled={!formik.values.template}
                                         >
                                             <CloudUpload />
                                             {!!sheetData.length ? `${sheetData.length} números importados` : "Importar planilha"}
@@ -336,6 +350,14 @@ export const MessageFormScreen: React.FC<MessageFormProps> = ({ nagazap, setShow
                                             <Typography color="error" fontSize="0.9rem">
                                                 {invalidSheetError}
                                             </Typography>
+                                        )}
+                                        {!!sheetData.length && (
+                                            <Box sx={{ gap: "1vw", marginTop: "0.5vw" }}>
+                                                <Typography sx={{ color: "secondary.main", whiteSpace: "break-spaces" }}>{sheetName}</Typography>
+                                                <IconButton onClick={resetSheet} sx={{ padding: 0 }}>
+                                                    <Clear />
+                                                </IconButton>
+                                            </Box>
                                         )}
                                     </Box>
                                 ) : null}
