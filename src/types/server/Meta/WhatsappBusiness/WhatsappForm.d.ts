@@ -43,6 +43,6 @@ export interface WhatsappApiForm {
 }
 
 export interface OvenForm {
-    to: string[]
+    to: { telefone: string; [key: string]: string }[]
     template: TemplateInfo | null
 }

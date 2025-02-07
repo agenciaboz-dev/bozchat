@@ -3,10 +3,10 @@ import { Avatar, Box, Button, CircularProgress, Grid, IconButton, MenuItem, Pape
 import { Subroute } from "./Subroute"
 import { useFormik } from "formik"
 import { OvenForm } from "../../types/server/Meta/WhatsappBusiness/WhatsappForm"
-import { ArrowBack, Check, CloudUpload, Error, WatchLater } from "@mui/icons-material"
+import { ArrowBack, Check, CheckCircle, CloudUpload, Download, Error, WatchLater } from "@mui/icons-material"
 import { api } from "../../api"
 import { TemplateInfo, TemplateUpdateHook } from "../../types/server/Meta/WhatsappBusiness/TemplatesInfo"
-import { getPhonesfromSheet } from "../../tools/getPhonesFromSheet"
+import { getDataFromSheet, getPhonesfromSheet } from "../../tools/getPhonesFromSheet"
 import { useSnackbar } from "burgos-snackbar"
 import { Nagazap } from "../../types/server/class/Nagazap"
 import { OpenInNew, Reply } from "@mui/icons-material"
@@ -17,6 +17,7 @@ import { SheetExample } from "./TemplateForm/SheetExample"
 import AddCircleIcon from "@mui/icons-material/AddCircle"
 import MaskedInputComponent from "../../components/MaskedInput"
 import { useIo } from "../../hooks/useIo"
+import { TemplateFields } from "./TemplateFields"
 
 interface MessageFormProps {
     nagazap: Nagazap
@@ -40,32 +41,22 @@ export const MessageFormScreen: React.FC<MessageFormProps> = ({ nagazap, setShow
     const [image, setImage] = useState<File>()
     const [imageError, setImageError] = useState("")
     const [loading, setLoading] = useState(false)
-    const [sheetPhones, setSheetPhones] = useState<string[]>([])
+    const [sheetData, setSheetData] = useState<{ telefone: string; [key: string]: string }[]>([])
     const [isImageRequired, setIsImageRequired] = useState(false)
     const [invalidNumbersError, setInvalidNumbersError] = useState(false)
     const [invalidNumbersOnSheetError, setInvalidNumbersOnSheetError] = useState(false)
     const [errorIndexes, setErrorIndexes] = useState<number[]>([])
     const [invalidSheetError, setInvalidSheetError] = useState("")
 
-    const validatePhones = (phones: string[], sheetPhones: string[]) => {
-        const invalidManualIndexes = phones.reduce<number[]>((acc, phone, index) => {
-            const cleanPhone = phone.replace(/\D/g, "")
-            if (cleanPhone.length !== 0 && cleanPhone.length !== 10 && cleanPhone.length !== 11) {
-                acc.push(index)
-            }
-            return acc
-        }, [])
-
+    const validatePhones = (sheetPhones: string[]) => {
         const invalidSheetPhones = sheetPhones.some((phone) => {
             const cleanPhone = phone.replace(/\D/g, "")
             return cleanPhone.length !== 0 && cleanPhone.length !== 10 && cleanPhone.length !== 11
         })
 
-        setErrorIndexes(invalidManualIndexes)
-        setInvalidNumbersError(invalidManualIndexes.length > 0)
         setInvalidNumbersOnSheetError(invalidSheetPhones)
 
-        return invalidManualIndexes.length === 0 && !invalidSheetPhones
+        return !invalidSheetPhones
     }
 
     const fetchTemplates = async () => {
@@ -78,24 +69,23 @@ export const MessageFormScreen: React.FC<MessageFormProps> = ({ nagazap, setShow
     }
 
     const formik = useFormik<OvenForm>({
-        initialValues: { to: [""], template: null },
+        initialValues: { to: [], template: null },
         async onSubmit(values) {
             if (loading) return
 
-            if (!validatePhones(values.to, sheetPhones)) {
+            if (!validatePhones(formik.values.to.map((item) => item.telefone))) {
                 snackbar({ severity: "error", text: "Existem números com formato inválido." })
                 return
             }
 
-            const valid_numbers = values.to.filter((item) => !!item.replace(/\D/g, ""))
-            if (!valid_numbers.length && !sheetPhones) {
+            if (!formik.values.to) {
                 return
             }
 
             const formData = new FormData()
             if (image) formData.append("file", image)
 
-            const data: OvenForm = { ...values, to: [...valid_numbers, ...sheetPhones] }
+            const data: OvenForm = { ...values }
             formData.append("data", JSON.stringify(data))
 
             setLoading(true)
@@ -111,6 +101,20 @@ export const MessageFormScreen: React.FC<MessageFormProps> = ({ nagazap, setShow
         },
     })
 
+    const variables = [
+        "telefone",
+        ...((formik.values.template
+            ? formik.values.template.components
+                  .filter((component) => !!component.example)
+                  .map((component) => {
+                      const param_type = component.type === "HEADER" ? "header_text_named_params" : "body_text_named_params"
+                      return component.example![param_type]?.map((item) => item.param_name)
+                  })
+                  .flatMap((item) => item)
+                  .filter((item) => !!item)
+            : []) as string[]),
+    ]
+
     const handleSheetsUpload = async (event: any) => {
         setInvalidNumbersOnSheetError(false)
         const files = Array.from(event?.target?.files as FileList)
@@ -118,15 +122,17 @@ export const MessageFormScreen: React.FC<MessageFormProps> = ({ nagazap, setShow
 
         files.forEach(async (file) => {
             if (file) {
-                if (file.name.split(".")[1] !== "xlsx") {
+                const extension = file.name.split(".")[1]
+                if (extension !== "xlsx" && extension !== "csv") {
                     setInvalidSheetError("Formato inválido, o arquivo de ser uma planilha do excel do tipo xlsx")
                     snackbar({ severity: "error", text: "Formato inválido, o arquivo de ser uma planilha do excel do tipo xlsx" })
                     return
                 }
 
                 try {
-                    const phones = await getPhonesfromSheet(file)
-                    setSheetPhones(phones.map((phone) => phone.phone.replace(/\D/g, "")))
+                    const data = await getDataFromSheet(file, extension)
+                    console.log(data)
+                    setSheetData(data.map((item) => ({ ...item, telefone: item.telefone.replace(/\D/g, "") })))
                 } catch (error) {
                     console.log(error)
                 }
@@ -134,16 +140,16 @@ export const MessageFormScreen: React.FC<MessageFormProps> = ({ nagazap, setShow
         })
     }
 
-    const onNewPhone = (phone = "") => {
-        const to = [...formik.values.to]
-        to.push(phone)
-        formik.setFieldValue("to", to)
-    }
+    // const onNewPhone = (phone = "") => {
+    //     const to = [...formik.values.to]
+    //     to.push(phone)
+    //     formik.setFieldValue("to", to)
+    // }
 
-    const onDeleteMessage = (index: number) => {
-        const to = formik.values.to.filter((_, item_index) => item_index != index)
-        formik.setFieldValue("to", to)
-    }
+    // const onDeleteMessage = (index: number) => {
+    //     const to = formik.values.to.filter((_, item_index) => item_index != index)
+    //     formik.setFieldValue("to", to)
+    // }
 
     const handleImageChange = useCallback(
         (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -172,6 +178,17 @@ export const MessageFormScreen: React.FC<MessageFormProps> = ({ nagazap, setShow
         setImage(undefined)
     }
 
+    const downloadTemplateSheet = async () => {
+        try {
+            const response = await api.post("/nagazap/template-sheet", formik.values.template, {
+                params: { nagazap_id: nagazap.id },
+            })
+            window.open(`${api.getUri()}/${response.data}`, "_new")
+        } catch (error) {
+            console.log(error)
+        }
+    }
+
     useEffect(() => {
         fetchTemplates()
     }, [])
@@ -182,6 +199,9 @@ export const MessageFormScreen: React.FC<MessageFormProps> = ({ nagazap, setShow
         } else {
             setIsImageRequired(false)
         }
+
+        setSheetData([])
+        clearImage()
     }, [formik.values.template])
 
     useEffect(() => {
@@ -204,6 +224,10 @@ export const MessageFormScreen: React.FC<MessageFormProps> = ({ nagazap, setShow
         }
     }, [templates])
 
+    useEffect(() => {
+        formik.setFieldValue("to", sheetData)
+    }, [sheetData])
+
     return (
         <Subroute
             title="Enviar mensagem"
@@ -219,110 +243,18 @@ export const MessageFormScreen: React.FC<MessageFormProps> = ({ nagazap, setShow
                     </IconButton>
                 ) : undefined
             }
+            right={
+                <Button
+                    variant="contained"
+                    onClick={() => formik.handleSubmit()}
+                    disabled={formik.values.to.length === 0 || !formik.values.template || (isImageRequired && !image)}
+                >
+                    {loading ? <CircularProgress size="1.5rem" color="inherit" /> : "Adicionar ao forno"}
+                </Button>
+            }
         >
             <form onSubmit={formik.handleSubmit}>
                 <Grid container columns={isMobile ? 1 : 3} spacing={"1vw"}>
-                    <Grid item xs={1}>
-                        <Box sx={{ flexDirection: "column", gap: isMobile ? "2vw" : "1vw" }}>
-                            <Typography sx={{ fontWeight: 600, color: "secondary.main" }}>Adicionar contatos:</Typography>
-                            {!isMobile ? (
-                                <Grid container columns={1}>
-                                    <Grid item xs={1}>
-                                        <Box sx={{ flexDirection: "column", gap: "0.2vw" }}>
-                                            <Button
-                                                component="label"
-                                                variant="outlined"
-                                                sx={{
-                                                    borderStyle: invalidNumbersOnSheetError || invalidSheetError ? undefined : "dashed",
-                                                    borderColor: invalidNumbersOnSheetError || invalidSheetError ? "red" : undefined,
-                                                    height: "100%",
-                                                    gap: isMobile ? "2vw" : "1vw",
-                                                }}
-                                                fullWidth
-                                            >
-                                                <CloudUpload />
-                                                {!!sheetPhones.length ? `${sheetPhones.length} números importados` : "Importar planilha"}
-                                                <input onChange={handleSheetsUpload} style={{ display: "none" }} type="file" multiple />
-                                            </Button>
-                                            {invalidSheetError && (
-                                                <Typography color="error" fontSize="0.9rem">
-                                                    {invalidSheetError}
-                                                </Typography>
-                                            )}
-                                        </Box>
-                                    </Grid>
-                                </Grid>
-                            ) : null}
-                            <Grid container columns={isMobile ? 1 : 2} spacing={isMobile ? 1 : 2}>
-                                {isMobile ? (
-                                    <Grid item xs={1}>
-                                        <Button
-                                            component="label"
-                                            variant="outlined"
-                                            sx={{ borderStyle: "dashed", height: "100%", gap: isMobile ? "2vw" : "1vw" }}
-                                            fullWidth
-                                        >
-                                            <CloudUpload />
-                                            {!!sheetPhones.length ? `${sheetPhones.length} números importados` : "Importar planilha"}
-                                            <input onChange={handleSheetsUpload} style={{ display: "none" }} type="file" multiple />
-                                        </Button>
-                                    </Grid>
-                                ) : null}
-                                {formik.values.to.map((number, index) => (
-                                    <Grid item xs={1} key={index}>
-                                        <TextField
-                                            label="Número"
-                                            name={`to[${index}]`}
-                                            value={number}
-                                            onChange={formik.handleChange}
-                                            InputProps={{
-                                                sx: {
-                                                    gap: "0.5vw",
-                                                },
-                                                startAdornment: (
-                                                    <IconButton color="secondary" onClick={() => onDeleteMessage(index)} sx={{ padding: 0 }}>
-                                                        <Clear sx={{ width: isMobile ? "5vw" : "1vw", height: isMobile ? "5vw" : "1vw" }} />
-                                                    </IconButton>
-                                                ),
-                                                inputComponent: MaskedInputComponent,
-                                                inputProps: { mask: "(00) 0 0000-0000", inputMode: "numeric" },
-                                            }}
-                                            sx={{
-                                                "& .MuiOutlinedInput-root": {
-                                                    "& fieldset": {
-                                                        borderColor: errorIndexes.includes(index) ? "red" : "inherit",
-                                                    },
-                                                    "&:hover fieldset": {
-                                                        borderColor: errorIndexes.includes(index) ? "red" : "inherit",
-                                                    },
-                                                },
-                                            }}
-                                        />
-                                    </Grid>
-                                ))}
-                                <Grid item xs={1}>
-                                    <Button
-                                        variant="outlined"
-                                        sx={{
-                                            borderStyle: "dashed",
-                                            height: "100%",
-                                            fontSize: "0.8rem",
-                                            gap: isMobile ? "2vw" : "0.5vw",
-                                            paddingLeft: "0.5vw",
-                                            minHeight: isMobile ? undefined : "56px",
-                                        }}
-                                        onClick={() => onNewPhone()}
-                                        fullWidth
-                                    >
-                                        <AddCircleIcon fontSize="small" />
-                                        Adicionar Contato
-                                    </Button>
-                                </Grid>
-                            </Grid>
-                            <Typography sx={{ color: "secondary.main" }}>Segue abaixo um modelo de como deve ser a planilha:</Typography>
-                            <SheetExample />
-                        </Box>
-                    </Grid>
                     <Grid item xs={1}>
                         <Box
                             sx={{
@@ -331,7 +263,7 @@ export const MessageFormScreen: React.FC<MessageFormProps> = ({ nagazap, setShow
                             }}
                         >
                             <Box sx={{ flexDirection: "column", gap: isMobile ? "2vw" : "1vw" }}>
-                                <Typography sx={{ color: "secondary.main", fontWeight: 600 }}>Selecionar templates:</Typography>
+                                <Typography sx={{ color: "secondary.main", fontWeight: 600 }}>Selecionar template:</Typography>
                                 <TextField
                                     fullWidth
                                     label="Template"
@@ -361,14 +293,78 @@ export const MessageFormScreen: React.FC<MessageFormProps> = ({ nagazap, setShow
                                         </MenuItem>
                                     ))}
                                 </TextField>
-                                <Typography sx={{ color: "secondary.main" }}>
-                                    Por favor, selecione o template desejado para o envio da mensagem:
-                                </Typography>
                             </Box>
-                            {formik.values.template?.components.map((component) => {
+
+                            <Box sx={{ flexDirection: "column", gap: "1vw" }}>
+                                <Typography sx={{ fontWeight: 600, color: "secondary.main" }}>Planilha modelo:</Typography>
+                                <Button
+                                    variant="outlined"
+                                    sx={{
+                                        borderStyle: invalidNumbersOnSheetError || invalidSheetError ? undefined : "dashed",
+                                        borderColor: invalidNumbersOnSheetError || invalidSheetError ? "red" : undefined,
+                                        height: "100%",
+                                        gap: isMobile ? "2vw" : "1vw",
+                                    }}
+                                    fullWidth
+                                    onClick={downloadTemplateSheet}
+                                >
+                                    <Download />
+                                    Baixar planilha de exemplo
+                                </Button>
+                            </Box>
+
+                            <Box sx={{ flexDirection: "column", gap: isMobile ? "2vw" : "1vw" }}>
+                                <Typography sx={{ fontWeight: 600, color: "secondary.main" }}>Adicionar contatos:</Typography>
+                                {!isMobile ? (
+                                    <Box sx={{ flexDirection: "column", gap: "0.2vw" }}>
+                                        <Button
+                                            component="label"
+                                            variant="outlined"
+                                            sx={{
+                                                borderStyle: invalidNumbersOnSheetError || invalidSheetError ? undefined : "dashed",
+                                                borderColor: invalidNumbersOnSheetError || invalidSheetError ? "red" : undefined,
+                                                height: "100%",
+                                                gap: isMobile ? "2vw" : "1vw",
+                                            }}
+                                            fullWidth
+                                        >
+                                            <CloudUpload />
+                                            {!!sheetData.length ? `${sheetData.length} números importados` : "Importar planilha"}
+                                            <input onChange={handleSheetsUpload} style={{ display: "none" }} type="file" multiple />
+                                        </Button>
+                                        {invalidSheetError && (
+                                            <Typography color="error" fontSize="0.9rem">
+                                                {invalidSheetError}
+                                            </Typography>
+                                        )}
+                                    </Box>
+                                ) : null}
+                                <Grid container columns={isMobile ? 1 : 2} spacing={isMobile ? 1 : 2}>
+                                    {isMobile ? (
+                                        <Grid item xs={1}>
+                                            <Button
+                                                component="label"
+                                                variant="outlined"
+                                                sx={{ borderStyle: "dashed", height: "100%", gap: isMobile ? "2vw" : "1vw" }}
+                                                fullWidth
+                                            >
+                                                <CloudUpload />
+                                                {!!sheetData.length ? `${sheetData.length} números importados` : "Importar planilha"}
+                                                <input onChange={handleSheetsUpload} style={{ display: "none" }} type="file" multiple />
+                                            </Button>
+                                        </Grid>
+                                    ) : null}
+                                </Grid>
+                            </Box>
+                        </Box>
+                    </Grid>
+                    <Grid item xs={1}>
+                        <Box sx={{ flexDirection: "column", gap: "1vw" }}>
+                            {formik.values.template?.components.map((component, index) => {
                                 if (component.format == "IMAGE") {
                                     return (
-                                        <Box sx={{ flexDirection: "column", gap: isMobile ? "2vw" : "1vw" }}>
+                                        <Box key={index} sx={{ flexDirection: "column", gap: isMobile ? "2vw" : "1vw" }}>
+                                            <Typography sx={{ fontWeight: "bold", color: "secondary.main" }}>Selecionar imagem:</Typography>
                                             <input
                                                 type="file"
                                                 ref={inputRef}
@@ -377,14 +373,16 @@ export const MessageFormScreen: React.FC<MessageFormProps> = ({ nagazap, setShow
                                                 onChange={handleImageChange}
                                             />
 
-                                            <Button
-                                                variant="outlined"
-                                                onClick={() => inputRef.current?.click()}
-                                                sx={{ borderStyle: "dashed", gap: "1vw" }}
-                                            >
-                                                <CloudUpload />
-                                                {"Selecionar imagem"}
-                                            </Button>
+                                            {!image && (
+                                                <Button
+                                                    variant="outlined"
+                                                    onClick={() => inputRef.current?.click()}
+                                                    sx={{ borderStyle: "dashed", gap: "1vw" }}
+                                                >
+                                                    <CloudUpload />
+                                                    {"Escolher arquivo"}
+                                                </Button>
+                                            )}
                                             <Box sx={{ gap: isMobile ? "2vw" : "0.5vw" }}>
                                                 <Typography
                                                     sx={{
@@ -410,31 +408,23 @@ export const MessageFormScreen: React.FC<MessageFormProps> = ({ nagazap, setShow
                                     return null
                                 }
                             })}
-                            <Box sx={{ flexDirection: "column", gap: "0.2vw" }}>
-                                <Button
-                                    type="submit"
-                                    fullWidth
-                                    variant="contained"
-                                    disabled={
-                                        formik.values.to[0] == "" ||
-                                        (!formik.values.to.length && !sheetPhones.length) ||
-                                        !formik.values.template ||
-                                        (isImageRequired && !image)
-                                    }
-                                    sx={{ marginTop: isMobile ? "2vw" : "1vw" }}
-                                >
-                                    {loading ? <CircularProgress size="1.5rem" color="inherit" /> : "Adicionar a fila"}
-                                </Button>
-                                {(invalidNumbersError || invalidNumbersOnSheetError) && (
-                                    <Typography color="error">Existem números com formato inválido.</Typography>
-                                )}
-                            </Box>
+                            {!!formik.values.template && <TemplateFields variables={variables} to={formik.values.to} />}
                         </Box>
                     </Grid>
 
                     <Grid item xs={1}>
                         {formik.values.template?.components.length && (
-                            <>
+                            <Box
+                                sx={{
+                                    overflowY: "auto",
+                                    maxHeight: "36vw",
+                                    flexDirection: "column",
+                                    padding: "1vw",
+                                    margin: "-1vw",
+                                    marginBottom: "-2vw",
+                                    paddingBottom: "2vw",
+                                }}
+                            >
                                 <Paper
                                     sx={{
                                         flexDirection: "column",
@@ -447,11 +437,11 @@ export const MessageFormScreen: React.FC<MessageFormProps> = ({ nagazap, setShow
                                     }}
                                 >
                                     <TrianguloFudido alignment="left" color="#2a323c" />
-                                    {formik.values.template?.components.map((component) => {
+                                    {formik.values.template?.components.map((component, index) => {
                                         if (component.format == "IMAGE") {
                                             const imageSrc = image ? URL.createObjectURL(image) : undefined
                                             return (
-                                                <Box sx={{ justifyContent: "center" }}>
+                                                <Box key={index} sx={{ justifyContent: "center" }}>
                                                     <Avatar
                                                         variant="rounded"
                                                         src={imageSrc}
@@ -473,6 +463,7 @@ export const MessageFormScreen: React.FC<MessageFormProps> = ({ nagazap, setShow
                                         if (component.text) {
                                             return (
                                                 <Typography
+                                                    key={index}
                                                     color="#fff"
                                                     sx={{
                                                         fontWeight: component.type == "HEADER" ? "bold" : undefined,
@@ -486,7 +477,7 @@ export const MessageFormScreen: React.FC<MessageFormProps> = ({ nagazap, setShow
                                         }
                                         if (component.buttons) {
                                             return (
-                                                <Box sx={{ gap: "0.5vw", flexDirection: "column" }}>
+                                                <Box key={index} sx={{ gap: "0.5vw", flexDirection: "column" }}>
                                                     {component.buttons?.map((button, index) => (
                                                         <Button
                                                             key={`${button.text}-${index}`}
@@ -505,7 +496,7 @@ export const MessageFormScreen: React.FC<MessageFormProps> = ({ nagazap, setShow
                                         return null
                                     })}
                                 </Paper>
-                            </>
+                            </Box>
                         )}
                     </Grid>
                 </Grid>
