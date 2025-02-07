@@ -133,7 +133,7 @@ export const WashimaPage: React.FC<WashimaProps> = ({}) => {
 
                     <Tabs value={isChat ? 1 : 0} onChange={handleChange} sx={{ flex: 1 }}>
                         <Tab
-                            label="Washima"
+                            label="Business"
                             sx={{ flex: 1 }}
                             onClick={() => {
                                 setIsChat(false)
@@ -161,7 +161,7 @@ export const WashimaPage: React.FC<WashimaProps> = ({}) => {
                         }}
                     >
                         <Box sx={{ alignItems: "center", gap: "1vw", color: "text.secondary" }}>
-                            <Box sx={{ fontWeight: "bold", fontSize: "1.5rem" }}>Washima</Box>
+                            <Box sx={{ fontWeight: "bold", fontSize: "1.5rem" }}>Business</Box>
                             <IconButton onClick={() => fetchWashimas()}>
                                 {loading ? <CircularProgress size={"1.5rem"} /> : <ReplayOutlined />}
                             </IconButton>

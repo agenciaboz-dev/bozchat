@@ -46,14 +46,14 @@ export const useMenuList = () => {
             onClick: () => navigate("/"),
         },
         {
-            name: "Washima",
+            name: "Business",
             path: "/washima",
             icon: <WhatsAppIcon />,
             onClick: () => navigate("/washima"),
         },
         {
             icon: <Hub />,
-            name: "Nagazap",
+            name: "Broadcast",
             path: "/nagazap",
             onClick: () => navigate("/nagazap/"),
         },

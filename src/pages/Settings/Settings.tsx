@@ -19,7 +19,7 @@ export const Settings: React.FC<SettingsProps> = ({}) => {
                     <Grid item xs={1}>
                         <Box sx={{ flexDirection: "column", gap: "1vw" }}>
                             <Box sx={{ flexDirection: "column" }}>
-                                <Title2 name="Notificações - Washima" />
+                                <Title2 name="Notificações - Business" />
                                 {washima_notifications.map((item) => (
                                     <NotificationSwitch key={item.event} notification={item} />
                                 ))}
@@ -30,7 +30,7 @@ export const Settings: React.FC<SettingsProps> = ({}) => {
                         </Box>
                     </Grid>
                     <Grid item xs={1}>
-                        <Title2 name="Notificações - Nagazap" />
+                        <Title2 name="Notificações - Broadcast" />
                         {nagazap_notifications.map((item) => (
                             <NotificationSwitch key={item.event} notification={item} />
                         ))}
