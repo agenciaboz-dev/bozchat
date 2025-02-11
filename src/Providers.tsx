@@ -1,4 +1,4 @@
-import { ConfirmDialog, ConfirmDialogProvider } from "burgos-confirm"
+import { ConfirmDialogProvider } from "burgos-confirm"
 import { Snackbar, SnackbarProvider } from "burgos-snackbar"
 import React from "react"
 import { UserProvider } from "./contexts/userContext"
@@ -8,6 +8,7 @@ import { MantineProvider } from "@mantine/core"
 import { IoProvider } from "./contexts/ioContext"
 import { PhotoProvider } from "react-photo-view"
 import { WashimaInputContextProvider } from "./contexts/washimaInputContext"
+import { ConfirmDialog } from "./components/ConfirmDialog"
 
 interface ProvidersProps {
     children: React.ReactNode
