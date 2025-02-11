@@ -292,7 +292,9 @@ export const MessageFormScreen: React.FC<MessageFormProps> = ({ nagazap, setShow
                                     select
                                     SelectProps={{
                                         SelectDisplayProps: { style: { display: "flex", alignItems: "center", gap: "0.5vw" } },
-                                        MenuProps: { MenuListProps: { sx: { bgcolor: "background.default" } } },
+                                        MenuProps: {
+                                            MenuListProps: { sx: { maxHeight: "20vw", bgcolor: "background.default", overflowY: "scroll" } },
+                                        },
                                     }}
                                 >
                                     <MenuItem value={""} sx={{ display: "none" }} />
