@@ -1,9 +1,10 @@
 import React, { useEffect, useState } from "react"
-import { Box, Button, CircularProgress, Grid, IconButton, Paper, Tab, Tabs, TextField, useMediaQuery } from "@mui/material"
+import { Box, Button, CircularProgress, Grid, IconButton, MenuItem, Paper, Tab, Tabs, TextField, useMediaQuery } from "@mui/material"
 import { Nagazap } from "../../../types/server/class/Nagazap"
 import { Subroute } from "../Subroute"
 import { useFormik } from "formik"
 import {
+    TemplateCategory,
     TemplateComponent as TemplateComponentType,
     TemplateForm as TemplateFormType,
 } from "../../../types/server/Meta/WhatsappBusiness/TemplatesInfo"
@@ -65,6 +66,12 @@ export const TemplateForm: React.FC<TemplateFormProps> = ({ nagazap, setShowInfo
             : setTemplateButtons
 
     const [templateVariables, setTemplateVariables] = useState<string[]>([])
+
+    const categories: { label: string; value: TemplateCategory }[] = [
+        { label: "Autenticação", value: "AUTHENTICATION" },
+        { label: "Marketing", value: "MARKETING" },
+        { label: "Utilidade", value: "UTILITY" },
+    ]
 
     const formik = useFormik<TemplateFormType>({
         initialValues: {
@@ -165,17 +172,34 @@ export const TemplateForm: React.FC<TemplateFormProps> = ({ nagazap, setShowInfo
                                 paddingTop: "1vw",
                             }}
                         >
-                            <TextField
-                                label="Nome do template"
-                                value={formik.values.name}
-                                onChange={(ev) => {
-                                    const event = ev
-                                    event.target.value = meta_normalize(ev.target.value)
-                                    formik.handleChange(event)
-                                }}
-                                name="name"
-                                required
-                            />
+                            <Box sx={{ gap: "1vw" }}>
+                                <TextField
+                                    label="Nome"
+                                    value={formik.values.name}
+                                    onChange={(ev) => {
+                                        const event = ev
+                                        event.target.value = meta_normalize(ev.target.value)
+                                        formik.handleChange(event)
+                                    }}
+                                    name="name"
+                                    required
+                                />
+                                <TextField
+                                    label="Tipo"
+                                    select
+                                    value={formik.values.category}
+                                    onChange={formik.handleChange}
+                                    name="category"
+                                    required
+                                    SelectProps={{ MenuProps: { MenuListProps: { sx: { bgcolor: "background.default" } } } }}
+                                >
+                                    {categories.map((category) => (
+                                        <MenuItem key={category.value} value={category.value}>
+                                            {category.label}
+                                        </MenuItem>
+                                    ))}
+                                </TextField>
+                            </Box>
                             <Tabs value={currentType} onChange={(_, value) => setCurrentType(value)} variant="fullWidth">
                                 <Tab value={"HEADER"} label="Cabeçalho" />
                                 <Tab value={"BODY"} label="Corpo" />
