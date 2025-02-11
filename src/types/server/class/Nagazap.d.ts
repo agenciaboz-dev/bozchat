@@ -4,7 +4,7 @@ import { UploadedFile } from "express-fileupload";
 import { BlacklistLog, FailedMessageLog, SentMessageLog } from "../types/shared/Meta/WhatsappBusiness/Logs";
 import { WithoutFunctions } from "./helpers";
 import { BusinessInfo } from "../types/shared/Meta/WhatsappBusiness/BusinessInfo";
-import { TemplateForm, TemplateFormResponse } from "../types/shared/Meta/WhatsappBusiness/TemplatesInfo";
+import { TemplateForm, TemplateFormResponse, TemplateInfo } from "../types/shared/Meta/WhatsappBusiness/TemplatesInfo";
 import { Company } from "./Company";
 export type NagaMessageType = "text" | "reaction" | "sticker" | "image" | "audio" | "video" | "button";
 export type NagaMessagePrisma = Prisma.NagazapMessageGetPayload<{}>;
@@ -93,6 +93,7 @@ export declare class Nagazap {
     addToBlacklist(number: string): Promise<void>;
     removeFromBlacklist(number: string): Promise<void>;
     getTemplates(): Promise<any>;
+    getTemplate(template_id: string): Promise<TemplateInfo>;
     uploadMedia(file: UploadedFile, filepath: string): Promise<string>;
     sendMessage(message: WhatsappForm): Promise<void>;
     queueMessage(data: WhatsappForm): Promise<WhatsappForm[]>;

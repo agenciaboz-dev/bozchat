@@ -24,6 +24,7 @@ export declare class User {
     static getAll(): Promise<User[]>;
     static findById(id: string): Promise<User | null>;
     static findByEmail(email: string): Promise<User | null>;
+    static delete(user_id: string): Promise<User>;
     constructor(data: UserPrisma);
     load(data: UserPrisma): void;
     update(data: Partial<User>): Promise<void>;

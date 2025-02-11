@@ -70,7 +70,7 @@ export const MessageFormScreen: React.FC<MessageFormProps> = ({ nagazap, setShow
     }
 
     const formik = useFormik<OvenForm>({
-        initialValues: { to: [], template: null },
+        initialValues: { to: [], template: null, template_id: "" },
         async onSubmit(values) {
             if (loading) return
 
@@ -86,7 +86,7 @@ export const MessageFormScreen: React.FC<MessageFormProps> = ({ nagazap, setShow
             const formData = new FormData()
             if (image) formData.append("file", image)
 
-            const data: OvenForm = { ...values }
+            const data: OvenForm = { ...values, template: null }
             formData.append("data", JSON.stringify(data))
 
             setLoading(true)
@@ -219,6 +219,7 @@ export const MessageFormScreen: React.FC<MessageFormProps> = ({ nagazap, setShow
 
         resetSheet()
         clearImage()
+        formik.setFieldValue("template_id", formik.values.template?.id)
     }, [formik.values.template])
 
     useEffect(() => {

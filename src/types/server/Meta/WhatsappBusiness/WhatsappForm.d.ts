@@ -45,4 +45,5 @@ export interface WhatsappApiForm {
 export interface OvenForm {
     to: { telefone: string; [key: string]: string }[]
     template: TemplateInfo | null
+    template_id: string
 }
