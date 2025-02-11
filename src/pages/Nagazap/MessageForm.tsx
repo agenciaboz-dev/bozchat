@@ -387,6 +387,10 @@ export const MessageFormScreen: React.FC<MessageFormProps> = ({ nagazap, setShow
                     </Grid>
                     <Grid item xs={1}>
                         <Box sx={{ flexDirection: "column", gap: "1vw" }}>
+                            {formik.values.template && (
+                                <Typography sx={{ color: "secondary.main", fontWeight: "bold" }}>ID: {formik.values.template_id}</Typography>
+                            )}
+
                             {formik.values.template?.components.map((component, index) => {
                                 if (component.format == "IMAGE") {
                                     return (
