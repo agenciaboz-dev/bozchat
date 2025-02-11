@@ -127,7 +127,11 @@ export const NagazapScreen: React.FC<NagazapProps> = ({}) => {
                                         select
                                         value={nagazap?.id || ""}
                                         label="Selecione uma conta"
-                                        SelectProps={{ MenuProps: { MenuListProps: { sx: { bgcolor: "background.default" } } } }}
+                                        SelectProps={{
+                                            MenuProps: {
+                                                MenuListProps: { sx: { maxHeight: "20vw", bgcolor: "background.default", overflowY: "scroll" } },
+                                            },
+                                        }}
                                     >
                                         <MenuItem
                                             sx={{ fontWeight: "bold", gap: "1vw" }}

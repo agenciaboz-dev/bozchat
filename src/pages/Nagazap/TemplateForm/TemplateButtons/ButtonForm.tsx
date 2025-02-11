@@ -49,7 +49,7 @@ export const ButtonForm: React.FC<ButtonFormProps> = ({ component, button, index
                     return setComponent({ ...component, buttons })
                 }}
                 select
-                SelectProps={{ MenuProps: { MenuListProps: { sx: { bgcolor: "background.default" } } } }}
+                SelectProps={{ MenuProps: { MenuListProps: { sx: { maxHeight: "20vw", bgcolor: "background.default", overflowY: "scroll" } } } }}
             >
                 <MenuItem value={"QUICK_REPLY"}>Resposta Rápida</MenuItem>
                 <MenuItem value={"URL"}>URL</MenuItem>

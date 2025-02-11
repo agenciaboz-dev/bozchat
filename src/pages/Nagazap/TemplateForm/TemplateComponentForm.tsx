@@ -73,7 +73,7 @@ export const TemplateComponentForm: React.FC<TemplateComponentFormProps> = ({ co
                         setComponent({ ...component, format, text: format === "TEXT" ? "" : undefined })
                     }}
                     select
-                    SelectProps={{ MenuProps: { MenuListProps: { sx: { bgcolor: "background.default" } } } }}
+                    SelectProps={{ MenuProps: { MenuListProps: { sx: { maxHeight: "20vw", bgcolor: "background.default", overflowY: "scroll" } } } }}
                 >
                     <MenuItem value={"TEXT"}>Texto</MenuItem>
                     <MenuItem value={"IMAGE"}>Imagem</MenuItem>
