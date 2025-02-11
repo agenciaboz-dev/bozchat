@@ -2,8 +2,9 @@ import { Prisma } from "@prisma/client";
 import { LoginForm } from "../types/shared/LoginForm";
 import { WithoutFunctions } from "./helpers";
 export type UserPrisma = Prisma.UserGetPayload<{}>;
-export type UserForm = Omit<WithoutFunctions<User>, "id"> & {
+export type UserForm = Omit<WithoutFunctions<User>, "id" | "active"> & {
     company_id: string;
+    active?: boolean;
 };
 export interface UserNotification {
     title: string;
@@ -17,6 +18,7 @@ export declare class User {
     admin: boolean;
     owner: boolean;
     company_id: string;
+    active: boolean;
     static new(data: UserForm): Promise<User>;
     static login(data: LoginForm): Promise<User | null>;
     static getAll(): Promise<User[]>;

@@ -28,7 +28,7 @@ interface NagazapProps {}
 
 export const NagazapScreen: React.FC<NagazapProps> = ({}) => {
     const io = useIo()
-    const { company } = useUser()
+    const { company, user } = useUser()
     const navigate = useNavigate()
     const isMobile = useMediaQuery("(orientation: portrait)")
 
@@ -137,6 +137,7 @@ export const NagazapScreen: React.FC<NagazapProps> = ({}) => {
                                                     setShowInformations(true)
                                                 }
                                             }}
+                                            disabled={!user?.admin}
                                         >
                                             <AddCircle />
                                             Adicionar conta

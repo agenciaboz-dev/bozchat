@@ -16,7 +16,7 @@ import { useUser } from "./useUser"
 import { Badge, BadgeProps, styled } from "@mui/material"
 import ApiIcon from "@mui/icons-material/Api"
 import PaletteIcon from "@mui/icons-material/Palette"
-import { AccountTree, Hub, Settings } from "@mui/icons-material"
+import { AccountTree, Groups, Hub, People, Settings } from "@mui/icons-material"
 import { Menu } from "../types/Menu"
 
 export const useMenuList = () => {
@@ -56,6 +56,12 @@ export const useMenuList = () => {
             name: "Broadcast",
             path: "/nagazap",
             onClick: () => navigate("/nagazap/"),
+        },
+        {
+            icon: <People />,
+            name: "Usuários",
+            path: "/users",
+            onClick: () => navigate("/users/"),
         },
         {
             icon: <Settings />,

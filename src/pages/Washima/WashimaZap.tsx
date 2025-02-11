@@ -9,6 +9,7 @@ import { textFieldStyle } from "../../style/textfield"
 import { useFormik } from "formik"
 import { api } from "../../api"
 import { WashimaSearch } from "./WashimaSearch"
+import { useUser } from "../../hooks/useUser"
 
 interface WashimaZapProps {
     washima: Washima
@@ -18,6 +19,7 @@ interface WashimaZapProps {
 export const WashimaZap: React.FC<WashimaZapProps> = ({ washima, onEdit }) => {
     const isMobile = useMediaQuery("(orientation: portrait)")
     const chatListRef = useRef<HTMLDivElement>(null)
+    const { user } = useUser()
 
     const [chat, setChat] = useState<Chat | null>(null)
     const [lastWashima, setLastWashima] = useState(washima)
@@ -90,9 +92,11 @@ export const WashimaZap: React.FC<WashimaZapProps> = ({ washima, onEdit }) => {
                             {washima.info.pushname}
                         </p>
 
-                        <IconButton onClick={() => onEdit()} sx={{ padding: 0 }}>
-                            <Settings />
-                        </IconButton>
+                        {user?.admin && (
+                            <IconButton onClick={() => onEdit()} sx={{ padding: 0 }}>
+                                <Settings />
+                            </IconButton>
+                        )}
                     </Box>
 
                     <WashimaSearch handleSearch={debouncedSearch} />

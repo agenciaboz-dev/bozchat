@@ -16,7 +16,7 @@ interface WashimaProps {}
 
 export const WashimaPage: React.FC<WashimaProps> = ({}) => {
     const { darkMode } = useDarkMode()
-    const { company } = useUser()
+    const { company, user } = useUser()
     const io = useIo()
     const notify = useNotification()
     const isMobile = useMediaQuery("(orientation: portrait)")
@@ -158,27 +158,29 @@ export const WashimaPage: React.FC<WashimaProps> = ({}) => {
                             bgcolor: darkMode ? "" : "background.default",
                         }}
                     >
-                        <Box sx={{ alignItems: "center", gap: "1vw", color: "text.secondary" }}>
+                        <Box sx={{ alignItems: "center", gap: "1vw", color: "text.secondary", marginBottom: "1vw" }}>
                             <Box sx={{ fontWeight: "bold", fontSize: "1.5rem" }}>Business</Box>
                             <IconButton onClick={() => fetchWashimas()}>
                                 {loading ? <CircularProgress size={"1.5rem"} /> : <ReplayOutlined />}
                             </IconButton>
                         </Box>
 
-                        <Button
-                            variant="outlined"
-                            color="primary"
-                            fullWidth
-                            sx={{ margin: "1vw 0", borderStyle: "dashed", fontSize: "1rem" }}
-                            onClick={() => {
-                                setCurrentWashima(null)
-                                if (isMobile) {
-                                    setIsChat(true)
-                                }
-                            }}
-                        >
-                            +
-                        </Button>
+                        {user?.admin && (
+                            <Button
+                                variant="outlined"
+                                color="primary"
+                                fullWidth
+                                sx={{ borderStyle: "dashed", fontSize: "1rem", marginBottom: "1vw" }}
+                                onClick={() => {
+                                    setCurrentWashima(null)
+                                    if (isMobile) {
+                                        setIsChat(true)
+                                    }
+                                }}
+                            >
+                                +
+                            </Button>
+                        )}
                         {washimas
                             .sort((a, b) => Number(b.created_at) - Number(a.created_at))
                             .map((item) => {

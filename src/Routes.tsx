@@ -9,6 +9,7 @@ import { useUser } from "./hooks/useUser"
 import { DeleteAccount } from "./pages/DeleteAccount/DeleteAccount"
 import { PrivacyTerms } from "./pages/PrivacyTerms/PrivacyTerms"
 import { Settings } from "./pages/Settings/Settings"
+import { Users } from "./pages/Users/Users"
 
 interface RoutesProps {}
 
@@ -21,6 +22,7 @@ export const Routes: React.FC<RoutesProps> = ({}) => {
             <Route index path="/washima/*" element={<WashimaPage />} />
             <Route path="/nagazap/*" element={<NagazapScreen />} />
             <Route path="/settings/*" element={<Settings />} />
+            <Route path="/users/*" element={<Users />} />
             <Route path="*" element={<WildCard />} />
         </ReactRoutes>
     ) : (
