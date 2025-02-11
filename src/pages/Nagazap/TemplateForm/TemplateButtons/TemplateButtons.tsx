@@ -1,7 +1,7 @@
 import React from "react"
 import { Box, Button } from "@mui/material"
 import { TemplateComponent } from "../../../../types/server/Meta/WhatsappBusiness/TemplatesInfo"
-import { OpenInNew, Reply } from "@mui/icons-material"
+import { OpenInNew, Phone, Reply } from "@mui/icons-material"
 
 interface TemplateButtonsProps {
     component: TemplateComponent
@@ -11,6 +11,7 @@ export const TemplateButtons: React.FC<TemplateButtonsProps> = ({ component }) =
     const icons = [
         { type: "QUICK_REPLY", icon: <Reply /> },
         { type: "URL", icon: <OpenInNew /> },
+        { type: "PHONE_NUMBER", icon: <Phone /> },
     ]
     return (
         <Box sx={{ flexDirection: "column", gap: "0.5vw" }}>

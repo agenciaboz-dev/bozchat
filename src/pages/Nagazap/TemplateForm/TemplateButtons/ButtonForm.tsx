@@ -53,6 +53,7 @@ export const ButtonForm: React.FC<ButtonFormProps> = ({ component, button, index
             >
                 <MenuItem value={"QUICK_REPLY"}>Resposta Rápida</MenuItem>
                 <MenuItem value={"URL"}>URL</MenuItem>
+                <MenuItem value={"PHONE_NUMBER"}>Telefone</MenuItem>
             </TextField>
 
             {button.type === "URL" && (
@@ -62,6 +63,18 @@ export const ButtonForm: React.FC<ButtonFormProps> = ({ component, button, index
                     onChange={(ev) => {
                         const buttons = component.buttons!
                         buttons[index] = { ...buttons[index], url: ev.target.value }
+                        return setComponent({ ...component, buttons })
+                    }}
+                />
+            )}
+
+            {button.type === "PHONE_NUMBER" && (
+                <TextField
+                    label="PHONE_NUMBER"
+                    value={button.phone_number}
+                    onChange={(ev) => {
+                        const buttons = component.buttons!
+                        buttons[index] = { ...buttons[index], phone_number: ev.target.value }
                         return setComponent({ ...component, buttons })
                     }}
                 />
