@@ -4,7 +4,7 @@ import { FileUpload, WithoutFunctions } from "../helpers";
 import { Socket } from "socket.io";
 import { WashimaMessage } from "./WashimaMessage";
 import { WashimaGroupUpdate } from "./WashimaGroupUpdate";
-import { User } from "../User";
+import { Company } from "../Company";
 export type WashimaPrisma = Prisma.WashimaGetPayload<{}>;
 export type WashimaMediaPrisma = Prisma.WashimaMediaGetPayload<{}>;
 export type WashimaProfilePicPrisma = Prisma.WashimaProfilePicGetPayload<{}>;
@@ -12,8 +12,8 @@ export interface WashimaDiskMetrics {
     messages: number;
     media: number;
 }
-export type WashimaForm = Omit<WithoutFunctions<Washima>, "id" | "created_at" | "active" | "client" | "qrcode" | "ready" | "info" | "chats" | "contact" | "users"> & {
-    user_id: string;
+export type WashimaForm = Omit<WithoutFunctions<Washima>, "id" | "created_at" | "active" | "client" | "qrcode" | "ready" | "info" | "chats" | "contact" | "companies"> & {
+    company_id: string;
 };
 export interface WashimaMessageId {
     fromMe: boolean;
@@ -60,7 +60,7 @@ export declare class Washima {
     chats: WAWebJS.Chat[];
     contact: string;
     diskMetrics?: WashimaDiskMetrics;
-    users: User[];
+    companies: Company[];
     static washimas: Washima[];
     static waitingList: Washima[];
     static find(id: string): Washima | undefined;

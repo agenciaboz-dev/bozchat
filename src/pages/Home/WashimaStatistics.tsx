@@ -11,7 +11,7 @@ interface WashimaStatisticsProps {}
 
 export const WashimaStatistics: React.FC<WashimaStatisticsProps> = ({}) => {
     const isMobile = useMediaQuery("(orientation: portrait)")
-    const { user } = useUser()
+    const { company } = useUser()
 
     const [connectedWashimas, setConnectedWashimas] = useState(0)
     const [pendingWashimas, setPendingWashimas] = useState(0)
@@ -29,12 +29,12 @@ export const WashimaStatistics: React.FC<WashimaStatisticsProps> = ({}) => {
     ]
 
     const fetchWashimasCount = async () => {
-        if (!user) return
+        if (!company) return
 
         setWashimasCountLoading(true)
 
         try {
-            const response = await api.get("/user/stats/washima", { params: { user_id: user.id } })
+            const response = await api.get("/company/stats/washima", { params: { company_id: company.id } })
             const data = response.data as { connected: number; pending: number }
             setConnectedWashimas(data.connected)
             setPendingWashimas(data.pending)
@@ -46,12 +46,12 @@ export const WashimaStatistics: React.FC<WashimaStatisticsProps> = ({}) => {
     }
 
     const fetchUnreplied = async () => {
-        if (!user) return
+        if (!company) return
 
         setUnrepliedLoading(true)
 
         try {
-            const response = await api.get("/user/stats/unreplied", { params: { user_id: user.id } })
+            const response = await api.get("/company/stats/unreplied", { params: { company_id: company.id } })
             setUnrepliedCount(response.data)
         } catch (error) {
             console.log(error)
@@ -61,12 +61,13 @@ export const WashimaStatistics: React.FC<WashimaStatisticsProps> = ({}) => {
     }
 
     const fetchStorage = async () => {
-        if (!user) return
+        if (!company) return
 
         setStorageLoading(true)
 
         try {
-            const response = await api.get("/user/stats/storage", { params: { user_id: user.id } })
+            const response = await api.get("/company/stats/storage", { params: { company_id: company.id } })
+            console.log(response.data)
             setStorageUse(response.data)
         } catch (error) {
             console.log(error)
@@ -78,7 +79,7 @@ export const WashimaStatistics: React.FC<WashimaStatisticsProps> = ({}) => {
     const fetchStats = async () => {
         fetchWashimasCount()
         fetchUnreplied()
-        // fetchStorage()
+        fetchStorage()
     }
 
     useEffect(() => {

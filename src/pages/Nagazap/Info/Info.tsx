@@ -2,7 +2,7 @@ import React, { Dispatch, SetStateAction, useEffect, useState } from "react"
 import { Box, CircularProgress, Grid, IconButton, Paper, Tooltip, useMediaQuery } from "@mui/material"
 import { Subroute } from "../Subroute"
 import { api } from "../../../api"
-import { AccountBox, ArrowBack, Business, Facebook, HealthAndSafety, LocalPhone, Refresh, Security, WhatsApp } from "@mui/icons-material"
+import { AccountBox, ArrowBack, Business, Facebook, Fingerprint, HealthAndSafety, LocalPhone, Refresh, Security, WhatsApp } from "@mui/icons-material"
 import { Nagazap } from "../../../types/server/class/Nagazap"
 import { BusinessInfo } from "../../../types/server/Meta/WhatsappBusiness/BusinessInfo"
 import { GeneralStat } from "../../../types/GeneralStat"
@@ -62,8 +62,8 @@ export const Info: React.FC<InfoProps> = ({ nagazap, setShowInformations }) => {
         { title: "Business ID", value: nagazap.businessId, icon: Business, copy: true },
         { title: "App ID", value: nagazap.appId, icon: Facebook, copy: true },
         { title: "Phone ID", value: nagazap.phoneId, icon: LocalPhone, copy: true },
+        { title: "Boz ID", value: nagazap.id, icon: Fingerprint, copy: true },
     ]
-    if (user?.admin) ids.push({ title: "Usuário do sistema", value: <Box>{nagazap.user.email}</Box>, icon: LocalPhone })
 
     const fetchInfo = async () => {
         setInfo(null)

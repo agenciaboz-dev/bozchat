@@ -3,22 +3,20 @@ import { Box, Button, CircularProgress, IconButton, MenuItem, Paper, Tab, Tabs, 
 import { backgroundStyle } from "../../style/background"
 import { Header } from "../../components/Header"
 import { api } from "../../api"
-import { QrCodeScanner, ReplayOutlined, WhatsApp } from "@mui/icons-material"
+import { QrCodeScanner, ReplayOutlined } from "@mui/icons-material"
 import { Washima } from "../../types/server/class/Washima/Washima"
 import { useDarkMode } from "../../hooks/useDarkMode"
 import { WashimaFormPage } from "./WashimaFormPage"
 import { useIo } from "../../hooks/useIo"
 import { WashimaZap } from "./WashimaZap"
 import { useUser } from "../../hooks/useUser"
-import { Chat } from "../../types/Chat"
-import { WashimaMessage } from "../../types/server/class/Washima/WashimaMessage"
 import { useNotification } from "../../hooks/useNotification"
 
 interface WashimaProps {}
 
 export const WashimaPage: React.FC<WashimaProps> = ({}) => {
     const { darkMode } = useDarkMode()
-    const { user } = useUser()
+    const { company } = useUser()
     const io = useIo()
     const notify = useNotification()
     const isMobile = useMediaQuery("(orientation: portrait)")
@@ -35,7 +33,7 @@ export const WashimaPage: React.FC<WashimaProps> = ({}) => {
     const fetchWashimas = async () => {
         setLoading(true)
         try {
-            const response = await api.get("/washima", { params: { user_id: user?.id } })
+            const response = await api.get("/washima", { params: { company_id: company?.id } })
             console.log(response.data)
             setWashimas(response.data)
             if (response.data.length > 0 && currentWashima === null) {
@@ -50,7 +48,7 @@ export const WashimaPage: React.FC<WashimaProps> = ({}) => {
 
     const listen = () => {
         io.on("washima:update", (data: Washima) => {
-            if (data.users.find((item) => item.id === user?.id)) addWashima(data)
+            if (data.companies.find((item) => item.id === company?.id)) addWashima(data)
         })
 
         io.on("washima:delete", (data: Washima) => {

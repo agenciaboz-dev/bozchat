@@ -28,7 +28,7 @@ interface NagazapProps {}
 
 export const NagazapScreen: React.FC<NagazapProps> = ({}) => {
     const io = useIo()
-    const { user } = useUser()
+    const { company } = useUser()
     const navigate = useNavigate()
     const isMobile = useMediaQuery("(orientation: portrait)")
 
@@ -38,11 +38,11 @@ export const NagazapScreen: React.FC<NagazapProps> = ({}) => {
     const [showInformations, setShowInformations] = useState(false)
 
     const fetchNagazap = async () => {
-        if (!user) return
+        if (!company) return
         setLoading(true)
 
         try {
-            const response = await api.get("/nagazap", { params: { user_id: user.id } })
+            const response = await api.get("/nagazap", { params: { company_id: company.id } })
             const list = response.data as Nagazap[]
             setNagazapList(list)
             if (!!list.length) {

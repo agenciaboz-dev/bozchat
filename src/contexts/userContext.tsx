@@ -4,11 +4,15 @@ import { useIo } from "../hooks/useIo"
 import { User, UserNotification } from "../types/server/class/User"
 import { useNotification } from "../hooks/useNotification"
 import { nagazap_notifications, washima_notifications } from "../pages/Settings/notifications_list"
+import { Company } from "../types/server/class/Company"
 
 interface UserContextValue {
     user: User | null
     setUser: (user: User | null) => void
     setTimestamp: React.Dispatch<React.SetStateAction<number>>
+
+    company: Company | null
+    setCompany: React.Dispatch<React.SetStateAction<Company | null>>
 }
 
 interface UserProviderProps {
@@ -25,6 +29,7 @@ export const UserProvider: React.FC<UserProviderProps> = ({ children }) => {
 
     const [user, setUser] = useState<User | null>(null)
     const [timestamp, setTimestamp] = useState(new Date().getTime())
+    const [company, setCompany] = useState<Company | null>(null)
 
     useEffect(() => {
         if (user) {
@@ -56,6 +61,8 @@ export const UserProvider: React.FC<UserProviderProps> = ({ children }) => {
                 user,
                 setUser,
                 setTimestamp,
+                company,
+                setCompany,
             }}
         >
             {children}

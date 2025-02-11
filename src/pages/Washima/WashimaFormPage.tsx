@@ -24,7 +24,7 @@ export const WashimaFormPage: React.FC<WashimaFormPageProps> = ({ currentWashima
     const io = useIo()
     const vw = window.innerWidth / 100
     const { darkMode } = useDarkMode()
-    const { user } = useUser()
+    const { user, company } = useUser()
     const { confirm } = useConfirmDialog()
 
     const isMobile = useMediaQuery("(orientation: portrait)")
@@ -37,17 +37,17 @@ export const WashimaFormPage: React.FC<WashimaFormPageProps> = ({ currentWashima
 
     const formik = useFormik<WashimaForm>({
         initialValues: currentWashima
-            ? { name: currentWashima.name, number: currentWashima.number, user_id: "" }
-            : { name: "", number: "", user_id: "" },
+            ? { name: currentWashima.name, number: currentWashima.number, company_id: "" }
+            : { name: "", number: "", company_id: "" },
         async onSubmit(values, formikHelpers) {
-            if (loading || !user) return
+            if (loading || !company) return
 
             try {
                 setLoading(true)
                 const data: WashimaForm = { ...values }
                 const response = currentWashima
                     ? await api.patch("/washima", { ...data, id: currentWashima.id })
-                    : await api.post("/washima", { ...data, user_id: user.id })
+                    : await api.post("/washima", { ...data, company_id: company.id })
                 console.log(response.data)
                 setCurrentWashima(response.data)
                 formik.resetForm()
@@ -62,7 +62,6 @@ export const WashimaFormPage: React.FC<WashimaFormPageProps> = ({ currentWashima
             number: Yup.string()
                 .required("campo obrigatório")
                 .test("len", "número inválido", (val) => val?.length === 15 || val?.length === 16),
-            users: Yup.array().min(1, "selecione pelo menos um usuário"),
         }),
         enableReinitialize: true,
         validateOnChange: false,
@@ -213,14 +212,6 @@ export const WashimaFormPage: React.FC<WashimaFormPageProps> = ({ currentWashima
                         </Button>
                     </Box>
                 </>
-                {user?.admin &&
-                    currentWashima?.users.map((user) => (
-                        <Paper key={user.id} sx={{ padding: "1vw", color: "secondary.main", flexDirection: "column" }}>
-                            <Box>{user.id}</Box>
-                            <Box>{user.name}</Box>
-                            <Box>{user.email}</Box>
-                        </Paper>
-                    ))}
             </Box>
 
             <Paper

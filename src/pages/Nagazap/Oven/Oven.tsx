@@ -26,8 +26,7 @@ export const Oven: React.FC<OvenProps> = ({ nagazap, setNagazap, setShowInformat
         return result
     }
 
-    const io = useIo()
-    const { user } = useUser()
+    const { company } = useUser()
     const isMobile = useMediaQuery("(orientation: portrait)")
 
     const [frequency, setFrequency] = useState(nagazap?.frequency || "")
@@ -38,12 +37,12 @@ export const Oven: React.FC<OvenProps> = ({ nagazap, setNagazap, setShowInformat
     const textfield_size = 250
 
     const refresh = async () => {
-        if (!nagazap || !user) return
+        if (!nagazap || !company) return
 
         setLoading(true)
 
         try {
-            const response = await api.get("/nagazap", { params: { nagazap_id: nagazap.id, user_id: user.id } })
+            const response = await api.get("/nagazap", { params: { nagazap_id: nagazap.id, company_id: company.id } })
             setNagazap(response.data)
         } catch (error) {
             console.log(error)

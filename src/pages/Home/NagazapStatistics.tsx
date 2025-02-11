@@ -11,7 +11,7 @@ interface NagazapStatisticsProps {}
 
 export const NagazapStatistics: React.FC<NagazapStatisticsProps> = ({}) => {
     const isMobile = useMediaQuery("(orientation: portrait)")
-    const { user } = useUser()
+    const { company } = useUser()
 
     const [nagazapsCount, setNagazapsCount] = useState<number>()
     const [templatesCount, setTemplatesCount] = useState<number>()
@@ -31,7 +31,7 @@ export const NagazapStatistics: React.FC<NagazapStatisticsProps> = ({}) => {
 
     const fetchNagazaps = async () => {
         try {
-            const response = await api.get("/nagazap/stats/count", { params: { user_id: user?.id } })
+            const response = await api.get("/nagazap/stats/count", { params: { company_id: company?.id } })
             setNagazapsCount(response.data)
         } catch (error) {
             console.log(error)
@@ -40,7 +40,7 @@ export const NagazapStatistics: React.FC<NagazapStatisticsProps> = ({}) => {
 
     const fetchTemplates = async () => {
         try {
-            const response = await api.get("/nagazap/stats/templates", { params: { user_id: user?.id } })
+            const response = await api.get("/nagazap/stats/templates", { params: { company_id: company?.id } })
             setTemplatesCount(response.data)
         } catch (error) {
             console.log(error)
@@ -49,7 +49,7 @@ export const NagazapStatistics: React.FC<NagazapStatisticsProps> = ({}) => {
 
     const fetchMessages = async () => {
         try {
-            const response = await api.get("/nagazap/stats/messages", { params: { user_id: user?.id } })
+            const response = await api.get("/nagazap/stats/messages", { params: { company_id: company?.id } })
             setSucessfulMessages(response.data.success)
             setErrorMessages(response.data.error)
         } catch (error) {
@@ -59,7 +59,7 @@ export const NagazapStatistics: React.FC<NagazapStatisticsProps> = ({}) => {
 
     const fetchOven = async () => {
         try {
-            const response = await api.get("/nagazap/stats/oven", { params: { user_id: user?.id } })
+            const response = await api.get("/nagazap/stats/oven", { params: { company_id: company?.id } })
             setOvenMessages(response.data)
         } catch (error) {
             console.log(error)
@@ -68,7 +68,7 @@ export const NagazapStatistics: React.FC<NagazapStatisticsProps> = ({}) => {
 
     const fetchBlacklist = async () => {
         try {
-            const response = await api.get("/nagazap/stats/blacklist", { params: { user_id: user?.id } })
+            const response = await api.get("/nagazap/stats/blacklist", { params: { company_id: company?.id } })
             setBlacklistCount(response.data)
         } catch (error) {
             console.log(error)

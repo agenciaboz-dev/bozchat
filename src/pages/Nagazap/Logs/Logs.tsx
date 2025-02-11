@@ -14,18 +14,18 @@ interface LogsProps {
 }
 
 export const Logs: React.FC<LogsProps> = ({ nagazap, setNagazap, setShowInformations }) => {
-    const { user } = useUser()
+    const { company } = useUser()
     const isMobile = useMediaQuery("(orientation: portrait)")
 
     const [loading, setLoading] = useState(false)
     const [filter, setFilter] = useState("")
 
     const refresh = async () => {
-        if (!user) return
+        if (!company) return
         setLoading(true)
 
         try {
-            const response = await api.get("/nagazap", { params: { user_id: user.id, nagazap_id: nagazap.id } })
+            const response = await api.get("/nagazap", { params: { company_id: company.id, nagazap_id: nagazap.id } })
             setNagazap(response.data)
         } catch (error) {
             console.log(error)

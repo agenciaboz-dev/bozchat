@@ -16,7 +16,7 @@ interface NagazapFormProps {
 }
 
 export const NagazapForm: React.FC<NagazapFormProps> = ({ onSuccess, setShowInformations }) => {
-    const { user } = useUser()
+    const { company } = useUser()
     const theme = useTheme()
     const isMobile = useMediaQuery("(orientation: portrait)")
 
@@ -28,7 +28,7 @@ export const NagazapForm: React.FC<NagazapFormProps> = ({ onSuccess, setShowInfo
     const [error, setError] = useState("")
 
     const formik = useFormik<NagazapFormType>({
-        initialValues: { appId: "", businessId: "", userId: user?.id || "", phoneId: "", token: "" },
+        initialValues: { appId: "", businessId: "", companyId: company?.id || "", phoneId: "", token: "" },
         async onSubmit(values, formikHelpers) {
             if (loading) return
             setLoading(true)
@@ -80,9 +80,9 @@ export const NagazapForm: React.FC<NagazapFormProps> = ({ onSuccess, setShowInfo
                     <Grid container columns={isMobile ? 1 : 3} spacing={3}>
                         <Grid item xs={1}>
                             <TextField
-                                label="App Id"
-                                name="appId"
-                                value={formik.values.appId}
+                                label="Business Id"
+                                name="businessId"
+                                value={formik.values.businessId}
                                 onChange={formik.handleChange}
                                 sx={textFieldStyle}
                                 required
@@ -91,9 +91,9 @@ export const NagazapForm: React.FC<NagazapFormProps> = ({ onSuccess, setShowInfo
                         </Grid>
                         <Grid item xs={1}>
                             <TextField
-                                label="Business Id"
-                                name="businessId"
-                                value={formik.values.businessId}
+                                label="App Id"
+                                name="appId"
+                                value={formik.values.appId}
                                 onChange={formik.handleChange}
                                 sx={textFieldStyle}
                                 required

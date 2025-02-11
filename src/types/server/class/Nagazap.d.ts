@@ -3,14 +3,14 @@ import { OvenForm, WhatsappForm } from "../types/shared/Meta/WhatsappBusiness/Wh
 import { UploadedFile } from "express-fileupload";
 import { BlacklistLog, FailedMessageLog, SentMessageLog } from "../types/shared/Meta/WhatsappBusiness/Logs";
 import { WithoutFunctions } from "./helpers";
-import { User } from "./User";
 import { BusinessInfo } from "../types/shared/Meta/WhatsappBusiness/BusinessInfo";
 import { TemplateForm, TemplateFormResponse } from "../types/shared/Meta/WhatsappBusiness/TemplatesInfo";
+import { Company } from "./Company";
 export type NagaMessageType = "text" | "reaction" | "sticker" | "image" | "audio" | "video" | "button";
 export type NagaMessagePrisma = Prisma.NagazapMessageGetPayload<{}>;
 export type NagaMessageForm = Omit<Prisma.NagazapMessageGetPayload<{}>, "id" | "nagazap_id">;
 export declare const nagazap_include: {
-    user: true;
+    company: true;
 };
 export type NagazapPrisma = Prisma.NagazapGetPayload<{
     include: typeof nagazap_include;
@@ -32,10 +32,10 @@ export interface NagazapForm {
     appId: string;
     phoneId: string;
     businessId: string;
-    userId: string;
+    companyId: string;
 }
 export declare class Nagazap {
-    id: number;
+    id: string;
     token: string;
     appId: string;
     phoneId: string;
@@ -51,17 +51,17 @@ export declare class Nagazap {
     failedMessages: FailedMessageLog[];
     displayName: string | null;
     displayPhone: string | null;
-    userId: string;
-    user: User;
+    companyId: string;
+    company: Company;
     static initialize(): Promise<void>;
     static new(data: NagazapForm): Promise<Nagazap>;
     static getByBusinessId(business_id: string): Promise<Nagazap>;
-    static getById(id: number): Promise<Nagazap>;
-    static getByUserId(user_id: string): Promise<Nagazap[]>;
+    static getById(id: string): Promise<Nagazap>;
+    static getByCompanyId(company_id: string): Promise<Nagazap[]>;
     static getAll(): Promise<Nagazap[]>;
     static shouldBake(): Promise<void>;
-    static delete(id: number): Promise<{
-        id: number;
+    static delete(id: string): Promise<{
+        id: string;
         token: string;
         lastUpdated: string;
         appId: string;
@@ -77,7 +77,7 @@ export declare class Nagazap {
         failedMessages: string;
         displayName: string | null;
         displayPhone: string | null;
-        userId: string;
+        companyId: string;
     }>;
     constructor(data: NagazapPrisma);
     loadBlacklist(saved_list: any[]): BlacklistLog[];
@@ -110,7 +110,8 @@ export declare class Nagazap {
     log(data: any): Promise<void>;
     errorLog(data: any, number: string): Promise<void>;
     createTemplate(data: TemplateForm): Promise<TemplateFormResponse>;
-    exportTemplateModel(data: TemplateForm): Promise<string>;
+    getTemplateSheet(template_name: string): string;
+    exportTemplateModel(template: TemplateForm): Promise<string>;
     uploadTemplateMedia(file: UploadedFile): Promise<any>;
     downloadMedia(media_id: string): Promise<string>;
     emit(): void;
