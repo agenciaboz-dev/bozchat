@@ -29,7 +29,7 @@ export const ChatContainer: React.FC<ChatProps> = ({ chat, onChatClick, washima,
             onVisible()
             console.log(chat)
         }
-        if (chat.lastMessage.hasMedia) {
+        if (chat.lastMessage?.hasMedia) {
             fetchMediaMetadata()
         }
     }, {})
@@ -44,7 +44,7 @@ export const ChatContainer: React.FC<ChatProps> = ({ chat, onChatClick, washima,
     const mocked_last_message: WashimaMessage = {
         ...chat.lastMessage,
         chat_id: chat.id._serialized,
-        sid: chat.lastMessage.id._serialized,
+        sid: chat.lastMessage?.id._serialized || "",
         washima_id: washima.id,
         deleted: false,
         edited: false,
