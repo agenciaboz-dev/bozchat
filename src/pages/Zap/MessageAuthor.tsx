@@ -5,6 +5,7 @@ import { washima_colors } from "../../style/colors"
 
 interface MessageAuthorProps {
     author?: string | null
+    small?: boolean
 }
 
 const authors_colors: { author: string; color: string }[] = []
@@ -23,12 +24,12 @@ export const getAuthorName = (author?: string | null) => {
     return {author_name, author_phone}
 }
 
-export const MessageAuthor: React.FC<MessageAuthorProps> = ({ author }) => {
+export const MessageAuthor: React.FC<MessageAuthorProps> = ({ author, small }) => {
     const isMobile = useMediaQuery("(orientation: portrait)")
 
     const theme = useTheme()
 
-    const {author_name, author_phone} = getAuthorName(author)
+    const { author_name, author_phone } = getAuthorName(author)
 
     const [authorColor, setAuthorColor] = useState("")
 
@@ -53,7 +54,9 @@ export const MessageAuthor: React.FC<MessageAuthorProps> = ({ author }) => {
                 alignItems: "center",
             }}
         >
-            <Box sx={{ color: authorColor }}>
+            <Box
+                sx={{ color: authorColor, maxWidth: small ? "15vw" : undefined, textOverflow: "ellipsis", whiteSpace: "nowrap", overflow: "hidden" }}
+            >
                 {!!author_phone && "~ "}
                 {author_name}
             </Box>

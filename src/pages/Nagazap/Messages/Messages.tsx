@@ -1,4 +1,4 @@
-import React, { useCallback, Dispatch, SetStateAction, useEffect, useState } from "react"
+import React, { useCallback, Dispatch, SetStateAction, useEffect, useState, useMemo } from "react"
 import { Box, CircularProgress, debounce, Grid, IconButton, TextField, ToggleButton, ToggleButtonGroup, useMediaQuery } from "@mui/material"
 import { Subroute } from "../Subroute"
 import { api } from "../../../api"
@@ -8,6 +8,9 @@ import { ArrowBack, List, Refresh, Search, ViewList, ViewQuilt } from "@mui/icon
 import { useIo } from "../../../hooks/useIo"
 import Masonry, { ResponsiveMasonry } from "react-responsive-masonry"
 import { MessageSkeleton } from "./MessageSkeleton"
+import { NagaChat } from "../../../types/NagaChat"
+import { ChatItem } from "./ChatItem"
+import { ChatContainer } from "./ChatContainer"
 
 interface MessagesScreenProps {
     nagazap: Nagazap
@@ -22,7 +25,26 @@ export const MessagesScreen: React.FC<MessagesScreenProps> = ({ nagazap, setShow
     const [messages, setMessages] = useState<NagaMessage[]>([])
     const [filter, setFilter] = useState("")
     const [filteredMessages, setFilteredMessages] = useState<NagaMessage[]>(messages)
-    const [layoutType, setLayoutType] = useState<"masonry" | "list">(isMobile ? "list" : "masonry")
+    const [selectedChat, setSelectedChat] = useState<NagaChat | null>(null)
+
+    const chats = useMemo(() => {
+        const chats: NagaChat[] = []
+        filteredMessages.forEach((message) => {
+            const chat_index = chats.findIndex((chat) => chat.from === message.from)
+            if (chat_index > -1) {
+                const current_chat = chats[chat_index]
+                current_chat.messages.push(message)
+                current_chat.lastMessage = message
+                chats[chat_index] = current_chat
+            } else {
+                chats.push({ from: message.from, messages: [message], lastMessage: message })
+            }
+        })
+
+        return chats
+            .map((chat) => ({ ...chat, messages: chat.messages.reverse() }))
+            .sort((a, b) => Number(b.lastMessage.timestamp) - Number(a.lastMessage.timestamp))
+    }, [filteredMessages])
 
     const fetchMessages = async () => {
         setLoading(true)
@@ -46,6 +68,8 @@ export const MessagesScreen: React.FC<MessagesScreenProps> = ({ nagazap, setShow
 
     const debouncedSearch = useCallback(debounce(onSearch, 300), [onSearch])
 
+    const onChatClick = (chat: NagaChat) => setSelectedChat(chat)
+
     useEffect(() => {
         fetchMessages()
     }, [])
@@ -63,6 +87,19 @@ export const MessagesScreen: React.FC<MessagesScreenProps> = ({ nagazap, setShow
     useEffect(() => {
         setFilteredMessages(messages)
     }, [messages])
+
+    useEffect(() => {
+        setFilteredMessages(
+            messages
+                .filter(
+                    (message) =>
+                        message?.from?.includes(filter) ||
+                        message?.name?.toLowerCase()?.includes(filter) ||
+                        message?.text?.toLowerCase()?.includes(filter)
+                )
+                .sort((a, b) => Number(b.timestamp) - Number(a.timestamp))
+        )
+    }, [filter])
 
     return (
         <Subroute
@@ -85,43 +122,31 @@ export const MessagesScreen: React.FC<MessagesScreenProps> = ({ nagazap, setShow
                 ) : null
             }
         >
-            <Box sx={{ gap: "1vw" }}>
-                <TextField
-                    placeholder="Digite o nome, número ou texto da mensagem"
-                    label="Buscar mensagens"
-                    InputProps={{ startAdornment: <Search />, sx: { gap: "0.5vw" } }}
-                    onChange={(ev) => debouncedSearch(ev.target.value)}
-                />
-                {!isMobile ? (
-                    <ToggleButtonGroup value={layoutType} onChange={(_, value) => setLayoutType(value)} exclusive>
-                        <ToggleButton value="masonry">
-                            <ViewQuilt />
-                        </ToggleButton>
-                        <ToggleButton value="list">
-                            <ViewList />
-                        </ToggleButton>
-                    </ToggleButtonGroup>
-                ) : null}
+            <TextField
+                placeholder="Digite o nome, número ou texto da mensagem"
+                label="Buscar mensagens"
+                InputProps={{ startAdornment: <Search />, sx: { gap: "0.5vw" } }}
+                onChange={(ev) => debouncedSearch(ev.target.value)}
+            />
+
+            <Box sx={{ gap: "1vw", marginTop: "-1vw" }}>
+                <Box
+                    sx={{
+                        flexDirection: "column",
+                        width: "25vw",
+                        gap: "1vw",
+                        overflow: "scroll",
+                        maxHeight: "30vw",
+                        margin: "-1vw",
+                        padding: "1vw",
+                    }}
+                >
+                    {chats.map((chat) => (
+                        <ChatItem key={chat.from} chat={chat} onChatClick={onChatClick} active={selectedChat?.from === chat.from} />
+                    ))}
+                </Box>
+                {selectedChat && <ChatContainer chat={selectedChat} onClose={() => setSelectedChat(null)} />}
             </Box>
-            <Masonry
-                columnsCount={layoutType === "list" ? 1 : 3}
-                gutter="1vw"
-                style={{ height: "0vh", gap: "1vw", maxWidth: layoutType === "list" ? (isMobile ? undefined : "24.5vw") : undefined }}
-                sequential
-            >
-                {/* @ts-ignore */}
-                {loading
-                    ? new Array(20).fill(1).map((_, index) => <MessageSkeleton key={index} />)
-                    : filteredMessages
-                          .filter(
-                              (message) =>
-                                  message?.from?.includes(filter) ||
-                                  message?.name?.toLowerCase()?.includes(filter) ||
-                                  message?.text?.toLowerCase()?.includes(filter)
-                          )
-                          .sort((a, b) => Number(b.timestamp) - Number(a.timestamp))
-                          .map((item) => <MessageContainer key={item.id} message={item} />)}
-            </Masonry>
         </Subroute>
     )
 }

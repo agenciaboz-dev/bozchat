@@ -157,7 +157,7 @@ export const NagazapScreen: React.FC<NagazapProps> = ({}) => {
                                 {nagazap && (
                                     <Box sx={{ flexDirection: "column" }}>
                                         <ToolButton label="Informações" route="/" setShowInformations={setShowInformations} />
-                                        <ToolButton label="Mensagens" route="/messages" setShowInformations={setShowInformations} />
+                                        <ToolButton label="Conversas" route="/messages" setShowInformations={setShowInformations} />
                                         <ToolButton label="Criar template" route="/template-form" setShowInformations={setShowInformations} />
                                         <ToolButton label="Enviar mensagem" route="/message-form" setShowInformations={setShowInformations} />
                                         <ToolButton

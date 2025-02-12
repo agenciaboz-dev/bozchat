@@ -25,8 +25,9 @@ export const AudioPlayer: React.FC<AudioPlayerProps> = ({ media, washima, chat_i
     const [profilePicUrl, setProfilePicUrl] = useState("")
 
     const fetchProfilePic = async () => {
+        if (!washima?.id) return
         try {
-            const response = await api.get("/washima/profile-pic", { params: { washima_id: washima?.id, chat_id, message_id: message?.sid } })
+            const response = await api.get("/washima/profile-pic", { params: { washima_id: washima.id, chat_id, message_id: message?.sid } })
             const data = response.data as WashimaProfilePic
             setProfilePicUrl(data.url)
         } catch (error) {
