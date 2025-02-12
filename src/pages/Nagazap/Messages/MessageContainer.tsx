@@ -1,6 +1,6 @@
-import React from "react"
+import React, { useMemo } from "react"
 import { Avatar, Box, Grid, MenuItem, Paper, Typography, useMediaQuery } from "@mui/material"
-import { NagaMessage } from "../../../types/server/class/Nagazap"
+import { NagaMessage, Nagazap } from "../../../types/server/class/Nagazap"
 import { useFormatMessageTime } from "../../../hooks/useFormatMessageTime"
 import { Title2 } from "../../../components/Title"
 import { TrianguloFudido } from "../../Zap/TrianguloFudido"
@@ -10,27 +10,35 @@ import { MessageAuthor } from "../../Zap/MessageAuthor"
 
 interface MessageContainerProps {
     message: NagaMessage
+    nagazap: Nagazap
 }
 
-export const MessageContainer: React.FC<MessageContainerProps> = ({ message }) => {
+export const MessageContainer: React.FC<MessageContainerProps> = ({ message, nagazap }) => {
     const isMobile = useMediaQuery("(orientation: portrait)")
     const formatTime = useFormatMessageTime()
+    const primary = "#0F6787"
+    const secondary = "#2a323c"
+
+    const from_me = useMemo(() => message.name === nagazap.displayPhone, [message])
 
     return (
         <Paper
-            elevation={4}
+            elevation={0}
             sx={{
                 flexDirection: "column",
                 gap: isMobile ? "2vw" : "0.5vw",
                 padding: isMobile ? "4vw" : "0.5vw",
                 position: "relative",
                 borderRadius: "0.5vw",
-                borderTopLeftRadius: 0,
+                borderTopLeftRadius: from_me ? undefined : 0,
+                borderTopRightRadius: from_me ? 0 : undefined,
                 color: "secondary.main",
                 paddingBottom: message.type === "audio" ? "1vw" : undefined,
                 width: "fit-content",
                 minWidth: "5vw",
                 minHeight: "2vw",
+                alignSelf: from_me ? "flex-end" : undefined,
+                bgcolor: from_me ? primary : secondary,
             }}
         >
             {(message.type === "image" || message.type === "sticker") && (
@@ -81,7 +89,7 @@ export const MessageContainer: React.FC<MessageContainerProps> = ({ message }) =
             >
                 {formatTime(new Date(Number(message.timestamp)))}
             </Box>
-            <TrianguloFudido alignment="left" color="#2a323c" />
+            <TrianguloFudido alignment={from_me ? "right" : "left"} color={from_me ? primary : secondary} />
         </Paper>
     )
 }

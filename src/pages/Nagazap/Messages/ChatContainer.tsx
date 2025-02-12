@@ -4,13 +4,16 @@ import { NagaChat } from "../../../types/NagaChat"
 import { MessageContainer } from "./MessageContainer"
 import { Cancel } from "@mui/icons-material"
 import { MessageAuthor } from "../../Zap/MessageAuthor"
+import { Nagazap } from "../../../types/server/class/Nagazap"
+import { NagazapInput } from "./NagazapInput"
 
 interface ChatContainerProps {
     chat: NagaChat
     onClose: () => void
+    nagazap: Nagazap
 }
 
-export const ChatContainer: React.FC<ChatContainerProps> = ({ chat, onClose }) => {
+export const ChatContainer: React.FC<ChatContainerProps> = ({ chat, onClose, nagazap }) => {
     const isMobile = useMediaQuery("(orientation: portrait)")
 
     return (
@@ -27,6 +30,7 @@ export const ChatContainer: React.FC<ChatContainerProps> = ({ chat, onClose }) =
                 flexDirection: "column",
                 overflow: "hidden",
                 position: "relative",
+                marginBottom: "-1vw",
             }}
         >
             <Box
@@ -37,7 +41,7 @@ export const ChatContainer: React.FC<ChatContainerProps> = ({ chat, onClose }) =
                     padding: isMobile ? "2vw" : "",
                 }}
             >
-                <MessageAuthor author={chat.lastMessage.name + " - " + chat.lastMessage.from} />
+                <MessageAuthor author={chat.name + " - " + chat.from} />
                 <Box sx={{ marginLeft: "auto" }}>
                     <IconButton sx={{ color: "white", padding: isMobile ? "0" : "" }} onClick={onClose}>
                         <Cancel />
@@ -64,10 +68,10 @@ export const ChatContainer: React.FC<ChatContainerProps> = ({ chat, onClose }) =
                 }}
             >
                 {chat.messages.map((message) => (
-                    <MessageContainer key={message.id} message={message} />
+                    <MessageContainer key={message.id} message={message} nagazap={nagazap} />
                 ))}
             </Box>
-            {/* <WashimaInput onSubmit={onSubmit} disabled={!chat} washima={washima} chat_id={chat.id._serialized} /> */}
+            <NagazapInput nagazap={nagazap} chat={chat} />
         </Paper>
     )
 }

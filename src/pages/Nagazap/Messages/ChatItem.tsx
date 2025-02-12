@@ -31,7 +31,7 @@ export const ChatItem: React.FC<ChatItemProps> = ({ chat, onChatClick, active })
                     flex: 1,
                 }}
             >
-                <MessageAuthor author={chat.lastMessage.name + " - " + chat.lastMessage.from} small />
+                <MessageAuthor author={chat.name + " - " + chat.from} small />
                 {(chat.lastMessage.type === "image" || chat.lastMessage.type === "sticker") && (
                     <Avatar
                         variant="rounded"

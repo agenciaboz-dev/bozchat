@@ -15,6 +15,10 @@ export declare const nagazap_include: {
 export type NagazapPrisma = Prisma.NagazapGetPayload<{
     include: typeof nagazap_include;
 }>;
+export interface NagazapResponseForm {
+    number: string;
+    text: string;
+}
 interface BuildHeadersOptions {
     upload?: boolean;
 }
@@ -116,5 +120,6 @@ export declare class Nagazap {
     uploadTemplateMedia(file: UploadedFile): Promise<any>;
     downloadMedia(media_id: string): Promise<string>;
     emit(): void;
+    sendResponse(data: NagazapResponseForm): Promise<void>;
 }
 export {};

@@ -34,7 +34,7 @@ export const MessagesScreen: React.FC<MessagesScreenProps> = ({ nagazap, setShow
                 current_chat.lastMessage = message
                 chats[chat_index] = current_chat
             } else {
-                chats.push({ from: message.from, messages: [message], lastMessage: message })
+                chats.push({ from: message.from, messages: [message], lastMessage: message, name: message.name })
             }
         })
 
@@ -72,17 +72,31 @@ export const MessagesScreen: React.FC<MessagesScreenProps> = ({ nagazap, setShow
     }, [])
 
     useEffect(() => {
-        io.on(`nagazap:${nagazap.id}:message`, (message) => {
+        io.on(`nagazap:${nagazap.id}:message`, (message: NagaMessage) => {
             setMessages((messages) => [...messages, message])
+
+            if (message.from === selectedChat?.from) {
+                const messages = selectedChat.messages
+                messages.unshift(message)
+                setSelectedChat({ ...selectedChat, lastMessage: message, messages })
+            }
         })
 
         return () => {
             io.off(`nagazap:${nagazap.id}:message`)
         }
-    }, [nagazap])
+    }, [nagazap, selectedChat])
 
     useEffect(() => {
         setFilteredMessages(messages)
+
+        io.on("nagazap:response", (message: NagaMessage) => {
+            setMessages((list) => [...list, message])
+        })
+
+        return () => {
+            io.off("nagazap:response")
+        }
     }, [messages])
 
     useEffect(() => {
@@ -142,7 +156,7 @@ export const MessagesScreen: React.FC<MessagesScreenProps> = ({ nagazap, setShow
                         <ChatItem key={chat.from} chat={chat} onChatClick={onChatClick} active={selectedChat?.from === chat.from} />
                     ))}
                 </Box>
-                {selectedChat && <ChatContainer chat={selectedChat} onClose={() => setSelectedChat(null)} />}
+                {selectedChat && <ChatContainer chat={selectedChat} onClose={() => setSelectedChat(null)} nagazap={nagazap} />}
             </Box>
         </Subroute>
     )
