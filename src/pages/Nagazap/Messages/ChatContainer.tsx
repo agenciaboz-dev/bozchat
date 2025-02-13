@@ -6,6 +6,7 @@ import { Cancel } from "@mui/icons-material"
 import { MessageAuthor } from "../../Zap/MessageAuthor"
 import { Nagazap } from "../../../types/server/class/Nagazap"
 import { NagazapInput } from "./NagazapInput"
+import { DateChip } from "../../Washima/WashimaChat/DateChip"
 
 interface ChatContainerProps {
     chat: NagaChat
@@ -67,9 +68,18 @@ export const ChatContainer: React.FC<ChatContainerProps> = ({ chat, onClose, nag
                     },
                 }}
             >
-                {chat.messages.map((message) => (
-                    <MessageContainer key={message.id} message={message} nagazap={nagazap} />
-                ))}
+                {chat.messages.map((message, index) => {
+                    const previous_message = chat.messages[index + 1]
+                    const changing_day =
+                        !previous_message ||
+                        new Date(Number(previous_message.timestamp)).toLocaleDateString() !== new Date(Number(message.timestamp)).toLocaleDateString()
+                    return (
+                        <>
+                            <MessageContainer key={message.id} message={message} nagazap={nagazap} />
+                            {changing_day && <DateChip timestamp={Number(message.timestamp)} />}
+                        </>
+                    )
+                })}
             </Box>
             <NagazapInput nagazap={nagazap} chat={chat} />
         </Paper>

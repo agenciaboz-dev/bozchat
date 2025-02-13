@@ -87,7 +87,7 @@ export const MessageContainer: React.FC<MessageContainerProps> = ({ message, nag
                     bottom: "0.5vw",
                 }}
             >
-                {formatTime(new Date(Number(message.timestamp)))}
+                {new Date(Number(message.timestamp)).toLocaleTimeString("pt-br", { hour: "2-digit", minute: "2-digit" })}
             </Box>
             <TrianguloFudido alignment={from_me ? "right" : "left"} color={from_me ? primary : secondary} />
         </Paper>
