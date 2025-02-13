@@ -69,7 +69,7 @@ export const MessagesScreen: React.FC<MessagesScreenProps> = ({ nagazap, setShow
 
     useEffect(() => {
         fetchMessages()
-    }, [])
+    }, [nagazap])
 
     useEffect(() => {
         io.on(`nagazap:${nagazap.id}:message`, (message: NagaMessage) => {

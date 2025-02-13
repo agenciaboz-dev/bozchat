@@ -208,7 +208,7 @@ export const MessageFormScreen: React.FC<MessageFormProps> = ({ nagazap, setShow
 
     useEffect(() => {
         fetchTemplates()
-    }, [])
+    }, [nagazap])
 
     useEffect(() => {
         if (formik.values.template?.components[0].format == "IMAGE") {

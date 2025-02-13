@@ -23,6 +23,7 @@ import { WagaLoading } from "../../components/WagaLoading"
 import { TemplateForm } from "./TemplateForm/TemplateForm"
 import { NagazapSettings } from "./NagazapSettings/NagazapSettings"
 import { OvenStatus } from "./Oven/OvenStatus"
+import { Results } from "./Results/Results"
 
 interface NagazapProps {}
 
@@ -66,7 +67,7 @@ export const NagazapScreen: React.FC<NagazapProps> = ({}) => {
 
     const onNagazapChoose = (nagazap: Nagazap) => {
         setNagazap(nagazap)
-        navigate("/nagazap/")
+        // navigate("/nagazap/")
     }
 
     const onAddNagazap = (new_nagazap: Nagazap) => {
@@ -174,7 +175,8 @@ export const NagazapScreen: React.FC<NagazapProps> = ({}) => {
                                         />
                                         <ToolButton label="Logs" route="/logs" setShowInformations={setShowInformations} />
                                         <ToolButton label="Lista negra" route="/blacklist" setShowInformations={setShowInformations} />
-                                        <ToolButton label="Configurações" route="/settings" setShowInformations={setShowInformations} />
+                                        <ToolButton label="Resultados" route="/results" setShowInformations={setShowInformations} />
+                                        <ToolButton label="Configurações" route="/settings" setShowInformations={setShowInformations} last />
                                     </Box>
                                 )}
                             </Box>
@@ -220,6 +222,7 @@ export const NagazapScreen: React.FC<NagazapProps> = ({}) => {
                                     }
                                 />
                                 <Route path="/form" element={<NagazapForm onSuccess={onAddNagazap} setShowInformations={setShowInformations} />} />
+                                <Route path="/results" element={<Results nagazap={nagazap} />} />
                             </Routes>
                         ) : (
                             <Routes>

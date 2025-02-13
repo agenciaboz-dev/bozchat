@@ -16,7 +16,7 @@ interface OvenProps {
     setShowInformations: React.Dispatch<React.SetStateAction<boolean>>
 }
 
-export const Oven: React.FC<OvenProps> = ({ nagazap, setNagazap, setShowInformations }) => {
+export const Oven: React.FC<OvenProps> = ({ nagazap: initialNagazap, setNagazap: setInitialNagazap, setShowInformations }) => {
     function chunkArray<T>(array: T[], chunkSize: number): T[][] {
         const result: T[][] = []
         for (let i = 0; i < array.length; i += chunkSize) {
@@ -29,6 +29,7 @@ export const Oven: React.FC<OvenProps> = ({ nagazap, setNagazap, setShowInformat
     const { company } = useUser()
     const isMobile = useMediaQuery("(orientation: portrait)")
 
+    const [nagazap, setNagazap] = useState(initialNagazap)
     const [frequency, setFrequency] = useState(nagazap?.frequency || "")
     const [batchSize, setBatchSize] = useState(nagazap?.batchSize || 0)
     const [loading, setLoading] = useState(false)
@@ -37,12 +38,12 @@ export const Oven: React.FC<OvenProps> = ({ nagazap, setNagazap, setShowInformat
     const textfield_size = 250
 
     const refresh = async () => {
-        if (!nagazap || !company) return
+        if (!initialNagazap || !company) return
 
         setLoading(true)
 
         try {
-            const response = await api.get("/nagazap", { params: { nagazap_id: nagazap.id, company_id: company.id } })
+            const response = await api.get("/nagazap", { params: { nagazap_id: initialNagazap.id, company_id: company.id } })
             setNagazap(response.data)
         } catch (error) {
             console.log(error)
@@ -108,7 +109,7 @@ export const Oven: React.FC<OvenProps> = ({ nagazap, setNagazap, setShowInformat
 
     useEffect(() => {
         refresh()
-    }, [])
+    }, [initialNagazap])
 
     return nagazap ? (
         <Subroute
