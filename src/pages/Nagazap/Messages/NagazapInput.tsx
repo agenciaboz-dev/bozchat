@@ -60,7 +60,7 @@ export const NagazapInput: React.FC<NagazapInputProps> = ({ chat, nagazap }) => 
                               "&::placeholder": {
                                   // <----- Add this.
                                   opacity: 1,
-                                  "-webkit-text-fill-color": "white",
+                                  // "-webkit-text-fill-color": "white",
                               },
                           }
                         : {},
