@@ -11,6 +11,11 @@ interface MediaInputMenuProps {
     chat_id: string
 }
 
+const isMkv = (file: File) => {
+    const splited = file.name.split(".")
+    return splited[splited.length - 1].toLowerCase() === "mkv"
+}
+
 export const MediaInputMenu: React.FC<MediaInputMenuProps> = ({ washima, chat_id }) => {
     const inputRef = useRef<HTMLInputElement>(null)
     const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null)
@@ -56,10 +61,6 @@ export const MediaInputMenu: React.FC<MediaInputMenuProps> = ({ washima, chat_id
 
     const handleFileChange = useCallback((event: React.ChangeEvent<HTMLInputElement>) => {
         const files = event.target.files
-        const isMkv = (file: File) => {
-            const splited = file.name.split(".")
-            return splited[splited.length - 1].toLowerCase() === "mkv"
-        }
 
         if (files) {
             const files_array = Array.from(files)
@@ -83,12 +84,35 @@ export const MediaInputMenu: React.FC<MediaInputMenuProps> = ({ washima, chat_id
         setSelectedFiles((files) => files.filter((_, item_index) => item_index !== index))
     }
 
+    const handlePaste = useCallback((event: ClipboardEvent) => {
+        const items = event.clipboardData?.items
+        if (items) {
+            const files = Array.from(items)
+                .filter((item) => item.type.indexOf("image") >= 0)
+                .map((item) => item.getAsFile())
+                .filter((file): file is File => file !== null)
+
+            if (files.length > 0) {
+                setSelectedFiles(files.filter((item) => !isMkv(item)))
+                setMediaType("image-video")
+            }
+        }
+    }, [])
+
     useEffect(() => {
         if (acceptedMimetypes) {
             inputRef.current?.click()
             setTimeout(() => setAcceptedMimetypes(""), 500)
         }
     }, [acceptedMimetypes])
+
+    useEffect(() => {
+        document.addEventListener("paste", handlePaste)
+
+        return () => {
+            document.removeEventListener("paste", handlePaste)
+        }
+    }, [handlePaste])
 
     return (
         <Box sx={{ marginLeft: "0.5vw" }}>
