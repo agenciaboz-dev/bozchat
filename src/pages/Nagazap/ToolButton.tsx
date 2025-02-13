@@ -1,5 +1,5 @@
 import React, { Dispatch, SetStateAction } from "react"
-import { MenuItem, useMediaQuery } from "@mui/material"
+import { MenuItem, SxProps, useMediaQuery } from "@mui/material"
 import { useLocation, useNavigate } from "react-router-dom"
 import colors from "../../style/colors"
 
@@ -7,9 +7,10 @@ interface ToolButtonProps {
     label: React.ReactNode
     route: string
     setShowInformations: Dispatch<SetStateAction<boolean>>
+    last?: boolean
 }
 
-export const ToolButton: React.FC<ToolButtonProps> = ({ label, route, setShowInformations }) => {
+export const ToolButton: React.FC<ToolButtonProps> = ({ label, route, setShowInformations, last }) => {
     const navigate = useNavigate()
     const splited_pathname = useLocation().pathname.split("nagazap")
     const isMobile = useMediaQuery("(orientation: portrait)")

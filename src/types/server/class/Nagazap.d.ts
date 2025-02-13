@@ -6,6 +6,8 @@ import { WithoutFunctions } from "./helpers";
 import { BusinessInfo } from "../types/shared/Meta/WhatsappBusiness/BusinessInfo";
 import { TemplateForm, TemplateFormResponse, TemplateInfo } from "../types/shared/Meta/WhatsappBusiness/TemplatesInfo";
 import { Company } from "./Company";
+import { Socket } from "socket.io";
+import { NagazapLink } from "./NagazapLink";
 export type NagaMessageType = "text" | "reaction" | "sticker" | "image" | "audio" | "video" | "button";
 export type NagaMessagePrisma = Prisma.NagazapMessageGetPayload<{}>;
 export type NagaMessageForm = Omit<Prisma.NagazapMessageGetPayload<{}>, "id" | "nagazap_id">;
@@ -83,6 +85,7 @@ export declare class Nagazap {
         displayPhone: string | null;
         companyId: string;
     }>;
+    static sendResponse(id: string, data: NagazapResponseForm, socket?: Socket): Promise<void>;
     constructor(data: NagazapPrisma);
     loadBlacklist(saved_list: any[]): BlacklistLog[];
     getMessages(): Promise<NagaMessage[]>;
@@ -120,6 +123,9 @@ export declare class Nagazap {
     uploadTemplateMedia(file: UploadedFile): Promise<any>;
     downloadMedia(media_id: string): Promise<string>;
     emit(): void;
-    sendResponse(data: NagazapResponseForm): Promise<void>;
+    sendResponse(data: NagazapResponseForm, socket?: Socket): Promise<void>;
+    getLinks(): Promise<NagazapLink[]>;
+    newLink(url: string, template_name?: string): Promise<NagazapLink>;
+    findOriginalLink(url: string): Promise<NagazapLink | undefined>;
 }
 export {};
