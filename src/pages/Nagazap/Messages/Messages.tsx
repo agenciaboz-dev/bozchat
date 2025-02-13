@@ -133,28 +133,31 @@ export const MessagesScreen: React.FC<MessagesScreenProps> = ({ nagazap, setShow
                 ) : null
             }
         >
-            <TextField
-                placeholder="Digite o nome, número ou texto da mensagem"
-                label="Buscar mensagens"
-                InputProps={{ startAdornment: <Search />, sx: { gap: "0.5vw" } }}
-                onChange={(ev) => debouncedSearch(ev.target.value)}
-            />
-
             <Box sx={{ gap: "1vw", marginTop: "-1vw" }}>
-                <Box
-                    sx={{
-                        flexDirection: "column",
-                        width: "25vw",
-                        gap: "1vw",
-                        overflow: "scroll",
-                        maxHeight: "30vw",
-                        margin: "-1vw",
-                        padding: "1vw",
-                    }}
-                >
-                    {chats.map((chat) => (
-                        <ChatItem key={chat.from} chat={chat} onChatClick={onChatClick} active={selectedChat?.from === chat.from} />
-                    ))}
+                <Box sx={{ flexDirection: "column", gap: "1vw" }}>
+                    <TextField
+                        placeholder="Nome, número ou texto da mensagem"
+                        label="Buscar mensagens"
+                        InputProps={{ startAdornment: <Search />, sx: { gap: "0.5vw" } }}
+                        onChange={(ev) => debouncedSearch(ev.target.value)}
+                    />
+                    <Box
+                        sx={{
+                            flexDirection: "column",
+                            width: "25vw",
+                            gap: "1vw",
+                            overflow: "scroll",
+                            maxHeight: "30vw",
+                            margin: "-1vw",
+                            padding: "1vw",
+                            marginTop: "0",
+                            paddingTop: "0",
+                        }}
+                    >
+                        {chats.map((chat) => (
+                            <ChatItem key={chat.from} chat={chat} onChatClick={onChatClick} active={selectedChat?.from === chat.from} />
+                        ))}
+                    </Box>
                 </Box>
                 {selectedChat && <ChatContainer chat={selectedChat} onClose={() => setSelectedChat(null)} nagazap={nagazap} />}
             </Box>

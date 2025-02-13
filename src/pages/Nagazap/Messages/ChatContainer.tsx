@@ -53,7 +53,7 @@ export const ChatContainer: React.FC<ChatContainerProps> = ({ chat, onClose, nag
             <Box
                 sx={{
                     width: "100%",
-                    height: "22vw",
+                    height: "27vw",
                     bgcolor: "background.default",
                     overflowY: "scroll",
                     borderRadius: isMobile ? "0 3vw 0 3vw" : "0 1.5vw 0 1.5vw",
