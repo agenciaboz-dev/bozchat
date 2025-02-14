@@ -48,7 +48,7 @@ export const BotForm: React.FC<BotFormProps> = ({ onSubmit, bot }) => {
                 setLoading(false)
             }
         },
-        enableReinitialize: true,
+        // enableReinitialize: true,
     })
 
     const fetchWashimas = async () => {
