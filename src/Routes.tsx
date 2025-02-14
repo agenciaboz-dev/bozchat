@@ -10,6 +10,7 @@ import { DeleteAccount } from "./pages/DeleteAccount/DeleteAccount"
 import { PrivacyTerms } from "./pages/PrivacyTerms/PrivacyTerms"
 import { Settings } from "./pages/Settings/Settings"
 import { Users } from "./pages/Users/Users"
+import { Bots } from "./pages/Bots/Bots"
 
 interface RoutesProps {}
 
@@ -23,6 +24,7 @@ export const Routes: React.FC<RoutesProps> = ({}) => {
             <Route path="/nagazap/*" element={<NagazapScreen />} />
             <Route path="/settings/*" element={<Settings />} />
             <Route path="/users/*" element={<Users />} />
+            <Route path="/bots/*" element={<Bots />} />
             <Route path="*" element={<WildCard />} />
         </ReactRoutes>
     ) : (

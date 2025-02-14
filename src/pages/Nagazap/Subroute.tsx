@@ -8,11 +8,13 @@ interface SubrouteProps {
     right?: React.ReactNode
     left?: React.ReactNode
     space?: boolean
+    elevation?: number
 }
 
-export const Subroute: React.FC<SubrouteProps> = ({ children, title, right, left, space }) => {
+export const Subroute: React.FC<SubrouteProps> = ({ children, title, right, left, space, elevation }) => {
     return (
         <Paper
+            elevation={elevation}
             sx={{
                 flexDirection: "column",
                 gap: "2vw",

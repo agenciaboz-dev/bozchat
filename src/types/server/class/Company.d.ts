@@ -4,6 +4,7 @@ import { Washima } from "./Washima/Washima";
 import { Nagazap } from "./Nagazap";
 import { WithoutFunctions } from "./helpers";
 import { Address } from "./Address";
+import { Bot, BotForm } from "./Bot/Bot";
 export type CompanyPrisma = Prisma.CompanyGetPayload<{}>;
 export type CompanyForm = Omit<WithoutFunctions<Company>, "id" | "address"> & {
     address: WithoutFunctions<Address>;
@@ -37,4 +38,6 @@ export declare class Company {
     }>;
     getBakingMessagesCount(): Promise<number>;
     getBlacklistedCount(): Promise<number>;
+    getBots(): Promise<Bot[]>;
+    createBot(data: BotForm): Promise<Bot>;
 }
