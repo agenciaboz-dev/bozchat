@@ -13,6 +13,7 @@ import {
     BackgroundVariant,
     ReactFlowInstance,
     useReactFlow,
+    ReactFlowJsonObject,
 } from "@xyflow/react"
 import dagre, { layout } from "@dagrejs/dagre"
 
@@ -33,6 +34,10 @@ const edgeType = "smoothstep"
 
 interface FlowLayoutProps {
     bot_id: string
+    botInstances: ReactFlowJsonObject<Node, Edge>[]
+    setBotInstances: React.Dispatch<React.SetStateAction<ReactFlowJsonObject<Node, Edge>[]>>
+    undoToInstance: ReactFlowJsonObject<Node, Edge> | null
+    setUndoToInstance: React.Dispatch<React.SetStateAction<ReactFlowJsonObject<Node, Edge> | null>>
 }
 
 export interface FlowNode extends Node {
@@ -53,7 +58,7 @@ interface FlowEdge extends Edge {
 
 const dagreGraph = new dagre.graphlib.Graph().setDefaultEdgeLabel(() => ({}))
 
-export const FlowLayout: React.FC<FlowLayoutProps> = ({ bot_id }) => {
+export const FlowLayout: React.FC<FlowLayoutProps> = ({ bot_id, botInstances, setBotInstances, undoToInstance, setUndoToInstance }) => {
     const { company } = useUser()
     const { setViewport } = useReactFlow()
     const theme = useTheme()
@@ -62,7 +67,6 @@ export const FlowLayout: React.FC<FlowLayoutProps> = ({ bot_id }) => {
     const [bot, setBot] = useState<Bot | null>(null)
     const [initializing, setInitializing] = useState(true)
     const [editingNode, setEditingNode] = useState<FlowNode | null>(null)
-
 
     const initialNodes: FlowNode[] = []
 
@@ -196,6 +200,7 @@ export const FlowLayout: React.FC<FlowLayoutProps> = ({ bot_id }) => {
             if (instance) {
                 console.log("ing")
                 const flow = instance.toObject()
+                setBotInstances((instances) => [...instances, flow])
                 try {
                     await api.patch("/company/bots", { instance: flow }, { params: { company_id: company?.id, bot_id: bot_id } })
                 } catch (error) {
@@ -343,6 +348,27 @@ export const FlowLayout: React.FC<FlowLayoutProps> = ({ bot_id }) => {
             // instance.fitView()
         }
     }, [nodes, instance])
+
+    useEffect(() => {
+        if (undoToInstance) {
+            const restoreFlow = async () => {
+                const flow = undoToInstance
+
+                let nodes: FlowNode[] = (flow?.nodes as FlowNode[]) || []
+                let edges: Edge[] = []
+                const { x = 0, y = 0, zoom = 1 } = flow.viewport
+                edges = flow.edges
+                setViewport({ x, y, zoom })
+
+                const layouted = updateLayout(nodes, edges)
+                setNodes(layouted.nodes)
+                setEdges(layouted.edges)
+                setUndoToInstance(null)
+            }
+
+            restoreFlow()
+        }
+    }, [undoToInstance])
 
     return initializing ? (
         <Box sx={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
