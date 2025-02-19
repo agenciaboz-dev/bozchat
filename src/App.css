@@ -110,3 +110,7 @@ img {
 .link:hover {
     text-decoration: underline;
 }
+
+.react-flow__panel {
+    display: none;
+}

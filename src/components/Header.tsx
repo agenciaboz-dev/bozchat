@@ -13,7 +13,7 @@ export const Header: React.FC<HeaderProps> = ({}) => {
 
     const isMobile = useMediaQuery("(orientation: portrait)")
 
-    const [menuAchor, setMenuAnchor] = React.useState<null | HTMLElement>(null)
+    const [menuAnchor, setMenuAnchor] = React.useState<null | HTMLElement>(null)
     const handleClickMenu = (event: React.MouseEvent<HTMLButtonElement>) => {
         setMenuAnchor(event.currentTarget)
     }
@@ -42,7 +42,7 @@ export const Header: React.FC<HeaderProps> = ({}) => {
                     {splitted_name.map((word) => word[0])}
                 </Avatar>
             </IconButton>
-            <Menu anchorEl={menuAchor} open={!!menuAchor} onClose={handleCloseMenu} slotProps={{ paper: { sx: { bgcolor: "background.default" } } }}>
+            <Menu anchorEl={menuAnchor} open={!!menuAnchor} onClose={handleCloseMenu} slotProps={{ paper: { sx: { bgcolor: "background.default" } } }}>
                 <Box sx={{ padding: "1vw", color: "secondary.main", fontSize: "0.8rem" }}>{user?.name}</Box>
                 <MenuItem onClick={logout}>Sair</MenuItem>
             </Menu>

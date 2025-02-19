@@ -5,7 +5,7 @@ import { useLocation } from "react-router-dom"
 import { Bot } from "../../types/server/class/Bot/Bot"
 import { Settings, SettingsApplications } from "@mui/icons-material"
 import { BotForm } from "./BotForm"
-import { FlowContainer } from "./FlowContainer"
+import { FlowLayout } from "./FlowLayout"
 
 interface BotPageProps {
     onSave: (bot: Bot) => void
@@ -36,7 +36,7 @@ export const BotPage: React.FC<BotPageProps> = ({ onSave }) => {
                     bot={bot}
                 />
             ) : (
-                <FlowContainer bot={bot} />
+                <FlowLayout bot_id={bot.id} />
             )}
         </Subroute>
     )

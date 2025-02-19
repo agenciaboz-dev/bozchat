@@ -9,6 +9,7 @@ import { IoProvider } from "./contexts/ioContext"
 import { PhotoProvider } from "react-photo-view"
 import { WashimaInputContextProvider } from "./contexts/washimaInputContext"
 import { ConfirmDialog } from "./components/ConfirmDialog"
+import { ReactFlowProvider } from "@xyflow/react"
 
 interface ProvidersProps {
     children: React.ReactNode
@@ -24,10 +25,12 @@ export const Providers: React.FC<ProvidersProps> = ({ children }) => {
                             <UserProvider>
                                 <MenuProvider>
                                     <PhotoProvider>
-                                        <MenuDrawer />
-                                        <Snackbar />
-                                        <ConfirmDialog />
-                                        {children}
+                                        <ReactFlowProvider>
+                                            <MenuDrawer />
+                                            <Snackbar />
+                                            <ConfirmDialog />
+                                            {children}
+                                        </ReactFlowProvider>
                                     </PhotoProvider>
                                 </MenuProvider>
                             </UserProvider>
