@@ -63,6 +63,7 @@ export const FlowLayout: React.FC<FlowLayoutProps> = ({ bot_id }) => {
     const [initializing, setInitializing] = useState(true)
     const [editingNode, setEditingNode] = useState<FlowNode | null>(null)
 
+
     const initialNodes: FlowNode[] = []
 
     const initialEdges: Edge[] = []

@@ -83,16 +83,16 @@ export const MessageNode: React.FC<MessageNodeProps> = (node) => {
             </Box>
 
             <Handle type="target" position={Position.Top} />
-            <Box sx={{ justifyContent: "center" }}>
-                {/* {data.lastNode && ( */}
-                <IconButton
-                    sx={{ position: "absolute", bottom: -20, visibility: menuAnchor ? "hidden" : undefined }}
-                    onClick={(ev) => (node.type === "message" ? setMenuAnchor(ev.currentTarget) : node.data.onAddChild("message"))}
-                >
-                    <AddCircle />
-                </IconButton>
-                {/* // )} */}
-            </Box>
+
+            {mouseOver && (
+                <Box sx={{ justifyContent: "center" }}>
+                    {/* {data.lastNode && ( */}
+                    <IconButton sx={{ position: "absolute", bottom: -20 }} onClick={() => node.data.onAddChild("message")}>
+                        <AddCircle />
+                    </IconButton>
+                    {/* // )} */}
+                </Box>
+            )}
 
             <Handle type="source" position={Position.Bottom} style={{}} isConnectable={false} />
 
@@ -102,6 +102,7 @@ export const MessageNode: React.FC<MessageNodeProps> = (node) => {
                 onClose={closeMenu}
                 anchorOrigin={{ horizontal: "center", vertical: "center" }}
                 transformOrigin={{ horizontal: "center", vertical: "top" }}
+                MenuListProps={{ sx: { bgcolor: "background.default" } }}
             >
                 <MenuItem onClick={() => addNode("message")}>Mensagem</MenuItem>
                 <MenuItem onClick={() => addNode("response")}>Resposta</MenuItem>
