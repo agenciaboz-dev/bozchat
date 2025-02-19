@@ -67,49 +67,39 @@ export const FlowLayout: React.FC<FlowLayoutProps> = ({ bot_id }) => {
 
     const initialEdges: Edge[] = []
 
-    const getLayoutedElements = (nodes: FlowNode[], edges: FlowEdge[], direction = "TB") => {
-        const isHorizontal = direction === "LR"
-        dagreGraph.setGraph({ rankdir: direction, ranksep: 100, nodesep: 100 })
+    // const updateLayout = (nodes: FlowNode[], edges: FlowEdge[], direction = "TB") => {
+    //     const isHorizontal = direction === "LR"
+    //     dagreGraph.setGraph({ rankdir: direction, ranksep: 100, nodesep: 100 })
 
-        nodes.forEach((node) => {
-            dagreGraph.setNode(node.id, { width: nodeWidth, height: nodeHeight })
-        })
+    //     nodes.forEach((node) => {
+    //         dagreGraph.setNode(node.id, { width: nodeWidth, height: nodeHeight })
+    //     })
 
-        edges.forEach((edge) => {
-            dagreGraph.setEdge(edge.source, edge.target)
-        })
+    //     edges.forEach((edge) => {
+    //         dagreGraph.setEdge(edge.source, edge.target)
+    //     })
 
-        dagre.layout(dagreGraph)
+    //     dagre.layout(dagreGraph)
 
-        const newNodes = nodes.map((node) => {
-            const nodeWithPosition = dagreGraph.node(node.id)
-            const newNode = {
-                ...node,
-                targetPosition: isHorizontal ? "left" : "top",
-                sourcePosition: isHorizontal ? "right" : "bottom",
-                // We are shifting the dagre node position (anchor=center center) to the top left
-                // so it matches the React Flow node anchor point (top left).
-                position: {
-                    x: nodeWithPosition.x - nodeWidth / 2,
-                    y: nodeWithPosition.y - nodeHeight / 2,
-                },
-            }
+    //     const newNodes = nodes.map((node) => {
+    //         const nodeWithPosition = dagreGraph.node(node.id)
+    //         const newNode = {
+    //             ...node,
+    //             targetPosition: isHorizontal ? "left" : "top",
+    //             sourcePosition: isHorizontal ? "right" : "bottom",
+    //             // We are shifting the dagre node position (anchor=center center) to the top left
+    //             // so it matches the React Flow node anchor point (top left).
+    //             position: {
+    //                 x: nodeWithPosition.x - nodeWidth / 2,
+    //                 y: nodeWithPosition.y - nodeHeight / 2,
+    //             },
+    //         }
 
-            return newNode
-        })
+    //         return newNode
+    //     })
 
-        return { nodes: newNodes as FlowNode[], edges }
-    }
-
-    const { nodes: layoutedNodes, edges: layoutedEdges } = getLayoutedElements(initialNodes, initialEdges)
-
-    const [nodes, setNodes, onNodesChange] = useNodesState(layoutedNodes)
-    const [edges, setEdges, onEdgesChange] = useEdgesState(layoutedEdges)
-
-    const onConnect = useCallback(
-        (params: Connection) => setEdges((eds) => addEdge({ ...params, type: ConnectionLineType.SmoothStep, animated: true }, eds)),
-        []
-    )
+    //     return { nodes: newNodes as FlowNode[], edges }
+    // }
 
     const updateLayout = (nodes: FlowNode[], edges: FlowEdge[]): { nodes: FlowNode[]; edges: FlowEdge[] } => {
         const dagreGraph = new dagre.graphlib.Graph().setDefaultEdgeLabel(() => ({}))
@@ -139,6 +129,16 @@ export const FlowLayout: React.FC<FlowLayoutProps> = ({ bot_id }) => {
 
         return { nodes: updatedNodes, edges }
     }
+
+    const { nodes: layoutedNodes, edges: layoutedEdges } = updateLayout(initialNodes, initialEdges)
+
+    const [nodes, setNodes, onNodesChange] = useNodesState(layoutedNodes)
+    const [edges, setEdges, onEdgesChange] = useEdgesState(layoutedEdges)
+
+    const onConnect = useCallback(
+        (params: Connection) => setEdges((eds) => addEdge({ ...params, type: ConnectionLineType.SmoothStep, animated: true }, eds)),
+        []
+    )
 
     const addNodeAndEdge = (
         sourceId: string,
@@ -243,14 +243,34 @@ export const FlowLayout: React.FC<FlowLayoutProps> = ({ bot_id }) => {
         return { newNodes, newEdges }
     }, [])
 
+    const reassignNodeIds = (nodes: FlowNode[], edges: FlowEdge[]) => {
+        const idMapping = new Map()
+        const newNodes = nodes.map((node, index) => {
+            const oldId = node.id
+            const newId = `node_${index}`
+            idMapping.set(oldId, newId)
+            return { ...node, id: newId }
+        })
+
+        const newEdges = edges.map((edge) => ({
+            ...edge,
+            source: idMapping.get(edge.source) || edge.source,
+            target: idMapping.get(edge.target) || edge.target,
+        }))
+
+        return { newNodes, newEdges }
+    }
+
     const onDeleteNode = useCallback(
         (node: FlowNode) => {
             const { newNodes, newEdges } = deleteNodeAndDescendants(node.id, nodes, edges)
-            setNodes(newNodes)
-            setEdges(newEdges)
+            const { newNodes: reassignedNodes, newEdges: reassignedEdges } = reassignNodeIds(newNodes, newEdges)
+            const layouted = updateLayout(reassignedNodes, reassignedEdges)
+            setNodes(layouted.nodes)
+            setEdges(layouted.edges)
             onSave()
         },
-        [deleteNodeAndDescendants, nodes, edges, setNodes, setEdges, onSave]
+        [deleteNodeAndDescendants, nodes, edges, setNodes, setEdges, onSave, reassignNodeIds]
     )
 
     // Example usage in your React component
