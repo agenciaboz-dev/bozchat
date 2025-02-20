@@ -156,6 +156,11 @@ export const FlowLayout: React.FC<FlowLayoutProps> = ({ bot_id, botInstances, se
         const sourceNode = nodes.find((n) => n.id === sourceId)
         if (!sourceNode) return
 
+        if (instance) {
+            const flow = instance.toObject()
+            setBotInstances((instances) => [...instances, flow])
+        }
+
         const newNodeId = `node_${nodes.length}`
         const newNode: FlowNode = {
             id: newNodeId,
@@ -200,7 +205,7 @@ export const FlowLayout: React.FC<FlowLayoutProps> = ({ bot_id, botInstances, se
             if (instance) {
                 console.log("ing")
                 const flow = instance.toObject()
-                setBotInstances((instances) => [...instances, flow])
+
                 try {
                     await api.patch("/company/bots", { instance: flow }, { params: { company_id: company?.id, bot_id: bot_id } })
                 } catch (error) {
@@ -269,6 +274,11 @@ export const FlowLayout: React.FC<FlowLayoutProps> = ({ bot_id, botInstances, se
 
     const onDeleteNode = useCallback(
         (node: FlowNode) => {
+            if (instance) {
+                const flow = instance.toObject()
+                setBotInstances((instances) => [...instances, flow])
+            }
+
             const { newNodes, newEdges } = deleteNodeAndDescendants(node.id, nodes, edges)
             const { newNodes: reassignedNodes, newEdges: reassignedEdges } = reassignNodeIds(newNodes, newEdges)
             const layouted = updateLayout(reassignedNodes, reassignedEdges)
@@ -351,19 +361,20 @@ export const FlowLayout: React.FC<FlowLayoutProps> = ({ bot_id, botInstances, se
 
     useEffect(() => {
         if (undoToInstance) {
-            const restoreFlow = async () => {
+            console.log({ undoToInstance })
+            const restoreFlow = () => {
                 const flow = undoToInstance
 
-                let nodes: FlowNode[] = (flow?.nodes as FlowNode[]) || []
-                let edges: Edge[] = []
+                const nodes: FlowNode[] = (flow?.nodes as FlowNode[]) || []
+                const edges: Edge[] = flow.edges || []
                 const { x = 0, y = 0, zoom = 1 } = flow.viewport
-                edges = flow.edges
                 setViewport({ x, y, zoom })
 
                 const layouted = updateLayout(nodes, edges)
                 setNodes(layouted.nodes)
                 setEdges(layouted.edges)
                 setUndoToInstance(null)
+                onSave()
             }
 
             restoreFlow()

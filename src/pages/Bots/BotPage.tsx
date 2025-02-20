@@ -1,4 +1,4 @@
-import React, { useState } from "react"
+import React, { useEffect, useState } from "react"
 import { Box, IconButton } from "@mui/material"
 import { Subroute } from "../Nagazap/Subroute"
 import { useLocation } from "react-router-dom"
@@ -27,6 +27,14 @@ export const BotPage: React.FC<BotPageProps> = ({ onSave }) => {
             setBotInstances(instances)
         }
     }
+
+    useEffect(() => {
+        console.log({ botInstances })
+    }, [botInstances])
+
+    useEffect(() => {
+        setBotInstances([])
+    }, [bot])
 
     return (
         <Subroute
