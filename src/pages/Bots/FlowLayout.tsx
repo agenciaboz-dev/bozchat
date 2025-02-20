@@ -397,6 +397,7 @@ export const FlowLayout: React.FC<FlowLayoutProps> = ({ bot_id, botInstances, se
                     },
                 ]
                 nodes[0].data.editNode = () => setEditingNode(nodes[0])
+                nodes[0].data.value = bot.trigger
 
                 let edges: Edge[] = []
 
