@@ -466,7 +466,7 @@ export const FlowLayout: React.FC<FlowLayoutProps> = ({ bot_id, botInstances, se
             onInit={setInstance}
             minZoom={0}
         >
-            <Background />
+            <Background size={1} />
             <NodeModal node={editingNode} onClose={() => setEditingNode(null)} saveNode={onEditNode} />
         </ReactFlow>
     )
