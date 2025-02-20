@@ -60,6 +60,8 @@ interface FlowEdge extends Edge {
 
 const dagreGraph = new dagre.graphlib.Graph().setDefaultEdgeLabel(() => ({}))
 
+const viewport_duration = 800
+
 export const FlowLayout: React.FC<FlowLayoutProps> = ({ bot_id, botInstances, setBotInstances, undoToInstance, setUndoToInstance }) => {
     const { company } = useUser()
     const { setViewport } = useReactFlow()
@@ -193,6 +195,15 @@ export const FlowLayout: React.FC<FlowLayoutProps> = ({ bot_id, botInstances, se
                 const layouted = updateLayout(newNodes, newEdges)
                 setEdges(layouted.edges)
 
+                const addedNode = layouted.nodes.find((n) => n.id === newNodeId)
+                if (addedNode && instance) {
+                    const { x, y } = addedNode.position
+                    instance.setCenter(x + nodeWidth / 2, y + nodeHeight / 2, {
+                        zoom: 0.9,
+                        duration: viewport_duration, // optional smooth animation (in ms)
+                    })
+                }
+
                 onSave()
 
                 return layouted.nodes
@@ -317,6 +328,21 @@ export const FlowLayout: React.FC<FlowLayoutProps> = ({ bot_id, botInstances, se
                 // const { newNodes: reassignedNodes, newEdges: reassignedEdges } = reassignNodeIds(newNodes, newEdges)
                 const layouted = updateLayout(newNodes, newEdges)
                 setEdges(layouted.edges)
+
+                const parentEdge = edges.find((edge) => edge.target === node.id)
+                if (parentEdge) {
+                    // find the parent node in the *layouted* array to get the final position
+                    const parentNode = layouted.nodes.find((n) => n.id === parentEdge.source)
+                    if (parentNode && instance) {
+                        // center on the parent node
+                        const { x, y } = parentNode.position
+                        instance.setCenter(x + nodeWidth / 2, y + nodeHeight / 2, {
+                            zoom: 0.9,
+                            duration: viewport_duration, // optional: animate over 800ms
+                        })
+                    }
+                }
+
                 onSave()
                 return layouted.nodes
             })
@@ -383,7 +409,7 @@ export const FlowLayout: React.FC<FlowLayoutProps> = ({ bot_id, botInstances, se
                 const layouted = updateLayout(nodes, edges)
                 setNodes(layouted.nodes)
                 setEdges(layouted.edges)
-                setTimeout(() => instance?.fitView({ padding: 0.1 }), 100)
+                setTimeout(() => instance?.fitView({ padding: 0.1, duration: viewport_duration }), 100)
             }
 
             restoreFlow()
