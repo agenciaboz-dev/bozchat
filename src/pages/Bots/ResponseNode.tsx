@@ -59,23 +59,23 @@ export const ResponseNode: React.FC<ResponseNodeProps> = (node) => {
                 </Button>
             )}
 
-            {mouseOver && node.id !== 'node_0' && (
+            {mouseOver && (
                 <Box
                     sx={{
                         justifyContent: "flex-end",
                         position: "absolute",
+                        bottom: -20,
                         right: 0,
-                        top: 0,
                     }}
                 >
-                    {node.data.deleteNode && (
-                        <IconButton onClick={() => node.data.deleteNode!(node)}>
-                            <Delete sx={{ width: 20, height: "auto" }} />
-                        </IconButton>
-                    )}
                     {node.data.value && (
                         <IconButton onClick={() => node.data.editNode(node)}>
-                            <Edit sx={{ width: 20, height: "auto" }} />
+                            <Edit sx={{}} />
+                        </IconButton>
+                    )}
+                    {node.data.deleteNode && (
+                        <IconButton onClick={() => node.data.deleteNode!(node)}>
+                            <Delete sx={{}} />
                         </IconButton>
                     )}
                 </Box>

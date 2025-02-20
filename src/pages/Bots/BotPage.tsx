@@ -71,13 +71,15 @@ export const BotPage: React.FC<BotPageProps> = ({ onSave, onDelete }) => {
                     bot={bot}
                 />
             ) : (
-                <FlowLayout
-                    bot_id={bot.id}
-                    botInstances={botInstances}
-                    setBotInstances={setBotInstances}
-                    undoToInstance={undoToInstance}
-                    setUndoToInstance={setUndoToInstance}
-                />
+                <Box sx={{ flex: 1, margin: "-2vw" }}>
+                    <FlowLayout
+                        bot_id={bot.id}
+                        botInstances={botInstances}
+                        setBotInstances={setBotInstances}
+                        undoToInstance={undoToInstance}
+                        setUndoToInstance={setUndoToInstance}
+                    />
+                </Box>
             )}
         </Subroute>
     )

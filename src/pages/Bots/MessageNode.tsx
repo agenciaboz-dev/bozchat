@@ -65,40 +65,38 @@ export const MessageNode: React.FC<MessageNodeProps> = (node) => {
                 </Button>
             )}
 
-            {mouseOver && (
-                <Box
-                    sx={{
-                        justifyContent: "flex-end",
-                        position: "absolute",
-                        right: 0,
-                        top: 0,
-                    }}
-                >
-                    {node.data.deleteNode && (
-                        <IconButton onClick={() => node.data.deleteNode!(node)}>
-                            <Delete sx={{ width: 20, height: "auto" }} />
-                        </IconButton>
-                    )}
-                    {node.data.value && (
-                        <IconButton onClick={() => node.data.editNode(node)}>
-                            <Edit sx={{ width: 20, height: "auto" }} />
-                        </IconButton>
-                    )}
-                </Box>
-            )}
-
             <Handle type="target" position={Position.Top} />
 
             {can_add_children && (
                 <Box sx={{ justifyContent: "center" }}>
-                    {/* {data.lastNode && ( */}
                     <IconButton
                         sx={{ position: "absolute", bottom: -20 }}
                         onClick={(ev) => (response_children ? node.data.onAddChild("response") : setMenuAnchor(ev.currentTarget))}
                     >
                         <AddCircle />
                     </IconButton>
-                    {/* // )} */}
+                </Box>
+            )}
+
+            {mouseOver && (
+                <Box
+                    sx={{
+                        justifyContent: "flex-end",
+                        position: "absolute",
+                        bottom: -20,
+                        right: 0,
+                    }}
+                >
+                    {node.data.value && (
+                        <IconButton onClick={() => node.data.editNode(node)}>
+                            <Edit sx={{}} />
+                        </IconButton>
+                    )}
+                    {node.data.deleteNode && (
+                        <IconButton onClick={() => node.data.deleteNode!(node)}>
+                            <Delete sx={{}} />
+                        </IconButton>
+                    )}
                 </Box>
             )}
 
