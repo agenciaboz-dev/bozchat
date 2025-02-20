@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react"
+import React, { useEffect, useRef, useState } from "react"
 import { Box, Button, Dialog, IconButton, MenuItem, TextField, Typography } from "@mui/material"
 import { FlowNode } from "./FlowLayout"
 import { Close } from "@mui/icons-material"
@@ -6,25 +6,31 @@ import { Close } from "@mui/icons-material"
 interface NodeModalProps {
     node: FlowNode | null
     onClose: () => void
-    saveNode: (node: FlowNode) => void
+    saveNode: (node_id: string, value: string) => void
 }
 
 export const NodeModal: React.FC<NodeModalProps> = ({ node, onClose, saveNode }) => {
+    const inputRef = useRef<HTMLInputElement>(null)
+
     const [nodeValue, setNodeValue] = useState(node?.data.value)
 
     const onSaveClick = () => {
         if (!node || !nodeValue) return
 
-        const updated_node = node
-        updated_node.data.value = nodeValue
+        saveNode(node.id, nodeValue)
 
-        saveNode(updated_node)
         onClose()
     }
 
     useEffect(() => {
         setNodeValue(node?.data.value)
     }, [node])
+
+    useEffect(() => {
+        if (inputRef.current) {
+            inputRef.current?.focus()
+        }
+    }, [inputRef.current])
 
     return (
         <Dialog open={!!node} onClose={onClose} PaperProps={{ sx: { bgcolor: "background.default", padding: "2vw", gap: "1vw" } }}>
@@ -39,11 +45,13 @@ export const NodeModal: React.FC<NodeModalProps> = ({ node, onClose, saveNode })
                         </IconButton>
                     </Box>
                     <TextField
+                        inputRef={inputRef}
                         multiline={node.type === "message"}
                         minRows={3}
                         label="Texto"
                         value={nodeValue}
                         onChange={(ev) => setNodeValue(ev.target.value)}
+                        onKeyDown={(ev) => (ev.ctrlKey && ev.key === "Enter" ? onSaveClick() : {})}
                     />
 
                     <Box sx={{ justifyContent: "flex-end" }}>
@@ -56,4 +64,3 @@ export const NodeModal: React.FC<NodeModalProps> = ({ node, onClose, saveNode })
         </Dialog>
     )
 }
-;("")

@@ -1,4 +1,4 @@
-import React, { useState } from "react"
+import React, { useMemo, useState } from "react"
 import { Box, Button, IconButton, Menu, MenuItem, Paper, Typography } from "@mui/material"
 import { FlowNode } from "./FlowLayout"
 import { nodeHeight, nodeWidth } from "./CustomNode"
@@ -11,8 +11,11 @@ interface ResponseNodeProps extends FlowNode {}
 export const ResponseNode: React.FC<ResponseNodeProps> = (node) => {
     const [mouseOver, setMouseOver] = useState(false)
 
-    const index = Number(node.id.split("node_")[1])
-    const topHandle = index !== 0
+    const children = useMemo(() => (node.data.getChildren ? node.data.getChildren(node.id) : []), [node])
+
+    const can_add_children = children.length === 0
+
+    const topHandle = node.id !== 'node_0'
 
     const bgcolor = "#2a323c"
 
@@ -56,29 +59,31 @@ export const ResponseNode: React.FC<ResponseNodeProps> = (node) => {
                 </Button>
             )}
 
-            <Box
-                sx={{
-                    justifyContent: "flex-end",
-                    position: "absolute",
-                    right: 0,
-                    top: 0,
-                    transition: "0.2s",
-                    opacity: mouseOver ? 1 : 0,
-                }}
-            >
-                <IconButton onClick={() => node.data.deleteNode(node)}>
-                    <Delete sx={{ width: 20, height: "auto" }} />
-                </IconButton>
-                {node.data.value && (
-                    <IconButton onClick={() => node.data.editNode(node)}>
-                        <Edit sx={{ width: 20, height: "auto" }} />
-                    </IconButton>
-                )}
-            </Box>
+            {mouseOver && node.id !== 'node_0' && (
+                <Box
+                    sx={{
+                        justifyContent: "flex-end",
+                        position: "absolute",
+                        right: 0,
+                        top: 0,
+                    }}
+                >
+                    {node.data.deleteNode && (
+                        <IconButton onClick={() => node.data.deleteNode!(node)}>
+                            <Delete sx={{ width: 20, height: "auto" }} />
+                        </IconButton>
+                    )}
+                    {node.data.value && (
+                        <IconButton onClick={() => node.data.editNode(node)}>
+                            <Edit sx={{ width: 20, height: "auto" }} />
+                        </IconButton>
+                    )}
+                </Box>
+            )}
 
             <Handle type="source" position={Position.Bottom} style={{}} isConnectable={false} />
 
-            {mouseOver && (
+            {can_add_children && (
                 <Box sx={{ justifyContent: "center" }}>
                     {/* {data.lastNode && ( */}
                     <IconButton sx={{ position: "absolute", bottom: -20 }} onClick={() => node.data.onAddChild("message")}>

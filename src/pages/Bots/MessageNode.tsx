@@ -1,4 +1,4 @@
-import React, { useState } from "react"
+import React, { useMemo, useState } from "react"
 import { Box, Button, IconButton, Menu, MenuItem, Paper, TextField, Typography } from "@mui/material"
 import { FlowNode } from "./FlowLayout"
 import { AddCircle, Delete, Edit } from "@mui/icons-material"
@@ -13,9 +13,12 @@ export const MessageNode: React.FC<MessageNodeProps> = (node) => {
     const [menuAnchor, setMenuAnchor] = useState<HTMLElement | null>(null)
     const [mouseOver, setMouseOver] = useState(false)
 
-    const closeMenu = () => setMenuAnchor(null)
+    const children = useMemo(() => (node.data.getChildren ? node.data.getChildren(node.id) : []), [node])
 
-    const index = Number(node.id.split("node_")[1])
+    const response_children = !!children.length && children.every((node) => node.type === "response")
+    const can_add_children = children.length === 0 || response_children
+
+    const closeMenu = () => setMenuAnchor(null)
 
     const bgcolor = "#0f6787"
 
@@ -62,32 +65,37 @@ export const MessageNode: React.FC<MessageNodeProps> = (node) => {
                 </Button>
             )}
 
-            <Box
-                sx={{
-                    justifyContent: "flex-end",
-                    position: "absolute",
-                    right: 0,
-                    top: 0,
-                    transition: "0.2s",
-                    opacity: mouseOver ? 1 : 0,
-                }}
-            >
-                <IconButton onClick={() => node.data.deleteNode(node)}>
-                    <Delete sx={{ width: 20, height: "auto" }} />
-                </IconButton>
-                {node.data.value && (
-                    <IconButton onClick={() => node.data.editNode(node)}>
-                        <Edit sx={{ width: 20, height: "auto" }} />
-                    </IconButton>
-                )}
-            </Box>
+            {mouseOver && (
+                <Box
+                    sx={{
+                        justifyContent: "flex-end",
+                        position: "absolute",
+                        right: 0,
+                        top: 0,
+                    }}
+                >
+                    {node.data.deleteNode && (
+                        <IconButton onClick={() => node.data.deleteNode!(node)}>
+                            <Delete sx={{ width: 20, height: "auto" }} />
+                        </IconButton>
+                    )}
+                    {node.data.value && (
+                        <IconButton onClick={() => node.data.editNode(node)}>
+                            <Edit sx={{ width: 20, height: "auto" }} />
+                        </IconButton>
+                    )}
+                </Box>
+            )}
 
             <Handle type="target" position={Position.Top} />
 
-            {mouseOver && (
+            {can_add_children && (
                 <Box sx={{ justifyContent: "center" }}>
                     {/* {data.lastNode && ( */}
-                    <IconButton sx={{ position: "absolute", bottom: -20 }} onClick={() => node.data.onAddChild("message")}>
+                    <IconButton
+                        sx={{ position: "absolute", bottom: -20 }}
+                        onClick={(ev) => (response_children ? node.data.onAddChild("response") : setMenuAnchor(ev.currentTarget))}
+                    >
                         <AddCircle />
                     </IconButton>
                     {/* // )} */}

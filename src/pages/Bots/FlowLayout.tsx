@@ -28,6 +28,7 @@ import { ResponseNode } from "./ResponseNode"
 import { MessageNode } from "./MessageNode"
 import { NodeModal } from "./NodeModal"
 import { useTheme } from "../../hooks/useTheme"
+import { uid } from "uid"
 
 const position = { x: 0, y: 0 }
 const edgeType = "smoothstep"
@@ -45,7 +46,8 @@ export interface FlowNode extends Node {
         onAddChild: (type: "message" | "response") => void
         value: string
         editNode: React.Dispatch<React.SetStateAction<FlowNode | null>>
-        deleteNode: (node: FlowNode) => void
+        deleteNode?: (node: FlowNode) => void
+        getChildren: (parentId: string, type?: "direct" | "recursive") => FlowNode[]
         // nodes: FlowNode[]
         // edges: FlowEdge[]
     }
@@ -145,59 +147,59 @@ export const FlowLayout: React.FC<FlowLayoutProps> = ({ bot_id, botInstances, se
         []
     )
 
-    const addNodeAndEdge = (
-        sourceId: string,
-        nodes: FlowNode[],
-        setNodes: Function,
-        edges: FlowEdge[],
-        setEdges: Function,
-        type: "response" | "message" = "response"
-    ) => {
-        const sourceNode = nodes.find((n) => n.id === sourceId)
-        if (!sourceNode) return
+    const addNodeAndEdge = useCallback(
+        (sourceId: string, type: "response" | "message" = "response") => {
+            setNodes((nodes) => {
+                const sourceNode = nodes.find((n) => n.id === sourceId)
+                if (!sourceNode) return []
 
-        if (instance) {
-            const flow = instance.toObject()
-            setBotInstances((instances) => [...instances, flow])
-        }
+                if (instance) {
+                    const flow = instance.toObject()
+                    setBotInstances((instances) => [...instances, flow])
+                }
 
-        const newNodeId = `node_${nodes.length}`
-        const newNode: FlowNode = {
-            id: newNodeId,
-            type,
-            position: { x: sourceNode.position.x, y: sourceNode.position.y + nodeHeight + 50 }, // Default offset for direct child
-            data: {
-                onAddChild: () => {},
-                editNode: () => setEditingNode(null),
-                deleteNode: () => {},
-                value: "",
-            },
-        }
+                const newNodeId = `node_${uid()}`
+                const newNode: FlowNode = {
+                    id: newNodeId,
+                    type,
+                    position: { x: sourceNode.position.x, y: sourceNode.position.y + nodeHeight + 50 }, // Default offset for direct child
+                    data: {
+                        onAddChild: () => {},
+                        editNode: () => setEditingNode(null),
+                        deleteNode: () => {},
+                        getChildren: () => [],
+                        value: "",
+                    },
+                }
 
-        const newNodes = [...nodes, newNode]
-        const newEdges: FlowEdge[] = [
-            ...edges,
-            {
-                id: `edge_${sourceId}-${newNodeId}`,
-                source: sourceId,
-                target: newNodeId,
-                type: "smoothstep",
-                animated: true,
-                style: {
-                    stroke: theme.colors.primary,
-                    // strokeWidth: 5,
-                    // strokeDasharray: 10,
-                },
-            },
-        ]
+                const newNodes = [...nodes, newNode]
+                const newEdges: FlowEdge[] = [
+                    ...edges,
+                    {
+                        id: `edge_${sourceId}-${newNodeId}`,
+                        source: sourceId,
+                        target: newNodeId,
+                        type: "smoothstep",
+                        animated: true,
+                        style: {
+                            stroke: theme.colors.primary,
+                            // strokeWidth: 5,
+                            // strokeDasharray: 10,
+                        },
+                    },
+                ]
 
-        // Update layout to avoid overlap and maintain structure
-        const layouted = updateLayout(newNodes, newEdges)
-        setNodes(layouted.nodes)
-        setEdges(layouted.edges)
+                // Update layout to avoid overlap and maintain structure
+                const layouted = updateLayout(newNodes, newEdges)
+                setEdges(layouted.edges)
 
-        onSave()
-    }
+                onSave()
+
+                return layouted.nodes
+            })
+        },
+        [nodes, edges, setNodes, setEdges]
+    )
 
     const onSave = async () => {
         console.log("sav")
@@ -226,13 +228,44 @@ export const FlowLayout: React.FC<FlowLayoutProps> = ({ bot_id, botInstances, se
         }
     }
 
-    const onEditNode = (node: FlowNode) => {
-        const index = Number(node.id.split("node_")[1])
-        const updated_nodes = [...nodes]
-        updated_nodes[index] = node
-        console.log(updated_nodes, index)
-        // setNodes(updated_nodes)
+    const onEditNode = (node_id: string, value: string) => {
+        if (instance) {
+            //this is just for the undo function
+            const flow = instance.toObject()
+            setBotInstances((instances) => [...instances, flow])
+        }
+
+        const updatedNodes = nodes.map((n) => (n.id === node_id ? { ...n, data: { ...n.data, value: value } } : n))
+        console.log({ updatedNodes })
+        setNodes(updatedNodes)
         onSave()
+    }
+
+    const getChildren = (parentId: string, type: "direct" | "recursive" = "direct") => {
+        if (type === "direct") {
+            const children_ids = edges.filter((edge) => edge.source === parentId).map((edge) => edge.target)
+            const children = nodes.filter((node) => children_ids.includes(node.id))
+            return children
+        }
+
+        const children = new Set<FlowNode>()
+        const stack = [parentId]
+
+        while (stack.length > 0) {
+            const currentId = stack.pop()
+            if (currentId) {
+                const node = nodes.find((node) => node.id === currentId)
+                if (node) {
+                    children.add(node)
+
+                    // Find children (i.e., nodes that the current node points to via edges)
+                    const direct_children = getChildren(currentId, "direct")
+                    stack.push(...direct_children.map((node) => node.id))
+                }
+            }
+        }
+
+        return Array.from(children)
     }
 
     const deleteNodeAndDescendants = useCallback((nodeId: string, nodes: FlowNode[], edges: FlowEdge[]) => {
@@ -254,23 +287,23 @@ export const FlowLayout: React.FC<FlowLayoutProps> = ({ bot_id, botInstances, se
         return { newNodes, newEdges }
     }, [])
 
-    const reassignNodeIds = (nodes: FlowNode[], edges: FlowEdge[]) => {
-        const idMapping = new Map()
-        const newNodes = nodes.map((node, index) => {
-            const oldId = node.id
-            const newId = `node_${index}`
-            idMapping.set(oldId, newId)
-            return { ...node, id: newId }
-        })
+    // const reassignNodeIds = (nodes: FlowNode[], edges: FlowEdge[]) => {
+    //     const idMapping = new Map()
+    //     const newNodes = nodes.map((node, index) => {
+    //         const oldId = node.id
+    //         const newId = `node_${index}`
+    //         idMapping.set(oldId, newId)
+    //         return { ...node, id: newId }
+    //     })
 
-        const newEdges = edges.map((edge) => ({
-            ...edge,
-            source: idMapping.get(edge.source) || edge.source,
-            target: idMapping.get(edge.target) || edge.target,
-        }))
+    //     const newEdges = edges.map((edge) => ({
+    //         ...edge,
+    //         source: idMapping.get(edge.source) || edge.source,
+    //         target: idMapping.get(edge.target) || edge.target,
+    //     }))
 
-        return { newNodes, newEdges }
-    }
+    //     return { newNodes, newEdges }
+    // }
 
     const onDeleteNode = useCallback(
         (node: FlowNode) => {
@@ -279,14 +312,16 @@ export const FlowLayout: React.FC<FlowLayoutProps> = ({ bot_id, botInstances, se
                 setBotInstances((instances) => [...instances, flow])
             }
 
-            const { newNodes, newEdges } = deleteNodeAndDescendants(node.id, nodes, edges)
-            const { newNodes: reassignedNodes, newEdges: reassignedEdges } = reassignNodeIds(newNodes, newEdges)
-            const layouted = updateLayout(reassignedNodes, reassignedEdges)
-            setNodes(layouted.nodes)
-            setEdges(layouted.edges)
-            onSave()
+            setNodes((nodes) => {
+                const { newNodes, newEdges } = deleteNodeAndDescendants(node.id, nodes, edges)
+                // const { newNodes: reassignedNodes, newEdges: reassignedEdges } = reassignNodeIds(newNodes, newEdges)
+                const layouted = updateLayout(newNodes, newEdges)
+                setEdges(layouted.edges)
+                onSave()
+                return layouted.nodes
+            })
         },
-        [deleteNodeAndDescendants, nodes, edges, setNodes, setEdges, onSave, reassignNodeIds]
+        [deleteNodeAndDescendants, nodes, edges, setNodes, setEdges, onSave]
     )
 
     // Example usage in your React component
@@ -309,9 +344,10 @@ export const FlowLayout: React.FC<FlowLayoutProps> = ({ bot_id, botInstances, se
                 ...node,
                 data: {
                     ...node.data,
-                    onAddChild: (type: "message" | "response") => addNodeAndEdge(node.id, nodes, setNodes, edges, setEdges, type),
-                    deleteNode: (node) => onDeleteNode(node),
+                    onAddChild: (type: "message" | "response") => addNodeAndEdge(node.id, type),
+                    deleteNode: node.id === "node_0" ? undefined : (node) => onDeleteNode(node),
                     editNode: (node) => setEditingNode(node),
+                    getChildren,
                 },
             }))
         )
@@ -328,7 +364,8 @@ export const FlowLayout: React.FC<FlowLayoutProps> = ({ bot_id, botInstances, se
                         type: "response",
                         data: {
                             value: bot.trigger,
-                            onAddChild: (type: "message" | "response") => addNodeAndEdge("node_0", nodes, setNodes, edges, setEdges, type),
+                            onAddChild: (type: "message" | "response") => addNodeAndEdge("node_0", type),
+                            getChildren,
                         },
                         position,
                     },
@@ -346,6 +383,7 @@ export const FlowLayout: React.FC<FlowLayoutProps> = ({ bot_id, botInstances, se
                 const layouted = updateLayout(nodes, edges)
                 setNodes(layouted.nodes)
                 setEdges(layouted.edges)
+                setTimeout(() => instance?.fitView({ padding: 0.1 }), 100)
             }
 
             restoreFlow()
@@ -353,7 +391,7 @@ export const FlowLayout: React.FC<FlowLayoutProps> = ({ bot_id, botInstances, se
     }, [bot])
 
     useEffect(() => {
-        console.log(nodes)
+        console.log({ nodes })
         if (instance) {
             // instance.fitView()
         }
@@ -399,6 +437,7 @@ export const FlowLayout: React.FC<FlowLayoutProps> = ({ bot_id, botInstances, se
             // style={{ margin: "-2vw",  }}
             nodesDraggable={false}
             onInit={setInstance}
+            minZoom={0}
         >
             <Background />
             <NodeModal node={editingNode} onClose={() => setEditingNode(null)} saveNode={onEditNode} />
