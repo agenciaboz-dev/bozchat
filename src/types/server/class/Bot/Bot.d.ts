@@ -16,23 +16,24 @@ export declare const bot_include: {
 type BotPrisma = Prisma.BotGetPayload<{
     include: typeof bot_include;
 }>;
-export interface FlowResponse {
-    flow: FlowObject[];
-    trigger: string;
+export interface FlowNode extends Node {
+    data: {
+        onAddChild: (type: "message" | "response") => void;
+        value: string;
+        editNode: (node: FlowNode | null) => void;
+        deleteNode?: (node: FlowNode) => void;
+        getChildren: (parentId: string, type?: "direct" | "recursive") => FlowNode[];
+    };
 }
-export interface FlowObject {
-    type: "message" | "response";
-    position: number[];
-    message?: string;
-    response?: FlowResponse[];
+export interface FlowEdge extends Edge {
+    type?: string;
+    animated?: boolean;
 }
 export interface ActiveBot {
     chat_id: string;
-    flow_index: number;
-    last_interaction: string;
-    started_at: string;
-    nagazap_id?: string;
-    washima_is?: string;
+    current_node_id: string;
+    last_interaction: number;
+    started_at: number;
 }
 export type BotForm = Omit<WithoutFunctions<Bot>, "id" | "created_at" | "triggered" | "instance" | "active_on">;
 export declare class Bot {
@@ -48,9 +49,15 @@ export declare class Bot {
     washima_ids: string[];
     static new(data: BotForm): Promise<Bot>;
     static getById(id: string): Promise<Bot>;
+    static getByWashima(washima_id: string): Promise<Bot[]>;
+    static getByNagazap(nagazap_id: string): Promise<Bot[]>;
     constructor(data: BotPrisma);
     load(data: BotPrisma): void;
     update(data: Partial<Bot>): Promise<void>;
     getChannels(): Promise<void>;
+    delete(): Promise<void>;
+    handleIncomingMessage(message: string, chat_id: string, response: (text: string) => void): void;
+    getActiveChat(chat_id: string): ActiveBot | undefined;
+    newChat(chat_id: string): ActiveBot;
 }
 export {};

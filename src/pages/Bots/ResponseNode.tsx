@@ -1,10 +1,10 @@
 import React, { useMemo, useState } from "react"
 import { Box, Button, IconButton, Menu, MenuItem, Paper, Typography } from "@mui/material"
-import { FlowNode } from "./FlowLayout"
 import { nodeHeight, nodeWidth } from "./CustomNode"
 import { Handle, Position } from "@xyflow/react"
 import { AddCircle, Delete, Edit } from "@mui/icons-material"
 import { TrianguloFudido } from "../Zap/TrianguloFudido"
+import { FlowNode } from "../../types/server/class/Bot/Bot"
 
 interface ResponseNodeProps extends FlowNode {}
 

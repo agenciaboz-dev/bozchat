@@ -1,11 +1,11 @@
 import React, { useMemo, useState } from "react"
 import { Box, Button, IconButton, Menu, MenuItem, Paper, TextField, Typography } from "@mui/material"
-import { FlowNode } from "./FlowLayout"
 import { AddCircle, Delete, Edit } from "@mui/icons-material"
 import { nodeHeight, nodeWidth } from "./CustomNode"
 import { Handle, Position } from "@xyflow/react"
 import { TrianguloFudido } from "../Zap/TrianguloFudido"
 import { NodeModal } from "./NodeModal"
+import { FlowNode } from "../../types/server/class/Bot/Bot"
 
 interface MessageNodeProps extends FlowNode {}
 

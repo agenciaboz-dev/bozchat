@@ -1,7 +1,7 @@
 import React, { useEffect, useRef, useState } from "react"
 import { Box, Button, Dialog, IconButton, MenuItem, TextField, Typography } from "@mui/material"
-import { FlowNode } from "./FlowLayout"
 import { Close } from "@mui/icons-material"
+import { FlowNode } from "../../types/server/class/Bot/Bot"
 
 interface NodeModalProps {
     node: FlowNode | null

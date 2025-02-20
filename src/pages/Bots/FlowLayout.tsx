@@ -19,7 +19,7 @@ import dagre, { layout } from "@dagrejs/dagre"
 
 import "@xyflow/react/dist/style.css"
 import { CustomNodeComponent, nodeHeight, nodeWidth } from "./CustomNode"
-import { Bot, FlowResponse } from "../../types/server/class/Bot/Bot"
+import { Bot, FlowEdge, FlowNode } from "../../types/server/class/Bot/Bot"
 import { api } from "../../api"
 import { useUser } from "../../hooks/useUser"
 import { WagaLoading } from "../../components/WagaLoading"
@@ -41,24 +41,7 @@ interface FlowLayoutProps {
     setUndoToInstance: React.Dispatch<React.SetStateAction<ReactFlowJsonObject<Node, Edge> | null>>
 }
 
-export interface FlowNode extends Node {
-    data: {
-        onAddChild: (type: "message" | "response") => void
-        value: string
-        editNode: React.Dispatch<React.SetStateAction<FlowNode | null>>
-        deleteNode?: (node: FlowNode) => void
-        getChildren: (parentId: string, type?: "direct" | "recursive") => FlowNode[]
-        // nodes: FlowNode[]
-        // edges: FlowEdge[]
-    }
-}
 
-interface FlowEdge extends Edge {
-    type?: string
-    animated?: boolean
-}
-
-const dagreGraph = new dagre.graphlib.Graph().setDefaultEdgeLabel(() => ({}))
 
 const viewport_duration = 800
 
