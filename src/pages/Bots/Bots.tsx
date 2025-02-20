@@ -83,9 +83,11 @@ export const Bots: React.FC<BotsProps> = ({}) => {
                                 <ToolButton label="Início" route="/" father_route="bots" />
                                 <ToolButton label="Criar bot" route="/form" father_route="bots" />
                                 <hr style={{ margin: "1vw 0" }} />
-                                {bots.map((bot) => (
-                                    <ToolButton key={bot.id} label={bot.name} route={`/${bot.name}`} father_route="bots" payload={bot} />
-                                ))}
+                                {bots
+                                    .sort((a, b) => Number(a.created_at) - Number(b.created_at))
+                                    .map((bot) => (
+                                        <ToolButton key={bot.id} label={bot.name} route={`/${bot.name}`} father_route="bots" payload={bot} />
+                                    ))}
                             </Box>
                         </Box>
                     </Title>

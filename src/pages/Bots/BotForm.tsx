@@ -11,6 +11,7 @@ import { Nagazap } from "../../types/server/class/Nagazap"
 import { api } from "../../api"
 import { useNavigate } from "react-router-dom"
 import { useConfirmDialog } from "burgos-confirm"
+import { meta_normalize } from "../../tools/normalize"
 
 interface BotFormProps {
     onSubmit: (bot: Bot) => void
@@ -52,7 +53,7 @@ export const BotForm: React.FC<BotFormProps> = ({ onSubmit, bot, onDelete }) => 
                 setLoading(false)
             }
         },
-        // enableReinitialize: true,
+        enableReinitialize: true,
     })
 
     const deleteBot = async () => {
@@ -116,7 +117,17 @@ export const BotForm: React.FC<BotFormProps> = ({ onSubmit, bot, onDelete }) => 
             }
         >
             <Box sx={{ gap: "1vw" }}>
-                <TextField label="Nome" value={formik.values.name} onChange={formik.handleChange} name="name" required />
+                <TextField
+                    label="Nome"
+                    value={formik.values.name}
+                    onChange={(ev) => {
+                        const event = ev
+                        event.target.value = meta_normalize(ev.target.value)
+                        formik.handleChange(event)
+                    }}
+                    name="name"
+                    required
+                />
                 <TextField label="Gatilho" value={formik.values.trigger} onChange={formik.handleChange} name="trigger" required />
             </Box>
 
