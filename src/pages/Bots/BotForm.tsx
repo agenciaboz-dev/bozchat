@@ -10,19 +10,23 @@ import { Washima } from "../../types/server/class/Washima/Washima"
 import { Nagazap } from "../../types/server/class/Nagazap"
 import { api } from "../../api"
 import { useNavigate } from "react-router-dom"
+import { useConfirmDialog } from "burgos-confirm"
 
 interface BotFormProps {
     onSubmit: (bot: Bot) => void
     bot?: Bot
+    onDelete?: (bot: Bot) => void
 }
 
-export const BotForm: React.FC<BotFormProps> = ({ onSubmit, bot }) => {
+export const BotForm: React.FC<BotFormProps> = ({ onSubmit, bot, onDelete }) => {
     const { company } = useUser()
     const navigate = useNavigate()
+    const { confirm } = useConfirmDialog()
 
     const [washimas, setWashimas] = useState<Washima[]>([])
     const [nagazaps, setNagazaps] = useState<Nagazap[]>([])
     const [loading, setLoading] = useState(false)
+    const [deleting, setDeleting] = useState(false)
 
     const formik = useFormik<BotFormType>({
         initialValues: {
@@ -33,7 +37,7 @@ export const BotForm: React.FC<BotFormProps> = ({ onSubmit, bot }) => {
             trigger: bot?.trigger || "",
         },
         async onSubmit(values, formikHelpers) {
-            if (loading || !company) return
+            if (loading || !company || deleting) return
 
             setLoading(true)
             try {
@@ -50,6 +54,20 @@ export const BotForm: React.FC<BotFormProps> = ({ onSubmit, bot }) => {
         },
         // enableReinitialize: true,
     })
+
+    const deleteBot = async () => {
+        if (deleting || !bot || !company || !onDelete) return
+        setDeleting(true)
+
+        try {
+            const response = await api.delete("/company/bots", { params: { company_id: company.id, bot_id: bot.id } })
+            onDelete(bot)
+        } catch (error) {
+            console.log(error)
+        } finally {
+            setDeleting(false)
+        }
+    }
 
     const fetchWashimas = async () => {
         try {
@@ -71,6 +89,10 @@ export const BotForm: React.FC<BotFormProps> = ({ onSubmit, bot }) => {
         }
     }
 
+    const onDeleteClick = () => {
+        confirm({ title: "Deletar bot", content: "Esta ação é permanente e irreversível. Deseja continuar?", onConfirm: deleteBot })
+    }
+
     useEffect(() => {
         fetchWashimas()
         fetchNagazaps()
@@ -85,9 +107,12 @@ export const BotForm: React.FC<BotFormProps> = ({ onSubmit, bot }) => {
             title={bot ? "Configurações" : "Criar Bot"}
             elevation={bot ? 5 : undefined}
             right={
-                <Button variant="contained" onClick={() => formik.handleSubmit()}>
-                    {loading ? <CircularProgress size={"1.5rem"} color="secondary" /> : "Salvar"}
-                </Button>
+                <Box sx={{ gap: "1vw" }}>
+                    {bot && <Button onClick={onDeleteClick}>{deleting ? <CircularProgress size="1.5rem" /> : "Deletar"}</Button>}
+                    <Button variant="contained" onClick={() => formik.handleSubmit()}>
+                        {loading ? <CircularProgress size={"1.5rem"} color="secondary" /> : "Salvar"}
+                    </Button>
+                </Box>
             }
         >
             <Box sx={{ gap: "1vw" }}>

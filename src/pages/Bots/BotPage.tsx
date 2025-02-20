@@ -10,9 +10,10 @@ import { Edge, Node, ReactFlowInstance, ReactFlowJsonObject } from "@xyflow/reac
 
 interface BotPageProps {
     onSave: (bot: Bot) => void
+    onDelete: (bot: Bot) => void
 }
 
-export const BotPage: React.FC<BotPageProps> = ({ onSave }) => {
+export const BotPage: React.FC<BotPageProps> = ({ onSave, onDelete }) => {
     const bot = useLocation().state as Bot
 
     const [showForm, setShowForm] = useState(false)
@@ -61,6 +62,10 @@ export const BotPage: React.FC<BotPageProps> = ({ onSave }) => {
                 <BotForm
                     onSubmit={(bot) => {
                         onSave(bot)
+                        setShowForm(false)
+                    }}
+                    onDelete={(bot) => {
+                        onDelete(bot)
                         setShowForm(false)
                     }}
                     bot={bot}

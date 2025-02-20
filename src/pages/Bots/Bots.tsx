@@ -6,7 +6,7 @@ import { Title } from "../../components/Title"
 import { AddBoxTwoTone, Engineering } from "@mui/icons-material"
 import { textFieldStyle } from "../../style/textfield"
 import { WagaLoading } from "../../components/WagaLoading"
-import { Route, Routes } from "react-router-dom"
+import { Route, Routes, useNavigate } from "react-router-dom"
 import { Home } from "./Home"
 import { Bot } from "../../types/server/class/Bot/Bot"
 import { BotForm } from "./BotForm"
@@ -20,6 +20,7 @@ interface BotsProps {}
 export const Bots: React.FC<BotsProps> = ({}) => {
     const isMobile = useMediaQuery("(orientation: portrait)")
     const { company } = useUser()
+    const navigate = useNavigate()
 
     const [loading, setLoading] = useState(true)
     const [bots, setBots] = useState<Bot[]>([])
@@ -36,6 +37,11 @@ export const Bots: React.FC<BotsProps> = ({}) => {
         } finally {
             setLoading(false)
         }
+    }
+
+    const onDeleteBot = (bot: Bot) => {
+        setBots((list) => list.filter((item) => item.id !== bot.id))
+        navigate("/bots")
     }
 
     useEffect(() => {
@@ -93,7 +99,7 @@ export const Bots: React.FC<BotsProps> = ({}) => {
                         <Routes>
                             <Route index element={<Home bots={bots} />} />
                             <Route path="/form" element={<BotForm onSubmit={addBot} />} />
-                            <Route path="/*" element={<BotPage onSave={addBot} />} />
+                            <Route path="/*" element={<BotPage onSave={addBot} onDelete={onDeleteBot} />} />
                         </Routes>
                     )}
                 </Box>
