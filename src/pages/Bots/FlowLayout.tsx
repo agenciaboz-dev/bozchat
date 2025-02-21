@@ -192,10 +192,10 @@ export const FlowLayout: React.FC<FlowLayoutProps> = ({ bot_id, botInstances, se
                 return layouted.nodes
             })
         },
-        [nodes, edges, setNodes, setEdges]
+        [nodes, edges, setNodes, setEdges, instance]
     )
 
-    const onSave = async () => {
+    const onSave = useCallback(async () => {
         console.log("sav")
         setTimeout(async () => {
             if (instance) {
@@ -209,7 +209,7 @@ export const FlowLayout: React.FC<FlowLayoutProps> = ({ bot_id, botInstances, se
                 }
             }
         }, 500)
-    }
+    }, [instance])
 
     const fetchBot = async () => {
         try {
