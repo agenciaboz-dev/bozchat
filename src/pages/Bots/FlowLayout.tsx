@@ -50,7 +50,8 @@ export const FlowLayout: React.FC<FlowLayoutProps> = ({ bot_id, botInstances, se
     const { setViewport } = useReactFlow()
     const theme = useTheme()
 
-    const [instance, setInstance] = useState<ReactFlowInstance<Node, FlowEdge> | null>(null)
+    const instance = useRef<ReactFlowInstance<Node, FlowEdge> | null>(null)
+
     const [bot, setBot] = useState<Bot | null>(null)
     const [initializing, setInitializing] = useState(true)
     const [editingNode, setEditingNode] = useState<FlowNode | null>(null)
@@ -138,8 +139,8 @@ export const FlowLayout: React.FC<FlowLayoutProps> = ({ bot_id, botInstances, se
                 const sourceNode = nodes.find((n) => n.id === sourceId)
                 if (!sourceNode) return []
 
-                if (instance) {
-                    const flow = instance.toObject()
+                if (instance.current) {
+                    const flow = instance.current.toObject()
                     setBotInstances((instances) => [...instances, flow])
                 }
 
@@ -181,7 +182,7 @@ export const FlowLayout: React.FC<FlowLayoutProps> = ({ bot_id, botInstances, se
                 const addedNode = layouted.nodes.find((n) => n.id === newNodeId)
                 if (addedNode && instance) {
                     const { x, y } = addedNode.position
-                    instance.setCenter(x + nodeWidth / 2, y + nodeHeight / 2, {
+                    instance.current?.setCenter(x + nodeWidth / 2, y + nodeHeight / 2, {
                         zoom: 0.9,
                         duration: viewport_duration, // optional smooth animation (in ms)
                     })
@@ -192,24 +193,27 @@ export const FlowLayout: React.FC<FlowLayoutProps> = ({ bot_id, botInstances, se
                 return layouted.nodes
             })
         },
-        [nodes, edges, setNodes, setEdges, instance]
+        [nodes, edges, setNodes, setEdges]
     )
 
-    const onSave = useCallback(async () => {
+    const onSave = async () => {
         console.log("sav")
         setTimeout(async () => {
-            if (instance) {
+            console.log({ instance_on_save: instance })
+            if (instance.current) {
                 console.log("ing")
-                const flow = instance.toObject()
+                const flow = instance.current.toObject()
 
                 try {
                     await api.patch("/company/bots", { instance: flow }, { params: { company_id: company?.id, bot_id: bot_id } })
                 } catch (error) {
                     console.log(error)
                 }
+            } else {
+                console.log("sem instancia")
             }
         }, 500)
-    }, [instance])
+    }
 
     const fetchBot = async () => {
         try {
@@ -223,9 +227,9 @@ export const FlowLayout: React.FC<FlowLayoutProps> = ({ bot_id, botInstances, se
     }
 
     const onEditNode = (node_id: string, value: string) => {
-        if (instance) {
+        if (instance.current) {
             //this is just for the undo function
-            const flow = instance.toObject()
+            const flow = instance.current.toObject()
             setBotInstances((instances) => [...instances, flow])
         }
 
@@ -301,8 +305,8 @@ export const FlowLayout: React.FC<FlowLayoutProps> = ({ bot_id, botInstances, se
 
     const onDeleteNode = useCallback(
         (node: FlowNode) => {
-            if (instance) {
-                const flow = instance.toObject()
+            if (instance.current) {
+                const flow = instance.current.toObject()
                 setBotInstances((instances) => [...instances, flow])
             }
 
@@ -319,7 +323,7 @@ export const FlowLayout: React.FC<FlowLayoutProps> = ({ bot_id, botInstances, se
                     if (parentNode && instance) {
                         // center on the parent node
                         const { x, y } = parentNode.position
-                        instance.setCenter(x + nodeWidth / 2, y + nodeHeight / 2, {
+                        instance.current?.setCenter(x + nodeWidth / 2, y + nodeHeight / 2, {
                             zoom: 0.9,
                             duration: viewport_duration, // optional: animate over 800ms
                         })
@@ -393,7 +397,7 @@ export const FlowLayout: React.FC<FlowLayoutProps> = ({ bot_id, botInstances, se
                 const layouted = updateLayout(nodes, edges)
                 setNodes(layouted.nodes)
                 setEdges(layouted.edges)
-                setTimeout(() => instance?.fitView({ padding: 0.1, duration: viewport_duration }), 1000)
+                setTimeout(() => instance.current?.fitView({ padding: 0.1, duration: viewport_duration }), 1000)
             }
 
             restoreFlow()
@@ -401,8 +405,12 @@ export const FlowLayout: React.FC<FlowLayoutProps> = ({ bot_id, botInstances, se
     }, [bot])
 
     useEffect(() => {
+        console.log({ instance })
+    }, [instance])
+
+    useEffect(() => {
         console.log({ nodes })
-        if (instance) {
+        if (instance.current) {
             // instance.fitView()
         }
     }, [nodes, instance])
@@ -446,7 +454,9 @@ export const FlowLayout: React.FC<FlowLayoutProps> = ({ bot_id, botInstances, se
             fitView
             // style={{ margin: "-2vw",  }}
             nodesDraggable={false}
-            onInit={setInstance}
+            onInit={(value) => {
+                instance.current = value
+            }}
             minZoom={0}
         >
             <Background size={1} />
