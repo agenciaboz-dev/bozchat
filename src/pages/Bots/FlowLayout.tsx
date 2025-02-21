@@ -96,7 +96,12 @@ export const FlowLayout: React.FC<FlowLayoutProps> = ({ bot_id, botInstances, se
 
     const updateLayout = (nodes: FlowNode[], edges: FlowEdge[]): { nodes: FlowNode[]; edges: FlowEdge[] } => {
         const dagreGraph = new dagre.graphlib.Graph().setDefaultEdgeLabel(() => ({}))
-        dagreGraph.setGraph({ rankdir: "TB", ranksep: 100, nodesep: 100 })
+        dagreGraph.setGraph({
+            rankdir: "TB",
+            ranksep: 100,
+            nodesep: 100,
+            // align: "UL",
+        })
 
         // Set custom node width and height
         nodes.forEach((node) => {
