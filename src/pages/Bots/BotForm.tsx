@@ -53,7 +53,7 @@ export const BotForm: React.FC<BotFormProps> = ({ onSubmit, bot, onDelete }) => 
                 setLoading(false)
             }
         },
-        enableReinitialize: true,
+        enableReinitialize: !!bot,
     })
 
     const deleteBot = async () => {
