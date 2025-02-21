@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react"
-import { Box, Button, Checkbox, Chip, CircularProgress, MenuItem, TextField } from "@mui/material"
+import { Box, Button, Checkbox, Chip, CircularProgress, MenuItem, Slider, TextField, Typography } from "@mui/material"
 import { Bot, BotForm as BotFormType } from "../../types/server/class/Bot/Bot"
 import { Subroute } from "../Nagazap/Subroute"
 import { useFormik } from "formik"
@@ -36,6 +36,8 @@ export const BotForm: React.FC<BotFormProps> = ({ onSubmit, bot, onDelete }) => 
             washima_ids: bot?.washima_ids || [],
             name: bot?.name || "",
             trigger: bot?.trigger || "",
+            expiry_minutes: bot?.expiry_minutes || 30,
+            fuzzy_threshold: bot?.fuzzy_threshold || 0.1,
         },
         async onSubmit(values, formikHelpers) {
             if (loading || !company || deleting) return
@@ -129,6 +131,35 @@ export const BotForm: React.FC<BotFormProps> = ({ onSubmit, bot, onDelete }) => 
                     required
                 />
                 <TextField label="Gatilho" value={formik.values.trigger} onChange={formik.handleChange} name="trigger" required />
+            </Box>
+
+            <Box sx={{ gap: "1vw", alignItems: "center" }}>
+                <TextField
+                    label="Minutos para conversa expirar"
+                    value={formik.values.expiry_minutes}
+                    onChange={(ev) => {
+                        const value = Number(ev.target.value.replace(/\D/g, ""))
+                        formik.setFieldValue("expiry_minutes", value)
+                    }}
+                    name="expiry_minutes"
+                    required
+                    sx={{ flex: 1 }}
+                />
+                <Box sx={{ flexDirection: "column", flex: 1 }}>
+                    <Typography sx={{ color: "secondary.main" }}>Limiar de diferença entre resposta e gatilhos</Typography>
+                    <Slider
+                        min={0.05}
+                        max={1}
+                        step={0.05}
+                        value={formik.values.fuzzy_threshold}
+                        onChange={(_, value) => {
+                            console.log(value)
+                            formik.setFieldValue("fuzzy_threshold", value)
+                        }}
+                        marks
+                        valueLabelDisplay="auto"
+                    />
+                </Box>
             </Box>
 
             <Box sx={{ gap: "1vw" }}>
