@@ -165,7 +165,7 @@ export const FlowLayout: React.FC<FlowLayoutProps> = ({ bot_id, botInstances, se
                         id: `edge_${sourceId}-${newNodeId}`,
                         source: sourceId,
                         target: newNodeId,
-                        type: "smoothstep",
+                        type: ConnectionLineType.SmoothStep,
                         animated: true,
                         style: {
                             stroke: theme.colors.primary,
