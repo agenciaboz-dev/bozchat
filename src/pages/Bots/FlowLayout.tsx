@@ -218,7 +218,7 @@ export const FlowLayout: React.FC<FlowLayoutProps> = ({ bot_id, botInstances, se
         } catch (error) {
             console.log(error)
         } finally {
-            setInitializing(false)
+            setTimeout(() => setInitializing(false), 1000)
         }
     }
 
@@ -393,7 +393,7 @@ export const FlowLayout: React.FC<FlowLayoutProps> = ({ bot_id, botInstances, se
                 const layouted = updateLayout(nodes, edges)
                 setNodes(layouted.nodes)
                 setEdges(layouted.edges)
-                setTimeout(() => instance?.fitView({ padding: 0.1, duration: viewport_duration }), 100)
+                setTimeout(() => instance?.fitView({ padding: 0.1, duration: viewport_duration }), 1000)
             }
 
             restoreFlow()
