@@ -99,7 +99,7 @@ export const Bots: React.FC<BotsProps> = ({}) => {
                         </Box>
                     ) : (
                         <Routes>
-                            <Route index element={<Home bots={bots} />} />
+                            <Route index element={<Home bots={bots} fetchBots={fetchBots} />} />
                             <Route path="/form" element={<BotForm onSubmit={addBot} />} />
                             <Route path="/*" element={<BotPage onSave={addBot} onDelete={onDeleteBot} />} />
                         </Routes>

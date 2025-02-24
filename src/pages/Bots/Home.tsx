@@ -1,19 +1,20 @@
 import React, { useMemo, useState } from "react"
-import { Box, Paper, ToggleButton, ToggleButtonGroup, Typography, Tooltip as MuiTooltip } from "@mui/material"
+import { Box, Paper, ToggleButton, ToggleButtonGroup, Typography, Tooltip as MuiTooltip, IconButton } from "@mui/material"
 import { Bot } from "../../types/server/class/Bot/Bot"
 import { Subroute } from "../Nagazap/Subroute"
 import { Bar, BarChart, CartesianGrid, Rectangle, ResponsiveContainer, Tooltip, XAxis, YAxis } from "recharts"
 import { useColors } from "../../hooks/useColors"
-import { OnlinePrediction, ThreeP } from "@mui/icons-material"
+import { OnlinePrediction, Refresh, ThreeP } from "@mui/icons-material"
 
 interface HomeProps {
     bots: Bot[]
+    fetchBots: () => Promise<void>
 }
 
 const total_label = "Total de conversas iniciadas"
 const active_now_label = "Conversas neste momento"
 
-export const Home: React.FC<HomeProps> = ({ bots }) => {
+export const Home: React.FC<HomeProps> = ({ bots, fetchBots }) => {
     const colors = useColors()
 
     const [chartKey, setChartKey] = useState<keyof Bot>("triggered")
@@ -41,18 +42,23 @@ export const Home: React.FC<HomeProps> = ({ bots }) => {
         <Subroute
             title="Início"
             right={
-                <ToggleButtonGroup value={chartKey} exclusive onChange={(_, value) => (value ? setChartKey(value) : null)}>
-                    <MuiTooltip title={total_label}>
-                        <ToggleButton value={"triggered"}>
-                            <ThreeP />
-                        </ToggleButton>
-                    </MuiTooltip>
-                    <MuiTooltip title={active_now_label}>
-                        <ToggleButton value={"active_on"}>
-                            <OnlinePrediction />
-                        </ToggleButton>
-                    </MuiTooltip>
-                </ToggleButtonGroup>
+                <Box sx={{ gap: "0.5vw", alignItems: "center" }}>
+                    <IconButton onClick={fetchBots} sx={{ flexShrink: 0 }}>
+                        <Refresh />
+                    </IconButton>
+                    <ToggleButtonGroup value={chartKey} exclusive onChange={(_, value) => (value ? setChartKey(value) : null)}>
+                        <MuiTooltip title={total_label}>
+                            <ToggleButton value={"triggered"}>
+                                <ThreeP />
+                            </ToggleButton>
+                        </MuiTooltip>
+                        <MuiTooltip title={active_now_label}>
+                            <ToggleButton value={"active_on"}>
+                                <OnlinePrediction />
+                            </ToggleButton>
+                        </MuiTooltip>
+                    </ToggleButtonGroup>
+                </Box>
             }
         >
             <Box sx={{ flex: 1 }}>
