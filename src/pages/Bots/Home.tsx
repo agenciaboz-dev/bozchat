@@ -41,7 +41,7 @@ export const Home: React.FC<HomeProps> = ({ bots }) => {
         <Subroute
             title="Início"
             right={
-                <ToggleButtonGroup value={chartKey} exclusive onChange={(_, value) => setChartKey(value)}>
+                <ToggleButtonGroup value={chartKey} exclusive onChange={(_, value) => (value ? setChartKey(value) : null)}>
                     <MuiTooltip title={total_label}>
                         <ToggleButton value={"triggered"}>
                             <ThreeP />
