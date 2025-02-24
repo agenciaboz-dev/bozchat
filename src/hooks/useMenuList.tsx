@@ -58,16 +58,16 @@ export const useMenuList = () => {
             onClick: () => navigate("/nagazap/"),
         },
         {
-            icon: <People />,
-            name: "Usuários",
-            path: "/users",
-            onClick: () => navigate("/users/"),
-        },
-        {
             icon: <Engineering />,
             name: "Chatbots",
             path: "/bots",
             onClick: () => navigate("/bots/"),
+        },
+        {
+            icon: <People />,
+            name: "Usuários",
+            path: "/users",
+            onClick: () => navigate("/users/"),
         },
         {
             icon: <Settings />,
