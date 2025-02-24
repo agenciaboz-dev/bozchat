@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react"
-import { Box, Button, Checkbox, Chip, CircularProgress, MenuItem, Slider, TextField, Typography } from "@mui/material"
+import { Box, Button, Checkbox, Chip, CircularProgress, IconButton, MenuItem, Slider, TextField, Tooltip, Typography } from "@mui/material"
 import { Bot, BotForm as BotFormType } from "../../types/server/class/Bot/Bot"
 import { Subroute } from "../Nagazap/Subroute"
 import { useFormik } from "formik"
@@ -12,6 +12,8 @@ import { api } from "../../api"
 import { useNavigate } from "react-router-dom"
 import { useConfirmDialog } from "burgos-confirm"
 import { meta_normalize } from "../../tools/normalize"
+import { Info, InfoOutlined } from "@mui/icons-material"
+import { useTheme } from "../../hooks/useTheme"
 
 interface BotFormProps {
     onSubmit: (bot: Bot) => void
@@ -22,6 +24,7 @@ interface BotFormProps {
 export const BotForm: React.FC<BotFormProps> = ({ onSubmit, bot, onDelete }) => {
     const { company } = useUser()
     const navigate = useNavigate()
+    const theme = useTheme()
     const { confirm } = useConfirmDialog()
 
     const [washimas, setWashimas] = useState<Washima[]>([])
@@ -150,7 +153,30 @@ export const BotForm: React.FC<BotFormProps> = ({ onSubmit, bot, onDelete }) => 
                     sx={{ flex: 1 }}
                 />
                 <Box sx={{ flexDirection: "column", flex: 1 }}>
-                    <Typography sx={{ color: "secondary.main" }}>Limiar de diferença entre resposta e gatilhos</Typography>
+                    <Box sx={{ alignItems: "center", gap: "0.5vw" }}>
+                        <Typography sx={{ color: "secondary.main" }}>Limiar de diferença entre resposta e gatilhos</Typography>
+                        <Tooltip
+                            title={
+                                <Box sx={{ flexDirection: "column", gap: "1vw" }}>
+                                    <Typography sx={{ fontSize: "0.8rem" }}>
+                                        Esse valor determina o quão precisas as respostas devem ser para ativar o bot ou a próxima etapa dele.
+                                    </Typography>
+                                    <Typography sx={{ fontSize: "0.8rem" }}>
+                                        Quanto mais próximo de <span style={{ color: theme.colors.primary, fontWeight: "bold" }}>0</span>, mais
+                                        parecida a resposta deve ser do gatilho.
+                                    </Typography>
+                                    <Typography sx={{ fontSize: "0.8rem" }}>
+                                        Quanto mais próximo de <span style={{ color: theme.colors.primary, fontWeight: "bold" }}>1</span>, mais
+                                        respostas diferentes serão aceitas.
+                                    </Typography>
+                                </Box>
+                            }
+                        >
+                            <IconButton sx={{ padding: 0 }}>
+                                <InfoOutlined />
+                            </IconButton>
+                        </Tooltip>
+                    </Box>
                     <Slider
                         min={0}
                         max={1}
