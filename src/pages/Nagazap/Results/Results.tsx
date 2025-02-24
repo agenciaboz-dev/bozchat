@@ -35,7 +35,7 @@ const CustomTooltip: React.FC<{
         } else {
             props.setCurrentLink(null)
         }
-    }, [props.active])
+    }, [props.active, props.label])
 
     return props.active ? (
         <Paper elevation={5} sx={{ flexDirection: "column", padding: "1vw" }}>
@@ -79,6 +79,10 @@ export const Results: React.FC<ResultsProps> = ({ nagazap }) => {
             setLinks([])
         }
     }, [nagazap])
+
+    useEffect(() => {
+        console.log(currentLink)
+    }, [currentLink])
 
     return (
         <Subroute
