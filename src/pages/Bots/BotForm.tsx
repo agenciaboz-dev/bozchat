@@ -37,7 +37,7 @@ export const BotForm: React.FC<BotFormProps> = ({ onSubmit, bot, onDelete }) => 
             name: bot?.name || "",
             trigger: bot?.trigger || "",
             expiry_minutes: bot?.expiry_minutes || 30,
-            fuzzy_threshold: bot?.fuzzy_threshold || 0.1,
+            fuzzy_threshold: bot ? bot.fuzzy_threshold : 0.1,
         },
         async onSubmit(values, formikHelpers) {
             if (loading || !company || deleting) return
@@ -152,7 +152,7 @@ export const BotForm: React.FC<BotFormProps> = ({ onSubmit, bot, onDelete }) => 
                 <Box sx={{ flexDirection: "column", flex: 1 }}>
                     <Typography sx={{ color: "secondary.main" }}>Limiar de diferença entre resposta e gatilhos</Typography>
                     <Slider
-                        min={0.05}
+                        min={0}
                         max={1}
                         step={0.05}
                         value={formik.values.fuzzy_threshold}
