@@ -2,9 +2,9 @@ import React, { useMemo, useState } from "react"
 import { Box, Paper, ToggleButton, ToggleButtonGroup, Typography, Tooltip as MuiTooltip, IconButton } from "@mui/material"
 import { Bot } from "../../types/server/class/Bot/Bot"
 import { Subroute } from "../Nagazap/Subroute"
-import { Bar, BarChart, CartesianGrid, Rectangle, ResponsiveContainer, Tooltip, XAxis, YAxis } from "recharts"
+import { Bar, BarChart, CartesianGrid, Legend, Rectangle, ResponsiveContainer, Tooltip, XAxis, YAxis } from "recharts"
 import { useColors } from "../../hooks/useColors"
-import { OnlinePrediction, Refresh, ThreeP } from "@mui/icons-material"
+import { OnlinePrediction, Refresh, SmartToy, ThreeP } from "@mui/icons-material"
 
 interface HomeProps {
     bots: Bot[]
@@ -12,14 +12,10 @@ interface HomeProps {
 }
 
 const total_label = "Total de conversas iniciadas"
-const active_now_label = "Conversas neste momento"
+const active_now_label = "Ativo agora em"
 
 export const Home: React.FC<HomeProps> = ({ bots, fetchBots }) => {
     const colors = useColors()
-
-    const [chartKey, setChartKey] = useState<keyof Bot>("triggered")
-
-    const chartLabel = useMemo(() => (chartKey === "active_on" ? active_now_label : total_label), [chartKey])
 
     const CustomTooltip: React.FC<{
         active?: boolean
@@ -27,10 +23,13 @@ export const Home: React.FC<HomeProps> = ({ bots, fetchBots }) => {
         label: string
     }> = (props) => {
         return props.active ? (
-            <Paper elevation={5} sx={{ flexDirection: "column", padding: "1vw" }}>
+            <Paper elevation={5} sx={{ flexDirection: "column", padding: "1vw", bgcolor: "background.default" }}>
                 <Typography sx={{ fontWeight: "bold" }}>{props.label}</Typography>
                 <Typography>
-                    {chartLabel}: {props.payload[0].value}
+                    {total_label}: {props.payload[0].value}
+                </Typography>
+                <Typography>
+                    {active_now_label}: {props.payload[1].value}
                 </Typography>
 
                 {/* <Typography sx={{ fontSize: "0.7rem", opacity: 0.5 }}>Clique na barra para ver mais detalhes</Typography> */}
@@ -46,7 +45,7 @@ export const Home: React.FC<HomeProps> = ({ bots, fetchBots }) => {
                     <IconButton onClick={fetchBots} sx={{ flexShrink: 0 }}>
                         <Refresh />
                     </IconButton>
-                    <ToggleButtonGroup value={chartKey} exclusive onChange={(_, value) => (value ? setChartKey(value) : null)}>
+                    {/* <ToggleButtonGroup value={chartKey} exclusive onChange={(_, value) => (value ? setChartKey(value) : null)}>
                         <MuiTooltip title={total_label}>
                             <ToggleButton value={"triggered"}>
                                 <ThreeP />
@@ -57,28 +56,34 @@ export const Home: React.FC<HomeProps> = ({ bots, fetchBots }) => {
                                 <OnlinePrediction />
                             </ToggleButton>
                         </MuiTooltip>
-                    </ToggleButtonGroup>
+                    </ToggleButtonGroup> */}
                 </Box>
             }
         >
             <Box sx={{ flex: 1 }}>
-                <ResponsiveContainer width={"100%"} height={"100%"}>
-                    <BarChart data={bots.map((bot) => ({ ...bot, active_on: bot.active_on.length }))}>
-                        <CartesianGrid strokeDasharray={"3 3"} />
-                        <XAxis dataKey={"name"} />
-                        <YAxis />
-                        <Tooltip
-                            cursor={{ opacity: 0.05, fill: colors.secondary }}
-                            content={(props) => <CustomTooltip active={props.active} label={props.label} payload={props.payload} />}
-                        />
-                        <Bar
-                            dataKey={chartKey}
-                            fill={colors.primary}
-                            maxBarSize={20}
-                            activeBar={<Rectangle fill={colors.terciary} cursor={"pointer"} />}
-                        />
-                    </BarChart>
-                </ResponsiveContainer>
+                {!!bots.length ? (
+                    <ResponsiveContainer width={"100%"} height={"100%"}>
+                        <BarChart data={bots.map((bot) => ({ ...bot, active_on: bot.active_on.length }))}>
+                            <CartesianGrid strokeDasharray={"3 3"} />
+                            <XAxis dataKey={"name"} />
+                            <YAxis />
+                            <Tooltip
+                                cursor={{ opacity: 0.05, fill: colors.secondary }}
+                                content={(props) => <CustomTooltip active={props.active} label={props.label} payload={props.payload} />}
+                            />
+                            <Bar dataKey={"triggered"} fill={colors.primary} barSize={50} activeBar={<Rectangle fill={colors.terciary} />} />
+                            <Bar dataKey={"active_on"} fill={colors.success} barSize={50} activeBar={<Rectangle fill={colors.warning} />} />
+                            <Legend formatter={(value) => (value === "triggered" ? "Total de conversas" : "Ativo agora")} />
+                        </BarChart>
+                    </ResponsiveContainer>
+                ) : (
+                    <Box
+                        sx={{ flexDirection: "column", gap: "1vw", color: "secondary.main", justifyContent: "center", alignItems: "center", flex: 1 }}
+                    >
+                        <Typography sx={{ fontSize: "3rem" }}>você não criou nenhum bot ainda</Typography>
+                        <SmartToy sx={{ width: "10vw", height: "auto" }} />
+                    </Box>
+                )}
             </Box>
         </Subroute>
     )
