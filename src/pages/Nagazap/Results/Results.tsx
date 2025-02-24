@@ -151,7 +151,7 @@ export const Results: React.FC<ResultsProps> = ({ nagazap }) => {
                                     <Bar
                                         dataKey={"clicks"}
                                         fill={colors.primary}
-                                        maxBarSize={20}
+                                        maxBarSize={50}
                                         activeBar={<Rectangle fill={colors.terciary} cursor={"pointer"} onClick={() => setShowDetailedData(true)} />}
                                     />
                                 </BarChart>
