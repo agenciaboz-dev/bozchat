@@ -51,7 +51,7 @@ export const Logs: React.FC<LogsProps> = ({}) => {
         },
         { field: "user_name", headerName: "Usuário", flex: 0.25 },
 
-        { field: "text", headerName: "Ação", flex: 0.55, editable: true },
+        { field: "text", headerName: "Ação", flex: 0.55 },
     ]
 
     const fetchLogs = async () => {
@@ -94,7 +94,7 @@ export const Logs: React.FC<LogsProps> = ({}) => {
                             pagination: { paginationModel: { page: 1, pageSize: 50 } },
                         }}
                         pageSizeOptions={[50, 100, 500, -1]}
-                        sx={{ border: 0 }}
+                        sx={{ border: 0, height: "76vh" }}
                         slots={{ filterPanel: () => <GridFilterPanel /> }}
                     />
                 </Paper>
