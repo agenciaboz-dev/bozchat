@@ -22,7 +22,7 @@ interface BotFormProps {
 }
 
 export const BotForm: React.FC<BotFormProps> = ({ onSubmit, bot, onDelete }) => {
-    const { company } = useUser()
+    const { company, user } = useUser()
     const navigate = useNavigate()
     const theme = useTheme()
     const { confirm } = useConfirmDialog()
@@ -48,8 +48,8 @@ export const BotForm: React.FC<BotFormProps> = ({ onSubmit, bot, onDelete }) => 
             setLoading(true)
             try {
                 const response = bot
-                    ? await api.patch("/company/bots", values, { params: { company_id: company.id, bot_id: bot.id } })
-                    : await api.post("/company/bots", values, { params: { company_id: company.id } })
+                    ? await api.patch("/company/bots", values, { params: { company_id: company.id, bot_id: bot.id, user_id: user?.id } })
+                    : await api.post("/company/bots", values, { params: { company_id: company.id, user_id: user?.id } })
                 onSubmit(response.data)
                 navigate(`/bots/${values.name}`, { state: response.data })
             } catch (error) {
@@ -66,7 +66,7 @@ export const BotForm: React.FC<BotFormProps> = ({ onSubmit, bot, onDelete }) => 
         setDeleting(true)
 
         try {
-            const response = await api.delete("/company/bots", { params: { company_id: company.id, bot_id: bot.id } })
+            const response = await api.delete("/company/bots", { params: { company_id: company.id, bot_id: bot.id, user_id: user?.id } })
             onDelete(bot)
         } catch (error) {
             console.log(error)

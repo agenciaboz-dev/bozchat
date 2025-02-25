@@ -19,6 +19,7 @@ import { AxiosError } from "axios"
 import { useSnackbar } from "burgos-snackbar"
 import { ArrowBack } from "@mui/icons-material"
 import { meta_normalize } from "../../../tools/normalize"
+import { useUser } from "../../../hooks/useUser"
 
 interface TemplateFormProps {
     nagazap: Nagazap
@@ -28,6 +29,7 @@ interface TemplateFormProps {
 export const TemplateForm: React.FC<TemplateFormProps> = ({ nagazap, setShowInformations }) => {
     const { snackbar } = useSnackbar()
     const isMobile = useMediaQuery("(orientation: portrait)")
+    const { user } = useUser()
 
     const [loading, setLoading] = useState(false)
     const [templateHeader, setTemplateHeader] = useState<TemplateComponentType>({ type: "HEADER", format: "TEXT", text: "Título" })
@@ -100,7 +102,7 @@ export const TemplateForm: React.FC<TemplateFormProps> = ({ nagazap, setShowInfo
             formData.append("data", JSON.stringify(data))
 
             try {
-                const response = await api.post("/nagazap/template", formData, { params: { nagazap_id: nagazap.id } })
+                const response = await api.post("/nagazap/template", formData, { params: { nagazap_id: nagazap.id, user_id: user?.id } })
                 console.log(response.data)
                 snackbar({
                     severity: "success",

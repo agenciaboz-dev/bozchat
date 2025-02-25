@@ -18,6 +18,7 @@ import AddCircleIcon from "@mui/icons-material/AddCircle"
 import MaskedInputComponent from "../../components/MaskedInput"
 import { useIo } from "../../hooks/useIo"
 import { TemplateFields } from "./TemplateFields"
+import { useUser } from "../../hooks/useUser"
 
 interface MessageFormProps {
     nagazap: Nagazap
@@ -35,6 +36,7 @@ export const MessageFormScreen: React.FC<MessageFormProps> = ({ nagazap, setShow
     const inputRef = useRef<HTMLInputElement>(null)
 
     const { snackbar } = useSnackbar()
+    const { user } = useUser()
     const isMobile = useMediaQuery("(orientation: portrait)")
 
     const [templates, setTemplates] = useState<TemplateInfo[]>([])
@@ -62,7 +64,7 @@ export const MessageFormScreen: React.FC<MessageFormProps> = ({ nagazap, setShow
 
     const fetchTemplates = async () => {
         try {
-            const response = await api.get("/nagazap/templates", { params: { nagazap_id: nagazap.id } })
+            const response = await api.get("/nagazap/templates", { params: { nagazap_id: nagazap.id, user_id: user?.id } })
             setTemplates(response.data)
         } catch (error) {
             console.log(error)
@@ -91,7 +93,7 @@ export const MessageFormScreen: React.FC<MessageFormProps> = ({ nagazap, setShow
 
             setLoading(true)
             try {
-                const response = await api.post("/nagazap/oven", formData, { params: { nagazap_id: nagazap.id } })
+                const response = await api.post("/nagazap/oven", formData, { params: { nagazap_id: nagazap.id, user_id: user?.id } })
                 console.log(response)
                 snackbar({ severity: "success", text: "Mensagens colocadas no forno" })
             } catch (error) {
@@ -198,7 +200,7 @@ export const MessageFormScreen: React.FC<MessageFormProps> = ({ nagazap, setShow
     const downloadTemplateSheet = async () => {
         try {
             const response = await api.post("/nagazap/template-sheet", formik.values.template, {
-                params: { nagazap_id: nagazap.id },
+                params: { nagazap_id: nagazap.id, user_id: user?.id },
             })
             window.open(`${api.getUri()}/${response.data}`, "_new")
         } catch (error) {

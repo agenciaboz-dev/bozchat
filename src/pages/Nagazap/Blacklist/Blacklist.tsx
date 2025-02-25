@@ -14,7 +14,7 @@ interface BlacklistProps {
 }
 
 export const Blacklist: React.FC<BlacklistProps> = ({ nagazap, setNagazap, setShowInformations }) => {
-    const { company } = useUser()
+    const { company, user } = useUser()
     const isMobile = useMediaQuery("(orientation: portrait)")
 
     const [loading, setLoading] = useState(false)
@@ -22,7 +22,7 @@ export const Blacklist: React.FC<BlacklistProps> = ({ nagazap, setNagazap, setSh
 
     const handleDelete = async (number: string) => {
         try {
-            const response = await api.delete("/nagazap/blacklist", { data: { number }, params: { nagazap_id: nagazap.id } })
+            const response = await api.delete("/nagazap/blacklist", { data: { number }, params: { nagazap_id: nagazap.id, user_id: user?.id } })
             setNagazap(response.data)
         } catch (error) {
             console.log(error)

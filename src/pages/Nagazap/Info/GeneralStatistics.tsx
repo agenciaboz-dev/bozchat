@@ -6,12 +6,15 @@ import { AlarmOnSharp, Block, Check, Close, DocumentScanner, PendingActions } fr
 import { GeneralStatsList } from "../../Home/GeneralStatsList"
 import { TemplateInfo } from "../../../types/server/Meta/WhatsappBusiness/TemplatesInfo"
 import { api } from "../../../api"
+import { useUser } from "../../../hooks/useUser"
 
 interface GeneralStatisticsProps {
     nagazap: Nagazap
 }
 
 export const GeneralStatistics: React.FC<GeneralStatisticsProps> = ({ nagazap }) => {
+    const {user} = useUser()
+    
     const [templates, setTemplates] = useState<TemplateInfo[]>()
 
     const generalStatistics: GeneralStat[] = [
@@ -35,7 +38,7 @@ export const GeneralStatistics: React.FC<GeneralStatisticsProps> = ({ nagazap })
 
     const fetchTemplates = async () => {
         try {
-            const response = await api.get("/nagazap/templates", { params: { nagazap_id: nagazap.id } })
+            const response = await api.get("/nagazap/templates", { params: { nagazap_id: nagazap.id, user_id: user?.id } })
             setTemplates(response.data)
         } catch (error) {
             console.log(error)

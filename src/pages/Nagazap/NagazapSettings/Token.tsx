@@ -6,6 +6,7 @@ import { api } from "../../../api"
 import { Subroute } from "../Subroute"
 import { useSnackbar } from "burgos-snackbar"
 import { Lock, LockOpen } from "@mui/icons-material"
+import { useUser } from "../../../hooks/useUser"
 
 interface TokenProps {
     nagazap: Nagazap
@@ -14,6 +15,7 @@ interface TokenProps {
 export const Token: React.FC<TokenProps> = ({ nagazap }) => {
     const { snackbar } = useSnackbar()
     const isMobile = useMediaQuery("(orientation: portrait)")
+    const {user} = useUser()
 
     const [loading, setLoading] = useState(false)
     const [locked, setLocked] = useState(true)
@@ -24,7 +26,7 @@ export const Token: React.FC<TokenProps> = ({ nagazap }) => {
             if (loading || !nagazap) return
             setLoading(true)
             try {
-                const response = await api.patch("/nagazap/token", values, { params: { nagazap_id: nagazap.id } })
+                const response = await api.patch("/nagazap/token", values, { params: { nagazap_id: nagazap.id, user_id: user?.id } })
                 snackbar({ severity: "success", text: "Token atualizado!" })
             } catch (error) {
                 console.log(error)

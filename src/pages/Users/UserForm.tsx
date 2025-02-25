@@ -17,7 +17,7 @@ interface UserFormProps {
 }
 
 export const UserForm: React.FC<UserFormProps> = (props) => {
-    const { company } = useUser()
+    const { company, user } = useUser()
     const { confirm } = useConfirmDialog()
     const { snackbar } = useSnackbar()
 
@@ -42,7 +42,9 @@ export const UserForm: React.FC<UserFormProps> = (props) => {
             setLoading(true)
             try {
                 console.log(values)
-                const response = selectedUser ? await api.patch("/user", values) : await api.post("/user", values)
+                const response = selectedUser
+                    ? await api.patch("/user", values, { params: { user_id: user?.id } })
+                    : await api.post("/user", values, { params: { user_id: user?.id } })
                 props.onSubmit(response.data)
                 setSelectedUser(response.data)
                 snackbar({ severity: "success", text: "Salvo!" })
@@ -63,7 +65,7 @@ export const UserForm: React.FC<UserFormProps> = (props) => {
             onConfirm: async () => {
                 setDeleting(true)
                 try {
-                    const response = await api.delete("/user", { params: { user_id: selectedUser.id } })
+                    const response = await api.delete("/user", { params: { deleted_user_id: selectedUser.id, user_id: user?.id } })
                     props.onDelete(response.data)
                     setSelectedUser(null)
                 } catch (error) {

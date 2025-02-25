@@ -16,7 +16,7 @@ interface NagazapFormProps {
 }
 
 export const NagazapForm: React.FC<NagazapFormProps> = ({ onSuccess, setShowInformations }) => {
-    const { company } = useUser()
+    const { company, user } = useUser()
     const theme = useTheme()
     const isMobile = useMediaQuery("(orientation: portrait)")
 
@@ -35,7 +35,7 @@ export const NagazapForm: React.FC<NagazapFormProps> = ({ onSuccess, setShowInfo
             setError("")
 
             try {
-                const response = await api.post("/nagazap", values)
+                const response = await api.post("/nagazap", values, { params: { user_id: user?.id } })
                 onSuccess(response.data)
             } catch (error) {
                 // console.log(error)

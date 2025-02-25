@@ -3,6 +3,7 @@ import { Box, Button, CircularProgress } from "@mui/material"
 import { Nagazap } from "../../../types/server/class/Nagazap"
 import { api } from "../../../api"
 import { useConfirmDialog } from "burgos-confirm"
+import { useUser } from "../../../hooks/useUser"
 
 interface DeleteNagazapProps {
     nagazap: Nagazap
@@ -12,6 +13,7 @@ interface DeleteNagazapProps {
 
 export const DeleteNagazap: React.FC<DeleteNagazapProps> = ({ nagazap, setNagazap, fetchNagazaps }) => {
     const { confirm } = useConfirmDialog()
+    const { user } = useUser()
 
     const [loading, setLoading] = useState(false)
 
@@ -28,7 +30,7 @@ export const DeleteNagazap: React.FC<DeleteNagazapProps> = ({ nagazap, setNagaza
         setLoading(true)
 
         try {
-            const response = await api.delete("/nagazap", { params: { nagazap_id: nagazap.id } })
+            const response = await api.delete("/nagazap", { params: { nagazap_id: nagazap.id, user_id: user?.id } })
             await fetchNagazaps()
         } catch (error) {
             console.log(error)

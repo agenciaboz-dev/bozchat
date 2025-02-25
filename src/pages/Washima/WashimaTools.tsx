@@ -4,6 +4,7 @@ import { Washima, WashimaDiskMetrics } from "../../types/server/class/Washima/Wa
 import { DiskMetricContainer } from "./DiskMetricContainer"
 import { api } from "../../api"
 import { SyncMessagesContainer } from "./SyncMessagesContainer"
+import { useUser } from "../../hooks/useUser"
 
 interface WashimaToolsProps {
     washima: Washima
@@ -13,6 +14,7 @@ interface WashimaToolsProps {
 
 export const WashimaTools: React.FC<WashimaToolsProps> = ({ washima, fetchingMessages, onSyncMessages }) => {
     const isMobile = useMediaQuery("(orientation: portrait)")
+    const { user } = useUser()
 
     const [diskMetrics, setDiskMetrics] = useState<WashimaDiskMetrics | null>(null)
     const [deletingMedia, setDeletingMedia] = useState(false)
@@ -35,7 +37,7 @@ export const WashimaTools: React.FC<WashimaToolsProps> = ({ washima, fetchingMes
 
         setDeletingMedia(true)
         try {
-            const response = await api.delete("/washima/tools/media", { data: { washima_id: washima.id } })
+            const response = await api.delete("/washima/tools/media", { data: { washima_id: washima.id }, params: { user_id: user?.id } })
             console.log(response.data)
         } catch (error) {
             console.log(error)
@@ -50,7 +52,7 @@ export const WashimaTools: React.FC<WashimaToolsProps> = ({ washima, fetchingMes
 
         setDeletingMessages(true)
         try {
-            const response = await api.delete("/washima/tools/messages", { data: { washima_id: washima.id } })
+            const response = await api.delete("/washima/tools/messages", { data: { washima_id: washima.id }, params: { user_id: user?.id } })
             console.log(response.data)
         } catch (error) {
             console.log(error)

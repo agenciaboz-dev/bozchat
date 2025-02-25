@@ -26,7 +26,7 @@ export const Oven: React.FC<OvenProps> = ({ nagazap: initialNagazap, setNagazap:
         return result
     }
 
-    const { company } = useUser()
+    const { company, user } = useUser()
     const isMobile = useMediaQuery("(orientation: portrait)")
 
     const [nagazap, setNagazap] = useState(initialNagazap)
@@ -58,7 +58,7 @@ export const Oven: React.FC<OvenProps> = ({ nagazap: initialNagazap, setNagazap:
         try {
             let data: any = {}
             data[type] = value
-            const response = await api.patch("/nagazap", data, { params: { nagazap_id: nagazap.id } })
+            const response = await api.patch("/nagazap", data, { params: { nagazap_id: nagazap.id, user_id: user?.id } })
             setNagazap(response.data)
         } catch (error) {
             console.log(error)
@@ -84,7 +84,7 @@ export const Oven: React.FC<OvenProps> = ({ nagazap: initialNagazap, setNagazap:
         setLoading(true)
 
         try {
-            const response = await api.get("/nagazap/" + option, { params: { nagazap_id: nagazap.id } })
+            const response = await api.get("/nagazap/" + option, { params: { nagazap_id: nagazap.id, user_id: user?.id } })
             setNagazap(response.data)
         } catch (error) {
             console.log(error)
@@ -98,7 +98,7 @@ export const Oven: React.FC<OvenProps> = ({ nagazap: initialNagazap, setNagazap:
         setLoading(true)
 
         try {
-            const response = await api.get("/nagazap/clearOven", { params: { nagazap_id: nagazap.id } })
+            const response = await api.get("/nagazap/clearOven", { params: { nagazap_id: nagazap.id, user_id: user?.id } })
             setNagazap(response.data)
         } catch (error) {
             console.log(error)

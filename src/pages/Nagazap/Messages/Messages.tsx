@@ -8,6 +8,7 @@ import { useIo } from "../../../hooks/useIo"
 import { NagaChat } from "../../../types/NagaChat"
 import { ChatItem } from "./ChatItem"
 import { ChatContainer } from "./ChatContainer"
+import { useUser } from "../../../hooks/useUser"
 
 interface MessagesScreenProps {
     nagazap: Nagazap
@@ -17,6 +18,7 @@ interface MessagesScreenProps {
 export const MessagesScreen: React.FC<MessagesScreenProps> = ({ nagazap, setShowInformations }) => {
     const io = useIo()
     const isMobile = useMediaQuery("(orientation: portrait)")
+    const {user} = useUser()
 
     const [loading, setLoading] = useState(false)
     const [messages, setMessages] = useState<NagaMessage[]>([])
@@ -47,7 +49,7 @@ export const MessagesScreen: React.FC<MessagesScreenProps> = ({ nagazap, setShow
         setLoading(true)
 
         try {
-            const response = await api.get("/nagazap/messages", { params: { nagazap_id: nagazap.id } })
+            const response = await api.get("/nagazap/messages", { params: { nagazap_id: nagazap.id, user_id: user?.id } })
             console.log("a")
             console.log(response.data)
             setMessages(response.data)

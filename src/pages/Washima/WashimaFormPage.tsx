@@ -46,8 +46,8 @@ export const WashimaFormPage: React.FC<WashimaFormPageProps> = ({ currentWashima
                 setLoading(true)
                 const data: WashimaForm = { ...values }
                 const response = currentWashima
-                    ? await api.patch("/washima", { ...data, id: currentWashima.id })
-                    : await api.post("/washima", { ...data, company_id: company.id })
+                    ? await api.patch("/washima", { ...data, id: currentWashima.id }, { params: { user_id: user?.id } })
+                    : await api.post("/washima", { ...data, company_id: company.id }, { params: { user_id: user?.id } })
                 console.log(response.data)
                 setCurrentWashima(response.data)
                 formik.resetForm()
@@ -72,7 +72,7 @@ export const WashimaFormPage: React.FC<WashimaFormPageProps> = ({ currentWashima
 
         try {
             setRestarting(true)
-            const response = await api.post("/washima/restart", { washima_id: currentWashima.id })
+            const response = await api.post("/washima/restart", { washima_id: currentWashima.id }, { params: { user_id: user?.id } })
             console.log(response.data)
         } catch (error) {
             console.log(error)
@@ -89,7 +89,7 @@ export const WashimaFormPage: React.FC<WashimaFormPageProps> = ({ currentWashima
             content: "Tem certeza que deseja deletar essa instância? Essa ação é irreversível.",
             onConfirm: async () => {
                 try {
-                    const response = await api.delete("/washima", { data: { washima_id: currentWashima.id } })
+                    const response = await api.delete("/washima", { data: { washima_id: currentWashima.id }, params: { user_id: user?.id } })
                     setCurrentWashima(null)
                     formik.resetForm()
                 } catch (error) {

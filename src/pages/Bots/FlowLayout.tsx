@@ -46,7 +46,7 @@ interface FlowLayoutProps {
 const viewport_duration = 800
 
 export const FlowLayout: React.FC<FlowLayoutProps> = ({ bot_id, botInstances, setBotInstances, undoToInstance, setUndoToInstance }) => {
-    const { company } = useUser()
+    const { company, user } = useUser()
     const { setViewport } = useReactFlow()
     const theme = useTheme()
 
@@ -210,7 +210,7 @@ export const FlowLayout: React.FC<FlowLayoutProps> = ({ bot_id, botInstances, se
                 const flow = instance.current.toObject()
 
                 try {
-                    await api.patch("/company/bots", { instance: flow }, { params: { company_id: company?.id, bot_id: bot_id } })
+                    await api.patch("/company/bots", { instance: flow }, { params: { company_id: company?.id, bot_id: bot_id, user_id: user?.id } })
                 } catch (error) {
                     console.log(error)
                 }
