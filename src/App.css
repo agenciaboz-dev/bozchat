@@ -114,3 +114,7 @@ img {
 .react-flow__panel {
     display: none;
 }
+
+.MuiDataGrid-panelWrapper {
+    background-color: #131b26;
+}

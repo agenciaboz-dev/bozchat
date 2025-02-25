@@ -56,7 +56,6 @@ export declare class Bot {
     washima_ids: string[];
     expiry_minutes: number;
     fuzzy_threshold: number;
-    static expiry_minutes: number;
     static pending_response: Map<string, PendingResponse>;
     static expiry_interval: NodeJS.Timeout;
     static new(data: BotForm): Promise<Bot>;

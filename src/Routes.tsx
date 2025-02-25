@@ -11,6 +11,7 @@ import { PrivacyTerms } from "./pages/PrivacyTerms/PrivacyTerms"
 import { Settings } from "./pages/Settings/Settings"
 import { Users } from "./pages/Users/Users"
 import { Bots } from "./pages/Bots/Bots"
+import { Logs } from "./pages/Logs/Logs"
 
 interface RoutesProps {}
 
@@ -25,6 +26,7 @@ export const Routes: React.FC<RoutesProps> = ({}) => {
             <Route path="/settings/*" element={<Settings />} />
             <Route path="/users/*" element={<Users />} />
             <Route path="/bots/*" element={<Bots />} />
+            <Route path="/logs/*" element={<Logs />} />
             <Route path="*" element={<WildCard />} />
         </ReactRoutes>
     ) : (

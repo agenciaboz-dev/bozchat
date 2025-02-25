@@ -16,7 +16,7 @@ import { useUser } from "./useUser"
 import { Badge, BadgeProps, styled } from "@mui/material"
 import ApiIcon from "@mui/icons-material/Api"
 import PaletteIcon from "@mui/icons-material/Palette"
-import { AccountTree, Engineering, Groups, Hub, People, Settings, SmartToy } from "@mui/icons-material"
+import { AccountTree, Engineering, Groups, Hub, List, People, Settings, SmartToy } from "@mui/icons-material"
 import { Menu } from "../types/Menu"
 
 export const useMenuList = () => {
@@ -68,6 +68,12 @@ export const useMenuList = () => {
             name: "Usuários",
             path: "/users",
             onClick: () => navigate("/users/"),
+        },
+        {
+            icon: <List />,
+            name: "Logs",
+            path: "/logs",
+            onClick: () => navigate("/logs/"),
         },
         {
             icon: <Settings />,

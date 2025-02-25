@@ -18,7 +18,7 @@
         "@mantine/hooks": "^7.2.2",
         "@mui/icons-material": "^5.14.3",
         "@mui/material": "^5.14.4",
-        "@mui/x-data-grid": "^6.19.3",
+        "@mui/x-data-grid": "^7.27.1",
         "@xyflow/react": "^12.4.3",
         "axios": "^1.4.0",
         "blob-util": "^2.0.2",
