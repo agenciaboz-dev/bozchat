@@ -10,9 +10,10 @@ interface TemplateVariablesProps {
     setVariables: React.Dispatch<React.SetStateAction<string[]>>
     component: TemplateComponent
     setComponent: React.Dispatch<React.SetStateAction<TemplateComponent>>
+    title: string
 }
 
-export const TemplateVariables: React.FC<TemplateVariablesProps> = ({ variables, setVariables, component, setComponent }) => {
+export const TemplateVariables: React.FC<TemplateVariablesProps> = ({ variables, setVariables, component, setComponent, title }) => {
     const [newVariableValue, setNewVariableValue] = useState("")
     const [variableExample, setVariableExample] = useState("")
 
@@ -45,9 +46,24 @@ export const TemplateVariables: React.FC<TemplateVariablesProps> = ({ variables,
         setComponent({ ...component, text: `${component.text}{{${variable}}}` })
     }
 
+    useEffect(() => {
+        const regex = /{{(.*?)}}/g
+        let match: RegExpExecArray | undefined | null
+
+        if (component.text) {
+            while ((match = regex.exec(component.text)) !== null) {
+                if (match && !!match.length) {
+                    if (!variables.includes(match[1])) {
+                        setComponent({ ...component, text: component.text.replace(match[0], "") })
+                    }
+                }
+            }
+        }
+    }, [variables, component.text])
+
     return (
         <Box sx={{ flexDirection: "column", gap: "1vw" }}>
-            <Title2 name="Variáveis" />
+            <Title2 name={`Variáveis do ${title}`} />
 
             <Box sx={{ gap: "1vw" }}>
                 <TextField

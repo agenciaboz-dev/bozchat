@@ -8,11 +8,20 @@ import { TemplateVariables } from "./TemplateVariables"
 interface TemplateComponentFormProps {
     component: TemplateComponent
     setComponent: React.Dispatch<React.SetStateAction<TemplateComponent>>
-    templateVariables: string[]
-    setTemplateVariables: React.Dispatch<React.SetStateAction<string[]>>
+    bodyVariables: string[]
+    setBodyVariables: React.Dispatch<React.SetStateAction<string[]>>
+    headerVariables: string[]
+    setHeaderVariables: React.Dispatch<React.SetStateAction<string[]>>
 }
 
-export const TemplateComponentForm: React.FC<TemplateComponentFormProps> = ({ component, setComponent, templateVariables, setTemplateVariables }) => {
+export const TemplateComponentForm: React.FC<TemplateComponentFormProps> = ({
+    component,
+    setComponent,
+    bodyVariables,
+    setBodyVariables,
+    headerVariables,
+    setHeaderVariables,
+}) => {
     const inputRef = useRef<HTMLInputElement>(null)
     const isMobile = useMediaQuery("(orientation: portrait)")
 
@@ -47,21 +56,6 @@ export const TemplateComponentForm: React.FC<TemplateComponentFormProps> = ({ co
         [component]
     )
 
-    useEffect(() => {
-        const regex = /{{(.*?)}}/g
-        let match: RegExpExecArray | undefined | null
-
-        if (component.text) {
-            while ((match = regex.exec(component.text)) !== null) {
-                if (match && !!match.length) {
-                    if (!templateVariables.includes(match[1])) {
-                        setComponent({ ...component, text: component.text.replace(match[0], "") })
-                    }
-                }
-            }
-        }
-    }, [templateVariables, component.text])
-
     return (
         <Box sx={{ flexDirection: "column", gap: isMobile ? "3vw" : "1vw" }}>
             {component.type === "HEADER" && (
@@ -92,12 +86,22 @@ export const TemplateComponentForm: React.FC<TemplateComponentFormProps> = ({ co
                     />
 
                     {/* VARIABLES */}
-                    {((component.type === "HEADER" && component.format === "TEXT") || component.type === "BODY") && (
+                    {component.type === "HEADER" && component.format === "TEXT" && (
                         <TemplateVariables
-                            variables={templateVariables}
-                            setVariables={setTemplateVariables}
+                            variables={headerVariables}
+                            setVariables={setHeaderVariables}
                             component={component}
                             setComponent={setComponent}
+                            title="cabeçalho"
+                        />
+                    )}
+                    {component.type === "BODY" && (
+                        <TemplateVariables
+                            variables={bodyVariables}
+                            setVariables={setBodyVariables}
+                            component={component}
+                            setComponent={setComponent}
+                            title="corpo"
                         />
                     )}
                 </>

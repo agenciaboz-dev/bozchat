@@ -65,7 +65,8 @@ export const TemplateForm: React.FC<TemplateFormProps> = ({ nagazap, setShowInfo
             ? setTemplateFooter
             : setTemplateButtons
 
-    const [templateVariables, setTemplateVariables] = useState<string[]>([])
+    const [bodyVariables, setBodyVariables] = useState<string[]>([])
+    const [headerVariables, setHeaderVariables] = useState<string[]>([])
 
     const categories: { label: string; value: TemplateCategory }[] = [
         { label: "Autenticação", value: "AUTHENTICATION" },
@@ -136,7 +137,8 @@ export const TemplateForm: React.FC<TemplateFormProps> = ({ nagazap, setShowInfo
             ],
         })
         formik.resetForm()
-        setTemplateVariables([])
+        setBodyVariables([])
+        setHeaderVariables([])
     }
 
     return (
@@ -209,8 +211,10 @@ export const TemplateForm: React.FC<TemplateFormProps> = ({ nagazap, setShowInfo
                             <TemplateComponentForm
                                 component={currentComponent}
                                 setComponent={currentSetComponent}
-                                templateVariables={templateVariables}
-                                setTemplateVariables={setTemplateVariables}
+                                bodyVariables={bodyVariables}
+                                setBodyVariables={setBodyVariables}
+                                headerVariables={headerVariables}
+                                setHeaderVariables={setHeaderVariables}
                             />
                         </Box>
                     </Grid>
