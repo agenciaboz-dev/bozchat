@@ -12,6 +12,7 @@ import { LoginForm } from "../types/server/LoginForm"
 import { api } from "../api"
 import { backgroundStyle } from "../style/background"
 import { User } from "../types/server/class/User"
+import { Company } from "../types/server/class/Company"
 
 interface LoginProps {}
 
@@ -39,9 +40,13 @@ export const Login: React.FC<LoginProps> = ({}) => {
             setLoginError("")
             try {
                 const response = await api.post("/user/login", values)
-                const user = response.data as User
-                if (user) {
-                    onLogin(user)
+                const user_and_company = response.data as { user: User; company: Company }
+                if (user_and_company) {
+                    if (user_and_company.user.active) {
+                        onLogin(user_and_company)
+                    } else {
+                        setLoginError("Esse usuário está desativado. Entre em contato com um administrador da sua empresa")
+                    }
                 } else {
                     setLoginError("Credenciais inválidas")
                 }
