@@ -21,7 +21,7 @@ export const ToolButton: React.FC<ToolButtonProps> = ({ label, route, setShowInf
     return (
         <MenuItem
             sx={{
-                bgcolor: active ? colors.primaryLight : "",
+                bgcolor: active ? colors.primary : "",
                 color: active ? "white" : "",
                 fontWeight: active ? "bold" : "normal",
                 pointerEvents: active ? "none" : "",
