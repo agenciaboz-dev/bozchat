@@ -16,18 +16,13 @@ import { PhotoProvider, PhotoView } from "react-photo-view"
 import { CopyAllButton } from "./WashimaTools/CopyAll"
 import { useWashimaInput } from "../../../hooks/useWashimaInput"
 import Message from "../../Zap/Message"
+import { SelectContactsModal } from "../SelectContactsModal/SelectContactsModal"
 
 interface WashimaChatProps {
     washima: Washima
     chat: Chat | null
     onClose: () => void
 }
-
-interface AlwaysScrollToBottomProps {
-    loading: boolean
-    shouldScroll: React.MutableRefObject<boolean>
-}
-
 
 export const WashimaChat: React.FC<WashimaChatProps> = ({ washima, chat, onClose }) => {
     const io = useIo()
@@ -39,6 +34,8 @@ export const WashimaChat: React.FC<WashimaChatProps> = ({ washima, chat, onClose
     const [messages, setMessages] = useState<WashimaMessage[]>([])
     const [groupUpdates, setGroupUpdates] = useState<WashimaGroupUpdate[]>([])
     const [loadingMessageId, setLoadingMessageId] = useState<string | null>(null)
+    const [selectedMessages, setSelectedMessages] = useState<WashimaMessage[]>([])
+    const [chooseForwardingContacts, setChooseForwardingContacts] = useState(false)
 
     const messages_and_group_updates = useMemo(
         () => [...messages, ...groupUpdates].sort((a, b) => Number(b.timestamp) - Number(a.timestamp)),
@@ -59,11 +56,20 @@ export const WashimaChat: React.FC<WashimaChatProps> = ({ washima, chat, onClose
         }
     }
 
-    const onSubmit = (message?: string, media?: WashimaMediaForm) => {
+    const onSendMessage = (message?: string, media?: WashimaMediaForm) => {
         console.log({ message, media })
         if ((message || media) && chat) {
             console.log("mandando")
             io.emit("washima:message", washima.id, chat.id._serialized, message, media, washimaInput.replyMessage)
+        }
+    }
+
+    const onForwardMessages = (contactIds: string[]) => {
+        if (chat) {
+            const message_ids = selectedMessages.map((item) => item.sid)
+            console.log({ message_ids, contactIds })
+            io.emit("washima:forward", washima.id, chat.id._serialized, contactIds, message_ids)
+            setSelectedMessages([])
         }
     }
 
@@ -133,6 +139,7 @@ export const WashimaChat: React.FC<WashimaChatProps> = ({ washima, chat, onClose
         setProfilePic("")
         setMessages([])
         setGroupUpdates([])
+        setSelectedMessages([])
     }
 
     const scrollToMessage = async (sid: string) => {
@@ -296,6 +303,8 @@ export const WashimaChat: React.FC<WashimaChatProps> = ({ washima, chat, onClose
                             previousItem={messages_and_group_updates[index + 1]}
                             onVisible={index % 5 === 4 ? () => fetchMessages(messages.length) : undefined}
                             scrollTo={scrollToMessage}
+                            selectedMessages={selectedMessages}
+                            setSelectedMessages={setSelectedMessages}
                         />
                     ) : (
                         <GroupUpdateItem key={item.sid} chat={chat} update={item as WashimaGroupUpdate} washima={washima} profilePic={profilePic} />
@@ -303,7 +312,14 @@ export const WashimaChat: React.FC<WashimaChatProps> = ({ washima, chat, onClose
                 )}
                 {loading && <LinearProgress sx={{ position: "absolute", bottom: 0, left: 0, right: 0 }} />}
             </Box>
-            <WashimaInput onSubmit={onSubmit} disabled={!chat} washima={washima} chat_id={chat.id._serialized} />
+            <WashimaInput
+                onSubmit={onSendMessage}
+                disabled={!chat}
+                washima={washima}
+                chat_id={chat.id._serialized}
+                selectedMessages={selectedMessages}
+                onForwardPress={() => setChooseForwardingContacts(true)}
+            />
             <Paper
                 elevation={5}
                 sx={{
@@ -320,6 +336,14 @@ export const WashimaChat: React.FC<WashimaChatProps> = ({ washima, chat, onClose
                     <KeyboardDoubleArrowDown />
                 </IconButton>
             </Paper>
+
+            <SelectContactsModal
+                open={chooseForwardingContacts}
+                onClose={() => setChooseForwardingContacts(false)}
+                washima={washima}
+                title="Encaminhar mensagens para"
+                onSubmit={onForwardMessages}
+            />
         </Paper>
     ) : (
         <NoChat />

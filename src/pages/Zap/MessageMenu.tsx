@@ -40,9 +40,10 @@ interface MessageMenuProps {
     from_me?: boolean
     onClose: () => void
     message: WashimaMessage
+    onSelect: () => void
 }
 
-export const MessageMenu: React.FC<MessageMenuProps> = ({ from_me, onClose, message }) => {
+export const MessageMenu: React.FC<MessageMenuProps> = ({ from_me, onClose, message, onSelect }) => {
     const washimaInput = useWashimaInput()
     const isMobile = useMediaQuery("(orientation: portrait)")
     const is_deleted = message.type === "revoked" || message.deleted
@@ -63,6 +64,11 @@ export const MessageMenu: React.FC<MessageMenuProps> = ({ from_me, onClose, mess
 
     const onReplyPress = () => {
         washimaInput.setReplyMessage(message)
+        handleCloseMenu()
+    }
+
+    const onForwardPress = () => {
+        onSelect()
         handleCloseMenu()
     }
 
@@ -107,12 +113,13 @@ export const MessageMenu: React.FC<MessageMenuProps> = ({ from_me, onClose, mess
                         },
                     }}
                 >
-                    {!is_deleted && <MessageMenuItem onClick={onReplyPress}>Responder</MessageMenuItem>}
-                    {!is_deleted && message.hasMedia && (
+                    <MessageMenuItem onClick={onReplyPress}>Responder</MessageMenuItem>
+                    {message.hasMedia && (
                         <MessageMenuItem onClick={downloadMedia}>
                             {downloading ? <CircularProgress size={"1rem"} color="secondary" /> : "Baixar"}
                         </MessageMenuItem>
                     )}
+                    <MessageMenuItem onClick={onForwardPress}>Encaminhar</MessageMenuItem>
                 </Menu>
             </Box>
         </motion.div>

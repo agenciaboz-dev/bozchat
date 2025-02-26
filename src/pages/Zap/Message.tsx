@@ -1,12 +1,12 @@
-import React, { forwardRef, useEffect, useState } from "react"
-import { Avatar, Box, Chip, CircularProgress, Icon, IconButton, MenuItem, Skeleton, alpha } from "@mui/material"
+import React, { forwardRef, useEffect, useMemo, useState } from "react"
+import { Avatar, Box, Checkbox, Chip, CircularProgress, Icon, IconButton, MenuItem, Skeleton, Typography, alpha } from "@mui/material"
 import { useMuiTheme } from "../../hooks/useMuiTheme"
 import { useMediaQuery } from "@mui/material"
 import { Washima, WashimaMedia } from "../../types/server/class/Washima/Washima"
 import { api } from "../../api"
 import { useVisibleCallback } from "burgos-use-visible-callback"
 import { ErrorChip, TodoChip } from "../../components/TodoChip"
-import { Delete, Download } from "@mui/icons-material"
+import { CheckBox, Delete, Download, Reply } from "@mui/icons-material"
 import { saveAs } from "file-saver"
 import { AudioPlayer } from "../Washima/AudioComponents/AudioPlayer"
 import { TrianguloFudido } from "./TrianguloFudido"
@@ -30,10 +30,12 @@ interface MessageProps {
     isGroup?: boolean
     onVisible?: () => void
     scrollTo: (sid: string) => void
+    selectedMessages: WashimaMessage[]
+    setSelectedMessages: React.Dispatch<React.SetStateAction<WashimaMessage[]>>
 }
 
 export const Message: React.ForwardRefRenderFunction<HTMLDivElement, MessageProps> = (
-    { message, isGroup, washima, previousItem, onVisible, scrollTo },
+    { message, isGroup, washima, previousItem, onVisible, scrollTo, selectedMessages, setSelectedMessages },
     ref
 ) => {
     const visibleCallbackRef = useVisibleCallback(() => {
@@ -59,6 +61,9 @@ export const Message: React.ForwardRefRenderFunction<HTMLDivElement, MessageProp
     const [loading, setLoading] = useState(message.hasMedia)
     const [hovering, setHovering] = useState(false)
     const [componentIsOnScreen, setComponentIsOnScreen] = useState(false)
+
+    const is_selected = useMemo(() => !!selectedMessages.find((item) => item.sid === message.sid), [selectedMessages])
+    const is_selecting = useMemo(() => selectedMessages.length > 0, [selectedMessages])
 
     const valid_types = ["video", "image", "ptt", "audio", "document", "sticker"]
     const is_audio = message.type === "ptt" || message.type === "audio"
@@ -122,9 +127,16 @@ export const Message: React.ForwardRefRenderFunction<HTMLDivElement, MessageProp
         }
     }
 
+    const onSelect = () => {
+        console.log("aa")
+        setSelectedMessages((selectedMessages) =>
+            is_selected ? selectedMessages.filter((item) => item.sid !== message.sid) : [...selectedMessages, message]
+        )
+    }
+
     useEffect(() => {
         if (hovering) {
-            console.log(attachmendMetaData)
+            // console.log(message)
         }
     }, [hovering])
 
@@ -138,22 +150,27 @@ export const Message: React.ForwardRefRenderFunction<HTMLDivElement, MessageProp
                 sx={{ flexDirection: message.fromMe ? "row-reverse" : "row", alignItems: "center", gap: "1vw", position: "relative" }}
             >
                 {/* //* HOVERING OVERLAY */}
-                {/* {hovering && (
+                {(is_selected || (is_selecting && hovering)) && (
                     <Box
                         sx={{
                             position: "absolute",
-                            top: 0,
+                            top: "-0.125vw",
                             left: 0,
                             right: 0,
-                            bottom: 0,
+                            bottom: "-0.125vw",
                             bgcolor: "white",
                             opacity: 0.1,
                             marginLeft: "-2vw",
                             marginRight: "-2vw",
                             marginTop: !same_as_previous && !day_changing ? (isMobile ? "2vw" : "0.5vw") : undefined,
+                            cursor: "pointer",
+                            zIndex: 5,
                         }}
+                        onClick={onSelect}
                     />
-                )} */}
+                )}
+
+                {is_selecting && <Checkbox checked={is_selected} sx={{ position: "absolute", left: 0 }} />}
 
                 <Box
                     ref={visibleCallbackRef}
@@ -170,6 +187,8 @@ export const Message: React.ForwardRefRenderFunction<HTMLDivElement, MessageProp
                         sx={{
                             position: "relative",
                             padding: isMobile ? "3vw" : `${is_image || is_video ? "0.25vw" : "0.5vw"}`,
+                            marginLeft: !message.fromMe && is_selecting ? "5vw" : undefined,
+                            // marginRight: message.fromMe && is_selecting ? "1vw" : undefined,
 
                             flexDirection: "column",
                             alignSelf: message.fromMe ? "flex-end" : "flex-start",
@@ -181,6 +200,7 @@ export const Message: React.ForwardRefRenderFunction<HTMLDivElement, MessageProp
                             marginTop: !same_as_previous && !day_changing ? (isMobile ? "2vw" : "0.5vw") : undefined,
                             gap: is_sticker ? "0.2vw" : undefined,
                             opacity: is_deleted ? 0.3 : undefined,
+                            transition: "0.5s",
                         }}
                     >
                         {show_triangle && (
@@ -188,6 +208,14 @@ export const Message: React.ForwardRefRenderFunction<HTMLDivElement, MessageProp
                                 color={is_sticker ? "transparent" : message.fromMe ? primary : secondary}
                                 alignment={message.fromMe ? "right" : "left"}
                             />
+                        )}
+
+                        {/*//* MENSAGEM ENCAMINHADA */}
+                        {message.forwarded && (
+                            <Box sx={{ gap: "0.3vw", alignItems: "center" }}>
+                                <Reply fontSize="small" sx={{ transform: "scaleX(-1)", opacity: 0.3 }} />
+                                <Typography sx={{ fontStyle: "italic", fontSize: "0.8rem", opacity: 0.5 }}>Encaminhada</Typography>
+                            </Box>
                         )}
 
                         {/*//* MESSAGE AUTHOR  */}
@@ -356,7 +384,9 @@ export const Message: React.ForwardRefRenderFunction<HTMLDivElement, MessageProp
                         <MessageDateContainer message={message} is_audio={is_audio} is_image={is_image} is_document={is_document} />
 
                         {/* //* MENU BUTTON */}
-                        {hovering && <MessageMenu from_me={message.fromMe} onClose={() => setHovering(false)} message={message} />}
+                        {hovering && !is_deleted && (
+                            <MessageMenu from_me={message.fromMe} onClose={() => setHovering(false)} message={message} onSelect={onSelect} />
+                        )}
                     </Box>
                 </Box>
             </Box>

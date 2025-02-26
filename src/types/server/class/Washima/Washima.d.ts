@@ -70,6 +70,7 @@ export declare class Washima {
     static push(washima: Washima): void;
     static new(data: WashimaForm): Promise<Washima>;
     static delete(washima_id: string): Promise<Washima | undefined>;
+    static forwardMessage(socket: Socket, washima_id: string, chat_id: string, destinatary_ids: string[], message_ids: string[]): Promise<void>;
     static sendMessage(socket: Socket, washima_id: string, chat_id: string, message?: string, media?: WashimaMediaForm, replyMessage?: WashimaMessage): Promise<void>;
     static getContact(socket: Socket, washima_id: string, contact_id: string, message_id: string): Promise<void>;
     constructor(data: WashimaPrisma);

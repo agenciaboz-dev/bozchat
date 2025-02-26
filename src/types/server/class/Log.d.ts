@@ -19,6 +19,6 @@ export declare class Log {
     user_id: string;
     user: User;
     company_id: string;
-    static new(data: LogForm): Promise<boolean>;
+    static new(data: LogForm): Promise<void>;
     constructor(data: LogPrisma);
 }

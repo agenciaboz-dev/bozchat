@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from "react"
+import React, { useEffect, useMemo, useRef, useState } from "react"
 import { Box, CircularProgress, IconButton, Paper, TextField, Typography } from "@mui/material"
 import { textFieldStyle } from "../../style/textfield"
 import SendIcon from "@mui/icons-material/Send"
@@ -8,17 +8,20 @@ import { useIo } from "../../hooks/useIo"
 import { MediaInputMenu } from "./MediaInput/MediaInputMenu"
 import { useLocalStorage } from "@mantine/hooks"
 import { useWashimaInput } from "../../hooks/useWashimaInput"
-import { Close } from "@mui/icons-material"
+import { Close, Forward, Reply } from "@mui/icons-material"
 import { QuotedMessage } from "./QuotedMessage"
+import { WashimaMessage } from "../../types/server/class/Washima/WashimaMessage"
 
 interface WashimaInputProps {
     onSubmit: (message?: string, media?: WashimaMediaForm) => void
     disabled?: boolean
     washima: Washima
     chat_id: string
+    selectedMessages: WashimaMessage[]
+    onForwardPress: () => void
 }
 
-export const WashimaInput: React.FC<WashimaInputProps> = ({ onSubmit, disabled, washima, chat_id }) => {
+export const WashimaInput: React.FC<WashimaInputProps> = ({ onSubmit, disabled, washima, chat_id, selectedMessages, onForwardPress }) => {
     const io = useIo()
     const inputHelper = useWashimaInput()
     const inputRef = useRef<HTMLInputElement>(null)
@@ -27,6 +30,8 @@ export const WashimaInput: React.FC<WashimaInputProps> = ({ onSubmit, disabled, 
     const [message, setMessage] = useState("")
     const [textDisabled, setTextDisabled] = useState(disabled)
     const [loading, setLoading] = useState(false)
+
+    const is_forwarding = useMemo(() => selectedMessages.length > 0, [selectedMessages])
 
     const onRecordStart = () => {
         setTextDisabled(true)
@@ -62,6 +67,10 @@ export const WashimaInput: React.FC<WashimaInputProps> = ({ onSubmit, disabled, 
         }
     }, [inputHelper.replyMessage])
 
+    // useEffect(() => {
+    //     setTextDisabled(is_forwarding)
+    // }, [is_forwarding])
+
     useEffect(() => {
         io.on("washima:message:sent", () => {
             setLoading(false)
@@ -79,22 +88,31 @@ export const WashimaInput: React.FC<WashimaInputProps> = ({ onSubmit, disabled, 
                 inputRef={inputRef}
                 placeholder="Envie uma mensagem"
                 name="message"
-                value={message}
+                value={
+                    is_forwarding
+                        ? `${selectedMessages.length} ${selectedMessages.length > 1 ? "mensagens selecionadas" : "mensagem selecionada"}`
+                        : message
+                }
                 disabled={textDisabled}
                 onChange={(ev) => setMessage(ev.target.value)}
                 sx={textFieldStyle}
                 autoComplete="off"
                 InputProps={{
+                    readOnly: is_forwarding,
                     sx: { color: "primary.main", bgcolor: "background.default", paddingLeft: "0", paddingRight: "0" },
                     // startAdornment: (
                     //     <Checkbox title="assinar mensagem" checked={sign} onChange={(_, checked) => handleSignCheckbox(checked)} />
                     // ),
-                    startAdornment: <MediaInputMenu washima={washima} chat_id={chat_id} />,
+                    startAdornment: is_forwarding ? undefined : <MediaInputMenu washima={washima} chat_id={chat_id} />,
                     endAdornment: loading ? (
                         <CircularProgress size="1.5rem" sx={{ marginRight: "0.5vw" }} />
                     ) : (
                         <Box sx={{ marginRight: "0.5vw" }}>
-                            {message ? (
+                            {is_forwarding ? (
+                                <IconButton color="primary" onClick={onForwardPress}>
+                                    <Reply sx={{ transform: "scaleX(-1)" }} />
+                                </IconButton>
+                            ) : message ? (
                                 <IconButton color="primary" type="submit" onClick={handleSubmit} disabled={disabled}>
                                     <SendIcon />
                                 </IconButton>

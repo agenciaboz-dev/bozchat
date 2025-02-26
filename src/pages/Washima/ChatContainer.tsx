@@ -27,7 +27,6 @@ export const ChatContainer: React.FC<ChatProps> = ({ chat, onChatClick, washima,
     const ref = useVisibleCallback(() => {
         if (onVisible) {
             onVisible()
-            console.log(chat)
         }
         if (chat.lastMessage?.hasMedia) {
             fetchMediaMetadata()
@@ -48,6 +47,7 @@ export const ChatContainer: React.FC<ChatProps> = ({ chat, onChatClick, washima,
         washima_id: washima.id,
         deleted: false,
         edited: false,
+        forwarded: false,
     }
 
     const handleClick = () => {
@@ -75,11 +75,10 @@ export const ChatContainer: React.FC<ChatProps> = ({ chat, onChatClick, washima,
         }
     }
 
-
-
     useEffect(() => {
         fetchProfilePic()
     }, [chat])
+
 
     return (
         <MenuItem
