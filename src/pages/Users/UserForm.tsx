@@ -41,6 +41,7 @@ export const UserForm: React.FC<UserFormProps> = (props) => {
                 const response = await api.post("/user", values, { params: { user_id: user?.id } })
                 props.onSubmit(response.data)
                 snackbar({ severity: "success", text: "Salvo!" })
+                formik.resetForm()
             } catch (error) {
                 console.log(error)
             } finally {
@@ -63,24 +64,14 @@ export const UserForm: React.FC<UserFormProps> = (props) => {
                     sx={{ ...textFieldStyle }}
                     autoComplete="off"
                     required
+                    type={showPassword ? "text" : "password"}
                     InputProps={{
                         endAdornment: (
-                            <IconButton onClick={() => setShowPassword(!showPassword)} color="primary">
-                                {showPassword ? <VisibilityOff /> : <Visibility />}
+                            <IconButton onClick={() => setShowPassword(!showPassword)}>
+                                {!showPassword ? <VisibilityOff /> : <Visibility />}
                             </IconButton>
                         ),
                     }}
-                />
-
-                <FormControlLabel
-                    control={<Switch checked={formik.values.admin} onChange={(_, value) => formik.setFieldValue("admin", value)} />}
-                    label="Administrador"
-                    componentsProps={{ typography: { sx: { color: "secondary.main" } } }}
-                />
-                <FormControlLabel
-                    control={<Switch checked={formik.values.active} onChange={(_, value) => formik.setFieldValue("active", value)} />}
-                    label="Ativo"
-                    componentsProps={{ typography: { sx: { color: "secondary.main" } } }}
                 />
 
                 <Box sx={{ gap: "1vw", flexDirection: "row-reverse" }}>

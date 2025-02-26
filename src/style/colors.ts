@@ -1,9 +1,50 @@
-const colors = {
-    background: "white",
+import { Theme } from "../types/Theme"
+
+export const default_colors: Theme = {
+    id: 1,
+    name: "default_light",
+    timestamp: "",
     primary: "#00AFEF",
-    primaryLight: "#00AFEF",
     secondary: "#ffffff",
+    terciary: "#1F1F1F",
+
+    success: "#34A853",
+
+    warning: "#ffb74d",
+
+    background: {
+        primary: "#ffffff",
+        secondary: "#00AFEF",
+    },
+
+    text: {
+        primary: "#00AFEF",
+        secondary: "#1F1F1F",
+        terciary: "#ffffff",
+    },
 }
+
+export const default_dark_colors: Theme = {
+    id: 2,
+    name: "default_dark",
+    timestamp: "",
+    primary: "#00AFEF",
+    secondary: "#ffffff",
+    terciary: "#D9D9D9",
+    success: "#34A853",
+    warning: "#ffa726",
+    background: {
+        primary: "#131b26",
+        // secondary: "#181818",
+    },
+    text: {
+        primary: "#00AFEF",
+        secondary: "#D9D9D9",
+        terciary: "#0078D4",
+    },
+}
+
+const colors = default_dark_colors
 
 export const washima_colors = [
     "#00BCD4", // Cyan 500
@@ -37,9 +78,7 @@ export const washima_colors = [
     "#FFEB3B", // Yellow 500
     "#5E35B1", // Deep Purple 600
     "#0D47A1", // Blue 900
-];
-
-
+]
 
 // export const washima_colors = [
 //     "#FF5733",
@@ -73,6 +112,5 @@ export const washima_colors = [
 //     "#FF337A",
 //     "#FF335B",
 // ]
-  
 
 export default colors

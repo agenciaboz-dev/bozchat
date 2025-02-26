@@ -113,7 +113,7 @@ export const UsersTable: React.FC<UsersTableProps> = (props) => {
                     sorting: { sortModel: [{ field: "name", sort: "asc" }] },
                     pagination: { paginationModel: { page: 1, pageSize: 50 } },
                 }}
-                pageSizeOptions={[50, 100]}
+                pageSizeOptions={[10, 20, 50, 100]}
                 sx={{ border: 0, height: "61vh" }}
                 // slots={{ filterPanel: () => <GridFilterPanel /> }}
                 onCellEditStop={(cell, event) => {

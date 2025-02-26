@@ -25,13 +25,6 @@ export const Login: React.FC<LoginProps> = ({}) => {
     const [loading, setLoading] = useState(false)
     const [loginError, setLoginError] = useState("")
 
-    const webkitbg = {
-        "& .MuiInputBase-input.MuiOutlinedInput-input:-webkit-autofill": {
-            "-webkit-box-shadow": ` 0 0 0 100px ${colors.background.primary} inset`,
-            borderRadius: "initial",
-        },
-    }
-
     const formik = useFormik<LoginForm>({
         initialValues: { login: "", password: "" },
         async onSubmit(values, formikHelpers) {
@@ -80,7 +73,7 @@ export const Login: React.FC<LoginProps> = ({}) => {
                         placeholder="nome de usuário, email ou cpf"
                         autoComplete="off"
                         required
-                        sx={{ ...textFieldStyle, ...webkitbg }}
+                        sx={{ ...textFieldStyle }}
                         error={!!loginError}
                     />
                     <TextField
@@ -91,7 +84,7 @@ export const Login: React.FC<LoginProps> = ({}) => {
                         type={showPassword ? "text" : "password"}
                         autoComplete="off"
                         required
-                        sx={{ ...textFieldStyle, ...webkitbg }}
+                        sx={{ ...textFieldStyle }}
                         InputProps={{
                             endAdornment: (
                                 <IconButton onClick={() => setShowPassword(!showPassword)} color="primary">
