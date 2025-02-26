@@ -91,10 +91,16 @@ export const Logs: React.FC<LogsProps> = ({}) => {
                         columns={columns}
                         initialState={{
                             sorting: { sortModel: [{ field: "timestamp", sort: "desc" }] },
-                            pagination: { paginationModel: { page: 1, pageSize: 50 } },
+                            pagination: { paginationModel: { page: 0, pageSize: 50 } },
                         }}
                         pageSizeOptions={[50, 100, 500, -1]}
-                        sx={{ border: 0, height: "76vh" }}
+                        sx={{
+                            border: 0,
+                            height: "76vh",
+                            "& .MuiDataGrid-cell": {
+                                color: "secondary.main",
+                            },
+                        }}
                         slots={{ filterPanel: () => <GridFilterPanel /> }}
                     />
                 </Paper>

@@ -45,8 +45,8 @@ export const useMuiTheme = () => {
                         },
                     },
                     components: {
-                        MuiMenuList: { defaultProps: { sx: { bgcolor: "background.default" } } },
-                        MuiList: { defaultProps: { sx: { bgcolor: "background.default" } } },
+                        MuiMenuList: { defaultProps: { sx: { bgcolor: colors.background.primary } } },
+                        MuiList: { defaultProps: { sx: { bgcolor: colors.background.primary } } },
                     },
                 },
                 ptBR
