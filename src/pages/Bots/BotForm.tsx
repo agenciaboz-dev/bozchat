@@ -137,7 +137,30 @@ export const BotForm: React.FC<BotFormProps> = ({ onSubmit, bot, onDelete }) => 
                     name="name"
                     required
                 />
-                <TextField label="Gatilho" value={formik.values.trigger} onChange={formik.handleChange} name="trigger" required />
+                <TextField
+                    label="Gatilho"
+                    value={formik.values.trigger}
+                    onChange={formik.handleChange}
+                    name="trigger"
+                    required
+                    InputProps={{
+                        endAdornment: (
+                            <Tooltip
+                                title={
+                                    <Box sx={{ flexDirection: "column", gap: "1vw" }}>
+                                        <Typography sx={{ fontSize: "0.8rem" }}>
+                                            Você pode especificar múltiplos gatilhos seperados por ";"
+                                        </Typography>
+                                    </Box>
+                                }
+                            >
+                                <IconButton sx={{ padding: 0 }}>
+                                    <InfoOutlined />
+                                </IconButton>
+                            </Tooltip>
+                        ),
+                    }}
+                />
             </Box>
 
             <Box sx={{ gap: "1vw", alignItems: "center" }}>
