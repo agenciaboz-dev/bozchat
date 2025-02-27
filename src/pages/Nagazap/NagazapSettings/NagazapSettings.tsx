@@ -5,6 +5,7 @@ import { Subroute } from "../Subroute"
 import { Token } from "./Token"
 import { DeleteNagazap } from "./DeleteNagazap"
 import { ArrowBack, Refresh } from "@mui/icons-material"
+import { SyncTemplates } from "./SyncTemplates"
 
 interface NagazapSettingsProps {
     nagazap: Nagazap
@@ -33,7 +34,10 @@ export const NagazapSettings: React.FC<NagazapSettingsProps> = ({ nagazap, setNa
         >
             <Box sx={{ flexDirection: "column", gap: "1vw" }}>
                 <Token nagazap={nagazap} />
-                <DeleteNagazap nagazap={nagazap} setNagazap={setNagazap} fetchNagazaps={fetchNagazaps} />
+                <Box sx={{ gap: "1vw" }}>
+                    <SyncTemplates nagazap={nagazap} />
+                    <DeleteNagazap nagazap={nagazap} setNagazap={setNagazap} fetchNagazaps={fetchNagazaps} />
+                </Box>
             </Box>
         </Subroute>
     )
