@@ -2,7 +2,7 @@ import React, { useEffect, useMemo, useState } from "react"
 import { Box, Chip, CircularProgress, IconButton, Menu, MenuItem, Paper } from "@mui/material"
 import { NagaTemplate, Nagazap } from "../../../types/server/class/Nagazap"
 import { Subroute } from "../Subroute"
-import { TemplateInfo, TemplateUpdateHook } from "../../../types/server/Meta/WhatsappBusiness/TemplatesInfo"
+import { TemplateCategory, TemplateInfo, TemplateUpdateHook } from "../../../types/server/Meta/WhatsappBusiness/TemplatesInfo"
 import { api } from "../../../api"
 import { useUser } from "../../../hooks/useUser"
 import { Add, Check, CopyAll, Delete, Download, Edit, Error, HourglassFull, MoreHoriz, Refresh, Send, WatchLater } from "@mui/icons-material"
@@ -25,6 +25,12 @@ const status_options: { [key: string]: { label: string; color: MuiColor; icon: t
     PENDING: { label: "pendente", color: "warning", icon: WatchLater },
     REJECTED: { label: "rejeitado", color: "error", icon: Error },
     PAUSED: { label: "pausado", color: "warning", icon: HourglassFull },
+}
+
+const category_options = {
+    MARKETING: "Marketing",
+    UTILITY: "Utilidade",
+    AUTHENTICATION: "Autenticação",
 }
 
 export const Templates: React.FC<TemplatesProps> = ({ nagazap }) => {
@@ -64,7 +70,14 @@ export const Templates: React.FC<TemplatesProps> = ({ nagazap }) => {
         },
         { field: "name", headerName: "Nome", flex: 0.3 },
 
-        { field: "category", headerName: "Categoria", flex: 0.1 },
+        {
+            field: "category",
+            headerName: "Categoria",
+            flex: 0.1,
+            valueFormatter(value) {
+                return category_options[value]
+            },
+        },
         { field: "sent", headerName: "Envios", flex: 0.05 },
 
         {
