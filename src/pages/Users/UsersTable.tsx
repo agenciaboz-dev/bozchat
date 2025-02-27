@@ -111,7 +111,7 @@ export const UsersTable: React.FC<UsersTableProps> = (props) => {
                 columns={columns}
                 initialState={{
                     sorting: { sortModel: [{ field: "name", sort: "asc" }] },
-                    pagination: { paginationModel: { page: 1, pageSize: 50 } },
+                    pagination: { paginationModel: { page: 0, pageSize: 10 } },
                 }}
                 pageSizeOptions={[10, 20, 50, 100]}
                 sx={{ border: 0, height: "61vh" }}

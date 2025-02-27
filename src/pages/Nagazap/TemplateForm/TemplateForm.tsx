@@ -1,7 +1,6 @@
-import React, { useEffect, useState } from "react"
-import { Box, Button, CircularProgress, Grid, IconButton, MenuItem, Paper, Tab, Tabs, TextField, useMediaQuery } from "@mui/material"
+import React, { useState } from "react"
+import { Box, Button, CircularProgress, Grid, MenuItem, Paper, Tab, Tabs, TextField, useMediaQuery } from "@mui/material"
 import { Nagazap } from "../../../types/server/class/Nagazap"
-import { Subroute } from "../Subroute"
 import { useFormik } from "formik"
 import {
     TemplateCategory,
@@ -17,16 +16,17 @@ import { TemplateComponentForm } from "./TemplateComponentForm"
 import { api } from "../../../api"
 import { AxiosError } from "axios"
 import { useSnackbar } from "burgos-snackbar"
-import { ArrowBack } from "@mui/icons-material"
 import { meta_normalize } from "../../../tools/normalize"
 import { useUser } from "../../../hooks/useUser"
+import { Title2 } from "../../../components/Title"
 
 interface TemplateFormProps {
     nagazap: Nagazap
-    setShowInformations: React.Dispatch<React.SetStateAction<boolean>>
+    setShowInformations?: React.Dispatch<React.SetStateAction<boolean>>
+    onSubmit: () => void
 }
 
-export const TemplateForm: React.FC<TemplateFormProps> = ({ nagazap, setShowInformations }) => {
+export const TemplateForm: React.FC<TemplateFormProps> = ({ nagazap, setShowInformations, onSubmit }) => {
     const { snackbar } = useSnackbar()
     const isMobile = useMediaQuery("(orientation: portrait)")
     const { user } = useUser()
@@ -110,6 +110,7 @@ export const TemplateForm: React.FC<TemplateFormProps> = ({ nagazap, setShowInfo
                 })
                 window.open(`${api.getUri()}/${response.data.csv_model}`, "_new")
                 resetForm()
+                onSubmit()
             } catch (error) {
                 console.log(error)
                 if (error instanceof AxiosError && error.response?.data) {
@@ -144,26 +145,15 @@ export const TemplateForm: React.FC<TemplateFormProps> = ({ nagazap, setShowInfo
     }
 
     return (
-        <Subroute
-            title="Novo Template"
-            space
-            left={
-                isMobile ? (
-                    <IconButton
-                        onClick={() => {
-                            setShowInformations(false)
-                        }}
-                    >
-                        <ArrowBack />
-                    </IconButton>
-                ) : undefined
-            }
-            right={
-                <Button variant="contained" onClick={() => formik.handleSubmit()} sx={{ alignSelf: "flex-end" }}>
-                    {loading ? <CircularProgress size="1.5rem" color="secondary" /> : "Concluir"}
-                </Button>
-            }
-        >
+        <Paper sx={{ flexDirection: "column", bgcolor: "background.default", padding: "2vw", gap: "1vw", height: "70vh", overflow: "auto" }}>
+            <Title2
+                name="Novo Template"
+                right={
+                    <Button variant="contained" onClick={() => formik.handleSubmit()} sx={{ alignSelf: "flex-end" }}>
+                        {loading ? <CircularProgress size="1.5rem" color="secondary" /> : "Concluir"}
+                    </Button>
+                }
+            />
             <form onSubmit={formik.handleSubmit}>
                 <Grid container columns={isMobile ? 1 : 3} spacing={"1vw"}>
                     <Grid item xs={isMobile ? 1 : 2}>
@@ -242,6 +232,6 @@ export const TemplateForm: React.FC<TemplateFormProps> = ({ nagazap, setShowInfo
                     </Grid>
                 </Grid>
             </form>
-        </Subroute>
+        </Paper>
     )
 }

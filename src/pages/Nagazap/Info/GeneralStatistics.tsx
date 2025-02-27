@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react"
 import { Box } from "@mui/material"
-import { Nagazap } from "../../../types/server/class/Nagazap"
+import { NagaTemplate, Nagazap } from "../../../types/server/class/Nagazap"
 import { GeneralStat } from "../../../types/GeneralStat"
 import { AlarmOnSharp, Block, Check, Close, DocumentScanner, PendingActions } from "@mui/icons-material"
 import { GeneralStatsList } from "../../Home/GeneralStatsList"
@@ -13,21 +13,21 @@ interface GeneralStatisticsProps {
 }
 
 export const GeneralStatistics: React.FC<GeneralStatisticsProps> = ({ nagazap }) => {
-    const {user} = useUser()
-    
-    const [templates, setTemplates] = useState<TemplateInfo[]>()
+    const { user } = useUser()
+
+    const [templates, setTemplates] = useState<NagaTemplate[]>()
 
     const generalStatistics: GeneralStat[] = [
         {
             title: "Templates Aprovados",
             icon: DocumentScanner,
-            value: templates?.filter((template) => template.status === "APPROVED").length,
+            value: templates?.filter((template) => template.info.status === "APPROVED").length,
             loading: templates === undefined,
         },
         {
             title: "Templates Pendentes",
             icon: PendingActions,
-            value: templates?.filter((template) => template.status === "PENDING").length,
+            value: templates?.filter((template) => template.info.status === "PENDING").length,
             loading: templates === undefined,
         },
         { title: "Mensagens enviadas", icon: Check, value: nagazap.sentMessages.length },

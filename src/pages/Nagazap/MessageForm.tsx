@@ -1,24 +1,20 @@
 import React, { useCallback, useEffect, useRef, useState } from "react"
-import { Avatar, Box, Button, CircularProgress, Grid, IconButton, MenuItem, Paper, TextField, Typography, useMediaQuery } from "@mui/material"
+import { Box, Button, CircularProgress, Grid, IconButton, MenuItem, TextField, Typography, useMediaQuery } from "@mui/material"
 import { Subroute } from "./Subroute"
 import { useFormik } from "formik"
 import { OvenForm } from "../../types/server/Meta/WhatsappBusiness/WhatsappForm"
-import { ArrowBack, Check, CheckCircle, CloudUpload, Download, Error, WatchLater } from "@mui/icons-material"
+import { ArrowBack, Check, CloudUpload, Download, Error, WatchLater } from "@mui/icons-material"
 import { api } from "../../api"
 import { TemplateInfo, TemplateUpdateHook } from "../../types/server/Meta/WhatsappBusiness/TemplatesInfo"
-import { getDataFromSheet, getPhonesfromSheet } from "../../tools/getPhonesFromSheet"
+import { getDataFromSheet } from "../../tools/getPhonesFromSheet"
 import { useSnackbar } from "burgos-snackbar"
-import { Nagazap } from "../../types/server/class/Nagazap"
-import { OpenInNew, Reply } from "@mui/icons-material"
-
-import { TrianguloFudido } from "../Zap/TrianguloFudido"
+import { NagaTemplate, Nagazap } from "../../types/server/class/Nagazap"
 import { Clear } from "@mui/icons-material"
-import { SheetExample } from "./TemplateForm/SheetExample"
-import AddCircleIcon from "@mui/icons-material/AddCircle"
-import MaskedInputComponent from "../../components/MaskedInput"
 import { useIo } from "../../hooks/useIo"
 import { TemplateFields } from "./TemplateFields"
 import { useUser } from "../../hooks/useUser"
+import { TemplatePreview } from "./TemplateForm/TemplatePreview"
+import { useLocation } from "react-router-dom"
 
 interface MessageFormProps {
     nagazap: Nagazap
@@ -27,27 +23,21 @@ interface MessageFormProps {
 
 export const MessageFormScreen: React.FC<MessageFormProps> = ({ nagazap, setShowInformations }) => {
     const io = useIo()
-    const icons = [
-        { type: "QUICK_REPLY", icon: <Reply /> },
-        { type: "URL", icon: <OpenInNew /> },
-    ]
 
-    const maxSize = "23vw"
     const inputRef = useRef<HTMLInputElement>(null)
 
     const { snackbar } = useSnackbar()
     const { user } = useUser()
     const isMobile = useMediaQuery("(orientation: portrait)")
+    const location = useLocation()
 
-    const [templates, setTemplates] = useState<TemplateInfo[]>([])
+    const [templates, setTemplates] = useState<NagaTemplate[]>([])
     const [image, setImage] = useState<File>()
     const [imageError, setImageError] = useState("")
     const [loading, setLoading] = useState(false)
     const [sheetData, setSheetData] = useState<{ telefone: string; [key: string]: string }[]>([])
     const [isImageRequired, setIsImageRequired] = useState(false)
-    const [invalidNumbersError, setInvalidNumbersError] = useState(false)
     const [invalidNumbersOnSheetError, setInvalidNumbersOnSheetError] = useState(false)
-    const [errorIndexes, setErrorIndexes] = useState<number[]>([])
     const [invalidSheetError, setInvalidSheetError] = useState("")
     const [sheetName, setSheetName] = useState("")
 
@@ -66,13 +56,14 @@ export const MessageFormScreen: React.FC<MessageFormProps> = ({ nagazap, setShow
         try {
             const response = await api.get("/nagazap/templates", { params: { nagazap_id: nagazap.id, user_id: user?.id } })
             setTemplates(response.data)
+            console.log(response.data)
         } catch (error) {
             console.log(error)
         }
     }
 
     const formik = useFormik<OvenForm>({
-        initialValues: { to: [], template: null, template_id: "" },
+        initialValues: { to: [], template: location.state?.template?.info || null, template_id: "" },
         async onSubmit(values) {
             if (loading) return
 
@@ -234,7 +225,7 @@ export const MessageFormScreen: React.FC<MessageFormProps> = ({ nagazap, setShow
             if (index !== -1) {
                 const updated_templates = [...templates]
                 const template = updated_templates[index]
-                template.status = updated_template.event
+                template.info.status = updated_template.event
                 setTemplates(updated_templates)
             }
         })
@@ -289,7 +280,7 @@ export const MessageFormScreen: React.FC<MessageFormProps> = ({ nagazap, setShow
                                     label="Template"
                                     value={formik.values.template?.name || ""}
                                     onChange={(event) =>
-                                        formik.setFieldValue("template", templates.find((item) => item.name == event.target.value) || null)
+                                        formik.setFieldValue("template", templates.find((item) => item.info.name == event.target.value)?.info || null)
                                     }
                                     select
                                     SelectProps={{
@@ -300,20 +291,14 @@ export const MessageFormScreen: React.FC<MessageFormProps> = ({ nagazap, setShow
                                     }}
                                 >
                                     <MenuItem value={""} sx={{ display: "none" }} />
-                                    {templates.map((item) => (
-                                        <MenuItem
-                                            key={item.id}
-                                            value={item.name}
-                                            sx={{ gap: "0.5vw" }}
-                                            title={item.status}
-                                            disabled={item.status !== "APPROVED"}
-                                        >
-                                            {item.status === "PENDING" && <WatchLater color="warning" />}
-                                            {item.status === "APPROVED" && <Check color="success" />}
-                                            {item.status === "REJECTED" && <Error color="error" />}
-                                            {item.name}
-                                        </MenuItem>
-                                    ))}
+                                    {templates
+                                        .filter((item) => item.info.status === "APPROVED")
+                                        .sort((a, b) => b.created_at - a.created_at)
+                                        .map((item) => (
+                                            <MenuItem key={item.id} value={item.info.name} sx={{ gap: "0.5vw" }} title={item.info.status}>
+                                                {item.info.name}
+                                            </MenuItem>
+                                        ))}
                                 </TextField>
                             </Box>
 
@@ -449,89 +434,7 @@ export const MessageFormScreen: React.FC<MessageFormProps> = ({ nagazap, setShow
 
                     <Grid item xs={1}>
                         {formik.values.template?.components.length && (
-                            <Box
-                                sx={{
-                                    overflowY: "auto",
-                                    maxHeight: "36vw",
-                                    flexDirection: "column",
-                                    padding: "1vw",
-                                    margin: "-1vw",
-                                    marginBottom: "-2vw",
-                                    paddingBottom: "2vw",
-                                }}
-                            >
-                                <Paper
-                                    sx={{
-                                        flexDirection: "column",
-                                        gap: isMobile ? "2vw" : "1vw",
-                                        padding: isMobile ? "4vw" : "0.5vw",
-                                        position: "relative",
-                                        borderRadius: "0.5vw",
-                                        borderTopLeftRadius: 0,
-                                        color: "secondary.main",
-                                    }}
-                                >
-                                    <TrianguloFudido alignment="left" color="#2a323c" />
-                                    {formik.values.template?.components.map((component, index) => {
-                                        if (component.format == "IMAGE") {
-                                            const imageSrc = image ? URL.createObjectURL(image) : undefined
-                                            return (
-                                                <Box key={index} sx={{ justifyContent: "center" }}>
-                                                    <Avatar
-                                                        variant="rounded"
-                                                        src={imageSrc}
-                                                        sx={{
-                                                            width: "100%",
-                                                            maxWidth: isMobile ? undefined : maxSize,
-                                                            maxHeight: isMobile ? undefined : maxSize,
-                                                            objectFit: "cover",
-                                                            height: imageSrc == undefined ? (isMobile ? "60vw" : maxSize) : "auto",
-                                                            bgcolor: "background.default",
-                                                            margin: "   ",
-                                                        }}
-                                                    >
-                                                        <CloudUpload color="primary" sx={{ width: "30%", height: "auto" }} />
-                                                    </Avatar>
-                                                </Box>
-                                            )
-                                        }
-                                        if (component.text) {
-                                            return (
-                                                <Typography
-                                                    key={index}
-                                                    color="#fff"
-                                                    sx={{
-                                                        fontWeight: component.type == "HEADER" ? "bold" : undefined,
-                                                        fontSize: component.type == "FOOTER" ? "0.8rem" : undefined,
-                                                        opacity: component.type == "FOOTER" ? 0.5 : 1,
-                                                    }}
-                                                >
-                                                    {component.text}
-                                                </Typography>
-                                            )
-                                        }
-                                        if (component.buttons) {
-                                            return (
-                                                <Box key={index} sx={{ gap: "0.5vw", flexDirection: "column" }}>
-                                                    {component.buttons?.map((button, index) => (
-                                                        <Button
-                                                            key={`${button.text}-${index}`}
-                                                            variant="text"
-                                                            fullWidth
-                                                            sx={{ textTransform: "none" }}
-                                                            startIcon={icons.find((item) => item.type === button.type)?.icon}
-                                                            onClick={() => button.type === "URL" && window.open(button.url, "_blank")}
-                                                        >
-                                                            {button.text}
-                                                        </Button>
-                                                    ))}
-                                                </Box>
-                                            )
-                                        }
-                                        return null
-                                    })}
-                                </Paper>
-                            </Box>
+                            <TemplatePreview components={formik.values.template.components} image={image} />
                         )}
                     </Grid>
                 </Grid>

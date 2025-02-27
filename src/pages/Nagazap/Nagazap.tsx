@@ -24,6 +24,7 @@ import { TemplateForm } from "./TemplateForm/TemplateForm"
 import { NagazapSettings } from "./NagazapSettings/NagazapSettings"
 import { OvenStatus } from "./Oven/OvenStatus"
 import { Results } from "./Results/Results"
+import { Templates } from "./Templates/Templates"
 
 interface NagazapProps {}
 
@@ -159,7 +160,7 @@ export const NagazapScreen: React.FC<NagazapProps> = ({}) => {
                                     <Box sx={{ flexDirection: "column" }}>
                                         <ToolButton label="Informações" route="/" setShowInformations={setShowInformations} />
                                         <ToolButton label="Conversas" route="/messages" setShowInformations={setShowInformations} />
-                                        <ToolButton label="Criar template" route="/template-form" setShowInformations={setShowInformations} />
+                                        <ToolButton label="Templates" route="/templates" setShowInformations={setShowInformations} />
                                         <ToolButton label="Enviar mensagem" route="/message-form" setShowInformations={setShowInformations} />
                                         <ToolButton
                                             label={
@@ -193,7 +194,7 @@ export const NagazapScreen: React.FC<NagazapProps> = ({}) => {
                             <Routes>
                                 <Route index element={<Info nagazap={nagazap} setShowInformations={setShowInformations} />} />
                                 <Route path="/messages" element={<MessagesScreen nagazap={nagazap} setShowInformations={setShowInformations} />} />
-                                <Route path="/template-form" element={<TemplateForm nagazap={nagazap} setShowInformations={setShowInformations} />} />
+                                <Route path="/templates" element={<Templates nagazap={nagazap} />} />
                                 <Route
                                     path="/message-form"
                                     element={<MessageFormScreen nagazap={nagazap} setShowInformations={setShowInformations} />}

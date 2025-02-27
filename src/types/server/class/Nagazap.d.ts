@@ -4,13 +4,15 @@ import { UploadedFile } from "express-fileupload";
 import { BlacklistLog, FailedMessageLog, SentMessageLog } from "../types/shared/Meta/WhatsappBusiness/Logs";
 import { WithoutFunctions } from "./helpers";
 import { BusinessInfo } from "../types/shared/Meta/WhatsappBusiness/BusinessInfo";
-import { TemplateForm, TemplateFormResponse, TemplateInfo } from "../types/shared/Meta/WhatsappBusiness/TemplatesInfo";
+import { TemplateForm, TemplateFormResponse } from "../types/shared/Meta/WhatsappBusiness/TemplatesInfo";
 import { Company } from "./Company";
 import { Socket } from "socket.io";
 import { NagazapLink } from "./NagazapLink";
+import { TemplateInfo } from "../Meta/WhatsappBusiness/TemplatesInfo";
 export type NagaMessageType = "text" | "reaction" | "sticker" | "image" | "audio" | "video" | "button";
 export type NagaMessagePrisma = Prisma.NagazapMessageGetPayload<{}>;
 export type NagaMessageForm = Omit<Prisma.NagazapMessageGetPayload<{}>, "id" | "nagazap_id">;
+export type NagaTemplatePrisma = Prisma.NagaTemplateGetPayload<{}>;
 export declare const nagazap_include: {
     company: true;
 };
@@ -23,6 +25,20 @@ export interface NagazapResponseForm {
 }
 interface BuildHeadersOptions {
     upload?: boolean;
+}
+export declare class NagaTemplate {
+    id: string;
+    created_at: number;
+    last_update: number;
+    sent: number;
+    info: TemplateInfo;
+    nagazap_id: string;
+    static getById(id: string): Promise<NagaTemplate>;
+    static new(data: TemplateInfo, nagazap_id: string): Promise<NagaTemplate>;
+    static update(data: Partial<NagaTemplate> & {
+        id: string;
+    }): Promise<NagaTemplate>;
+    constructor(data: NagaTemplatePrisma);
 }
 export declare class NagaMessage {
     id: number;
@@ -99,8 +115,8 @@ export declare class Nagazap {
     saveMessage(data: NagaMessageForm): Promise<NagaMessage>;
     addToBlacklist(number: string): Promise<void>;
     removeFromBlacklist(number: string): Promise<void>;
-    getTemplates(): Promise<any>;
-    getTemplate(template_id: string): Promise<TemplateInfo>;
+    getMetaTemplates(): Promise<TemplateInfo[]>;
+    getMetaTemplate(template_id: string): Promise<TemplateInfo>;
     uploadMedia(file: UploadedFile, filepath: string): Promise<string>;
     sendMessage(message: WhatsappForm): Promise<void>;
     queueMessage(data: WhatsappForm): Promise<WhatsappForm[]>;
@@ -127,5 +143,8 @@ export declare class Nagazap {
     getLinks(): Promise<NagazapLink[]>;
     newLink(url: string, template_name?: string): Promise<NagazapLink>;
     findOriginalLink(url: string): Promise<NagazapLink | undefined>;
+    getTemplates(): Promise<NagaTemplate[]>;
+    getTemplate(id: string): Promise<NagaTemplate>;
+    syncTemplates(): Promise<void>;
 }
 export {};
