@@ -2,7 +2,7 @@ import React from "react"
 import { Avatar, Box, Button, Paper, Typography, useMediaQuery } from "@mui/material"
 import { TemplateComponent } from "../../../types/server/Meta/WhatsappBusiness/TemplatesInfo"
 import { TrianguloFudido } from "../../Zap/TrianguloFudido"
-import { Image, OpenInNew, Reply } from "@mui/icons-material"
+import { Image, LocalPhone, OpenInNew, Reply } from "@mui/icons-material"
 
 interface TemplatePreviewProps {
     components: TemplateComponent[]
@@ -14,6 +14,7 @@ const maxSize = "23vw"
 const icons = [
     { type: "QUICK_REPLY", icon: <Reply /> },
     { type: "URL", icon: <OpenInNew /> },
+    { type: "PHONE_NUMBER", icon: <LocalPhone /> },
 ]
 
 export const TemplatePreview: React.FC<TemplatePreviewProps> = ({ components, image }) => {
@@ -73,6 +74,7 @@ export const TemplatePreview: React.FC<TemplatePreviewProps> = ({ components, im
                                 key={index}
                                 color="#fff"
                                 sx={{
+                                    whiteSpace: "pre-wrap",
                                     fontWeight: component.type == "HEADER" ? "bold" : undefined,
                                     fontSize: component.type == "FOOTER" ? "0.8rem" : undefined,
                                     opacity: component.type == "FOOTER" ? 0.5 : 1,

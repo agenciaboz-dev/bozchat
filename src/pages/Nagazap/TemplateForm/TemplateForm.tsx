@@ -1,6 +1,6 @@
-import React, { useState } from "react"
-import { Box, Button, CircularProgress, Grid, MenuItem, Paper, Tab, Tabs, TextField, useMediaQuery } from "@mui/material"
-import { Nagazap } from "../../../types/server/class/Nagazap"
+import React, { useEffect, useState } from "react"
+import { Box, Button, CircularProgress, Grid, IconButton, MenuItem, Paper, Tab, Tabs, TextField, useMediaQuery } from "@mui/material"
+import { NagaTemplate, Nagazap } from "../../../types/server/class/Nagazap"
 import { useFormik } from "formik"
 import {
     TemplateCategory,
@@ -19,14 +19,18 @@ import { useSnackbar } from "burgos-snackbar"
 import { meta_normalize } from "../../../tools/normalize"
 import { useUser } from "../../../hooks/useUser"
 import { Title2 } from "../../../components/Title"
+import { Close } from "@mui/icons-material"
+import { TemplatePreview } from "./TemplatePreview"
 
 interface TemplateFormProps {
     nagazap: Nagazap
     setShowInformations?: React.Dispatch<React.SetStateAction<boolean>>
     onSubmit: () => void
+    currentTemplate: NagaTemplate | null
+    onClose: () => void
 }
 
-export const TemplateForm: React.FC<TemplateFormProps> = ({ nagazap, setShowInformations, onSubmit }) => {
+export const TemplateForm: React.FC<TemplateFormProps> = ({ nagazap, setShowInformations, onSubmit, currentTemplate, onClose }) => {
     const { snackbar } = useSnackbar()
     const isMobile = useMediaQuery("(orientation: portrait)")
     const { user } = useUser()
@@ -79,8 +83,8 @@ export const TemplateForm: React.FC<TemplateFormProps> = ({ nagazap, setShowInfo
     const formik = useFormik<TemplateFormType>({
         initialValues: {
             language: "pt_BR",
-            name: "",
-            category: "MARKETING",
+            name: currentTemplate?.info.name || "",
+            category: currentTemplate?.info.category || "MARKETING",
             allow_category_change: true,
             components: [templateHeader, templateBody, templateFooter, templateButtons],
         },
@@ -102,11 +106,17 @@ export const TemplateForm: React.FC<TemplateFormProps> = ({ nagazap, setShowInfo
             formData.append("data", JSON.stringify(data))
 
             try {
-                const response = await api.post("/nagazap/template", formData, { params: { nagazap_id: nagazap.id, user_id: user?.id } })
+                const response = currentTemplate
+                    ? await api.patch("/nagazap/template", formData, {
+                          params: { nagazap_id: nagazap.id, user_id: user?.id, template_id: currentTemplate.id },
+                      })
+                    : await api.post("/nagazap/template", formData, { params: { nagazap_id: nagazap.id, user_id: user?.id } })
                 console.log(response.data)
                 snackbar({
                     severity: "success",
-                    text: "Criação do template solicitada, aguardar aprovação. Você pode baixar um modelo de planilha.",
+                    text: `${
+                        currentTemplate ? "Alteração" : "Criação"
+                    } do template solicitada, aguardar aprovação. Você pode baixar um modelo de planilha.`,
                 })
                 // window.open(`${api.getUri()}/${response.data.csv_model}`, "_new")
                 resetForm()
@@ -120,6 +130,7 @@ export const TemplateForm: React.FC<TemplateFormProps> = ({ nagazap, setShowInfo
                 setLoading(false)
             }
         },
+        enableReinitialize: true,
     })
 
     const resetForm = () => {
@@ -144,14 +155,46 @@ export const TemplateForm: React.FC<TemplateFormProps> = ({ nagazap, setShowInfo
         setHeaderVariables([])
     }
 
+    const handleClose = () => {
+        onClose()
+        setTimeout(() => resetForm(), 500)
+    }
+
+    useEffect(() => {
+        if (currentTemplate) {
+            console.log({ currentTemplate })
+            const header = currentTemplate?.info.components.find((item) => item.type === "HEADER")!
+            setTemplateHeader(header)
+            const header_vars = header.example?.header_text_named_params
+            if (header_vars) {
+                setHeaderVariables(header_vars.map((variable) => variable.param_name))
+            }
+
+            const body = currentTemplate?.info.components.find((item) => item.type === "BODY")!
+            setTemplateBody(body)
+            const body_vars = body.example?.body_text_named_params
+            if (body_vars) {
+                setBodyVariables(body_vars.map((variable) => variable.param_name))
+            }
+
+            const footer = currentTemplate?.info.components.find((item) => item.type === "FOOTER")!
+            setTemplateFooter(footer)
+
+            const buttons = currentTemplate?.info.components.find((item) => item.type === "BUTTONS")!
+            setTemplateButtons(buttons)
+        } else {
+            handleClose()
+        }
+    }, [currentTemplate])
+
     return (
-        <Paper sx={{ flexDirection: "column", bgcolor: "background.default", padding: "2vw", gap: "1vw", height: "70vh", overflow: "auto" }}>
+        <Paper sx={{ flexDirection: "column", bgcolor: "background.default", padding: "2vw", gap: "1vw", height: "90vh", overflow: "auto" }}>
             <Title2
-                name="Novo Template"
+                name={currentTemplate ? "Editar Template" : "Novo Template"}
                 right={
-                    <Button variant="contained" onClick={() => formik.handleSubmit()} sx={{ alignSelf: "flex-end" }}>
-                        {loading ? <CircularProgress size="1.5rem" color="secondary" /> : "Concluir"}
-                    </Button>
+                    <IconButton onClick={handleClose}>
+                        <Close />
+                    </IconButton>
                 }
             />
             <form onSubmit={formik.handleSubmit}>
@@ -177,6 +220,7 @@ export const TemplateForm: React.FC<TemplateFormProps> = ({ nagazap, setShowInfo
                                     }}
                                     name="name"
                                     required
+                                    disabled={!!currentTemplate}
                                 />
                                 <TextField
                                     label="Tipo"
@@ -185,6 +229,7 @@ export const TemplateForm: React.FC<TemplateFormProps> = ({ nagazap, setShowInfo
                                     onChange={formik.handleChange}
                                     name="category"
                                     required
+                                    disabled={!!currentTemplate && currentTemplate.info.status !== "REJECTED"}
                                     SelectProps={{ MenuProps: { MenuListProps: { sx: { bgcolor: "background.default" } } } }}
                                 >
                                     {categories.map((category) => (
@@ -200,38 +245,26 @@ export const TemplateForm: React.FC<TemplateFormProps> = ({ nagazap, setShowInfo
                                 <Tab value={"FOOTER"} label="Rodapé" />
                                 <Tab value={"BUTTONS"} label="Botões" />
                             </Tabs>
-                            <TemplateComponentForm
-                                component={currentComponent}
-                                setComponent={currentSetComponent}
-                                bodyVariables={bodyVariables}
-                                setBodyVariables={setBodyVariables}
-                                headerVariables={headerVariables}
-                                setHeaderVariables={setHeaderVariables}
-                            />
+                            {currentComponent && (
+                                <TemplateComponentForm
+                                    component={currentComponent}
+                                    setComponent={currentSetComponent}
+                                    bodyVariables={bodyVariables}
+                                    setBodyVariables={setBodyVariables}
+                                    headerVariables={headerVariables}
+                                    setHeaderVariables={setHeaderVariables}
+                                />
+                            )}
                         </Box>
                     </Grid>
                     <Grid item xs={1}>
-                        <Paper
-                            sx={{
-                                flexDirection: "column",
-                                gap: isMobile ? "2vw" : "1vw",
-                                padding: isMobile ? "3vw" : "0.5vw",
-                                position: "relative",
-                                borderRadius: "0.5vw",
-                                borderTopLeftRadius: 0,
-                                color: "secondary.main",
-                                marginBottom: "2vw",
-                            }}
-                        >
-                            <TemplateHeader component={templateHeader} />
-                            <TemplateBody component={templateBody} />
-                            <TemplateFooter component={templateFooter} />
-                            <TemplateButtons component={templateButtons} />
-                            <TrianguloFudido alignment="left" color={"#2a323c"} />
-                        </Paper>
+                        <TemplatePreview components={[templateHeader, templateBody, templateFooter, templateButtons]} />
                     </Grid>
                 </Grid>
             </form>
+            <Button variant="contained" onClick={() => formik.handleSubmit()} sx={{ position: "absolute", bottom: "2vw", right: "2vw" }}>
+                {loading ? <CircularProgress size="1.5rem" color="secondary" /> : "Enviar template para análise"}
+            </Button>
         </Paper>
     )
 }

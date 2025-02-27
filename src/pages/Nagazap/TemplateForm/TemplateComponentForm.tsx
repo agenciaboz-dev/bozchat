@@ -64,7 +64,20 @@ export const TemplateComponentForm: React.FC<TemplateComponentFormProps> = ({
                     value={component.format!}
                     onChange={(ev) => {
                         const format = ev.target.value as "IMAGE" | "TEXT"
-                        setComponent({ ...component, format, text: format === "TEXT" ? "" : undefined })
+                        setComponent((component) => {
+                            const updated_component = { ...component }
+                            updated_component.format = format
+                            updated_component.example = undefined
+                            if (format === "IMAGE") {
+                                updated_component.text = undefined
+                                setHeaderVariables([])
+                            }
+
+                            if (format === "TEXT") {
+                                updated_component.file = undefined
+                            }
+                            return updated_component
+                        })
                     }}
                     select
                     SelectProps={{ MenuProps: { MenuListProps: { sx: { maxHeight: "20vw", bgcolor: "background.default", overflowY: "scroll" } } } }}

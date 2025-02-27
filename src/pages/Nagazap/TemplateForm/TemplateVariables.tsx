@@ -91,7 +91,13 @@ export const TemplateVariables: React.FC<TemplateVariablesProps> = ({ variables,
 
             <Box sx={{ gap: "0.5vw", flexWrap: "wrap" }}>
                 {variables.map((variable) => (
-                    <Chip key={variable} label={variable} onDelete={() => onDeleteVariable(variable)} onClick={() => onVariableClick(variable)} />
+                    <Chip
+                        key={variable}
+                        color="primary"
+                        label={variable}
+                        onDelete={() => onDeleteVariable(variable)}
+                        onClick={() => onVariableClick(variable)}
+                    />
                 ))}
             </Box>
         </Box>

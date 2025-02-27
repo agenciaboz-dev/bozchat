@@ -46,6 +46,20 @@ export const Templates: React.FC<TemplatesProps> = ({ nagazap }) => {
     const [selectedTemplate, setSelectedTemplate] = useState<NagaTemplate | null>(null)
     const [openTemplateModal, setOpenTemplateModal] = useState(false)
     const [openDownloadModal, setOpenDownloadModal] = useState(false)
+    const [editingTemplate, setEditingTemplate] = useState<NagaTemplate | null>(null)
+
+    const can_edit = useMemo(
+        () =>
+            !selectedTemplate
+                ? false
+                : selectedTemplate.info.status === "REJECTED"
+                ? true
+                : selectedTemplate.info.status === "PENDING"
+                ? false
+                : selectedTemplate.last_update !== selectedTemplate.created_at &&
+                  new Date().getTime() - selectedTemplate.last_update < 24 * 60 * 60 * 1000,
+        [selectedTemplate]
+    )
 
     const mescled_templates = useMemo(() => templates.map((template) => ({ ...template, ...template.info })), [templates])
 
@@ -54,6 +68,7 @@ export const Templates: React.FC<TemplatesProps> = ({ nagazap }) => {
             field: "status",
             headerName: "Situação",
             renderCell: (cell) => {
+                if (!cell.value) return "erro"
                 const option = status_options[cell.value]
                 const Icon = option.icon
                 return <Chip label={option.label} color={option.color} size="small" />
@@ -61,19 +76,28 @@ export const Templates: React.FC<TemplatesProps> = ({ nagazap }) => {
         },
         {
             field: "created_at",
-            headerName: "Data",
+            headerName: "Criado em",
             flex: 0.1,
             renderCell: (cell) => {
                 const date = new Date(cell.value)
                 return date.toLocaleString("pt-br")
             },
         },
-        { field: "name", headerName: "Nome", flex: 0.3 },
+        {
+            field: "last_update",
+            headerName: "Última edição",
+            flex: 0.1,
+            renderCell: (cell) => {
+                const date = new Date(cell.value)
+                return date.toLocaleString("pt-br")
+            },
+        },
+        { field: "name", headerName: "Nome", flex: 0.28 },
 
         {
             field: "category",
             headerName: "Categoria",
-            flex: 0.1,
+            flex: 0.07,
             valueFormatter(value) {
                 return category_options[value]
             },
@@ -131,6 +155,11 @@ export const Templates: React.FC<TemplatesProps> = ({ nagazap }) => {
         navigate("/nagazap/message-form", { state: { template: selectedTemplate } })
     }
 
+    const editTemplate = () => {
+        setMenuAnchor(null)
+        setEditingTemplate(selectedTemplate)
+    }
+
     useEffect(() => {
         fetchTemplates()
     }, [nagazap])
@@ -155,12 +184,29 @@ export const Templates: React.FC<TemplatesProps> = ({ nagazap }) => {
         }
     }, [templates])
 
+    useEffect(() => {
+        if (!openTemplateModal) {
+            setEditingTemplate(null)
+        }
+    }, [openTemplateModal])
+
+    useEffect(() => {
+        if (editingTemplate) {
+            setOpenTemplateModal(true)
+        }
+    }, [editingTemplate])
+
     return (
         <Subroute
             title="Templates"
             right={
                 <Box sx={{ gap: "0.5vw" }}>
-                    <IconButton onClick={() => setOpenTemplateModal(true)}>
+                    <IconButton
+                        onClick={() => {
+                            setSelectedTemplate(null)
+                            setOpenTemplateModal(true)
+                        }}
+                    >
                         <Add />
                     </IconButton>
                     <IconButton onClick={fetchTemplates}>{loading ? <CircularProgress size={"1.5rem"} color="secondary" /> : <Refresh />}</IconButton>
@@ -175,7 +221,7 @@ export const Templates: React.FC<TemplatesProps> = ({ nagazap }) => {
                         columns={columns}
                         initialState={{
                             sorting: {
-                                sortModel: [{ field: "created_at", sort: "desc" }],
+                                sortModel: [{ field: "last_update", sort: "desc" }],
                             },
                             pagination: { paginationModel: { page: 0, pageSize: 10 } },
                         }}
@@ -215,7 +261,7 @@ export const Templates: React.FC<TemplatesProps> = ({ nagazap }) => {
                             <Download />
                             Baixar modelo de planilha
                         </MenuItem>
-                        <MenuItem disabled>
+                        <MenuItem onClick={editTemplate} disabled={!can_edit}>
                             <Edit /> Editar
                         </MenuItem>
                         <MenuItem disabled>
@@ -225,7 +271,13 @@ export const Templates: React.FC<TemplatesProps> = ({ nagazap }) => {
                 </Paper>
             </Box>
 
-            <TemplateModal nagazap={nagazap} onClose={() => setOpenTemplateModal(false)} open={openTemplateModal} onSubmit={onSubmitTemplate} />
+            <TemplateModal
+                nagazap={nagazap}
+                onClose={() => setOpenTemplateModal(false)}
+                open={openTemplateModal}
+                onSubmit={onSubmitTemplate}
+                currentTemplate={editingTemplate}
+            />
             <DownloadTemplateSheetModal
                 nagazap={nagazap}
                 onClose={() => setOpenDownloadModal(false)}
