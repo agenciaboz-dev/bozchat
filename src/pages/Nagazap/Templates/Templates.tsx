@@ -5,7 +5,7 @@ import { Subroute } from "../Subroute"
 import { TemplateInfo, TemplateUpdateHook } from "../../../types/server/Meta/WhatsappBusiness/TemplatesInfo"
 import { api } from "../../../api"
 import { useUser } from "../../../hooks/useUser"
-import { Add, Check, Error, HourglassFull, MoreHoriz, Refresh, WatchLater } from "@mui/icons-material"
+import { Add, Check, CopyAll, Delete, Download, Edit, Error, HourglassFull, MoreHoriz, Refresh, Send, WatchLater } from "@mui/icons-material"
 import { DataGrid, GridColDef } from "@mui/x-data-grid"
 import { useClipboard } from "@mantine/hooks"
 import { useSnackbar } from "burgos-snackbar"
@@ -14,6 +14,7 @@ import { TemplatePreview } from "../TemplateForm/TemplatePreview"
 import { TemplateModal } from "./TemplateModal"
 import { useIo } from "../../../hooks/useIo"
 import { useNavigate } from "react-router-dom"
+import { DownloadTemplateSheetModal } from "./DownloadTemplateSheetModal"
 
 interface TemplatesProps {
     nagazap: Nagazap
@@ -38,6 +39,7 @@ export const Templates: React.FC<TemplatesProps> = ({ nagazap }) => {
     const [menuAnchor, setMenuAnchor] = useState<HTMLElement | null>(null)
     const [selectedTemplate, setSelectedTemplate] = useState<NagaTemplate | null>(null)
     const [openTemplateModal, setOpenTemplateModal] = useState(false)
+    const [openDownloadModal, setOpenDownloadModal] = useState(false)
 
     const mescled_templates = useMemo(() => templates.map((template) => ({ ...template, ...template.info })), [templates])
 
@@ -107,14 +109,7 @@ export const Templates: React.FC<TemplatesProps> = ({ nagazap }) => {
 
     const downloadTemplateSheet = async () => {
         setMenuAnchor(null)
-        try {
-            const response = await api.post("/nagazap/template-sheet", selectedTemplate?.info, {
-                params: { nagazap_id: nagazap.id, user_id: user?.id },
-            })
-            window.open(`${api.getUri()}/${response.data}`, "_new")
-        } catch (error) {
-            console.log(error)
-        }
+        setOpenDownloadModal(true)
     }
 
     const sendThisTemplate = () => {
@@ -183,19 +178,47 @@ export const Templates: React.FC<TemplatesProps> = ({ nagazap }) => {
                         }}
                     />
 
-                    <Menu open={!!menuAnchor} anchorEl={menuAnchor} onClose={() => setMenuAnchor(null)}>
-                        <MenuItem onClick={copyId}>Copiar ID</MenuItem>
+                    <Menu
+                        open={!!menuAnchor}
+                        anchorEl={menuAnchor}
+                        onClose={() => setMenuAnchor(null)}
+                        MenuListProps={{
+                            sx: {
+                                ".MuiButtonBase-root": {
+                                    gap: "0.5vw",
+                                },
+                            },
+                        }}
+                    >
+                        <MenuItem onClick={copyId}>
+                            <CopyAll />
+                            Copiar ID
+                        </MenuItem>
                         <MenuItem disabled={selectedTemplate?.info.status !== "APPROVED"} onClick={sendThisTemplate}>
+                            <Send />
                             Preparar envio
                         </MenuItem>
-                        <MenuItem onClick={downloadTemplateSheet}>Baixar modelo CSV</MenuItem>
-                        <MenuItem disabled>Editar</MenuItem>
-                        <MenuItem disabled>Deletar</MenuItem>
+                        <MenuItem onClick={downloadTemplateSheet}>
+                            <Download />
+                            Baixar modelo de planilha
+                        </MenuItem>
+                        <MenuItem disabled>
+                            <Edit /> Editar
+                        </MenuItem>
+                        <MenuItem disabled>
+                            <Delete /> Deletar
+                        </MenuItem>
                     </Menu>
                 </Paper>
             </Box>
 
             <TemplateModal nagazap={nagazap} onClose={() => setOpenTemplateModal(false)} open={openTemplateModal} onSubmit={onSubmitTemplate} />
+            <DownloadTemplateSheetModal
+                nagazap={nagazap}
+                onClose={() => setOpenDownloadModal(false)}
+                open={openDownloadModal}
+                template={selectedTemplate}
+            />
         </Subroute>
     )
 }

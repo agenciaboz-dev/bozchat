@@ -106,9 +106,9 @@ export const TemplateForm: React.FC<TemplateFormProps> = ({ nagazap, setShowInfo
                 console.log(response.data)
                 snackbar({
                     severity: "success",
-                    text: "Criação do template solicitada, aguardar aprovação. Um modelo de planilha será baixado agora.",
+                    text: "Criação do template solicitada, aguardar aprovação. Você pode baixar um modelo de planilha.",
                 })
-                window.open(`${api.getUri()}/${response.data.csv_model}`, "_new")
+                // window.open(`${api.getUri()}/${response.data.csv_model}`, "_new")
                 resetForm()
                 onSubmit()
             } catch (error) {
