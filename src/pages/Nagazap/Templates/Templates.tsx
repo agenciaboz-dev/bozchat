@@ -15,6 +15,7 @@ import { TemplateModal } from "./TemplateModal"
 import { useIo } from "../../../hooks/useIo"
 import { useNavigate } from "react-router-dom"
 import { DownloadTemplateSheetModal } from "./DownloadTemplateSheetModal"
+import { useConfirmDialog } from "burgos-confirm"
 
 interface TemplatesProps {
     nagazap: Nagazap
@@ -38,6 +39,7 @@ export const Templates: React.FC<TemplatesProps> = ({ nagazap }) => {
     const { user } = useUser()
     const clipboard = useClipboard({ timeout: 1000 })
     const { snackbar } = useSnackbar()
+    const { confirm } = useConfirmDialog()
     const navigate = useNavigate()
 
     const [templates, setTemplates] = useState<NagaTemplate[]>([])
@@ -160,6 +162,31 @@ export const Templates: React.FC<TemplatesProps> = ({ nagazap }) => {
         setEditingTemplate(selectedTemplate)
     }
 
+    const deleteTemplate = () => {
+        confirm({
+            title: "Deletar template",
+            content: "Essa ação é permanente e irreversível. Deseja continuar?",
+            onConfirm: async () => {
+                if (loading || !selectedTemplate) return
+                setLoading(true)
+                setMenuAnchor(null)
+
+                try {
+                    const response = await api.delete("/nagazap/template", {
+                        params: { nagazap_id: nagazap.id, user_id: user?.id, template_id: selectedTemplate.id },
+                    })
+                    setTemplates((list) => list.filter((item) => item.id !== selectedTemplate.id))
+                    setSelectedTemplate(null)
+                    snackbar({ severity: "warning", text: "Template deletado" })
+                } catch (error) {
+                    console.log(error)
+                } finally {
+                    setLoading(false)
+                }
+            },
+        })
+    }
+
     useEffect(() => {
         fetchTemplates()
     }, [nagazap])
@@ -264,7 +291,7 @@ export const Templates: React.FC<TemplatesProps> = ({ nagazap }) => {
                         <MenuItem onClick={editTemplate} disabled={!can_edit}>
                             <Edit /> Editar
                         </MenuItem>
-                        <MenuItem disabled>
+                        <MenuItem onClick={deleteTemplate}>
                             <Delete /> Deletar
                         </MenuItem>
                     </Menu>
