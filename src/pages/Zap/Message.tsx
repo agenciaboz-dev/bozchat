@@ -54,7 +54,8 @@ export const Message: React.ForwardRefRenderFunction<HTMLDivElement, MessageProp
         !previousItem || new Date(previousItem.timestamp * 1000).toLocaleDateString() !== new Date(message.timestamp * 1000).toLocaleDateString()
     const show_triangle = !same_as_previous || day_changing
 
-    const show_author = (!same_as_previous || day_changing) && isGroup
+    const from_me = isGroup ? message.author === washima.info.pushname : message.fromMe
+    const show_author = (!same_as_previous || day_changing) && isGroup && !from_me
 
     const [mediaObj, setMediaObj] = useState<{ source: string; ext: string; size: string }>()
     const [attachmendMetaData, setAttachmendMetaData] = useState<WashimaMedia | null>(null)
@@ -146,8 +147,8 @@ export const Message: React.ForwardRefRenderFunction<HTMLDivElement, MessageProp
             {day_changing && <DateChip timestamp={message.timestamp * 1000} />}
             <Box
                 ref={ref}
-                id={`message:${message.sid}`}
-                sx={{ flexDirection: message.fromMe ? "row-reverse" : "row", alignItems: "center", gap: "1vw", position: "relative" }}
+                id={`message:${message.id.id}`}
+                sx={{ flexDirection: from_me ? "row-reverse" : "row", alignItems: "center", gap: "1vw", position: "relative" }}
             >
                 {/* //* HOVERING OVERLAY */}
                 {(is_selected || (is_selecting && hovering)) && (
@@ -187,16 +188,16 @@ export const Message: React.ForwardRefRenderFunction<HTMLDivElement, MessageProp
                         sx={{
                             position: "relative",
                             padding: isMobile ? "3vw" : `${is_image || is_video ? "0.25vw" : "0.5vw"}`,
-                            marginLeft: !message.fromMe && is_selecting ? "5vw" : undefined,
-                            // marginRight: message.fromMe && is_selecting ? "1vw" : undefined,
+                            marginLeft: !from_me && is_selecting ? "5vw" : undefined,
+                            // marginRight: from_me && is_selecting ? "1vw" : undefined,
 
                             flexDirection: "column",
-                            alignSelf: message.fromMe ? "flex-end" : "flex-start",
-                            textAlign: message.fromMe ? "end" : "start",
+                            alignSelf: from_me ? "flex-end" : "flex-start",
+                            textAlign: from_me ? "end" : "start",
                             borderRadius: isMobile ? "3vw" : "0.75vw",
-                            borderTopRightRadius: show_triangle && message.fromMe ? "0" : undefined,
-                            borderTopLeftRadius: show_triangle && !message.fromMe ? "0" : undefined,
-                            bgcolor: is_sticker ? "transparent" : message.fromMe ? primary : secondary,
+                            borderTopRightRadius: show_triangle && from_me ? "0" : undefined,
+                            borderTopLeftRadius: show_triangle && !from_me ? "0" : undefined,
+                            bgcolor: is_sticker ? "transparent" : from_me ? primary : secondary,
                             marginTop: !same_as_previous && !day_changing ? (isMobile ? "2vw" : "0.5vw") : undefined,
                             gap: is_sticker ? "0.2vw" : undefined,
                             opacity: is_deleted ? 0.3 : undefined,
@@ -205,8 +206,8 @@ export const Message: React.ForwardRefRenderFunction<HTMLDivElement, MessageProp
                     >
                         {show_triangle && (
                             <TrianguloFudido
-                                color={is_sticker ? "transparent" : message.fromMe ? primary : secondary}
-                                alignment={message.fromMe ? "right" : "left"}
+                                color={is_sticker ? "transparent" : from_me ? primary : secondary}
+                                alignment={from_me ? "right" : "left"}
                             />
                         )}
 
@@ -311,13 +312,7 @@ export const Message: React.ForwardRefRenderFunction<HTMLDivElement, MessageProp
                                             </Box>
                                         ))}
                                     {is_audio && (
-                                        <AudioPlayer
-                                            loading={loading || !mediaObj}
-                                            media={mediaObj}
-                                            washima={washima}
-                                            chat_id={message.from}
-                                            message={message}
-                                        />
+                                        <AudioPlayer loading={loading} media={mediaObj} washima={washima} chat_id={message.from} message={message} />
                                     )}
                                     {is_document &&
                                         (loading ? (
@@ -385,7 +380,7 @@ export const Message: React.ForwardRefRenderFunction<HTMLDivElement, MessageProp
 
                         {/* //* MENU BUTTON */}
                         {hovering && !is_deleted && (
-                            <MessageMenu from_me={message.fromMe} onClose={() => setHovering(false)} message={message} onSelect={onSelect} />
+                            <MessageMenu from_me={from_me} onClose={() => setHovering(false)} message={message} onSelect={onSelect} />
                         )}
                     </Box>
                 </Box>
