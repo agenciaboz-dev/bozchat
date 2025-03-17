@@ -100,9 +100,18 @@ export const TemplateForm: React.FC<TemplateFormProps> = ({ nagazap, setShowInfo
             const data: TemplateFormType = {
                 ...values,
                 parameter_format: "NAMED",
-                components: [{ ...templateHeader, file: undefined }, templateBody, templateFooter, templateButtons],
+                components: [{ ...templateHeader, file: undefined }, templateBody],
             }
             console.log(data)
+
+            if (templateFooter?.text) {
+                data.components.push(templateFooter)
+            }
+
+            if (!!templateButtons?.buttons?.length) {
+                data.components.push(templateButtons)
+            }
+
             formData.append("data", JSON.stringify(data))
 
             try {
@@ -130,7 +139,7 @@ export const TemplateForm: React.FC<TemplateFormProps> = ({ nagazap, setShowInfo
                 setLoading(false)
             }
         },
-        enableReinitialize: true,
+        enableReinitialize: !!currentTemplate,
     })
 
     const resetForm = () => {
