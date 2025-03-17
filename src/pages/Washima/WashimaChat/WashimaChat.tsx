@@ -142,8 +142,8 @@ export const WashimaChat: React.FC<WashimaChatProps> = ({ washima, chat, onClose
         setSelectedMessages([])
     }
 
-    const scrollToMessage = async (sid: string) => {
-        setLoadingMessageId(sid)
+    const scrollToMessage = async (id: string) => {
+        setLoadingMessageId(id)
     }
 
     useEffect(() => {
@@ -162,7 +162,7 @@ export const WashimaChat: React.FC<WashimaChatProps> = ({ washima, chat, onClose
 
     useEffect(() => {
         if (chat?.lastMessage) {
-            setLoadingMessageId(chat.lastMessage.id._serialized)
+            setLoadingMessageId(chat.lastMessage.id.id)
         }
     }, [chat?.lastMessage])
 
