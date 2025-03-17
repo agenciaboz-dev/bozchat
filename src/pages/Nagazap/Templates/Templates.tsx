@@ -58,8 +58,9 @@ export const Templates: React.FC<TemplatesProps> = ({ nagazap }) => {
                 ? true
                 : selectedTemplate.info.status === "PENDING"
                 ? false
-                : selectedTemplate.last_update !== selectedTemplate.created_at &&
-                  new Date().getTime() - selectedTemplate.last_update < 24 * 60 * 60 * 1000,
+                : selectedTemplate.last_update !== selectedTemplate.created_at
+                ? true
+                : new Date().getTime() - selectedTemplate.last_update > 24 * 60 * 60 * 1000,
         [selectedTemplate]
     )
 
