@@ -46,6 +46,7 @@ export const TemplatePreview: React.FC<TemplatePreviewProps> = ({ components, im
             >
                 <TrianguloFudido alignment="left" color="#2a323c" />
                 {components.map((component, index) => {
+                    if (!component) return null
                     if (component.format == "IMAGE") {
                         const imageSrc = image ? URL.createObjectURL(image) : undefined
                         return (
