@@ -7,10 +7,11 @@ import { Check, CheckCircle, CopyAll } from "@mui/icons-material"
 import { WashimaMedia } from "../../../../types/server/class/Washima/Washima"
 
 interface CopyAllProps {
+    washima_id: string
     chat: Chat
 }
 
-export const CopyAllButton: React.FC<CopyAllProps> = ({ chat }) => {
+export const CopyAllButton: React.FC<CopyAllProps> = ({ chat, washima_id }) => {
     const [loading, setLoading] = useState(false)
     const [copied, setCopied] = useState(false)
 
@@ -25,7 +26,9 @@ export const CopyAllButton: React.FC<CopyAllProps> = ({ chat }) => {
 
         setLoading(true)
         try {
-            const response = await api.get("/washima/tools/copy-chat", { params: { chat_id: chat.id._serialized } })
+            const response = await api.get("/washima/tools/copy-chat", {
+                params: { chat_id: chat.id._serialized, washima_id, is_group: chat.isGroup || undefined },
+            })
             const messages = response.data as WashimaMessage[]
 
             await Promise.all(

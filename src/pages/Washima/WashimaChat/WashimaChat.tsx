@@ -265,7 +265,7 @@ export const WashimaChat: React.FC<WashimaChatProps> = ({ washima, chat, onClose
                 <p style={{ fontWeight: "bold" }}>{chat?.name}</p>
                 {!!chat && (
                     <Box sx={{ marginLeft: "auto" }}>
-                        <CopyAllButton chat={chat} />
+                        <CopyAllButton chat={chat} washima_id={washima.id} />
                         <IconButton sx={{ color: "white", padding: isMobile ? "0" : "" }} onClick={onClose}>
                             <CancelIcon />
                         </IconButton>
