@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react"
 import { Box, CircularProgress, Dialog, IconButton, Typography, useMediaQuery } from "@mui/material"
 import { backgroundStyle } from "../../style/background"
-import { Header } from "../../components/Header"
+import { Header } from "../../components/Header/Header"
 import { UsersStats } from "./UsersStats"
 import { User } from "../../types/server/class/User"
 import { useUser } from "../../hooks/useUser"

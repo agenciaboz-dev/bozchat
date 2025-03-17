@@ -1,6 +1,6 @@
 import React from "react"
 import { Box, Grid } from "@mui/material"
-import { Header } from "../../components/Header"
+import { Header } from "../../components/Header/Header"
 import { backgroundStyle } from "../../style/background"
 import { Title2 } from "../../components/Title"
 import { nagazap_notifications, washima_notifications } from "./notifications_list"

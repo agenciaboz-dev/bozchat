@@ -1,6 +1,6 @@
 import React from "react"
 import { Box, useMediaQuery } from "@mui/material"
-import { Header } from "../../components/Header"
+import { Header } from "../../components/Header/Header"
 import { backgroundStyle } from "../../style/background"
 import { WashimaStatistics } from "./WashimaStatistics"
 import { NagazapStatistics } from "./NagazapStatistics"

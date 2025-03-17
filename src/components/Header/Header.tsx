@@ -1,8 +1,9 @@
 import React from 'react'
 import { Avatar, Box, IconButton, Menu, MenuItem, Paper, useMediaQuery } from "@mui/material"
 import { Menu as MenuIcon } from "@mui/icons-material"
-import { useMenu } from "../hooks/useMenu"
-import { useUser } from "../hooks/useUser"
+import { useMenu } from "../../hooks/useMenu"
+import { useUser } from "../../hooks/useUser"
+import { CompanyCard } from './CompanyCard'
 
 interface HeaderProps {}
 
@@ -43,7 +44,7 @@ export const Header: React.FC<HeaderProps> = ({}) => {
                 </Avatar>
             </IconButton>
             <Menu anchorEl={menuAnchor} open={!!menuAnchor} onClose={handleCloseMenu} slotProps={{ paper: { sx: { bgcolor: "background.default" } } }}>
-                <Box sx={{ padding: "1vw", color: "secondary.main", fontSize: "0.8rem" }}>{user?.name}</Box>
+                <CompanyCard />
                 <MenuItem onClick={logout}>Sair</MenuItem>
             </Menu>
         </Paper>

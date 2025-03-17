@@ -8,7 +8,7 @@ import { DarkModeProvider } from "./contexts/darkModeContext"
 import { ThemeProvider as CustomThemeProvider } from "./contexts/themeContext"
 import "@mantine/core/styles.css"
 import { version } from "./version"
-import { Header } from "./components/Header"
+import { Header } from "./components/Header/Header"
 import "react-photo-view/dist/react-photo-view.css"
 
 

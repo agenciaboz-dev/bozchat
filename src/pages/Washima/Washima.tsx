@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react"
 import { Box, Button, CircularProgress, IconButton, MenuItem, Paper, Tab, Tabs, Typography, useMediaQuery } from "@mui/material"
 import { backgroundStyle } from "../../style/background"
-import { Header } from "../../components/Header"
+import { Header } from "../../components/Header/Header"
 import { api } from "../../api"
 import { QrCodeScanner, ReplayOutlined } from "@mui/icons-material"
 import { Washima } from "../../types/server/class/Washima/Washima"

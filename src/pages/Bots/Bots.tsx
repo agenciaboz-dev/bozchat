@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react"
 import { Box, Paper, TextField, useMediaQuery } from "@mui/material"
 import { backgroundStyle } from "../../style/background"
-import { Header } from "../../components/Header"
+import { Header } from "../../components/Header/Header"
 import { Title } from "../../components/Title"
 import { AddBoxTwoTone, Engineering } from "@mui/icons-material"
 import { textFieldStyle } from "../../style/textfield"
