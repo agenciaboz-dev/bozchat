@@ -1,6 +1,6 @@
 import React, { useEffect, useRef, useState } from "react"
-import { Avatar, Box, CircularProgress, IconButton, Paper, Skeleton, Slider, SxProps, useMediaQuery } from "@mui/material"
-import { Headphones, Pause, PlayArrow } from "@mui/icons-material"
+import { Avatar, Box, CircularProgress, IconButton, Paper, Skeleton, Slider, SxProps, Tooltip, useMediaQuery } from "@mui/material"
+import { Headphones, Pause, PlayArrow, Warning } from "@mui/icons-material"
 import { useAudioPlayer, useGlobalAudioPlayer } from "react-use-audio-player"
 import { formatTimeDuration } from "../../../tools/formatTimeDuration"
 import { api } from "../../../api"
@@ -77,9 +77,13 @@ export const AudioPlayer: React.FC<AudioPlayerProps> = ({ media, washima, chat_i
                 <Headphones sx={{ borderRadius: 100, width: isMobile ? "6vw" : "2vw", height: isMobile ? "6vw" : "2vw" }} color="secondary" />
             </Avatar>
             {/* <CircularProgress size={"3.5vw"} /> */}
-            <IconButton size="small" onClick={() => player.togglePlayPause()} disabled={loading}>
+            <IconButton size="small" onClick={() => (media ? player.togglePlayPause() : null)} disabled={loading}>
                 {loading ? (
                     <CircularProgress size={isMobile ? "8vw" : "2vw"} color="inherit" />
+                ) : !media ? (
+                    <Tooltip title="Não foi possível carregar o áudio">
+                        <Warning color="error" />
+                    </Tooltip>
                 ) : player.playing ? (
                     <Pause sx={{ width: isMobile ? "8vw" : "2vw", height: isMobile ? "8vw" : "2vw" }} />
                 ) : (
