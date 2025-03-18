@@ -2,7 +2,7 @@ import React, { useEffect, useMemo, useState } from "react"
 import { Box, Chip, CircularProgress, IconButton, Menu, MenuItem, Paper } from "@mui/material"
 import { NagaTemplate, Nagazap } from "../../../types/server/class/Nagazap"
 import { Subroute } from "../Subroute"
-import { TemplateCategory, TemplateInfo, TemplateUpdateHook } from "../../../types/server/Meta/WhatsappBusiness/TemplatesInfo"
+import { TemplateCategory, TemplateInfo, TemplateStatus, TemplateUpdateHook } from "../../../types/server/Meta/WhatsappBusiness/TemplatesInfo"
 import { api } from "../../../api"
 import { useUser } from "../../../hooks/useUser"
 import { Add, Check, CopyAll, Delete, Download, Edit, Error, HourglassFull, MoreHoriz, Refresh, Send, WatchLater } from "@mui/icons-material"
@@ -193,17 +193,15 @@ export const Templates: React.FC<TemplatesProps> = ({ nagazap }) => {
     }, [nagazap])
 
     useEffect(() => {
-        console.log(selectedTemplate)
-    }, [selectedTemplate])
-
-    useEffect(() => {
-        io.on("template:update", (updated_template: TemplateUpdateHook) => {
-            const index = templates.findIndex((item) => item.id === updated_template.message_template_id.toString())
+        io.on("template:update", (updated_template: { id: string; status: TemplateStatus }) => {
+            console.log(updated_template)
+            const index = templates.findIndex((item) => item.id === updated_template.id)
             if (index !== -1) {
-                const updated_templates = [...templates]
-                const template = updated_templates[index]
-                template.info.status = updated_template.event
-                setTemplates(updated_templates)
+                setTemplates((list) => {
+                    const updated_templates = [...list]
+                    updated_templates[index].info.status = updated_template.status
+                    return updated_templates
+                })
             }
         })
 
