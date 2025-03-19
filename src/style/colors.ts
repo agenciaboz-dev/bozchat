@@ -14,13 +14,13 @@ export const default_colors: Theme = {
 
     background: {
         primary: "#ffffff",
-        secondary: "#00AFEF",
+        // secondary: "#00AFEF",
     },
 
     text: {
         primary: "#00AFEF",
         secondary: "#1F1F1F",
-        terciary: "#ffffff",
+        terciary: "#00AFEF",
     },
 }
 

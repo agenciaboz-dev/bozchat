@@ -6,6 +6,7 @@ import { Title2 } from "../../components/Title"
 import { nagazap_notifications, washima_notifications } from "./notifications_list"
 import { NotificationSwitch } from "./NotificationSwitch"
 import { SigningBox } from "./SigningBox"
+import { ThemeSwitch } from "./ThemeSwitch"
 
 interface SettingsProps {}
 
@@ -19,21 +20,22 @@ export const Settings: React.FC<SettingsProps> = ({}) => {
                     <Grid item xs={1}>
                         <Box sx={{ flexDirection: "column", gap: "1vw" }}>
                             <Box sx={{ flexDirection: "column" }}>
-                                <Title2 name="Notificações - Business" />
+                                <Title2 name="Notificações" />
                                 {washima_notifications.map((item) => (
+                                    <NotificationSwitch key={item.event} notification={item} />
+                                ))}
+                                {nagazap_notifications.map((item) => (
                                     <NotificationSwitch key={item.event} notification={item} />
                                 ))}
                             </Box>
 
-                            <Title2 name="Assinatura" />
-                            <SigningBox />
+                            <Title2 name="Tema" />
+                            <ThemeSwitch />
                         </Box>
                     </Grid>
                     <Grid item xs={1}>
-                        <Title2 name="Notificações - Broadcast" />
-                        {nagazap_notifications.map((item) => (
-                            <NotificationSwitch key={item.event} notification={item} />
-                        ))}
+                        <Title2 name="Assinatura" />
+                        <SigningBox />
                     </Grid>
                 </Grid>
             </Box>

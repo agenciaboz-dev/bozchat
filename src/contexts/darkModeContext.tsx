@@ -1,6 +1,6 @@
+import { useLocalStorage } from "@mantine/hooks"
 import { createContext, useEffect, useState } from "react"
 import React from "react"
-import { useLocalStorage } from "../hooks/useLocalStorage"
 
 interface DarkModeContextValue {
     value: boolean
@@ -17,17 +17,11 @@ const DarkModeContext = createContext<DarkModeContextValue>({} as DarkModeContex
 export default DarkModeContext
 
 export const DarkModeProvider: React.FC<DarkModeProviderProps> = ({ children }) => {
-    const storage = useLocalStorage()
-    const [value, setValue] = useState<boolean>(true)
+    const [value, setValue] = useLocalStorage({ key: "chatboz:darkmode", defaultValue: true })
 
     const toogleDarkMode = () => {
-        setValue(!value)
+        setValue((value) => !value)
     }
-
-    useEffect(() => {
-        storage.set("boz:darkmode", value)
-        // setTimeout(() => toogleDarkMode(), 100)
-    }, [value])
 
     return <DarkModeContext.Provider value={{ value, setValue, toogleDarkMode }}>{children}</DarkModeContext.Provider>
 }
