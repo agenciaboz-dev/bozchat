@@ -47,15 +47,15 @@ export const useMenuList = () => {
         },
         {
             name: "Business",
-            path: "/washima",
+            path: "/business",
             icon: <WhatsAppIcon />,
-            onClick: () => navigate("/washima"),
+            onClick: () => navigate("/business"),
         },
         {
             icon: <Hub />,
             name: "Broadcast",
-            path: "/nagazap",
-            onClick: () => navigate("/nagazap/"),
+            path: "/broadcast",
+            onClick: () => navigate("/broadcast/"),
         },
         {
             icon: <Engineering />,

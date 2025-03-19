@@ -21,8 +21,8 @@ export const Routes: React.FC<RoutesProps> = ({}) => {
     return user ? (
         <ReactRoutes>
             <Route index element={<Home />} />
-            <Route index path="/washima/*" element={<WashimaPage />} />
-            <Route path="/nagazap/*" element={<NagazapScreen />} />
+            <Route index path="/business/*" element={<WashimaPage />} />
+            <Route path="/broadcast/*" element={<NagazapScreen />} />
             <Route path="/settings/*" element={<Settings />} />
             <Route path="/users/*" element={<Users />} />
             <Route path="/bots/*" element={<Bots />} />

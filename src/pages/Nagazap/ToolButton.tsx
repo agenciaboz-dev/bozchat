@@ -12,7 +12,7 @@ interface ToolButtonProps {
     payload?: any
 }
 
-export const ToolButton: React.FC<ToolButtonProps> = ({ label, route, setShowInformations, last, payload, father_route = "nagazap" }) => {
+export const ToolButton: React.FC<ToolButtonProps> = ({ label, route, setShowInformations, last, payload, father_route = "broadcast" }) => {
     const navigate = useNavigate()
     const splited_pathname = useLocation().pathname.split(father_route)
     const isMobile = useMediaQuery("(orientation: portrait)")

@@ -62,19 +62,19 @@ export const NagazapScreen: React.FC<NagazapProps> = ({}) => {
     }
 
     const onNewNagazapPress = () => {
-        navigate("/nagazap/form")
+        navigate("/broadcast/form")
         setNagazap(undefined)
     }
 
     const onNagazapChoose = (nagazap: Nagazap) => {
         setNagazap(nagazap)
-        // navigate("/nagazap/")
+        // navigate("/broadcast/")
     }
 
     const onAddNagazap = (new_nagazap: Nagazap) => {
         setNagazapList((list) => [...list, new_nagazap])
         setNagazap(new_nagazap)
-        navigate("/nagazap/")
+        navigate("/broadcast/")
     }
 
     useEffect(() => {

@@ -1,16 +1,14 @@
 import React, { useEffect, useMemo, useState } from "react"
-import { Box, Chip, CircularProgress, IconButton, Menu, MenuItem, Paper } from "@mui/material"
+import { AlertColor, Box, Chip, CircularProgress, IconButton, Menu, MenuItem, Paper } from "@mui/material"
 import { NagaTemplate, Nagazap } from "../../../types/server/class/Nagazap"
 import { Subroute } from "../Subroute"
-import { TemplateCategory, TemplateInfo, TemplateStatus, TemplateUpdateHook } from "../../../types/server/Meta/WhatsappBusiness/TemplatesInfo"
+import { TemplateInfo, TemplateStatus } from "../../../types/server/Meta/WhatsappBusiness/TemplatesInfo"
 import { api } from "../../../api"
 import { useUser } from "../../../hooks/useUser"
 import { Add, Check, CopyAll, Delete, Download, Edit, Error, HourglassFull, MoreHoriz, Refresh, Send, WatchLater } from "@mui/icons-material"
 import { DataGrid, GridColDef } from "@mui/x-data-grid"
 import { useClipboard } from "@mantine/hooks"
 import { useSnackbar } from "burgos-snackbar"
-import { MuiColor } from "../../../types/server/class/Log"
-import { TemplatePreview } from "../TemplateForm/TemplatePreview"
 import { TemplateModal } from "./TemplateModal"
 import { useIo } from "../../../hooks/useIo"
 import { useNavigate } from "react-router-dom"
@@ -21,7 +19,7 @@ interface TemplatesProps {
     nagazap: Nagazap
 }
 
-const status_options: { [key: string]: { label: string; color: MuiColor; icon: typeof Check } } = {
+const status_options: { [key: string]: { label: string; color: AlertColor; icon: typeof Check } } = {
     APPROVED: { label: "aprovado", color: "success", icon: Check },
     PENDING: { label: "pendente", color: "warning", icon: WatchLater },
     REJECTED: { label: "rejeitado", color: "error", icon: Error },
@@ -155,7 +153,7 @@ export const Templates: React.FC<TemplatesProps> = ({ nagazap }) => {
     const sendThisTemplate = () => {
         if (!selectedTemplate) return
         setMenuAnchor(null)
-        navigate("/nagazap/message-form", { state: { template: selectedTemplate } })
+        navigate("/broadcast/message-form", { state: { template: selectedTemplate } })
     }
 
     const editTemplate = () => {
