@@ -4,11 +4,10 @@ import { UploadedFile } from "express-fileupload";
 import { BlacklistLog, FailedMessageLog, SentMessageLog } from "../types/shared/Meta/WhatsappBusiness/Logs";
 import { WithoutFunctions } from "./helpers";
 import { BusinessInfo } from "../types/shared/Meta/WhatsappBusiness/BusinessInfo";
-import { TemplateForm, TemplateFormResponse } from "../types/shared/Meta/WhatsappBusiness/TemplatesInfo";
+import { TemplateCategory, TemplateComponent, TemplateForm, TemplateInfo } from "../types/shared/Meta/WhatsappBusiness/TemplatesInfo";
 import { Company } from "./Company";
 import { Socket } from "socket.io";
 import { NagazapLink } from "./NagazapLink";
-import { TemplateInfo } from "../Meta/WhatsappBusiness/TemplatesInfo";
 export type NagaMessageType = "text" | "reaction" | "sticker" | "image" | "audio" | "video" | "button";
 export type NagaMessagePrisma = Prisma.NagazapMessageGetPayload<{}>;
 export type NagaMessageForm = Omit<Prisma.NagazapMessageGetPayload<{}>, "id" | "nagazap_id">;
@@ -33,12 +32,19 @@ export declare class NagaTemplate {
     sent: number;
     info: TemplateInfo;
     nagazap_id: string;
+    static updateSentNumber(template_name: string, batch_size: number): Promise<NagaTemplate>;
+    static getByName(name: string): Promise<NagaTemplate>;
     static getById(id: string): Promise<NagaTemplate>;
     static new(data: TemplateInfo, nagazap_id: string): Promise<NagaTemplate>;
-    static update(data: Partial<NagaTemplate> & {
+    static update(data: Omit<Partial<NagaTemplate>, "info"> & {
         id: string;
+        info?: Partial<TemplateInfo>;
     }): Promise<NagaTemplate>;
     constructor(data: NagaTemplatePrisma);
+    load(data: NagaTemplatePrisma): void;
+    update(data: Omit<Partial<NagaTemplate>, "info"> & {
+        info?: Partial<TemplateInfo>;
+    }): Promise<void>;
 }
 export declare class NagaMessage {
     id: number;
@@ -133,9 +139,13 @@ export declare class Nagazap {
     clearOven(): Promise<void>;
     log(data: any): Promise<void>;
     errorLog(data: any, number: string): Promise<void>;
-    createTemplate(data: TemplateForm): Promise<TemplateFormResponse>;
-    getTemplateSheet(template_name: string): string;
-    exportTemplateModel(template: TemplateForm): Promise<string>;
+    createTemplate(data: TemplateForm): Promise<NagaTemplate>;
+    updateTemplate(template_id: string, data: {
+        components?: TemplateComponent[];
+        category?: TemplateCategory;
+    }): Promise<NagaTemplate>;
+    getTemplateSheet(template_name: string, type?: string): string;
+    exportTemplateModel(template: TemplateForm, type?: string): Promise<string>;
     uploadTemplateMedia(file: UploadedFile): Promise<any>;
     downloadMedia(media_id: string): Promise<string>;
     emit(): void;
@@ -146,5 +156,6 @@ export declare class Nagazap {
     getTemplates(): Promise<NagaTemplate[]>;
     getTemplate(id: string): Promise<NagaTemplate>;
     syncTemplates(): Promise<void>;
+    deleteTemplate(template_id: string): Promise<NagaTemplate>;
 }
 export {};

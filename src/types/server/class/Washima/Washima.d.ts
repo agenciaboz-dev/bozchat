@@ -78,7 +78,7 @@ export declare class Washima {
     sendBulkGroupNotification(notification: WAWebJS.GroupNotification): Promise<void>;
     update(data: Partial<Washima>): Promise<void>;
     getContactPicture(target_id: string, target?: "chat" | "message"): Promise<WashimaProfilePic | undefined>;
-    buildChat(id: string, offset?: number, isGroup?: boolean): Promise<{
+    buildChat(id: string, offset?: number): Promise<{
         messages: WashimaMessage[];
         group_updates: WashimaGroupUpdate[] | undefined;
     } | {

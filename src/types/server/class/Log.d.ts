@@ -7,15 +7,15 @@ export declare const log_include: {
 export type LogPrisma = Prisma.LogGetPayload<{
     include: typeof log_include;
 }>;
-export type MuiColor = "primary" | "secondary" | "info" | "warning" | "error" | "success";
-export type LogForm = Omit<WithoutFunctions<Log>, "id" | "user" | "timestamp" | "color"> & {
-    color?: MuiColor;
+export type LogForm = Omit<WithoutFunctions<Log>, "id" | "user" | "timestamp" | "type"> & {
+    type?: LogType;
 };
+export type LogType = "washima" | "nagazap" | "chatbot" | "users" | "default";
 export declare class Log {
     id: string;
     timestamp: number;
     text: string;
-    color: MuiColor;
+    type: LogType;
     user_id: string;
     user: User;
     company_id: string;

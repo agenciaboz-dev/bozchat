@@ -35,12 +35,12 @@ export declare class WashimaMessage {
     deleted: boolean;
     replied_to?: WashimaMessage | null;
     forwarded: boolean;
-    static getChatMessages(chat_id: string, offset?: number, take?: number | null): Promise<WashimaMessage[]>;
+    static getChatMessages(washima_id: string, chat_id: string, is_group: boolean, offset?: number, take?: number | null): Promise<WashimaMessage[]>;
     static getWashimaMessages(washima_id: string, body?: any): Promise<WashimaMessage[]>;
     static search(value: string): Promise<WashimaMessage[]>;
     static getBySid(sid: string): Promise<WashimaMessage>;
-    static getByWrongId(id: string): Promise<WashimaMessage>;
-    static new(data: WashimaMessageForm): Promise<WashimaMessage>;
+    static getByWrongId(id: string): Promise<WashimaMessage | null>;
+    static new(data: WashimaMessageForm, author?: string): Promise<WashimaMessage>;
     static update(message: WAWebJS.Message, options?: {
         edited?: boolean;
         deleted?: boolean;

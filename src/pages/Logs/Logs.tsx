@@ -1,21 +1,22 @@
 import React, { useEffect, useMemo, useState } from "react"
 import { Box, IconButton, Paper } from "@mui/material"
-import { Log, MuiColor } from "../../types/server/class/Log"
+import { Log } from "../../types/server/class/Log"
 import { backgroundStyle } from "../../style/background"
 import { Header } from "../../components/Header/Header"
 import { DataGrid, GridColDef, GridFilterPanel } from "@mui/x-data-grid"
 import { useUser } from "../../hooks/useUser"
 import { api } from "../../api"
-import { Check, Delete, Edit, Refresh, Warning } from "@mui/icons-material"
+import { Check, Delete, Edit, Engineering, Help, Hub, People, Refresh, Warning, WhatsApp } from "@mui/icons-material"
 import { Title2 } from "../../components/Title"
 
 interface LogsProps {}
 
 const icons = {
-    success: Check,
-    error: Delete,
-    warning: Warning,
-    info: Edit,
+    washima: WhatsApp,
+    nagazap: Hub,
+    chatbot: Engineering,
+    users: People,
+    default: Help,
 }
 
 export const Logs: React.FC<LogsProps> = ({}) => {
@@ -28,14 +29,14 @@ export const Logs: React.FC<LogsProps> = ({}) => {
 
     const columns: GridColDef[] = [
         {
-            field: "color",
-            headerName: "Tipo",
+            field: "type",
+            headerName: "Módulo",
             disableColumnMenu: true,
             renderCell: (cell) => {
                 const value = cell.value as keyof typeof icons
                 const Icon = icons[value]
 
-                return <Icon color={value} sx={{ height: 50, width: 25 }} />
+                return <Icon sx={{ height: 50, width: 25 }} />
             },
             flex: 0.05,
             align: "center",
