@@ -13,7 +13,20 @@ export type NagaMessagePrisma = Prisma.NagazapMessageGetPayload<{}>;
 export type NagaMessageForm = Omit<Prisma.NagazapMessageGetPayload<{}>, "id" | "nagazap_id">;
 export type NagaTemplatePrisma = Prisma.NagaTemplateGetPayload<{}>;
 export declare const nagazap_include: {
-    company: true;
+    company: {
+        include: {
+            departments: {
+                include: {
+                    users: {
+                        select: {
+                            id: true;
+                            name: true;
+                        };
+                    };
+                };
+            };
+        };
+    };
 };
 export type NagazapPrisma = Prisma.NagazapGetPayload<{
     include: typeof nagazap_include;

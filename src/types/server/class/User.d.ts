@@ -1,8 +1,23 @@
 import { Prisma } from "@prisma/client";
 import { LoginForm } from "../types/shared/LoginForm";
 import { WithoutFunctions } from "./helpers";
-export type UserPrisma = Prisma.UserGetPayload<{}>;
-export type UserForm = Omit<WithoutFunctions<User>, "id" | "active"> & {
+import { Department } from "./Department";
+export declare const user_include: {
+    departments: {
+        include: {
+            users: {
+                select: {
+                    id: true;
+                    name: true;
+                };
+            };
+        };
+    };
+};
+export type UserPrisma = Prisma.UserGetPayload<{
+    include: typeof user_include;
+}>;
+export type UserForm = Omit<WithoutFunctions<User>, "id" | "active" | "departments"> & {
     company_id: string;
     active?: boolean;
 };
@@ -19,6 +34,7 @@ export declare class User {
     owner: boolean;
     company_id: string;
     active: boolean;
+    departments: Department[];
     static new(data: UserForm): Promise<User>;
     static login(data: LoginForm): Promise<User | null>;
     static getAll(): Promise<User[]>;

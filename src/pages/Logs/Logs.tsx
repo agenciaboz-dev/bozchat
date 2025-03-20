@@ -6,7 +6,7 @@ import { Header } from "../../components/Header/Header"
 import { DataGrid, GridColDef, GridFilterPanel } from "@mui/x-data-grid"
 import { useUser } from "../../hooks/useUser"
 import { api } from "../../api"
-import { Check, Delete, Edit, Engineering, Help, Hub, People, Refresh, Warning, WhatsApp } from "@mui/icons-material"
+import { Check, Delete, Edit, Engineering, Help, Hub, People, Refresh, SafetyDivider, Warning, WhatsApp } from "@mui/icons-material"
 import { Title2 } from "../../components/Title"
 
 interface LogsProps {}
@@ -16,6 +16,7 @@ const icons = {
     nagazap: Hub,
     chatbot: Engineering,
     users: People,
+    departments: SafetyDivider,
     default: Help,
 }
 

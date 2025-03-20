@@ -1,14 +1,17 @@
-import React, { useState } from "react"
-import { IconButton, Menu, MenuItem, Paper } from "@mui/material"
+import React, { useRef, useState } from "react"
+import { Autocomplete, IconButton, Menu, MenuItem, Paper, TextField } from "@mui/material"
 import { User } from "../../types/server/class/User"
 import { DataGrid, GridColDef } from "@mui/x-data-grid"
 import { AdminPanelSettings, Circle, MoreHoriz } from "@mui/icons-material"
 import { useClipboard } from "@mantine/hooks"
 import { useSnackbar } from "burgos-snackbar"
 import { useUser } from "../../hooks/useUser"
+import { Department } from "../../types/server/class/Department"
+import { textFieldStyle } from "../../style/textfield"
 
 interface UsersTableProps {
     users: User[]
+    departments: Department[]
     loading?: boolean
     updateUser: (data: Partial<User> & { id: string }) => void
     onDeleteUser: (user: User) => void
@@ -18,6 +21,7 @@ export const UsersTable: React.FC<UsersTableProps> = (props) => {
     const clipboard = useClipboard({ timeout: 1000 })
     const { snackbar } = useSnackbar()
     const { user } = useUser()
+    const newDepartmentsValue = useRef<Department[] | null>(null)
 
     const [menuAnchor, setMenuAnchor] = useState<HTMLElement | null>(null)
     const [selectedUser, setSelectedUser] = useState<User | null>(null)
@@ -76,16 +80,44 @@ export const UsersTable: React.FC<UsersTableProps> = (props) => {
             flex: 0.035,
             align: "center",
         },
-        { field: "name", headerName: "Nome", flex: 0.13, editable: user?.admin },
-        { field: "email", headerName: "E-mail", flex: 0.17, editable: user?.admin },
+        { field: "name", headerName: "Nome", flex: 0.15, editable: user?.admin },
+        { field: "email", headerName: "E-mail", flex: 0.15, editable: user?.admin },
         {
             field: "password",
             headerName: "Senha",
-            flex: 0.13,
+            flex: 0.1,
             sortable: false,
             filterable: false,
             valueFormatter: () => "***************",
             editable: user?.admin,
+        },
+        {
+            field: "departments",
+            headerName: "Setores",
+            flex: 0.12,
+            editable: user?.admin,
+            valueFormatter: (value: Department[]) => value.map((item) => item.name).join(", "),
+            renderEditCell: (params) => {
+                return (
+                    <Autocomplete
+                        options={props.departments}
+                        renderInput={(props) => <TextField {...props} label="Setores" variant="standard" />}
+                        getOptionLabel={(option) => option.name}
+                        value={params.row.departments}
+                        fullWidth
+                        open
+                        multiple
+                        onChange={(_, newValue) => {
+                            params.api.setEditCellValue({ id: params.id, field: params.field, value: newValue })
+                            newDepartmentsValue.current = newValue
+                        }}
+                        disableCloseOnSelect
+                        ListboxProps={{ sx: { width: "100%", bgcolor: "background.default" } }}
+                        renderTags={(value) => ""}
+                        isOptionEqualToValue={(option, value) => option.id === value.id}
+                    />
+                )
+            },
         },
         {
             field: "id",
@@ -117,12 +149,14 @@ export const UsersTable: React.FC<UsersTableProps> = (props) => {
                 sx={{ border: 0, height: "61vh" }}
                 // slots={{ filterPanel: () => <GridFilterPanel /> }}
                 onCellEditStop={(cell, event) => {
-                    const new_value = (event as unknown as any).target.value as string | undefined
+                    const new_value = newDepartmentsValue.current || ((event as unknown as any).target.value as string | undefined)
                     const old_value = props.users.find((user) => user.id === cell.row.id)![cell.field as keyof User]
+                    console.log({ new_value, cell })
                     if (!new_value || new_value === old_value) {
                         return
                     } else {
                         props.updateUser({ id: cell.row.id, [cell.field]: new_value })
+                        newDepartmentsValue.current = null
                         snackbar({ severity: "info", text: "salvo" })
                     }
                 }}
@@ -143,7 +177,7 @@ export const UsersTable: React.FC<UsersTableProps> = (props) => {
                         return false
                     }
 
-                    if (!["name", "email", "password"].includes(cell.field)) {
+                    if (!["name", "email", "password", "departments"].includes(cell.field)) {
                         return false
                     }
 

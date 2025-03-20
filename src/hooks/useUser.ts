@@ -14,7 +14,7 @@ export const useUser = () => {
     const onLogin = (data: { company: Company; user: User }) => {
         setCompany(data.company)
         setUser(data.user)
-        navigate("/")
+        // navigate("/")
     }
 
     const logout = () => {
