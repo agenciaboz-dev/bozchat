@@ -16,7 +16,7 @@ import { useUser } from "./useUser"
 import { Badge, BadgeProps, styled } from "@mui/material"
 import ApiIcon from "@mui/icons-material/Api"
 import PaletteIcon from "@mui/icons-material/Palette"
-import { AccountTree, Engineering, Groups, Hub, List, People, SafetyDivider, Settings, SmartToy } from "@mui/icons-material"
+import { AccountTree, Engineering, Groups, Hub, List, People, SafetyDivider, Settings, SmartToy, ViewWeek } from "@mui/icons-material"
 import { Menu } from "../types/Menu"
 
 export const useMenuList = () => {
@@ -56,6 +56,12 @@ export const useMenuList = () => {
             name: "Broadcast",
             path: "/broadcast",
             onClick: () => navigate("/broadcast/"),
+        },
+        {
+            icon: <ViewWeek />,
+            name: "Quadros",
+            path: "/boards",
+            onClick: () => navigate("/boards/"),
         },
         {
             icon: <Engineering />,

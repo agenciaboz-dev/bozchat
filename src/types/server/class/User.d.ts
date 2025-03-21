@@ -2,6 +2,7 @@ import { Prisma } from "@prisma/client";
 import { LoginForm } from "../types/shared/LoginForm";
 import { WithoutFunctions } from "./helpers";
 import { Department } from "./Department";
+import { Board } from "./Board/Board";
 export declare const user_include: {
     departments: {
         include: {
@@ -45,4 +46,5 @@ export declare class User {
     load(data: UserPrisma): void;
     update(data: Partial<User>): Promise<void>;
     notify(reason: string, data: UserNotification): void;
+    getBoards(): Promise<Board[]>;
 }
