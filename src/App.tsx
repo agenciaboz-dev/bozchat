@@ -20,7 +20,7 @@ const Themed = () => {
             <BrowserRouter>
                 <Providers>
                     <Routes />
-                    <Box position={"fixed"} bottom={10} right={10} color={"secondary.main"}>
+                    <Box position={"fixed"} bottom={10} right={10} color={"text.secondary"}>
                         v {version}
                     </Box>
                 </Providers>

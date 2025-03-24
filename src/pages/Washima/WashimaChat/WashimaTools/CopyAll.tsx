@@ -58,8 +58,8 @@ export const CopyAllButton: React.FC<CopyAllProps> = ({ chat, washima_id }) => {
     }
 
     return (
-        <IconButton sx={{ color: "white" }} onClick={copyAllMessages}>
-            {loading ? <CircularProgress size="1.5rem" color="secondary" /> : copied ? <Check color="success" /> : <CopyAll />}
+        <IconButton sx={{ color: "text.secondary" }} onClick={copyAllMessages}>
+            {loading ? <CircularProgress size="1.5rem" color="primary" /> : copied ? <Check color="success" /> : <CopyAll />}
         </IconButton>
     )
 }

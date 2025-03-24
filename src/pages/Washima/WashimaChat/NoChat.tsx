@@ -14,7 +14,7 @@ export const NoChat: React.FC<NoChatProps> = ({}) => {
                 justifyContent: "center",
                 alignItems: "center",
                 gap: "1vw",
-                color: "secondary.main",
+                color: "text.secondary",
                 padding: "1vw",
             }}
         >

@@ -228,7 +228,7 @@ export const WashimaChat: React.FC<WashimaChatProps> = ({ washima, chat, onClose
                 bgcolor: "background.paper",
                 // height: isMobile ? "77vh" : "90vh",
                 padding: isMobile ? "2vw" : "1vw",
-                color: "secondary.main",
+                color: "text.secondary",
                 gap: "1vw",
                 flexDirection: "column",
                 overflow: "hidden",
@@ -266,7 +266,7 @@ export const WashimaChat: React.FC<WashimaChatProps> = ({ washima, chat, onClose
                 {!!chat && (
                     <Box sx={{ marginLeft: "auto" }}>
                         <CopyAllButton chat={chat} washima_id={washima.id} />
-                        <IconButton sx={{ color: "white", padding: isMobile ? "0" : "" }} onClick={onClose}>
+                        <IconButton sx={{ color: "text.secondary", padding: isMobile ? "0" : "" }} onClick={onClose}>
                             <CancelIcon />
                         </IconButton>
                     </Box>
