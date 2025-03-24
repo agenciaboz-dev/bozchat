@@ -18,8 +18,10 @@ import {
 import { MoreHoriz } from "@mui/icons-material"
 import { User } from "../../types/server/class/User"
 import { Board } from "../../types/server/class/Board/Board"
-import { Room } from "../../types/server/class/Board/Room"
 import { WithoutFunctions } from "../../types/server/class/helpers"
+import { Route, Routes, useNavigate } from "react-router-dom"
+import { BoardPage } from "./Kanban"
+import { slugify } from "../../tools/normalize"
 
 interface BoardsTableProps {
     boards: Board[]
@@ -31,6 +33,8 @@ interface BoardsTableProps {
         }
     ) => Promise<void>
     onDeleteBoard: (data: Board) => void
+    selectedBoard: Board | null
+    setSelectedBoard: React.Dispatch<React.SetStateAction<Board | null>>
 }
 
 interface CustomRow extends WithoutFunctions<Board> {
@@ -44,14 +48,14 @@ export const BoardsTable: React.FC<BoardsTableProps> = (props) => {
     const { snackbar } = useSnackbar()
     const { user } = useUser()
     const isMenu = useRef(false)
+    const navigate = useNavigate()
 
     const [menuAnchor, setMenuAnchor] = useState<HTMLElement | null>(null)
-    const [selectedBoard, setSelectedBoard] = useState<Board | null>(null)
 
     const deleteBoard = () => {
-        if (!selectedBoard) return
+        if (!props.selectedBoard) return
 
-        props.onDeleteBoard(selectedBoard)
+        props.onDeleteBoard(props.selectedBoard)
         setMenuAnchor(null)
     }
 
@@ -112,16 +116,12 @@ export const BoardsTable: React.FC<BoardsTableProps> = (props) => {
         isMenu.current = false
     }
 
-    const navigateToBoard = (board: Board) => {
-        console.log(`navegar para o quadro ${board.name}`)
-    }
-
     const onRowClick = (params: GridRowParams<Board>) => {
         const board = params.row
-        if (board.id === selectedBoard?.id) {
+        if (board.id === props.selectedBoard?.id) {
             navigateToBoard(board)
         } else {
-            setSelectedBoard(board)
+            props.setSelectedBoard(board)
         }
     }
 
@@ -141,7 +141,7 @@ export const BoardsTable: React.FC<BoardsTableProps> = (props) => {
         console.log(rowSelectionModel[0])
         const selected_department = props.boards.find((department) => department.id === rowSelectionModel[0])
         if (selected_department) {
-            setSelectedBoard(selected_department)
+            props.setSelectedBoard(selected_department)
         }
     }
 
@@ -156,12 +156,15 @@ export const BoardsTable: React.FC<BoardsTableProps> = (props) => {
 
         return true
     }
+    const navigateToBoard = (board: Board) => {
+        navigate(slugify(board.name))
+    }
 
     useEffect(() => {
-        if (selectedBoard && !isMenu.current) {
-            navigateToBoard(selectedBoard)
+        if (props.selectedBoard && !isMenu.current) {
+            navigateToBoard(props.selectedBoard)
         }
-    }, [selectedBoard])
+    }, [props.selectedBoard])
 
     return (
         <Paper sx={{ flex: 1 }}>

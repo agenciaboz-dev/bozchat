@@ -37,18 +37,19 @@ export const Title2: React.FC<{ name: string; right?: React.ReactNode; left?: Re
                 alignItems: "center",
             }}
         >
-            {left ? <Box>{left}</Box> : isMobile && !space ? <Box sx={{ flex: 0.1 }}></Box> : null}
-            <p
-                style={{
-                    flex: isMobile ? 1 : undefined,
-                    color: colors.primary,
-                    textAlign: center ? undefined : isMobile ? "center" : undefined,
-                }}
-            >
-                {name}
-            </p>
+            <Box sx={{ alignItems: "center", gap: "0.5vw" }}>
+                {left ? <Box>{left}</Box> : isMobile && !space ? <Box sx={{ flex: 0.1 }}></Box> : null}
+                <p
+                    style={{
+                        flex: isMobile ? 1 : undefined,
+                        color: colors.primary,
+                        textAlign: center ? undefined : isMobile ? "center" : undefined,
+                    }}
+                >
+                    {name}
+                </p>
+            </Box>
             {right ? right : isMobile && space ? <Box sx={{ flex: 0.1 }}></Box> : null}
-            {/* {right} */}
         </Box>
     )
 }

@@ -9,25 +9,26 @@ import { api } from '../../api'
 import { backgroundStyle } from '../../style/background'
 import { Header } from '../../components/Header/Header'
 import { Title2 } from '../../components/Title'
-import { Add, Close, Replay } from '@mui/icons-material'
-import { BoardsTable } from './BoardsTable'
-import { BoardFormComponent } from './BoardForm'
+import { Add, Close, Refresh, Replay } from "@mui/icons-material"
+import { BoardsTable } from "./BoardsTable"
+import { BoardFormComponent } from "./BoardForm"
+import { Route, Routes, useNavigate } from "react-router-dom"
+import { BoardPage } from "./Kanban"
 
-interface BoardsProps {
-    
-}
+interface BoardsProps {}
 
-export const Boards:React.FC<BoardsProps> = ({  }) => {
+export const Boards: React.FC<BoardsProps> = ({}) => {
     const { company, user } = useUser()
     const { confirm } = useConfirmDialog()
+    const navigate = useNavigate()
 
     const [boards, setBoards] = useState<Board[]>([])
     const [users, setUsers] = useState<User[]>([])
     const [loading, setLoading] = useState(false)
     const [showBoardForm, setShowBoardForm] = useState(false)
+    const [selectedBoard, setSelectedBoard] = useState<Board | null>(null)
 
-    const addOrReplaceBoard = (board: Board) =>
-        setBoards((list) => [...list.filter((item) => item.id !== board.id), board])
+    const addOrReplaceBoard = (board: Board) => setBoards((list) => [...list.filter((item) => item.id !== board.id), board])
 
     const removeBoard = (board: Board) => setBoards((list) => list.filter((item) => item.id !== board.id))
 
@@ -90,36 +91,54 @@ export const Boards:React.FC<BoardsProps> = ({  }) => {
         })
     }
 
+    const navigateBack = () => {
+        navigate("/boards")
+        setSelectedBoard(null)
+    }
+
     useEffect(() => {
         fetchData()
+
+        if (!selectedBoard) navigateBack()
     }, [])
 
     return (
         <Box sx={{ ...backgroundStyle, overflow: "auto" }}>
             <Header />
-            <Box sx={{ flexDirection: "column", flex: 1, gap: "1vw", padding: "2vw" }}>
-                <Title2
-                    name="Quadros"
-                    right={
-                        <Box sx={{ gap: "0.5vw" }}>
-                            <IconButton onClick={() => setShowBoardForm(true)}>
-                                <Add />
-                            </IconButton>
-                            <IconButton onClick={fetchData}>
-                                {loading ? <CircularProgress size="1.5rem" color="secondary" /> : <Replay />}
-                            </IconButton>
+            <Routes>
+                <Route
+                    index
+                    path="/"
+                    element={
+                        <Box sx={{ flexDirection: "column", flex: 1, gap: "1vw", padding: "2vw" }}>
+                            <Title2
+                                name="Quadros"
+                                right={
+                                    <Box sx={{ gap: "0.5vw" }}>
+                                        <IconButton onClick={() => setShowBoardForm(true)}>
+                                            <Add />
+                                        </IconButton>
+                                        <IconButton onClick={fetchData}>
+                                            {loading ? <CircularProgress size="1.5rem" color="secondary" /> : <Refresh />}
+                                        </IconButton>
+                                    </Box>
+                                }
+                            />
+                            <BoardsTable
+                                loading={loading}
+                                boards={boards}
+                                users={users}
+                                onDeleteBoard={deleteBoard}
+                                updateBoard={updateBoards}
+                                selectedBoard={selectedBoard}
+                                setSelectedBoard={setSelectedBoard}
+                            />
                         </Box>
                     }
                 />
-                <BoardsTable
-                    loading={loading}
-                    boards={boards}
-                    users={users}
-                    onDeleteBoard={deleteBoard}
-                    updateBoard={updateBoards}
-                />
-            </Box>
 
+                {selectedBoard && <Route path="*" element={<BoardPage board={selectedBoard} navigateBack={navigateBack} />} />}
+            </Routes>
             <Dialog
                 open={showBoardForm}
                 keepMounted
