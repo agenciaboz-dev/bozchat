@@ -17,7 +17,7 @@ export const NotificationSwitch: React.FC<NotificationSwitchProps> = ({ notifica
     }, [subscribed])
 
     return (
-        <Box sx={{ gap: "0.5vw", alignItems: "center", color: "secondary.main" }}>
+        <Box sx={{ gap: "0.5vw", alignItems: "center", color: "text.secondary" }}>
             {notification.label}
             <Switch checked={subscribed} onChange={(_, value) => setSubscribed(value)} />
         </Box>

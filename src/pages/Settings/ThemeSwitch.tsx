@@ -12,9 +12,9 @@ export const ThemeSwitch:React.FC<ThemeSwitchProps> = ({  }) => {
     
     return (
         <Box sx={{ marginTop: "auto", alignItems: "center", padding: "1vw" }}>
-                <LightMode color={darkMode ? "disabled" : "secondary"} />
-                <Switch checked={darkMode} onChange={() => toogleDarkMode()} />
-                <DarkMode color={darkMode ? "secondary" : "disabled"} />
-            </Box>
+            <LightMode color={darkMode ? "disabled" : "primary"} />
+            <Switch checked={darkMode} onChange={() => toogleDarkMode()} />
+            <DarkMode color={darkMode ? "secondary" : "disabled"} />
+        </Box>
     )
 }
