@@ -18,7 +18,7 @@ export const DateChip: React.FC<DateChipProps> = ({ timestamp }) => {
                 margin: "2vw 0",
                 fontSize: "0.8rem",
                 padding: "1vw",
-                color: "secondary.main",
+                color: "text.secondary",
             }}
         />
     )

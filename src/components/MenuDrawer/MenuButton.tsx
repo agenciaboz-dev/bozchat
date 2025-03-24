@@ -5,6 +5,7 @@ import { useLocation } from "react-router-dom"
 import { useColors } from "../../hooks/useColors"
 import { KeyboardArrowDown } from "@mui/icons-material"
 import { Menu } from "../../types/Menu"
+import { useDarkMode } from "../../hooks/useDarkMode"
 
 interface MenuButtonProps {
     menu: Menu
@@ -12,7 +13,8 @@ interface MenuButtonProps {
 }
 
 export const MenuButton: React.FC<MenuButtonProps> = ({ menu, sx }) => {
-    const isMobile = useMediaQuery('(orientation: portrait)')
+    const isMobile = useMediaQuery("(orientation: portrait)")
+    const { darkMode } = useDarkMode()
     const Icon = () => menu.icon
     const location = useLocation()
     const active = location.pathname.split("/")[1] == menu.path.split("/")[1]
@@ -24,9 +26,19 @@ export const MenuButton: React.FC<MenuButtonProps> = ({ menu, sx }) => {
     const buildStyle = (active: boolean, menu: Menu) => {
         const menuItemStyle: SxProps = {
             backgroundColor: active ? (menu.submenus ? "" : "background.default") : "",
-            color: active ? (menu.submenus ? "secondary.main" : "background.paper") : "secondary.main",
+            color: darkMode
+                ? active
+                    ? menu.submenus
+                        ? "secondary.main"
+                        : "background.paper"
+                    : "secondary.main"
+                : active
+                ? menu.submenus
+                    ? "text.secondary"
+                    : "background.paper"
+                : "text.secondary",
             pointerEvents: active ? (menu.submenus ? "auto" : "none") : "auto",
-            fontWeight: "bold",
+            fontWeight: darkMode ? "bold" : active ? "bold" : "normal",
             fontSize: "1vw",
             gap: "1vw",
             ...sx,

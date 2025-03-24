@@ -13,7 +13,7 @@ export const SigningBox: React.FC<SigningBoxProps> = ({}) => {
     }, [enabledSignBox])
 
     return (
-        <Box sx={{ gap: "0.5vw", alignItems: "center", color: "secondary.main" }}>
+        <Box sx={{ gap: "0.5vw", alignItems: "center", color: "text.secondary" }}>
             Assinar
             <Switch checked={enabledSignBox} onChange={(_, value) => setEnableSignBox(value)} />
             <TextField value={signing} onChange={(ev) => setSigning(ev.target.value)} disabled={!enabledSignBox} label="Assinatura" />

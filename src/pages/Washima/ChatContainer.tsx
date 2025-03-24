@@ -126,7 +126,7 @@ export const ChatContainer: React.FC<ChatProps> = ({ chat, onChatClick, washima,
                 }}
             >
                 {/*//*  title and date */}
-                <Box sx={{ justifyContent: "space-between", alignItems: "center", width: "100%", color: "secondary.main" }}>
+                <Box sx={{ justifyContent: "space-between", alignItems: "center", width: "100%", color: "text.secondary" }}>
                     <p
                         style={{
                             fontWeight: "bold",
@@ -161,7 +161,7 @@ export const ChatContainer: React.FC<ChatProps> = ({ chat, onChatClick, washima,
                         fontSize: isMobile ? "4vw" : "0.8vw",
                         gap: "0.5vw",
                         alignItems: "center",
-                        color: "secondary.main",
+                        color: "text.secondary",
                     }}
                     title={chat.lastMessage?.body}
                 >

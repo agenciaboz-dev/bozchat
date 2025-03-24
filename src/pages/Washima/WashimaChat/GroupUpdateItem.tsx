@@ -30,7 +30,7 @@ export const GroupUpdateItem: React.FC<GroupUpdateItemProps> = ({ update, washim
                     margin: "2vw 0 0",
                     fontSize: "0.8rem",
                     padding: "1vw",
-                    color: "secondary.main",
+                    color: "text.secondary",
                 }}
             />
         )
