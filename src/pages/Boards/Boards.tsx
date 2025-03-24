@@ -46,7 +46,7 @@ export const Boards:React.FC<BoardsProps> = ({  }) => {
     }
 
     const fetchBoards = async () => {
-        const response = await api.get("/company/boards", { params: { company_id: company?.id } })
+        const response = await api.get("/company/boards", { params: { company_id: company?.id, user_id: user?.id } })
         setBoards(response.data)
     }
 
