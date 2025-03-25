@@ -1,6 +1,5 @@
 import React, { useEffect, useMemo, useRef, useState } from "react"
-import { Autocomplete, Box, Chip, IconButton, Menu, MenuItem, Paper, TextField, Tooltip } from "@mui/material"
-import { Department } from "../../types/server/class/Department"
+import { IconButton, Menu, MenuItem, Paper } from "@mui/material"
 import { useSnackbar } from "burgos-snackbar"
 import { useUser } from "../../hooks/useUser"
 import {
@@ -19,8 +18,7 @@ import { MoreHoriz } from "@mui/icons-material"
 import { User } from "../../types/server/class/User"
 import { Board } from "../../types/server/class/Board/Board"
 import { WithoutFunctions } from "../../types/server/class/helpers"
-import { Route, Routes, useNavigate } from "react-router-dom"
-import { BoardPage } from "./Kanban"
+import {  useNavigate } from "react-router-dom"
 import { slugify } from "../../tools/normalize"
 
 interface BoardsTableProps {
@@ -35,6 +33,7 @@ interface BoardsTableProps {
     onDeleteBoard: (data: Board) => void
     selectedBoard: Board | null
     setSelectedBoard: React.Dispatch<React.SetStateAction<Board | null>>
+    openBoardSettings: () => void
 }
 
 interface CustomRow extends WithoutFunctions<Board> {
@@ -51,6 +50,11 @@ export const BoardsTable: React.FC<BoardsTableProps> = (props) => {
     const navigate = useNavigate()
 
     const [menuAnchor, setMenuAnchor] = useState<HTMLElement | null>(null)
+
+    const openBoardSettings = () => {
+        props.openBoardSettings()
+        setMenuAnchor(null)
+    }
 
     const deleteBoard = () => {
         if (!props.selectedBoard) return
@@ -192,6 +196,9 @@ export const BoardsTable: React.FC<BoardsTableProps> = (props) => {
             />
 
             <Menu open={!!menuAnchor} anchorEl={menuAnchor} onClose={closeMenu}>
+                <MenuItem onClick={openBoardSettings} disabled={!user?.admin}>
+                    Configurações
+                </MenuItem>
                 <MenuItem onClick={deleteBoard} disabled={!user?.admin}>
                     Deletar
                 </MenuItem>

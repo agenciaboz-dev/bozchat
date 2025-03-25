@@ -7,6 +7,7 @@ import { Chat, ChatDto } from "./Chat";
 import WAWebJS from "whatsapp-web.js";
 import { Washima } from "../Washima/Washima";
 import { WashimaMessage } from "../Washima/WashimaMessage";
+import { Socket } from "socket.io";
 export type BoardPrisma = Prisma.BoardGetPayload<{}>;
 export interface BoardForm {
     name: string;
@@ -27,14 +28,18 @@ export declare class Board {
     created_at: string;
     rooms: Room[];
     entry_room_id: string;
+    entry_room_index: number;
     company_id: string;
     receive_washima_message: BoardWashimaSettings[];
+    static handleSocket(socket: Socket): void;
     static handleWashimaNewMessage(data: HandleWashimaMessageDto): Promise<void>;
     static getCompanyBoards(company_id: string): Promise<Board[]>;
     static find(board_id: string): Promise<Board>;
     static new(data: BoardForm, company_id: string): Promise<Board>;
     constructor(data: BoardPrisma);
     load(data: BoardPrisma): void;
+    getEntryRoom(): Room;
+    getEntryRoomIndex(): number;
     update(data: Partial<WithoutFunctions<Board & {
         departments?: Department[];
         users?: User[];
@@ -54,4 +59,7 @@ export declare class Board {
     updateRoom(updatedRoom: Room): void;
     newChat(chat: Chat, room_id?: string): Promise<void>;
     handleWashimaMessage(chatDto: ChatDto): Promise<false | undefined>;
+    handleWashimaSettingsChange(data: BoardWashimaSettings[]): Promise<void>;
+    unsyncWashima(data: BoardWashimaSettings): Promise<void>;
+    syncWashima(data: BoardWashimaSettings): Promise<void>;
 }

@@ -12,6 +12,7 @@ import { uid } from "uid"
 import { useSnackbar } from "burgos-snackbar"
 import { Room } from "../../types/server/class/Board/Room"
 import { useUser } from "../../hooks/useUser"
+import { BoardSettingsModal } from "./BoardSettingsModal/BoardSettingsModal"
 
 interface BoardPageProps {
     board: WithoutFunctions<Board>
@@ -21,11 +22,12 @@ interface BoardPageProps {
 export const BoardPage: React.FC<BoardPageProps> = (props) => {
     const io = useIo()
     const { snackbar } = useSnackbar()
-    const {user} = useUser()
+    const { user } = useUser()
 
     const [board, setBoard] = useState(props.board)
     const [editMode, setEditMode] = useState(false)
     const [saving, setSaving] = useState(false)
+    const [showSettings, setShowSettings] = useState(false)
 
     const isSame = (result: DropResult<string>) =>
         result.destination?.droppableId === result.source.droppableId && result.destination.index === result.source.index
@@ -115,7 +117,7 @@ export const BoardPage: React.FC<BoardPageProps> = (props) => {
     const addRoom = () => {
         setBoard((currentBoard) => {
             const rooms = currentBoard.rooms
-            rooms.push({ chats: [], id: uid(), name: `Sala ${rooms.length+1}`, newMessage: async () => {} })
+            rooms.push({ chats: [], id: uid(), name: `Sala ${rooms.length + 1}`, newMessage: async () => {} })
             const board = { ...currentBoard, rooms }
             save(board)
 
@@ -124,16 +126,16 @@ export const BoardPage: React.FC<BoardPageProps> = (props) => {
     }
 
     const deleteRoom = (room_id: string) => {
-        setBoard(currentBoard => {
-            const room = currentBoard.rooms.find(item => item.id === room_id)
+        setBoard((currentBoard) => {
+            const room = currentBoard.rooms.find((item) => item.id === room_id)
             const rooms = currentBoard.rooms.filter((item) => item.id !== room_id)
-            
+
             if (!!room?.chats.length) {
-                const defaultRoomIndex = currentBoard.rooms.findIndex(item => item.id === currentBoard.entry_room_id)
+                const defaultRoomIndex = currentBoard.rooms.findIndex((item) => item.id === currentBoard.entry_room_id)
                 rooms[defaultRoomIndex].chats = [...room.chats, ...rooms[defaultRoomIndex].chats]
             }
 
-            const board = {...currentBoard, rooms}
+            const board = { ...currentBoard, rooms }
             save(board)
 
             return board
@@ -172,28 +174,41 @@ export const BoardPage: React.FC<BoardPageProps> = (props) => {
                     }
                     right={
                         <Box>
-                            {editMode && <>
-                                <IconButton onClick={addRoom}>
-                                    <Add />
-                                </IconButton>
-                                <IconButton disabled>
-                                    <Settings />
-                                </IconButton>
-                            </>}
-                            {user?.admin && <IconButton onClick={handleEditPress}>
-                                {saving ? <CircularProgress size="1.5rem" color="secondary" /> : editMode ? <EditOff /> : <Edit />}
-                            </IconButton>}
+                            {user?.admin && (
+                                <>
+                                    <IconButton onClick={addRoom}>
+                                        <Add />
+                                    </IconButton>
+                                    <IconButton onClick={() => setShowSettings(true)}>
+                                        <Settings />
+                                    </IconButton>
+                                    <IconButton onClick={handleEditPress}>
+                                        {saving ? <CircularProgress size="1.5rem" color="secondary" /> : editMode ? <EditOff /> : <Edit />}
+                                    </IconButton>
+                                </>
+                            )}
                         </Box>
                     }
                 />
                 <Droppable droppableId={props.board.id} type="room" direction="horizontal">
                     {(provided, snapshort) => (
-                        <Box ref={provided.innerRef} {...provided.droppableProps} sx={{ gap: "2vw", overflow: 'auto', margin: '0 -2vw', padding: '0 2vw', marginBottom: '-2vw', paddingBottom: '2vw' }}>
+                        <Box
+                            ref={provided.innerRef}
+                            {...provided.droppableProps}
+                            sx={{ gap: "2vw", overflow: "auto", margin: "0 -2vw", padding: "0 2vw", marginBottom: "-2vw", paddingBottom: "2vw" }}
+                        >
                             {board.rooms.map((room, index) => (
                                 <Draggable key={room.id} draggableId={room.id} index={index} isDragDisabled={!editMode}>
                                     {(provided) => (
                                         <Box ref={provided.innerRef} {...provided.draggableProps} {...provided.dragHandleProps}>
-                                            <BoardRoom room={room} editMode={editMode} updateRoom={updateRoom} index={index} board={board} deleteRoom={deleteRoom} />
+                                            <BoardRoom
+                                                room={room}
+                                                editMode={editMode}
+                                                updateRoom={updateRoom}
+                                                index={index}
+                                                board={board}
+                                                deleteRoom={deleteRoom}
+                                            />
                                         </Box>
                                     )}
                                 </Draggable>
@@ -202,6 +217,8 @@ export const BoardPage: React.FC<BoardPageProps> = (props) => {
                         </Box>
                     )}
                 </Droppable>
+
+                <BoardSettingsModal board={board} open={showSettings} onClose={() => setShowSettings(false)} onSubmit={setBoard} />
             </Box>
         </DragDropContext>
     )

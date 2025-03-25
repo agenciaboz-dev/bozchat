@@ -1,19 +1,21 @@
-import React, { useEffect, useState } from 'react'
-import {Box, CircularProgress, Dialog, IconButton, Typography} from '@mui/material'
-import { useUser } from '../../hooks/useUser'
-import { useConfirmDialog } from 'burgos-confirm'
-import { Department } from '../../types/server/class/Department'
-import { Board } from '../../types/server/class/Board/Board'
-import { User } from '../../types/server/class/User'
-import { api } from '../../api'
-import { backgroundStyle } from '../../style/background'
-import { Header } from '../../components/Header/Header'
-import { Title2 } from '../../components/Title'
+import React, { useEffect, useState } from "react"
+import { Box, CircularProgress, Dialog, IconButton, Typography } from "@mui/material"
+import { useUser } from "../../hooks/useUser"
+import { useConfirmDialog } from "burgos-confirm"
+import { Board } from "../../types/server/class/Board/Board"
+import { User } from "../../types/server/class/User"
+import { backgroundStyle } from "../../style/background"
+import { Header } from "../../components/Header/Header"
+import { Title2 } from "../../components/Title"
 import { Add, Close, Refresh, Replay } from "@mui/icons-material"
 import { BoardsTable } from "./BoardsTable"
 import { BoardFormComponent } from "./BoardForm"
 import { Route, Routes, useNavigate } from "react-router-dom"
 import { BoardPage } from "./Kanban"
+import { useApi } from "../../hooks/useApi"
+import { api } from "../../api"
+import { useFetchedData } from "../../hooks/useFetchedData"
+import { BoardSettingsModal } from "./BoardSettingsModal/BoardSettingsModal"
 
 interface BoardsProps {}
 
@@ -21,39 +23,20 @@ export const Boards: React.FC<BoardsProps> = ({}) => {
     const { company, user } = useUser()
     const { confirm } = useConfirmDialog()
     const navigate = useNavigate()
+    const { fetchBoards, loading, setLoading } = useApi()
 
-    const [boards, setBoards] = useState<Board[]>([])
-    const [users, setUsers] = useState<User[]>([])
-    const [loading, setLoading] = useState(false)
+    const [boards, setBoards] = useFetchedData<Board>("boards")
+    const [users, setUsers] = useFetchedData<User>("users")
     const [showBoardForm, setShowBoardForm] = useState(false)
     const [selectedBoard, setSelectedBoard] = useState<Board | null>(null)
+    const [showBoardSettings, setShowBoardSettings] = useState(false)
 
     const addOrReplaceBoard = (board: Board) => setBoards((list) => [...list.filter((item) => item.id !== board.id), board])
 
     const removeBoard = (board: Board) => setBoards((list) => list.filter((item) => item.id !== board.id))
 
     const fetchData = async () => {
-        if (loading || !company) return
-        setLoading(true)
-
-        try {
-            // await fetchUsers()
-            await fetchBoards()
-        } catch (error) {
-            console.log(error)
-        } finally {
-            setLoading(false)
-        }
-    }
-
-    const fetchBoards = async () => {
-        const response = await api.get("/company/boards", { params: { company_id: company?.id, user_id: user?.id } })
-        setBoards(response.data)
-    }
-
-    const fetchUsers = async () => {
-        const response = await api.get("/company/users", { params: { company_id: company?.id } })
-        setUsers(response.data)
+        setBoards(await fetchBoards())
     }
 
     const updateBoards = async (data: Partial<Board> & { id: string }) => {
@@ -132,6 +115,7 @@ export const Boards: React.FC<BoardsProps> = ({}) => {
                                 updateBoard={updateBoards}
                                 selectedBoard={selectedBoard}
                                 setSelectedBoard={setSelectedBoard}
+                                openBoardSettings={() => setShowBoardSettings(true)}
                             />
                         </Box>
                     }
@@ -159,6 +143,18 @@ export const Boards: React.FC<BoardsProps> = ({}) => {
                     }}
                 />
             </Dialog>
+
+            {selectedBoard && (
+                <BoardSettingsModal
+                    board={selectedBoard}
+                    open={showBoardSettings}
+                    onClose={() => setShowBoardSettings(false)}
+                    onSubmit={(board) => {
+                        addOrReplaceBoard(board)
+                        setSelectedBoard(board)
+                    }}
+                />
+            )}
         </Box>
     )
 }

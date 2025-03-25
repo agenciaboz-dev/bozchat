@@ -53,7 +53,7 @@ export const BoardRoom: React.FC<KanbanColumnProps> = (props) => {
     }
 
     return (
-        <Paper sx={{ flexDirection: "column", width: "25vw", padding: "1vw", gap: "1vw", overflow: "auto", height: "73vh" }}>
+        <Paper sx={{ flexDirection: "column", width: "25vw", padding: "1vw", gap: "1vw", overflow: "auto", height: "74vh" }}>
             {props.editMode ? (
                 <Box sx={{ flexDirection: "column", marginBottom: "0.2vw" }}>
                     <Box sx={{ justifyContent: "space-between" }}>
@@ -65,7 +65,10 @@ export const BoardRoom: React.FC<KanbanColumnProps> = (props) => {
                     <RoomNameInput onSubmit={(name) => editRoomName(props.index, name)} currentName={props.room.name} />
                 </Box>
             ) : (
-                <Typography sx={{ color: "secondary.main", fontWeight: "bold" }}>{props.room.name}</Typography>
+                <Box sx={{ alignItems: "center", gap: "1vw" }}>
+                    <Typography sx={{ color: "secondary.main", fontWeight: "bold" }}>{props.room.name}</Typography>
+                    <Chip label={`${props.room.chats.length}`} size="small" color="primary" />
+                </Box>
             )}
 
             <Droppable droppableId={props.room.id} type="chat" direction="vertical">
