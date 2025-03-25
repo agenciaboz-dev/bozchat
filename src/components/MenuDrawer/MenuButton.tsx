@@ -30,7 +30,7 @@ export const MenuButton: React.FC<MenuButtonProps> = ({ menu, sx }) => {
                 ? active
                     ? menu.submenus
                         ? "secondary.main"
-                        : "background.paper"
+                        : "primary.main"
                     : "secondary.main"
                 : active
                 ? menu.submenus
