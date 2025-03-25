@@ -11,6 +11,7 @@ import { GeneralStatistics } from "./GeneralStatistics"
 import { MessagesChart } from "./MessagesChart"
 import { BlacklistChart } from "./BlacklistChart"
 import { useUser } from "../../../hooks/useUser"
+import { useDarkMode } from "../../../hooks/useDarkMode"
 
 interface InfoProps {
     nagazap: Nagazap
@@ -18,6 +19,7 @@ interface InfoProps {
 }
 
 export const Info: React.FC<InfoProps> = ({ nagazap, setShowInformations }) => {
+    const { darkMode } = useDarkMode()
     const { user } = useUser()
 
     const [loading, setLoading] = useState(true)

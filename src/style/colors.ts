@@ -16,7 +16,7 @@ export const default_colors: Theme = {
     text: {
         primary: "#00AFEF",
         secondary: "#1F1F1F",
-        terciary: "#00AFEF",
+        terciary: "#707070",
     },
 }
 
@@ -31,7 +31,7 @@ export const default_dark_colors: Theme = {
     warning: "#ffa726",
     background: {
         primary: "#131b26",
-        // secondary: "#181818",
+        secondary: "#131b2625",
     },
     text: {
         primary: "#00AFEF",

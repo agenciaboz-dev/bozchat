@@ -38,10 +38,10 @@ export const BlacklistChart: React.FC<BlacklistChartProps> = ({ blacklist }) => 
 
     return (
         <Box sx={{ flexDirection: "column", gap: "0.5vw" }}>
-            <Box sx={{ color: "secondary.main", fontWeight: "bold", paddingLeft: "2vw" }}>Parar promoções</Box>
+            <Box sx={{ color: "text.secondary", fontWeight: "bold", paddingLeft: "2vw" }}>Parar promoções</Box>
             <ResponsiveContainer style={{ flex: 1, paddingRight: isMobile ? 20 : undefined }} height={290}>
                 <AreaChart data={blacklistData} margin={{ left: -20 }} style={{ flex: 1 }}>
-                    <CartesianGrid strokeDasharray="3 3" />
+                    <CartesianGrid strokeDasharray="3 3" strokeWidth={2} />
                     <XAxis dataKey="date" tickFormatter={(value) => new Date(value).toLocaleDateString("pt-br")} />
                     <YAxis />
                     <Tooltip labelFormatter={(value) => new Date(value).toLocaleDateString("pt-br")} />

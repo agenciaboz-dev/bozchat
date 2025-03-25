@@ -20,7 +20,7 @@ export const Subroute: React.FC<SubrouteProps> = ({ children, title, right, left
                 gap: "2vw",
                 padding: "2vw",
                 width: "99%",
-                bgcolor: "background.default",
+                bgcolor: "background.paper",
                 borderTopRightRadius: "2vw",
                 overflowY: "auto",
             }}

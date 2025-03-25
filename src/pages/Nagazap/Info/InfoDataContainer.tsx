@@ -3,12 +3,15 @@ import { Box, IconButton, Skeleton, Tooltip, Typography, useMediaQuery } from "@
 import { GeneralStat } from "../../../types/GeneralStat"
 import { CopyAll } from "@mui/icons-material"
 import { useClipboard } from "@mantine/hooks"
+import { useDarkMode } from "../../../hooks/useDarkMode"
+import { default_colors } from "../../../style/colors"
 
 interface InfoDataContainerProps {
     data: GeneralStat & { copy?: boolean }
 }
 
 export const InfoDataContainer: React.FC<InfoDataContainerProps> = ({ data }) => {
+    const { darkMode } = useDarkMode()
     const isMobile = useMediaQuery("(orientation: portrait)")
     const Icon = data.icon
 
@@ -30,8 +33,8 @@ export const InfoDataContainer: React.FC<InfoDataContainerProps> = ({ data }) =>
                         alignItems: "center",
                     }}
                 >
-                    <Icon color="secondary" sx={{ width: isMobile ? "5vw" : "1vw", height: isMobile ? "5vw" : "1vw" }} />
-                    <Box sx={[{ fontSize: "0.9rem", fontWeight: "bold", color: "secondary.main" }]}>{data.title}</Box>
+                    <Icon color={darkMode ? "secondary" : "action"} sx={{ width: isMobile ? "5vw" : "1vw", height: isMobile ? "5vw" : "1vw" }} />
+                    <Box sx={[{ fontSize: "0.9rem", fontWeight: "bold", color: "text.secondary" }]}>{data.title}</Box>
                 </Box>
                 {data.loading ? (
                     <Skeleton variant="rounded" animation="wave" sx={{ height: isMobile ? "9vw" : "1.72vw", width: isMobile ? "80vw" : "15vw" }} />

@@ -1,7 +1,8 @@
 import React, { Dispatch, SetStateAction } from "react"
 import { MenuItem, SxProps, useMediaQuery } from "@mui/material"
 import { useLocation, useNavigate } from "react-router-dom"
-import colors from "../../style/colors"
+import colors, { default_colors } from "../../style/colors"
+import { useDarkMode } from "../../hooks/useDarkMode"
 
 interface ToolButtonProps {
     label: React.ReactNode
@@ -13,6 +14,7 @@ interface ToolButtonProps {
 }
 
 export const ToolButton: React.FC<ToolButtonProps> = ({ label, route, setShowInformations, last, payload, father_route = "broadcast" }) => {
+    const { darkMode } = useDarkMode()
     const navigate = useNavigate()
     const splited_pathname = useLocation().pathname.split(father_route)
     const isMobile = useMediaQuery("(orientation: portrait)")
@@ -22,7 +24,7 @@ export const ToolButton: React.FC<ToolButtonProps> = ({ label, route, setShowInf
         <MenuItem
             sx={{
                 bgcolor: active ? colors.primary : "",
-                color: active ? "white" : "",
+                color: active ? "white" : darkMode ? "" : default_colors.text.secondary,
                 fontWeight: active ? "bold" : "normal",
                 pointerEvents: active ? "none" : "",
             }}

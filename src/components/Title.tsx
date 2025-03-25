@@ -1,13 +1,23 @@
 import { Box, lighten, useMediaQuery } from "@mui/material";
 import ApiIcon from "@mui/icons-material/Api"
 import { useColors } from "../hooks/useColors";
+import { useDarkMode } from "../hooks/useDarkMode"
+import colors, { default_colors } from "../style/colors"
 
 export const Title: React.FC<{ title: string; children?: React.ReactNode; icon?: React.ReactNode }> = ({ title, children, icon }) => {
     const isMobile = useMediaQuery("(orientation: portrait)")
+    const { darkMode } = useDarkMode()
 
     return (
         <Box sx={{ flexDirection: "column", gap: "1vw", padding: isMobile ? "5vw 0" : "1vw 0" }}>
-            <Box sx={{ alignItems: "center", justifyContent: "center", gap: isMobile ? "2vw" : "0.5vw" }}>
+            <Box
+                sx={{
+                    alignItems: "center",
+                    justifyContent: "center",
+                    gap: isMobile ? "2vw" : "0.5vw",
+                    color: darkMode ? colors.secondary : default_colors.text.secondary,
+                }}
+            >
                 {icon ? icon : <ApiIcon />}
                 <p style={{ textAlign: "center", fontWeight: "800", fontSize: isMobile ? "5vw" : "1.2vw" }}>{title}</p>
             </Box>
