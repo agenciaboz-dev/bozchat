@@ -55,7 +55,7 @@ export const BoardRoom: React.FC<KanbanColumnProps> = (props) => {
     return (
         <Paper sx={{ flexDirection: "column", width: "25vw", padding: "1vw", gap: "1vw", overflow: "auto", height: "73vh" }}>
             {props.editMode ? (
-                <Box sx={{ flexDirection: "column", marginBottom: '0.2vw' }}>
+                <Box sx={{ flexDirection: "column", marginBottom: "0.2vw" }}>
                     <Box sx={{ justifyContent: "space-between" }}>
                         <Chip label={props.index + 1} />
                         <IconButton onClick={(ev) => setMenuAnchorEl(ev.currentTarget)}>
@@ -70,8 +70,18 @@ export const BoardRoom: React.FC<KanbanColumnProps> = (props) => {
 
             <Droppable droppableId={props.room.id} type="chat" direction="vertical">
                 {(provided) => (
-                    <Box ref={provided.innerRef} {...provided.droppableProps} sx={{ flexDirection: "column", gap: "1vw", flex: 1, opacity: props.editMode ? 0.45 : 1, pointerEvents: 'none' }}>
-                        { props.room.chats.length === 0 ? (
+                    <Box
+                        ref={provided.innerRef}
+                        {...provided.droppableProps}
+                        sx={{
+                            flexDirection: "column",
+                            gap: "1vw",
+                            flex: 1,
+                            opacity: props.editMode ? 0.45 : 1,
+                            pointerEvents: props.editMode ? "none" : undefined,
+                        }}
+                    >
+                        {props.room.chats.length === 0 ? (
                             <Box sx={{ justifyContent: "center", alignItems: "center", height: "100%" }}>
                                 <Typography sx={{ color: "secondary.main", alignSelf: "center" }}>Nenhuma conversa</Typography>
                             </Box>
@@ -84,7 +94,9 @@ export const BoardRoom: React.FC<KanbanColumnProps> = (props) => {
             </Droppable>
 
             <Menu open={!!menuAnchorEl} anchorEl={menuAnchorEl} onClose={onMenuClose}>
-                <MenuItem disabled={props.room.entry_point} onClick={deleteRoom}>Deletar</MenuItem>
+                <MenuItem disabled={props.room.entry_point} onClick={deleteRoom}>
+                    Deletar
+                </MenuItem>
             </Menu>
         </Paper>
     )
