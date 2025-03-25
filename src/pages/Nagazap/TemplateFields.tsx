@@ -9,7 +9,7 @@ interface TemplateFieldsProps {
 export const TemplateFields: React.FC<TemplateFieldsProps> = ({ variables, to }) => {
     return (
         <Box sx={{ flexDirection: "column", gap: "1vw" }}>
-            <Typography sx={{ color: "secondary.main", fontWeight: "bold" }}>Campos:</Typography>
+            <Typography sx={{ color: "text.secondary", fontWeight: "bold" }}>Campos:</Typography>
 
             <Box sx={{ flexDirection: "column", gap: "0.5vw" }}>
                 {variables.map((variable) => (

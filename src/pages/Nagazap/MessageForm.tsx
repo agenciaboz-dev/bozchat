@@ -276,7 +276,7 @@ export const MessageFormScreen: React.FC<MessageFormProps> = ({ nagazap, setShow
                             }}
                         >
                             <Box sx={{ flexDirection: "column", gap: isMobile ? "2vw" : "1vw" }}>
-                                <Typography sx={{ color: "secondary.main", fontWeight: 600 }}>Selecionar template:</Typography>
+                                <Typography sx={{ color: "text.secondary", fontWeight: 600 }}>Selecionar template:</Typography>
                                 <TextField
                                     fullWidth
                                     label="Template"
@@ -305,7 +305,7 @@ export const MessageFormScreen: React.FC<MessageFormProps> = ({ nagazap, setShow
                             </Box>
 
                             <Box sx={{ flexDirection: "column", gap: "1vw" }}>
-                                <Typography sx={{ fontWeight: 600, color: "secondary.main" }}>Planilha modelo:</Typography>
+                                <Typography sx={{ fontWeight: 600, color: "text.secondary" }}>Planilha modelo:</Typography>
                                 <Button
                                     variant="outlined"
                                     sx={{
@@ -323,7 +323,7 @@ export const MessageFormScreen: React.FC<MessageFormProps> = ({ nagazap, setShow
                             </Box>
 
                             <Box sx={{ flexDirection: "column", gap: isMobile ? "2vw" : "1vw" }}>
-                                <Typography sx={{ fontWeight: 600, color: "secondary.main" }}>Adicionar contatos:</Typography>
+                                <Typography sx={{ fontWeight: 600, color: "text.secondary" }}>Adicionar contatos:</Typography>
                                 {!isMobile ? (
                                     <Box sx={{ flexDirection: "column", gap: "0.2vw" }}>
                                         <Button
@@ -349,7 +349,7 @@ export const MessageFormScreen: React.FC<MessageFormProps> = ({ nagazap, setShow
                                         )}
                                         {!!sheetData.length && (
                                             <Box sx={{ gap: "1vw", marginTop: "0.5vw" }}>
-                                                <Typography sx={{ color: "secondary.main", whiteSpace: "break-spaces" }}>{sheetName}</Typography>
+                                                <Typography sx={{ color: "text.secondary", whiteSpace: "break-spaces" }}>{sheetName}</Typography>
                                                 <IconButton onClick={resetSheet} sx={{ padding: 0 }}>
                                                     <Clear />
                                                 </IconButton>
@@ -379,14 +379,14 @@ export const MessageFormScreen: React.FC<MessageFormProps> = ({ nagazap, setShow
                     <Grid item xs={1}>
                         <Box sx={{ flexDirection: "column", gap: "1vw" }}>
                             {formik.values.template && (
-                                <Typography sx={{ color: "secondary.main", fontWeight: "bold" }}>ID: {formik.values.template_id}</Typography>
+                                <Typography sx={{ color: "text.secondary", fontWeight: "bold" }}>ID: {formik.values.template_id}</Typography>
                             )}
 
                             {formik.values.template?.components.map((component, index) => {
                                 if (component.format == "IMAGE") {
                                     return (
                                         <Box key={index} sx={{ flexDirection: "column", gap: isMobile ? "2vw" : "1vw" }}>
-                                            <Typography sx={{ fontWeight: "bold", color: "secondary.main" }}>Selecionar imagem:</Typography>
+                                            <Typography sx={{ fontWeight: "bold", color: "text.secondary" }}>Selecionar imagem:</Typography>
                                             <input
                                                 type="file"
                                                 ref={inputRef}
@@ -408,7 +408,7 @@ export const MessageFormScreen: React.FC<MessageFormProps> = ({ nagazap, setShow
                                             <Box sx={{ gap: isMobile ? "2vw" : "0.5vw" }}>
                                                 <Typography
                                                     sx={{
-                                                        color: imageError ? "error.main" : "secondary.main",
+                                                        color: imageError ? "error.main" : "text.secondary",
                                                         maxWidth: !image ? undefined : "22vw",
                                                         overflow: !image ? undefined : "hidden",
                                                         whiteSpace: !image ? undefined : "nowrap",
