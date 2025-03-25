@@ -19,7 +19,7 @@ export const NoChat: React.FC<NoChatProps> = ({}) => {
             }}
         >
             <WhatsappWebSvg />
-            <Box sx={{ fontSize: "2rem" }}>Whatsapp Web</Box>
+            <Box sx={{ fontSize: "2rem" }}>WhatsApp Business</Box>
             <Box>Envie e receba mensagens sem precisar do celular conectado a conta.</Box>
             <Box>Use o WhatsApp em quantos dispositivos quiser, ao mesmo tempo.</Box>
 

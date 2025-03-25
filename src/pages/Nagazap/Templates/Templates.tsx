@@ -250,7 +250,7 @@ export const Templates: React.FC<TemplatesProps> = ({ nagazap }) => {
                             pagination: { paginationModel: { page: 0, pageSize: 10 } },
                         }}
                         pageSizeOptions={[10, 20, 50, 100]}
-                        sx={{ border: 0, height: "61vh" }}
+                        sx={{ border: 0, height: "61vh", color: "text.secondary" }}
                         onRowSelectionModelChange={(params) => {
                             if (params.length === 0) return
                             console.log(params[0])

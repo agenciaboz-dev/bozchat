@@ -3,6 +3,7 @@ import { Avatar, Box, Button, Paper, Typography, useMediaQuery } from "@mui/mate
 import { TemplateComponent } from "../../../types/server/Meta/WhatsappBusiness/TemplatesInfo"
 import { TrianguloFudido } from "../../Zap/TrianguloFudido"
 import { Image, LocalPhone, OpenInNew, Reply } from "@mui/icons-material"
+import { useDarkMode } from "../../../hooks/useDarkMode"
 
 interface TemplatePreviewProps {
     components: TemplateComponent[]
@@ -19,6 +20,7 @@ const icons = [
 
 export const TemplatePreview: React.FC<TemplatePreviewProps> = ({ components, image }) => {
     const isMobile = useMediaQuery("(orientation: portrait)")
+    const { darkMode } = useDarkMode()
 
     return (
         <Box
@@ -44,7 +46,7 @@ export const TemplatePreview: React.FC<TemplatePreviewProps> = ({ components, im
                     color: "secondary.main",
                 }}
             >
-                <TrianguloFudido alignment="left" color="#2a323c" />
+                <TrianguloFudido alignment="left" color={darkMode ? "#2a323c" : "#aaaaaa25"} />
                 {components.map((component, index) => {
                     if (!component) return null
                     if (component.format == "IMAGE") {
@@ -73,7 +75,7 @@ export const TemplatePreview: React.FC<TemplatePreviewProps> = ({ components, im
                         return (
                             <Typography
                                 key={index}
-                                color="#fff"
+                                color="text.secondary"
                                 sx={{
                                     whiteSpace: "pre-wrap",
                                     fontWeight: component.type == "HEADER" ? "bold" : undefined,
