@@ -155,7 +155,6 @@ export const WashimaPage: React.FC<WashimaProps> = ({}) => {
                             flexDirection: "column",
                             alignItems: "center",
                             padding: "2vw",
-                            bgcolor: darkMode ? "" : "background.default",
                         }}
                     >
                         <Box sx={{ alignItems: "center", gap: "1vw", color: "text.secondary", marginBottom: "1vw" }}>

@@ -6,12 +6,12 @@ export const default_colors: Theme = {
     timestamp: "",
     primary: "#00AFEF",
     secondary: "#ffffff",
-    terciary: "#1F1F1F",
+    terciary: "#99dff9",
     success: "#34A853",
     warning: "#ffb74d",
     background: {
         primary: "#ffffff",
-        // secondary: "#00AFEF",
+        secondary: "#aaaaaa25",
     },
     text: {
         primary: "#00AFEF",

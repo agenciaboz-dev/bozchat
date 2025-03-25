@@ -32,23 +32,17 @@ export const Header: React.FC<HeaderProps> = ({}) => {
                 justifyContent: "center",
                 alignItems: "center",
                 position: "relative",
-                backgroundColor: "background.default",
+                backgroundColor: darkMode ? "background.default" : "primary.main",
                 borderRadius: 0,
             }}
         >
-            <IconButton sx={{ position: "absolute", left: "2vw" }} onClick={() => menu.drawer.handlers.toggle()}>
+            <IconButton sx={{ position: "absolute", left: "2vw", color: "white" }} onClick={() => menu.drawer.handlers.toggle()}>
                 <MenuIcon />
             </IconButton>
             <img src="/wagazap.svg" style={{ width: isMobile ? "16vw" : "4vw", height: isMobile ? "16vw" : "4vw" }} draggable={false} />
             <ThemeSwitch />
             <IconButton sx={{ position: "absolute", right: "2vw" }} onClick={handleClickMenu}>
-                <Avatar
-                    sx={[
-                        { fontWeight: "bold" },
-                        darkMode ? { bgcolor: "secondary.main", color: "primary.main" } : { bgcolor: "primary.main", color: "secondary.main" },
-                    ]}
-                    imgProps={{ draggable: false }}
-                >
+                <Avatar sx={{ bgcolor: "secondary.main", color: "primary.main", fontWeight: "bold" }} imgProps={{ draggable: false }}>
                     {splitted_name.map((word) => word[0])}
                 </Avatar>
             </IconButton>

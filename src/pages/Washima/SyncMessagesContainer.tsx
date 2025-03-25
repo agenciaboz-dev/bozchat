@@ -45,7 +45,7 @@ export const SyncMessagesContainer: React.FC<SyncMessagesContainerProps> = ({ wa
             <LinearProgress variant="determinate" value={chat_progress_value} />
         </Box>
     ) : (
-        <Button variant="outlined" onClick={onSyncPress}>
+        <Button variant="outlined" onClick={onSyncPress} sx={{ fontWeight: "bold" }}>
             Sincronizar
         </Button>
     )

@@ -35,7 +35,7 @@ export const MenuButton: React.FC<MenuButtonProps> = ({ menu, sx }) => {
                 : active
                 ? menu.submenus
                     ? "text.secondary"
-                    : "background.paper"
+                    : "primary.main"
                 : "text.secondary",
             pointerEvents: active ? (menu.submenus ? "auto" : "none") : "auto",
             fontWeight: darkMode ? "bold" : active ? "bold" : "normal",

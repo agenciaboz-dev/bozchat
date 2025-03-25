@@ -203,7 +203,7 @@ export const WashimaFormPage: React.FC<WashimaFormPageProps> = ({ currentWashima
                             </>
                         )}
                         <Button
-                            style={{ flex: 1 }}
+                            style={{ flex: 1, color: "white" }}
                             variant="contained"
                             onClick={() => formik.handleSubmit()}
                             disabled={restarting || fetchingMessages}
@@ -218,7 +218,6 @@ export const WashimaFormPage: React.FC<WashimaFormPageProps> = ({ currentWashima
                 sx={{
                     flex: isMobile ? 1 : 0.5,
                     flexDirection: isMobile ? "row" : "column",
-                    bgcolor: darkMode ? "" : "background.default",
                     justifyContent: "center",
                     alignItems: currentWashima?.ready && isMobile ? "baseline" : "center",
                 }}
