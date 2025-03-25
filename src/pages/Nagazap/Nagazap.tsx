@@ -25,10 +25,12 @@ import { NagazapSettings } from "./NagazapSettings/NagazapSettings"
 import { OvenStatus } from "./Oven/OvenStatus"
 import { Results } from "./Results/Results"
 import { Templates } from "./Templates/Templates"
+import { useDarkMode } from "../../hooks/useDarkMode"
 
 interface NagazapProps {}
 
 export const NagazapScreen: React.FC<NagazapProps> = ({}) => {
+    const { darkMode } = useDarkMode()
     const io = useIo()
     const { company, user } = useUser()
     const navigate = useNavigate()
@@ -125,7 +127,7 @@ export const NagazapScreen: React.FC<NagazapProps> = ({}) => {
                             >
                                 <Box sx={{ padding: isMobile ? "2vw" : "0 2vw", paddingBottom: isMobile ? 0 : undefined }}>
                                     <TextField
-                                        sx={textFieldStyle}
+                                        sx={textFieldStyle({ darkMode })}
                                         select
                                         value={nagazap?.id || ""}
                                         label="Selecione uma conta"

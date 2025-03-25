@@ -6,6 +6,7 @@ import { MediaListItem } from "./MediaListItem"
 import { Washima, WashimaMediaForm } from "../../../types/server/class/Washima/Washima"
 import { file2base64 } from "../../../tools/toBase64"
 import { useIo } from "../../../hooks/useIo"
+import { useDarkMode } from "../../../hooks/useDarkMode"
 
 interface PhotoVideoConfirmationModalProps {
     files: File[]
@@ -17,6 +18,8 @@ interface PhotoVideoConfirmationModalProps {
 }
 
 export const PhotoVideoConfirmationModal: React.FC<PhotoVideoConfirmationModalProps> = ({ files, onCancel, isOpen, washima, chat_id, onDelete }) => {
+    const { darkMode } = useDarkMode()
+
     const io = useIo()
 
     const [currentFile, setCurrentFile] = useState(files ? files[0] : null)
@@ -119,7 +122,7 @@ export const PhotoVideoConfirmationModal: React.FC<PhotoVideoConfirmationModalPr
                 placeholder="Insira uma legenda"
                 value={caption}
                 onChange={(ev) => setCaption(ev.target.value)}
-                // sx={textFieldStyle}
+                // sx={textFieldStyle({ darkMode })}
                 autoComplete="off"
                 InputProps={{
                     sx: { color: "primary.main", bgcolor: "background.default", paddingLeft: "0", paddingRight: "0" },

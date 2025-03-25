@@ -8,6 +8,7 @@ import { Key, Visibility, VisibilityOff } from "@mui/icons-material"
 import { api } from "../../api"
 import { useConfirmDialog } from "burgos-confirm"
 import { useSnackbar } from "burgos-snackbar"
+import { useDarkMode } from "../../hooks/useDarkMode"
 
 interface UserFormProps {
     loading?: boolean
@@ -15,6 +16,7 @@ interface UserFormProps {
 }
 
 export const UserForm: React.FC<UserFormProps> = (props) => {
+    const { darkMode } = useDarkMode()
     const { company, user } = useUser()
     const { confirm } = useConfirmDialog()
     const { snackbar } = useSnackbar()
@@ -54,14 +56,28 @@ export const UserForm: React.FC<UserFormProps> = (props) => {
     return (
         <Box sx={{ flexDirection: "column", flex: 1, gap: "1vw", padding: "1vw" }}>
             <form onSubmit={formik.handleSubmit}>
-                <TextField required value={formik.values.name} onChange={formik.handleChange} name="name" label="Nome" sx={textFieldStyle} />
-                <TextField required value={formik.values.email} onChange={formik.handleChange} name="email" label="E-mail" sx={textFieldStyle} />
+                <TextField
+                    required
+                    value={formik.values.name}
+                    onChange={formik.handleChange}
+                    name="name"
+                    label="Nome"
+                    sx={textFieldStyle({ darkMode })}
+                />
+                <TextField
+                    required
+                    value={formik.values.email}
+                    onChange={formik.handleChange}
+                    name="email"
+                    label="E-mail"
+                    sx={textFieldStyle({ darkMode })}
+                />
                 <TextField
                     value={formik.values.password}
                     onChange={formik.handleChange}
                     name="password"
                     label="Senha"
-                    sx={{ ...textFieldStyle }}
+                    sx={{ ...textFieldStyle({ darkMode }) }}
                     autoComplete="off"
                     required
                     type={showPassword ? "text" : "password"}

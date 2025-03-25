@@ -8,6 +8,7 @@ import { file2base64 } from "../../../tools/toBase64"
 import { useIo } from "../../../hooks/useIo"
 import { Center } from "@mantine/core"
 import { documentIcon } from "../../../tools/documentIcon"
+import { useDarkMode } from "../../../hooks/useDarkMode"
 
 interface ConfirmationModalProps {
     files: File[]
@@ -19,6 +20,8 @@ interface ConfirmationModalProps {
 }
 
 export const DocumentConfirmationModal: React.FC<ConfirmationModalProps> = ({ files, onCancel, isOpen, washima, chat_id, onDelete }) => {
+    const { darkMode } = useDarkMode()
+
     const io = useIo()
 
     const [currentFile, setCurrentFile] = useState(files ? files[0] : null)
@@ -144,7 +147,7 @@ export const DocumentConfirmationModal: React.FC<ConfirmationModalProps> = ({ fi
                 placeholder="Insira uma legenda"
                 value={caption}
                 onChange={(ev) => setCaption(ev.target.value)}
-                // sx={textFieldStyle}
+                // sx={textFieldStyle({ darkMode })}
                 autoComplete="off"
                 InputProps={{
                     sx: { color: "primary.main", bgcolor: "background.default", paddingLeft: "0", paddingRight: "0" },

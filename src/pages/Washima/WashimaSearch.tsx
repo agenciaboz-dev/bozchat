@@ -4,12 +4,15 @@ import { textFieldStyle } from "../../style/textfield"
 import { Close, Search } from "@mui/icons-material"
 import { string } from "yup"
 import { FormikErrors, FormikTouched } from "formik"
+import { useDarkMode } from "../../hooks/useDarkMode"
 
 interface WashimaSearchProps {
     handleSearch: (value: string) => void
 }
 
 export const WashimaSearch: React.FC<WashimaSearchProps> = ({ handleSearch }) => {
+    const { darkMode } = useDarkMode()
+
     const [value, setValue] = useState("")
 
     const onChange = (text: string) => {
@@ -24,7 +27,7 @@ export const WashimaSearch: React.FC<WashimaSearchProps> = ({ handleSearch }) =>
 
     return (
         <TextField
-            sx={textFieldStyle}
+            sx={textFieldStyle({ darkMode })}
             value={value}
             onChange={(ev) => onChange(ev.target.value)}
             placeholder="Pesquisar chat ou mensagem"

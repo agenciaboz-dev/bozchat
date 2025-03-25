@@ -11,6 +11,7 @@ import { useWashimaInput } from "../../hooks/useWashimaInput"
 import { Close, Forward, Reply } from "@mui/icons-material"
 import { QuotedMessage } from "./QuotedMessage"
 import { WashimaMessage } from "../../types/server/class/Washima/WashimaMessage"
+import { useDarkMode } from "../../hooks/useDarkMode"
 
 interface WashimaInputProps {
     onSubmit: (message?: string, media?: WashimaMediaForm) => void
@@ -22,6 +23,7 @@ interface WashimaInputProps {
 }
 
 export const WashimaInput: React.FC<WashimaInputProps> = ({ onSubmit, disabled, washima, chat_id, selectedMessages, onForwardPress }) => {
+    const { darkMode } = useDarkMode()
     const io = useIo()
     const inputHelper = useWashimaInput()
     const inputRef = useRef<HTMLInputElement>(null)
@@ -95,7 +97,7 @@ export const WashimaInput: React.FC<WashimaInputProps> = ({ onSubmit, disabled, 
                 }
                 disabled={textDisabled}
                 onChange={(ev) => setMessage(ev.target.value)}
-                sx={textFieldStyle}
+                sx={textFieldStyle({ darkMode })}
                 autoComplete="off"
                 InputProps={{
                     readOnly: is_forwarding,

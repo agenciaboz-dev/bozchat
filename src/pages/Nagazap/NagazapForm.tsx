@@ -9,6 +9,7 @@ import { api } from "../../api"
 import { AxiosError } from "axios"
 import { HandledError } from "../../types/server/class/HandledError"
 import { ArrowBack, Refresh } from "@mui/icons-material"
+import { useDarkMode } from "../../hooks/useDarkMode"
 
 interface NagazapFormProps {
     onSuccess: (nagazap: Nagazap) => void
@@ -16,6 +17,7 @@ interface NagazapFormProps {
 }
 
 export const NagazapForm: React.FC<NagazapFormProps> = ({ onSuccess, setShowInformations }) => {
+    const { darkMode } = useDarkMode()
     const { company, user } = useUser()
     const theme = useTheme()
     const isMobile = useMediaQuery("(orientation: portrait)")
@@ -84,7 +86,7 @@ export const NagazapForm: React.FC<NagazapFormProps> = ({ onSuccess, setShowInfo
                                 name="businessId"
                                 value={formik.values.businessId}
                                 onChange={formik.handleChange}
-                                sx={textFieldStyle}
+                                sx={textFieldStyle({ darkMode })}
                                 required
                                 error={!!error}
                             />
@@ -95,7 +97,7 @@ export const NagazapForm: React.FC<NagazapFormProps> = ({ onSuccess, setShowInfo
                                 name="appId"
                                 value={formik.values.appId}
                                 onChange={formik.handleChange}
-                                sx={textFieldStyle}
+                                sx={textFieldStyle({ darkMode })}
                                 required
                                 error={!!error}
                             />
@@ -106,7 +108,7 @@ export const NagazapForm: React.FC<NagazapFormProps> = ({ onSuccess, setShowInfo
                                 name="phoneId"
                                 value={formik.values.phoneId}
                                 onChange={formik.handleChange}
-                                sx={textFieldStyle}
+                                sx={textFieldStyle({ darkMode })}
                                 required
                                 error={!!error}
                             />
@@ -117,7 +119,7 @@ export const NagazapForm: React.FC<NagazapFormProps> = ({ onSuccess, setShowInfo
                         name="token"
                         value={formik.values.token}
                         onChange={formik.handleChange}
-                        sx={textFieldStyle}
+                        sx={textFieldStyle({ darkMode })}
                         required
                         error={!!error}
                         helperText={error}

@@ -22,6 +22,7 @@ import { DeletedMessage } from "./DeletedMessage"
 import { MessageAuthor } from "./MessageAuthor"
 import { MessageMenu } from "./MessageMenu"
 import { QuotedMessage } from "../Washima/QuotedMessage"
+import { useDarkMode } from "../../hooks/useDarkMode"
 
 interface MessageProps {
     washima: Washima
@@ -45,6 +46,9 @@ export const Message: React.ForwardRefRenderFunction<HTMLDivElement, MessageProp
     }, {})
     const isMobile = useMediaQuery("(orientation: portrait)")
     const theme = useMuiTheme()
+    const { darkMode } = useDarkMode()
+    const lightModePrimary = "#99dff9"
+    const lightModeSecondary = "#D9D9D9"
     const primary = "#0f6787"
     const secondary = "#5e5e5e"
 
@@ -197,7 +201,15 @@ export const Message: React.ForwardRefRenderFunction<HTMLDivElement, MessageProp
                             borderRadius: isMobile ? "3vw" : "0.75vw",
                             borderTopRightRadius: show_triangle && from_me ? "0" : undefined,
                             borderTopLeftRadius: show_triangle && !from_me ? "0" : undefined,
-                            bgcolor: is_sticker ? "transparent" : from_me ? primary : secondary,
+                            bgcolor: is_sticker
+                                ? "transparent"
+                                : from_me
+                                ? darkMode
+                                    ? primary
+                                    : lightModePrimary
+                                : darkMode
+                                ? secondary
+                                : lightModeSecondary,
                             marginTop: !same_as_previous && !day_changing ? (isMobile ? "2vw" : "0.5vw") : undefined,
                             gap: is_sticker ? "0.2vw" : undefined,
                             opacity: is_deleted ? 0.3 : undefined,
@@ -206,7 +218,17 @@ export const Message: React.ForwardRefRenderFunction<HTMLDivElement, MessageProp
                     >
                         {show_triangle && (
                             <TrianguloFudido
-                                color={is_sticker ? "transparent" : from_me ? primary : secondary}
+                                color={
+                                    is_sticker
+                                        ? "transparent"
+                                        : from_me
+                                        ? darkMode
+                                            ? primary
+                                            : lightModePrimary
+                                        : darkMode
+                                        ? secondary
+                                        : lightModeSecondary
+                                }
                                 alignment={from_me ? "right" : "left"}
                             />
                         )}

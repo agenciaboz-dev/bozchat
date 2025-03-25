@@ -7,6 +7,7 @@ import { useSnackbar } from "burgos-snackbar"
 import { textFieldStyle } from "../../style/textfield"
 import { User } from "../../types/server/class/User"
 import { Board, BoardForm } from "../../types/server/class/Board/Board"
+import { useDarkMode } from "../../hooks/useDarkMode"
 
 interface BoardFormComponentProps {
     onSubmit: (board: Board) => void
@@ -14,6 +15,7 @@ interface BoardFormComponentProps {
 }
 
 export const BoardFormComponent: React.FC<BoardFormComponentProps> = (props) => {
+    const { darkMode } = useDarkMode()
     const { company, user } = useUser()
     const { snackbar } = useSnackbar()
 
@@ -41,11 +43,17 @@ export const BoardFormComponent: React.FC<BoardFormComponentProps> = (props) => 
         },
     })
 
-
     return (
         <Box sx={{ flexDirection: "column", flex: 1, gap: "1vw", padding: "1vw" }}>
             <form onSubmit={formik.handleSubmit}>
-                <TextField required value={formik.values.name} onChange={formik.handleChange} name="name" label="Nome" sx={textFieldStyle} />
+                <TextField
+                    required
+                    value={formik.values.name}
+                    onChange={formik.handleChange}
+                    name="name"
+                    label="Nome"
+                    sx={textFieldStyle({ darkMode })}
+                />
 
                 <Box sx={{ gap: "1vw", flexDirection: "row-reverse" }}>
                     <Button

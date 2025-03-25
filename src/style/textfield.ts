@@ -1,6 +1,10 @@
 import { SxProps } from "@mui/material"
 import colors from "./colors"
 
+interface StyleProps {
+    darkMode?: boolean
+}
+
 export const webkitbg = {
     "& .MuiInputBase-input.MuiOutlinedInput-input:-webkit-autofill": {
         "-webkit-box-shadow": ` 0 0 0 100px ${colors.background.primary} inset`,
@@ -8,7 +12,7 @@ export const webkitbg = {
     },
 }
 
-export const textFieldStyle: SxProps = {
+export const textFieldStyle = ({ darkMode = true }: StyleProps): SxProps => ({
     ...webkitbg,
     "& .MuiInputLabel-root": {
         color: "grey",
@@ -57,7 +61,11 @@ export const textFieldStyle: SxProps = {
             fontSize: "4vw",
         },
     },
-}
+    "& .MuiInputBase-input::placeholder": {
+        // color: "text.primary",
+        opacity: darkMode ? 0.5 : 1,
+    },
+})
 
 export const textAreaField: SxProps = {
     "& .MuiInputLabel-root": {

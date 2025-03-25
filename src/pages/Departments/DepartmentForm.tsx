@@ -7,6 +7,7 @@ import { useUser } from "../../hooks/useUser"
 import { useSnackbar } from "burgos-snackbar"
 import { textFieldStyle } from "../../style/textfield"
 import { User } from "../../types/server/class/User"
+import { useDarkMode } from "../../hooks/useDarkMode"
 
 interface DepartmentFormComponentProps {
     onSubmit: (department: Department) => void
@@ -14,6 +15,7 @@ interface DepartmentFormComponentProps {
 }
 
 export const DepartmentFormComponent: React.FC<DepartmentFormComponentProps> = (props) => {
+    const { darkMode } = useDarkMode()
     const { company, user } = useUser()
     const { snackbar } = useSnackbar()
 
@@ -42,22 +44,28 @@ export const DepartmentFormComponent: React.FC<DepartmentFormComponentProps> = (
         },
     })
 
-
     return (
         <Box sx={{ flexDirection: "column", flex: 1, gap: "1vw", padding: "1vw" }}>
             <form onSubmit={formik.handleSubmit}>
-                <TextField required value={formik.values.name} onChange={formik.handleChange} name="name" label="Nome" sx={textFieldStyle} />
+                <TextField
+                    required
+                    value={formik.values.name}
+                    onChange={formik.handleChange}
+                    name="name"
+                    label="Nome"
+                    sx={textFieldStyle({ darkMode })}
+                />
 
                 <Autocomplete
                     options={props.users}
-                    renderInput={(params) => <TextField {...params} label="Usuários" sx={textFieldStyle}  />}
+                    renderInput={(params) => <TextField {...params} label="Usuários" sx={textFieldStyle({ darkMode })} />}
                     getOptionLabel={(option) => option.name}
                     value={formik.values.users}
                     multiple
-                    onChange={(_, users) => formik.setFieldValue('users', users)}
+                    onChange={(_, users) => formik.setFieldValue("users", users)}
                     disableCloseOnSelect
-                    ChipProps={{ size: 'small', color: 'primary' }}
-                    ListboxProps={{sx: {width: '100%', bgcolor: 'background.default'}}}
+                    ChipProps={{ size: "small", color: "primary" }}
+                    ListboxProps={{ sx: { width: "100%", bgcolor: "background.default" } }}
                 />
 
                 <Box sx={{ gap: "1vw", flexDirection: "row-reverse" }}>
