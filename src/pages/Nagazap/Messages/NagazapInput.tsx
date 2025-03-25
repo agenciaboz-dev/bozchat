@@ -5,6 +5,7 @@ import { Nagazap, NagazapResponseForm } from "../../../types/server/class/Nagaza
 import { useIo } from "../../../hooks/useIo"
 import { textFieldStyle } from "../../../style/textfield"
 import { Send } from "@mui/icons-material"
+import { useDarkMode } from "../../../hooks/useDarkMode"
 
 interface NagazapInputProps {
     chat: NagaChat
@@ -12,6 +13,7 @@ interface NagazapInputProps {
 }
 
 export const NagazapInput: React.FC<NagazapInputProps> = ({ chat, nagazap }) => {
+    const { darkMode } = useDarkMode()
     const io = useIo()
 
     const can_respond = useMemo(() => {
@@ -54,7 +56,7 @@ export const NagazapInput: React.FC<NagazapInputProps> = ({ chat, nagazap }) => 
                 disabled={!can_respond}
                 onChange={(ev) => setText(ev.target.value)}
                 sx={{
-                    ...textFieldStyle,
+                    ...textFieldStyle({ darkMode }),
                     input: !can_respond
                         ? {
                               "&::placeholder": {

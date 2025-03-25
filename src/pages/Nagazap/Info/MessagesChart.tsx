@@ -45,7 +45,7 @@ export const MessagesChart: React.FC<MessagesChartProps> = ({ messages }) => {
         >
             <Box
                 sx={{
-                    color: "secondary.main",
+                    color: "text.secondary",
                     fontWeight: "bold",
                     paddingLeft: "2vw",
                 }}

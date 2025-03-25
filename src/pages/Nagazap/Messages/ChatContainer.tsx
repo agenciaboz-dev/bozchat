@@ -19,7 +19,7 @@ export const ChatContainer: React.FC<ChatContainerProps> = ({ chat, onClose, nag
 
     return (
         <Paper
-            elevation={15}
+            elevation={5}
             sx={{
                 flex: 1,
                 // justifyContent: isMobile ? "flex-end" : "center",
@@ -44,7 +44,7 @@ export const ChatContainer: React.FC<ChatContainerProps> = ({ chat, onClose, nag
             >
                 <MessageAuthor author={chat.name + " - " + chat.from} />
                 <Box sx={{ marginLeft: "auto" }}>
-                    <IconButton sx={{ color: "white", padding: isMobile ? "0" : "" }} onClick={onClose}>
+                    <IconButton sx={{ color: "text.secondary", padding: isMobile ? "0" : "" }} onClick={onClose}>
                         <Cancel />
                     </IconButton>
                 </Box>

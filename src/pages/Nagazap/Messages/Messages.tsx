@@ -9,6 +9,8 @@ import { NagaChat } from "../../../types/NagaChat"
 import { ChatItem } from "./ChatItem"
 import { ChatContainer } from "./ChatContainer"
 import { useUser } from "../../../hooks/useUser"
+import { textFieldStyle } from "../../../style/textfield"
+import { useDarkMode } from "../../../hooks/useDarkMode"
 
 interface MessagesScreenProps {
     nagazap: Nagazap
@@ -16,9 +18,10 @@ interface MessagesScreenProps {
 }
 
 export const MessagesScreen: React.FC<MessagesScreenProps> = ({ nagazap, setShowInformations }) => {
+    const { darkMode } = useDarkMode()
     const io = useIo()
     const isMobile = useMediaQuery("(orientation: portrait)")
-    const {user} = useUser()
+    const { user } = useUser()
 
     const [loading, setLoading] = useState(false)
     const [messages, setMessages] = useState<NagaMessage[]>([])
@@ -142,6 +145,7 @@ export const MessagesScreen: React.FC<MessagesScreenProps> = ({ nagazap, setShow
                         label="Buscar mensagens"
                         InputProps={{ startAdornment: <Search />, sx: { gap: "0.5vw" } }}
                         onChange={(ev) => debouncedSearch(ev.target.value)}
+                        sx={textFieldStyle({ darkMode })}
                     />
                     <Box
                         sx={{

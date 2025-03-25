@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react"
-import { Box, useMediaQuery, useTheme } from "@mui/material"
+import { Box, useMediaQuery } from "@mui/material"
 import Inputmask from "inputmask"
 import { washima_colors } from "../../style/colors"
 
@@ -21,13 +21,11 @@ export const getAuthorName = (author?: string | null) => {
                   author_split[1].length === 10 ? "55" + author_split[1] : author_split[1]
               )
             : ""
-    return {author_name, author_phone}
+    return { author_name, author_phone }
 }
 
 export const MessageAuthor: React.FC<MessageAuthorProps> = ({ author, small }) => {
     const isMobile = useMediaQuery("(orientation: portrait)")
-
-    const theme = useTheme()
 
     const { author_name, author_phone } = getAuthorName(author)
 
@@ -60,7 +58,7 @@ export const MessageAuthor: React.FC<MessageAuthorProps> = ({ author, small }) =
                 {!!author_phone && "~ "}
                 {author_name}
             </Box>
-            <Box sx={{ color: theme.palette.secondary.dark, fontSize: "0.7rem" }}>{author_phone}</Box>
+            <Box sx={{ color: "text.secondary", fontSize: "0.7rem" }}>{author_phone}</Box>
         </Box>
     )
 }

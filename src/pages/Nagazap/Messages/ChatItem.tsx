@@ -5,6 +5,8 @@ import { MessageAuthor } from "../../Zap/MessageAuthor"
 import { AudioPlayer } from "../../Washima/AudioComponents/AudioPlayer"
 import { useFormatMessageTime } from "../../../hooks/useFormatMessageTime"
 import { TrianguloFudido } from "../../Zap/TrianguloFudido"
+import { useDarkMode } from "../../../hooks/useDarkMode"
+import colors, { default_colors } from "../../../style/colors"
 
 interface ChatItemProps {
     chat: NagaChat
@@ -14,12 +16,13 @@ interface ChatItemProps {
 
 export const ChatItem: React.FC<ChatItemProps> = ({ chat, onChatClick, active }) => {
     const isMobile = useMediaQuery("(orientation: portrait)")
+    const { darkMode } = useDarkMode()
     const formatTime = useFormatMessageTime()
 
     return (
         <MenuItem sx={{ padding: 0, margin: 0, whiteSpace: "normal", borderRadius: "0.5vw" }} onClick={() => onChatClick(chat)}>
             <Paper
-                elevation={active ? 15 : undefined}
+                elevation={active ? 5 : undefined}
                 sx={{
                     flexDirection: "column",
                     gap: isMobile ? "2vw" : "0.5vw",
@@ -29,6 +32,7 @@ export const ChatItem: React.FC<ChatItemProps> = ({ chat, onChatClick, active })
                     borderTopLeftRadius: 0,
                     color: "secondary.main",
                     flex: 1,
+                    border: active ? `1px solid ${colors.primary}` : undefined,
                 }}
             >
                 <MessageAuthor author={chat.name + " - " + chat.from} small />
@@ -78,11 +82,12 @@ export const ChatItem: React.FC<ChatItemProps> = ({ chat, onChatClick, active })
                                 : undefined,
                         right: "0.5vw",
                         bottom: "0.5vw",
+                        color: "text.secondary",
                     }}
                 >
                     {formatTime(new Date(Number(chat.lastMessage.timestamp)))}
                 </Box>
-                <TrianguloFudido alignment="left" color="#2a323c" />
+                {/* <TrianguloFudido alignment="left" color={darkMode ? "#2a323c" : "#aaaaaa25"} /> */}
             </Paper>
         </MenuItem>
     )

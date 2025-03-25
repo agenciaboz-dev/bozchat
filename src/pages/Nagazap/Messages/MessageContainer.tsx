@@ -7,6 +7,7 @@ import { TrianguloFudido } from "../../Zap/TrianguloFudido"
 import { PhotoView } from "react-photo-view"
 import { AudioPlayer } from "../../Washima/AudioComponents/AudioPlayer"
 import { MessageAuthor } from "../../Zap/MessageAuthor"
+import { useDarkMode } from "../../../hooks/useDarkMode"
 
 interface MessageContainerProps {
     message: NagaMessage
@@ -15,7 +16,10 @@ interface MessageContainerProps {
 
 export const MessageContainer: React.FC<MessageContainerProps> = ({ message, nagazap }) => {
     const isMobile = useMediaQuery("(orientation: portrait)")
+    const { darkMode } = useDarkMode()
     const formatTime = useFormatMessageTime()
+    const lightModePrimary = "#99dff9"
+    const lightModeSecondary = "#D9D9D9"
     const primary = "#0F6787"
     const secondary = "#2a323c"
 
@@ -38,7 +42,7 @@ export const MessageContainer: React.FC<MessageContainerProps> = ({ message, nag
                 minWidth: "5vw",
                 minHeight: "2vw",
                 alignSelf: from_me ? "flex-end" : undefined,
-                bgcolor: from_me ? primary : secondary,
+                bgcolor: from_me ? (darkMode ? primary : lightModePrimary) : darkMode ? secondary : lightModeSecondary,
             }}
         >
             {(message.type === "image" || message.type === "sticker") && (
@@ -89,7 +93,10 @@ export const MessageContainer: React.FC<MessageContainerProps> = ({ message, nag
             >
                 {new Date(Number(message.timestamp)).toLocaleTimeString("pt-br", { hour: "2-digit", minute: "2-digit" })}
             </Box>
-            <TrianguloFudido alignment={from_me ? "right" : "left"} color={from_me ? primary : secondary} />
+            <TrianguloFudido
+                alignment={from_me ? "right" : "left"}
+                color={from_me ? (darkMode ? primary : lightModePrimary) : darkMode ? secondary : lightModeSecondary}
+            />
         </Paper>
     )
 }

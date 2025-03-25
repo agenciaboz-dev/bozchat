@@ -50,7 +50,7 @@ export const Message: React.ForwardRefRenderFunction<HTMLDivElement, MessageProp
     const lightModePrimary = "#99dff9"
     const lightModeSecondary = "#D9D9D9"
     const primary = "#0f6787"
-    const secondary = "#5e5e5e"
+    const secondary = "#2a323c"
 
     const same_as_previous =
         !!previousItem && (message.author ? previousItem?.author === message.author : (previousItem as WashimaMessage).from === message.from)
