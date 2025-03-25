@@ -20,7 +20,7 @@ interface BoardSettingsModalProps {
 
 export const BoardSettingsModal: React.FC<BoardSettingsModalProps> = (props) => {
     const { company, user } = useUser()
-    const [washimas, setWashimas] = useFetchedData<Washima>("washimas")
+    const [washimas] = useFetchedData<Washima>("washimas")
 
     const [tab, setTab] = useState(0)
     const [loading, setLoading] = useState(false)
@@ -48,7 +48,7 @@ export const BoardSettingsModal: React.FC<BoardSettingsModalProps> = (props) => 
             open={props.open}
             onClose={props.onClose}
             PaperProps={{
-                sx: { maxWidth: "80vw", padding: "2vw", bgcolor: "background.default", flexDirection: "column", width: "50vw", height: "30vw" },
+                sx: { maxWidth: "80vw", padding: "2vw", bgcolor: "background.default", flexDirection: "column", width: "50vw" },
             }}
         >
             <Title2
@@ -61,10 +61,11 @@ export const BoardSettingsModal: React.FC<BoardSettingsModalProps> = (props) => 
             />
             <Tabs value={tab} onChange={(_, value) => setTab(value)} variant="fullWidth">
                 <Tab label="Business" value={0} />
-                <Tab label="Acesso" value={1} />
+                <Tab label="Broadcast" value={1} />
+                <Tab label="Acesso" value={2} />
             </Tabs>
 
-            <Box sx={{ paddingTop: "1vw" }}>
+            <Box sx={{ paddingTop: "1vw", height: "30vw", overflow: "auto", flexDirection: "column" }}>
                 {tab === 0 && (
                     <BusinessTab
                         board={props.board}
@@ -73,13 +74,12 @@ export const BoardSettingsModal: React.FC<BoardSettingsModalProps> = (props) => 
                         setSelectedWashimas={setSelectedWashimas}
                     />
                 )}
-                {tab === 1 && <AccessTab />}
-            </Box>
-
-            <Box sx={{ marginTop: "auto", justifyContent: "flex-end" }}>
-                <Button variant="contained" onClick={() => onSaveClick()}>
-                    {loading ? <CircularProgress size={"1.5rem"} color="secondary" /> : "Salvar"}
-                </Button>
+                {tab === 2 && <AccessTab />}
+                <Box sx={{ marginTop: "auto", justifyContent: "flex-end" }}>
+                    <Button variant="contained" onClick={() => onSaveClick()}>
+                        {loading ? <CircularProgress size={"1.5rem"} color="secondary" /> : "Salvar"}
+                    </Button>
+                </Box>
             </Box>
         </Dialog>
     )

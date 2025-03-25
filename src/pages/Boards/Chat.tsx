@@ -1,8 +1,10 @@
-import React, { useState } from "react"
+import React, { useEffect, useState } from "react"
 import { Avatar, Box, IconButton, Paper, Typography } from "@mui/material"
 import { Chat } from "../../types/server/class/Board/Chat"
 import { Draggable } from "@hello-pangea/dnd"
 import { MoreHoriz, Send } from "@mui/icons-material"
+import { api } from "../../api"
+import { MediaChip } from "../../components/MediaChip"
 
 interface BoardChatProps {
     chat: Chat
@@ -11,6 +13,32 @@ interface BoardChatProps {
 
 export const BoardChat: React.FC<BoardChatProps> = (props) => {
     const [menuAnchorEl, setMenuAnchorEl] = useState<HTMLElement | null>(null)
+    const [mediaMetaData, setMediaMetaData] = useState<{
+        mimetype: string | undefined
+        filename: string | undefined
+        message_id: string
+    }>()
+
+    const fetchMediaMetadata = async () => {
+        try {
+            const response = await api.get("/washima/media-metadata", {
+                params: { washima_id: props.chat.washima_id, message_id: props.chat.last_message.sid },
+            })
+            setMediaMetaData(response.data)
+        } catch (error) {
+            console.log(error)
+        }
+    }
+
+    useEffect(() => {
+        if (props.chat.last_message?.hasMedia) {
+            fetchMediaMetadata()
+        }
+    }, [])
+
+    useEffect(() => {
+        console.log(mediaMetaData)
+    }, [mediaMetaData])
 
     return (
         <Draggable draggableId={props.chat.id} index={props.index}>
@@ -48,18 +76,19 @@ export const BoardChat: React.FC<BoardChatProps> = (props) => {
 
                     <hr />
 
-                    <Box sx={{ alignItems: "center", justifyContent: 'space-between' }}>
+                    <Box sx={{ alignItems: "center", justifyContent: "space-between" }}>
                         <Typography
                             sx={{
                                 width: "18vw",
                                 overflow: "hidden",
                                 display: "-webkit-box",
-                                WebkitLineClamp: 2, 
-                                WebkitBoxOrient: "vertical", 
+                                WebkitLineClamp: 2,
+                                WebkitBoxOrient: "vertical",
                                 textOverflow: "ellipsis",
                             }}
                         >
                             {props.chat.last_message.body}
+                            {props.chat.last_message.hasMedia && mediaMetaData?.mimetype && <MediaChip mimetype={mediaMetaData.mimetype} />}
                         </Typography>
                         <IconButton onClick={(ev) => setMenuAnchorEl(ev.currentTarget)}>
                             <Send />

@@ -1,5 +1,5 @@
 import React, { useEffect, useMemo, useRef, useState } from "react"
-import { IconButton, Menu, MenuItem, Paper } from "@mui/material"
+import { Badge, Box, IconButton, Menu, MenuItem, Paper } from "@mui/material"
 import { useSnackbar } from "burgos-snackbar"
 import { useUser } from "../../hooks/useUser"
 import {
@@ -14,11 +14,11 @@ import {
     MuiBaseEvent,
     MuiEvent,
 } from "@mui/x-data-grid"
-import { MoreHoriz } from "@mui/icons-material"
+import { Hub, MoreHoriz, WhatsApp } from "@mui/icons-material"
 import { User } from "../../types/server/class/User"
 import { Board } from "../../types/server/class/Board/Board"
 import { WithoutFunctions } from "../../types/server/class/helpers"
-import {  useNavigate } from "react-router-dom"
+import { useNavigate } from "react-router-dom"
 import { slugify } from "../../tools/normalize"
 
 interface BoardsTableProps {
@@ -39,8 +39,8 @@ interface BoardsTableProps {
 interface CustomRow extends WithoutFunctions<Board> {
     chats: number
     roomsCount: number
-    businessSync: boolean
     unreadCount: number
+    syncsCount: { washima: number; nagazap: number }
 }
 
 export const BoardsTable: React.FC<BoardsTableProps> = (props) => {
@@ -69,7 +69,7 @@ export const BoardsTable: React.FC<BoardsTableProps> = (props) => {
                 ...board,
                 roomsCount: board.rooms.length,
                 chats: board.rooms.reduce((total, room) => (total += room.chats.length), 0),
-                businessSync: board.receive_washima_message.length > 0,
+                syncsCount: { washima: board.receive_washima_message.length, nagazap: 0 },
                 unreadCount: board.rooms.reduce((total, room) => (total += room.chats.filter((chat) => chat.unread_count > 0).length), 0),
             })),
         [props.boards]
@@ -77,16 +77,20 @@ export const BoardsTable: React.FC<BoardsTableProps> = (props) => {
 
     const columns: (GridColDef & { field: keyof CustomRow })[] = [
         {
-            field: "businessSync",
-            headerName: "Sincronizado",
-            flex: 0.04,
+            field: "syncsCount",
+            headerName: "Integração",
+            flex: 0.03,
             display: "flex",
             align: "center",
             renderCell: (params) => (
-                <Paper
-                    elevation={5}
-                    sx={{ width: "1vw", height: "1vw", bgcolor: params.value ? "success.main" : "error.main", borderRadius: "100%" }}
-                />
+                <Box sx={{ gap: "1vw" }}>
+                    <Badge badgeContent={params.value.washima} color="primary">
+                        <WhatsApp color={params.value.washima > 0 ? "success" : "disabled"} />
+                    </Badge>
+                    <Badge badgeContent={params.value.nagazap} color="primary">
+                        <Hub color={params.value.nagazap > 0 ? "success" : "disabled"} />
+                    </Badge>
+                </Box>
             ),
         },
         { field: "name", headerName: "Nome", flex: 0.1, editable: user?.admin },

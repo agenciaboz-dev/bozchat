@@ -13,6 +13,8 @@ import { useSnackbar } from "burgos-snackbar"
 import { Room } from "../../types/server/class/Board/Room"
 import { useUser } from "../../hooks/useUser"
 import { BoardSettingsModal } from "./BoardSettingsModal/BoardSettingsModal"
+import { useFetchedData } from "../../hooks/useFetchedData"
+import { Washima } from "../../types/server/class/Washima/Washima"
 
 interface BoardPageProps {
     board: WithoutFunctions<Board>
@@ -24,6 +26,7 @@ export const BoardPage: React.FC<BoardPageProps> = (props) => {
     const { snackbar } = useSnackbar()
     const { user } = useUser()
 
+    const [washimas] = useFetchedData<Washima>("washimas")
     const [board, setBoard] = useState(props.board)
     const [editMode, setEditMode] = useState(false)
     const [saving, setSaving] = useState(false)
@@ -135,6 +138,12 @@ export const BoardPage: React.FC<BoardPageProps> = (props) => {
                 rooms[defaultRoomIndex].chats = [...room.chats, ...rooms[defaultRoomIndex].chats]
             }
 
+            for (const [index, setting] of currentBoard.receive_washima_message.entries()) {
+                if (setting.room_id === room_id) {
+                    currentBoard.receive_washima_message[index].room_id = currentBoard.entry_room_id
+                }
+            }
+
             const board = { ...currentBoard, rooms }
             save(board)
 
@@ -202,6 +211,7 @@ export const BoardPage: React.FC<BoardPageProps> = (props) => {
                                     {(provided) => (
                                         <Box ref={provided.innerRef} {...provided.draggableProps} {...provided.dragHandleProps}>
                                             <BoardRoom
+                                                washimas={washimas}
                                                 room={room}
                                                 editMode={editMode}
                                                 updateRoom={updateRoom}

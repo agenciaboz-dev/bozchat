@@ -45,7 +45,14 @@ export const BusinessTab: React.FC<BusinessTabProps> = (props) => {
                     {syncedWashimas.map((washima) => {
                         const setting = props.selectedWashimas.find((item) => item.washima_id === washima.id)
                         return (
-                            <BusinessContainer washima={washima} key={washima.id} checked={!!setting} onChange={onWashimaClick} board={props.board} />
+                            <BusinessContainer
+                                washima={washima}
+                                key={washima.id}
+                                checked={!!setting}
+                                onChange={onWashimaClick}
+                                board={props.board}
+                                room={props.board.rooms.find((room) => room.id === setting?.room_id)}
+                            />
                         )
                     })}
                 </Box>
@@ -55,7 +62,16 @@ export const BusinessTab: React.FC<BusinessTabProps> = (props) => {
 
                 {remainingWashimas.map((washima) => {
                     const setting = props.selectedWashimas.find((item) => item.washima_id === washima.id)
-                    return <BusinessContainer washima={washima} key={washima.id} checked={!!setting} onChange={onWashimaClick} board={props.board} />
+                    return (
+                        <BusinessContainer
+                            washima={washima}
+                            key={washima.id}
+                            checked={!!setting}
+                            onChange={onWashimaClick}
+                            board={props.board}
+                            room={props.board.rooms.find((room) => room.id === setting?.room_id)}
+                        />
+                    )
                 })}
             </Box>
         </Box>

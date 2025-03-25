@@ -10,6 +10,7 @@ interface BusinessContainerProps {
     board: WithoutFunctions<Board>
     washima: Washima
     checked: boolean
+    room?: Room
     onChange: (washima_id: string, setting?: BoardWashimaSettings) => void
 }
 
@@ -17,7 +18,7 @@ export const BusinessContainer: React.FC<BusinessContainerProps> = (props) => {
     const { fetchWashimaProfilePic } = useApi()
 
     const [profilePic, setProfilePic] = useState<WashimaProfilePic | null>(null)
-    const [selectedRoom, setSelectedRoom] = useState(props.board.rooms[props.board.entry_room_index])
+    const [selectedRoom, setSelectedRoom] = useState(props.room || props.board.rooms[props.board.entry_room_index])
 
     const onChangeRoom = (room: Room) => {
         props.onChange(props.washima.id, props.checked ? { washima_id: props.washima.id, room_id: room.id } : undefined)

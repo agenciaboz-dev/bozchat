@@ -7,8 +7,9 @@ import { RoomNameInput } from "./RoomNameInput"
 import { Board } from "../../types/server/class/Board/Board"
 import { useSnackbar } from "burgos-snackbar"
 import { WithoutFunctions } from "../../types/server/class/helpers"
-import { More, MoreHoriz } from "@mui/icons-material"
+import { More, MoreHoriz, WhatsApp } from "@mui/icons-material"
 import { useConfirmDialog } from "burgos-confirm"
+import { Washima } from "../../types/server/class/Washima/Washima"
 
 interface KanbanColumnProps {
     room: Room
@@ -17,6 +18,7 @@ interface KanbanColumnProps {
     board: WithoutFunctions<Board>
     index: number
     deleteRoom: (room_id: string) => void
+    washimas: Washima[]
 }
 
 export const BoardRoom: React.FC<KanbanColumnProps> = (props) => {
@@ -42,7 +44,7 @@ export const BoardRoom: React.FC<KanbanColumnProps> = (props) => {
         confirm({
             title: "Deletar sala",
             content: `Tem certeza que deseja deletar essa sala? Essa ação é permanente e irreversível.
-            ${props.room.chats.length > 0 ? 'As conversas serão transferidas para a sala inicial do quadros' : ''}
+            ${props.room.chats.length > 0 ? "As conversas serão transferidas para a sala inicial do quadros" : ""}
             `,
             onConfirm: () => props.deleteRoom(props.room.id),
         })
@@ -52,12 +54,26 @@ export const BoardRoom: React.FC<KanbanColumnProps> = (props) => {
         setMenuAnchorEl(null)
     }
 
+    const syncedWashimas = props.board.receive_washima_message.map((setting) =>
+        setting.room_id === props.room.id ? (
+            <Chip
+                icon={<WhatsApp color="success" />}
+                label={props.washimas.find((washima) => washima.id === setting.washima_id)?.name}
+                size="small"
+                sx={{ color: "success.main" }}
+            />
+        ) : null
+    )
+
     return (
         <Paper sx={{ flexDirection: "column", width: "25vw", padding: "1vw", gap: "1vw", overflow: "auto", height: "74vh" }}>
             {props.editMode ? (
                 <Box sx={{ flexDirection: "column", marginBottom: "0.2vw" }}>
                     <Box sx={{ justifyContent: "space-between" }}>
-                        <Chip label={props.index + 1} />
+                        <Box sx={{ alignItems: "center", gap: "1vw", flexWrap: "wrap" }}>
+                            <Chip label={props.index + 1} color="primary" />
+                            {syncedWashimas}
+                        </Box>
                         <IconButton onClick={(ev) => setMenuAnchorEl(ev.currentTarget)}>
                             <MoreHoriz />
                         </IconButton>
@@ -65,9 +81,10 @@ export const BoardRoom: React.FC<KanbanColumnProps> = (props) => {
                     <RoomNameInput onSubmit={(name) => editRoomName(props.index, name)} currentName={props.room.name} />
                 </Box>
             ) : (
-                <Box sx={{ alignItems: "center", gap: "1vw" }}>
+                <Box sx={{ alignItems: "center", gap: "1vw", flexWrap: "wrap" }}>
                     <Typography sx={{ color: "secondary.main", fontWeight: "bold" }}>{props.room.name}</Typography>
                     <Chip label={`${props.room.chats.length}`} size="small" color="primary" />
+                    {syncedWashimas}
                 </Box>
             )}
 
