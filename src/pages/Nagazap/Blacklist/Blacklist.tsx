@@ -6,6 +6,7 @@ import { ArrowBack, DeleteForever, Refresh } from "@mui/icons-material"
 import { api } from "../../../api"
 import { useUser } from "../../../hooks/useUser"
 import { BlacklistLog } from "../../../types/server/Meta/WhatsappBusiness/Logs"
+import { useDarkMode } from "../../../hooks/useDarkMode"
 
 interface BlacklistProps {
     nagazap: Nagazap
@@ -16,6 +17,7 @@ interface BlacklistProps {
 export const Blacklist: React.FC<BlacklistProps> = ({ nagazap, setNagazap, setShowInformations }) => {
     const { company, user } = useUser()
     const isMobile = useMediaQuery("(orientation: portrait)")
+    const { darkMode } = useDarkMode()
 
     const [loading, setLoading] = useState(false)
     const [blacklist, setBlacklist] = useState<BlacklistLog[]>([])
@@ -64,7 +66,7 @@ export const Blacklist: React.FC<BlacklistProps> = ({ nagazap, setNagazap, setSh
                     }}
                     disabled={loading}
                 >
-                    {loading ? <CircularProgress size="1.5rem" color="secondary" /> : <Refresh />}
+                    {loading ? <CircularProgress size="1.5rem" color={darkMode ? "secondary" : "inherit"} /> : <Refresh />}
                 </IconButton>
             }
             left={

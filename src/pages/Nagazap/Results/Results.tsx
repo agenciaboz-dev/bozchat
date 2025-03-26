@@ -11,6 +11,7 @@ import { WagaLoading } from "../../../components/WagaLoading"
 import { WithoutFunctions } from "../../../types/server/class/helpers"
 import { useColors } from "../../../hooks/useColors"
 import { buildDetailedResult } from "./buildDetailedResult"
+import { useDarkMode } from "../../../hooks/useDarkMode"
 
 interface ResultsProps {
     nagazap: Nagazap
@@ -26,6 +27,7 @@ const CustomTooltip: React.FC<{
     setCurrentLink: React.Dispatch<React.SetStateAction<NagazapLink | null>>
     links: NagazapLink[]
 }> = (props) => {
+    const { darkMode } = useDarkMode()
     useEffect(() => {
         if (props.active) {
             const data_link = props.payload[0].payload as DataLink
@@ -42,13 +44,14 @@ const CustomTooltip: React.FC<{
             <Typography sx={{ fontWeight: "bold" }}>{props.label}</Typography>
             <Typography>Total de acessos: {props.payload[0].value}</Typography>
 
-            <Typography sx={{ fontSize: "0.7rem", opacity: 0.5 }}>Clique na barra para ver mais detalhes</Typography>
+            <Typography sx={{ fontSize: "0.75rem", opacity: darkMode ? 0.5 : 1 }}>Clique na barra para ver mais detalhes</Typography>
         </Paper>
     ) : null
 }
 
 export const Results: React.FC<ResultsProps> = ({ nagazap }) => {
     const isMobile = useMediaQuery("(orientation: portrait)")
+    const { darkMode } = useDarkMode()
     const colors = useColors()
 
     const [loading, setLoading] = useState(true)
@@ -90,7 +93,7 @@ export const Results: React.FC<ResultsProps> = ({ nagazap }) => {
             space={isMobile ? true : undefined}
             right={
                 <IconButton onClick={fetchLinks} disabled={loading}>
-                    {loading ? <CircularProgress size="1.5rem" color="secondary" /> : <Refresh />}
+                    {loading ? <CircularProgress size="1.5rem" color={darkMode ? "secondary" : "inherit"} /> : <Refresh />}
                 </IconButton>
             }
         >
@@ -136,7 +139,7 @@ export const Results: React.FC<ResultsProps> = ({ nagazap }) => {
                                     <XAxis dataKey={"template_name"} />
                                     <YAxis />
                                     <Tooltip
-                                        cursor={{ opacity: 0.05, fill: colors.secondary }}
+                                        cursor={{ opacity: darkMode ? 0.05 : 0.15, fill: darkMode ? colors.secondary : colors.terciary }}
                                         content={(props) => (
                                             <CustomTooltip
                                                 active={props.active}
