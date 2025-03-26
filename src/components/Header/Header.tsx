@@ -1,9 +1,9 @@
 import React from 'react'
-import { Avatar, Box, IconButton, Menu, MenuItem, Paper, useMediaQuery } from "@mui/material"
+import { Avatar, IconButton, Menu, MenuItem, Paper, useMediaQuery } from "@mui/material"
 import { Menu as MenuIcon } from "@mui/icons-material"
 import { useMenu } from "../../hooks/useMenu"
 import { useUser } from "../../hooks/useUser"
-import { CompanyCard } from './CompanyCard'
+import { CompanyCard } from "./CompanyCard"
 import { ThemeSwitch } from "../../pages/Settings/ThemeSwitch"
 import { useDarkMode } from "../../hooks/useDarkMode"
 
@@ -39,7 +39,7 @@ export const Header: React.FC<HeaderProps> = ({}) => {
             <IconButton sx={{ position: "absolute", left: "2vw", color: "white" }} onClick={() => menu.drawer.handlers.toggle()}>
                 <MenuIcon />
             </IconButton>
-            <img src="/wagazap.svg" style={{ width: isMobile ? "16vw" : "4vw", height: isMobile ? "16vw" : "4vw" }} draggable={false} />
+            <img src="/logos/negativos/1.png" style={{ width: isMobile ? "16vw" : "4vw", height: isMobile ? "16vw" : "4vw" }} draggable={false} />
             <ThemeSwitch />
             <IconButton sx={{ position: "absolute", right: "2vw" }} onClick={handleClickMenu}>
                 <Avatar sx={{ bgcolor: "secondary.main", color: "primary.main", fontWeight: "bold" }} imgProps={{ draggable: false }}>
