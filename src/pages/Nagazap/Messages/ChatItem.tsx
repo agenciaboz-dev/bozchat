@@ -32,7 +32,7 @@ export const ChatItem: React.FC<ChatItemProps> = ({ chat, onChatClick, active })
                     borderTopLeftRadius: 0,
                     color: "secondary.main",
                     flex: 1,
-                    border: active ? `1px solid ${colors.primary}` : undefined,
+                    backgroundColor: darkMode ? undefined : active ? "#d9d9d9" : undefined,
                 }}
             >
                 <MessageAuthor author={chat.name + " - " + chat.from} small />
@@ -87,7 +87,7 @@ export const ChatItem: React.FC<ChatItemProps> = ({ chat, onChatClick, active })
                 >
                     {formatTime(new Date(Number(chat.lastMessage.timestamp)))}
                 </Box>
-                {/* <TrianguloFudido alignment="left" color={darkMode ? "#2a323c" : "#aaaaaa25"} /> */}
+                <TrianguloFudido alignment="left" color={active ? (darkMode ? "#3a3a49" : "#d9d9d9") : darkMode ? "#2a323c" : "#e9e9e9"} />
             </Paper>
         </MenuItem>
     )
