@@ -1,5 +1,5 @@
 import React from "react"
-import { Box, Paper } from "@mui/material"
+import { Box, Paper, useMediaQuery } from "@mui/material"
 import { Title2 } from "../../components/Title"
 
 interface SubrouteProps {
@@ -12,6 +12,8 @@ interface SubrouteProps {
 }
 
 export const Subroute: React.FC<SubrouteProps> = ({ children, title, right, left, space, elevation }) => {
+    const isMobile = useMediaQuery("(orientation: portrait)")
+
     return (
         <Paper
             elevation={elevation}
@@ -21,7 +23,7 @@ export const Subroute: React.FC<SubrouteProps> = ({ children, title, right, left
                 padding: "2vw",
                 width: "99%",
                 bgcolor: "background.paper",
-                borderTopRightRadius: "2vw",
+                borderRadius: isMobile ? "2vw" : "0 4px 4px 0",
                 overflowY: "auto",
             }}
         >

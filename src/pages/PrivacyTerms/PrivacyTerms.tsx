@@ -9,7 +9,7 @@ export const PrivacyTerms: React.FC<PrivacyTermsProps> = ({}) => {
     return (
         <Box sx={backgroundStyle}>
             <Box sx={{ color: "secondary.main", flexDirection: "column", padding: "3vw", gap: "0.5vw" }}>
-                <img src={"/wagazap.svg"} style={{ width: isMobile ? "25vw" : "10vw", alignSelf: "center" }} draggable={false} />
+                <img src={"/logos/1.png"} style={{ width: isMobile ? "25vw" : "10vw", alignSelf: "center" }} draggable={false} />
                 <h1>Privacy Policy for Wagazap</h1>
                 <p>
                     <strong>Effective Date:</strong> November 8. 2024

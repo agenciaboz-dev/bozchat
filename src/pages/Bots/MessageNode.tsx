@@ -6,10 +6,12 @@ import { Handle, Position } from "@xyflow/react"
 import { TrianguloFudido } from "../Zap/TrianguloFudido"
 import { NodeModal } from "./NodeModal"
 import { FlowNode } from "../../types/server/class/Bot/Bot"
+import { useDarkMode } from "../../hooks/useDarkMode"
 
 interface MessageNodeProps extends FlowNode {}
 
 export const MessageNode: React.FC<MessageNodeProps> = (node) => {
+    const { darkMode } = useDarkMode()
     const [menuAnchor, setMenuAnchor] = useState<HTMLElement | null>(null)
     const [mouseOver, setMouseOver] = useState(false)
 
@@ -42,7 +44,7 @@ export const MessageNode: React.FC<MessageNodeProps> = (node) => {
             onMouseEnter={() => setMouseOver(true)}
             onMouseLeave={() => setMouseOver(false)}
         >
-            <TrianguloFudido alignment="right" color={"#287793"} />
+            <TrianguloFudido alignment="right" color={darkMode ? "#287793" : "#0f6787"} />
 
             {node.data.value ? (
                 <Typography

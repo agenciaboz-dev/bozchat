@@ -44,7 +44,7 @@ export const UserProvider: React.FC<UserProviderProps> = ({ children }) => {
                         title: data.title,
                         body: data.body,
                         audio_src: notification.audio_src,
-                        icon_url: "/logo.png",
+                        icon_url: "/logos/1.png",
                     })
                 })
             )

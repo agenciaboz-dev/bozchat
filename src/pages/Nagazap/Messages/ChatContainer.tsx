@@ -56,7 +56,7 @@ export const ChatContainer: React.FC<ChatContainerProps> = ({ chat, onClose, nag
                     height: "27vw",
                     bgcolor: "background.default",
                     overflowY: "scroll",
-                    borderRadius: isMobile ? "0 3vw 0 3vw" : "0 1.5vw 0 1.5vw",
+                    borderRadius: isMobile ? "2vw" : "4px",
                     padding: isMobile ? "4vw" : "2vw",
                     color: "text.secondary",
                     flexDirection: "column-reverse",
