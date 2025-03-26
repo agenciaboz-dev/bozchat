@@ -22,17 +22,17 @@ export interface Theme {
 
 export interface ThemeDB {
     id: number
-    name: stirng
-    primary: stirng
-    secondary: stirng
-    terciary: stirng
-    success: stirng
-    warning: stirng
-    background_primary: stirng
-    background_secondary: stirng
-    text_primary: stirng
-    text_secondary: stirng
-    text_terciary: stirng
-    timestamp: stirng
+    name: string
+    primary: string
+    secondary: string
+    terciary: string
+    success: string
+    warning: string
+    background_primary: string
+    background_secondary: string
+    text_primary: string
+    text_secondary: string
+    text_terciary: string
+    timestamp: string
     user: User
 }
