@@ -3,6 +3,7 @@ import { Box, Paper, useMediaQuery } from "@mui/material"
 import { WhatsappForm } from "../../../types/server/Meta/WhatsappBusiness/WhatsappForm"
 import { Nagazap } from "../../../types/server/class/Nagazap"
 import { Title2 } from "../../../components/Title"
+import { useDarkMode } from "../../../hooks/useDarkMode"
 
 interface BatchProps {
     batch: WhatsappForm[]
@@ -12,6 +13,8 @@ interface BatchProps {
 
 export const Batch: React.FC<BatchProps> = ({ batch, nagazap, index }) => {
     const isMobile = useMediaQuery("(orientation: portrait)")
+    const { darkMode } = useDarkMode()
+
     return nagazap ? (
         <Paper sx={{ flexDirection: "column", padding: "1vw", gap: "1vw", height: "100%", opacity: nagazap.paused ? 0.4 : 1 }}>
             <Title2
@@ -28,13 +31,13 @@ export const Batch: React.FC<BatchProps> = ({ batch, nagazap, index }) => {
 
             <Box sx={{ flexDirection: "column" }}>
                 {batch.map((message, index) => (
-                    <Box key={index + message.number} sx={{ color: "secondary.main", justifyContent: "space-between" }}>
+                    <Box key={index + message.number} sx={{ color: "text.secondary", justifyContent: "space-between" }}>
                         {message.number}
                         <Box
                             sx={{
-                                fontSize: isMobile ? "0.75rem" : "0.6rem",
+                                fontSize: "0.75rem",
                                 alignSelf: "flex-end",
-                                opacity: 0.5,
+                                opacity: darkMode ? 0.5 : 1,
                                 width: isMobile ? undefined : "7vw",
                                 overflow: "hidden",
                                 textOverflow: "ellipsis",

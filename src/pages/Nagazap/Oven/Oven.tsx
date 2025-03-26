@@ -9,6 +9,7 @@ import { Batch } from "./Batch"
 import { useIo } from "../../../hooks/useIo"
 import { useUser } from "../../../hooks/useUser"
 import { OvenStatus } from "./OvenStatus"
+import { useDarkMode } from "../../../hooks/useDarkMode"
 
 interface OvenProps {
     nagazap?: Nagazap
@@ -17,6 +18,8 @@ interface OvenProps {
 }
 
 export const Oven: React.FC<OvenProps> = ({ nagazap: initialNagazap, setNagazap: setInitialNagazap, setShowInformations }) => {
+    const { darkMode } = useDarkMode()
+
     function chunkArray<T>(array: T[], chunkSize: number): T[][] {
         const result: T[][] = []
         for (let i = 0; i < array.length; i += chunkSize) {
@@ -287,7 +290,7 @@ export const Oven: React.FC<OvenProps> = ({ nagazap: initialNagazap, setNagazap:
             {!batches.length && (
                 <Box
                     sx={{
-                        color: "secondary.main",
+                        color: darkMode ? "text.secondary" : "text.disabled",
                         justifyContent: "center",
                         alignItems: "center",
                         flex: 1,
@@ -295,7 +298,7 @@ export const Oven: React.FC<OvenProps> = ({ nagazap: initialNagazap, setNagazap:
                         fontSize: "2rem",
                     }}
                 >
-                    <Cake sx={{ width: "15vw", height: "auto" }} />o forno está vazio
+                    <Cake sx={{ width: "15vw", height: "auto" }} />O forno está vazio
                 </Box>
             )}
         </Subroute>
