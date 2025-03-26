@@ -20,9 +20,10 @@ interface WashimaInputProps {
     chat_id: string
     selectedMessages: WashimaMessage[]
     onForwardPress: () => void
+    inBoards?: boolean
 }
 
-export const WashimaInput: React.FC<WashimaInputProps> = ({ onSubmit, disabled, washima, chat_id, selectedMessages, onForwardPress }) => {
+export const WashimaInput: React.FC<WashimaInputProps> = ({ onSubmit, disabled, washima, chat_id, selectedMessages, onForwardPress, inBoards }) => {
     const { darkMode } = useDarkMode()
     const io = useIo()
     const inputHelper = useWashimaInput()
@@ -119,7 +120,12 @@ export const WashimaInput: React.FC<WashimaInputProps> = ({ onSubmit, disabled, 
                                     <SendIcon />
                                 </IconButton>
                             ) : (
-                                <RecordAudioContainer onSend={sendAudio} onRecordFinish={onRecordCancel} onRecordStart={onRecordStart} />
+                                <RecordAudioContainer
+                                    onSend={sendAudio}
+                                    onRecordFinish={onRecordCancel}
+                                    onRecordStart={onRecordStart}
+                                    inBoards={inBoards}
+                                />
                             )}
                         </Box>
                     ),

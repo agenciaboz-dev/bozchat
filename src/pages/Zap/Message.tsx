@@ -30,13 +30,15 @@ interface MessageProps {
     previousItem?: WashimaMessage | WashimaGroupUpdate
     isGroup?: boolean
     onVisible?: () => void
-    scrollTo: (sid: string) => void
-    selectedMessages: WashimaMessage[]
-    setSelectedMessages: React.Dispatch<React.SetStateAction<WashimaMessage[]>>
+    scrollTo?: (sid: string) => void
+    selectedMessages?: WashimaMessage[]
+    setSelectedMessages?: React.Dispatch<React.SetStateAction<WashimaMessage[]>>
+    inBoards?: boolean
+    noActions?: boolean
 }
 
 export const Message: React.ForwardRefRenderFunction<HTMLDivElement, MessageProps> = (
-    { message, isGroup, washima, previousItem, onVisible, scrollTo, selectedMessages, setSelectedMessages },
+    { message, isGroup, washima, previousItem, onVisible, scrollTo, selectedMessages, setSelectedMessages, inBoards, noActions },
     ref
 ) => {
     const visibleCallbackRef = useVisibleCallback(() => {
@@ -67,8 +69,8 @@ export const Message: React.ForwardRefRenderFunction<HTMLDivElement, MessageProp
     const [hovering, setHovering] = useState(false)
     const [componentIsOnScreen, setComponentIsOnScreen] = useState(false)
 
-    const is_selected = useMemo(() => !!selectedMessages.find((item) => item.sid === message.sid), [selectedMessages])
-    const is_selecting = useMemo(() => selectedMessages.length > 0, [selectedMessages])
+    const is_selected = useMemo(() => !!selectedMessages?.find((item) => item.sid === message.sid), [selectedMessages])
+    const is_selecting = useMemo(() => (selectedMessages ? selectedMessages.length > 0 : false), [selectedMessages])
 
     const valid_types = ["video", "image", "ptt", "audio", "document", "sticker"]
     const is_audio = message.type === "ptt" || message.type === "audio"
@@ -133,8 +135,7 @@ export const Message: React.ForwardRefRenderFunction<HTMLDivElement, MessageProp
     }
 
     const onSelect = () => {
-        console.log("aa")
-        setSelectedMessages((selectedMessages) =>
+        setSelectedMessages?.((selectedMessages) =>
             is_selected ? selectedMessages.filter((item) => item.sid !== message.sid) : [...selectedMessages, message]
         )
     }
@@ -148,7 +149,7 @@ export const Message: React.ForwardRefRenderFunction<HTMLDivElement, MessageProp
     return (
         <Box sx={{ flexDirection: "column" }} onPointerEnter={() => setHovering(true)} onPointerLeave={() => setHovering(false)}>
             {/*//* DATE CHIP */}
-            {day_changing && <DateChip timestamp={message.timestamp * 1000} />}
+            {day_changing && !noActions && <DateChip timestamp={message.timestamp * 1000} />}
             <Box
                 ref={ref}
                 id={`message:${message.id.id}`}
@@ -181,7 +182,7 @@ export const Message: React.ForwardRefRenderFunction<HTMLDivElement, MessageProp
                     ref={visibleCallbackRef}
                     sx={{
                         flexDirection: "column",
-                        maxWidth: message.hasMedia && is_document ? "25vw" : message.hasMedia ? "20vw" : isMobile ? "90%" : "75%",
+                        maxWidth: inBoards ? "18vw" : message.hasMedia && is_document ? "25vw" : message.hasMedia ? "20vw" : isMobile ? "90%" : "75%",
                     }}
                 >
                     {/*//* MESSAGE AUTHOR  */}
@@ -256,7 +257,7 @@ export const Message: React.ForwardRefRenderFunction<HTMLDivElement, MessageProp
                                     marginBottom: "0.5vw",
                                     maxWidth: "25vw",
                                 }}
-                                onClick={() => scrollTo(message.replied_to!.sid)}
+                                onClick={() => scrollTo?.(message.replied_to!.sid)}
                             >
                                 <QuotedMessage message={message.replied_to} />
                             </MenuItem>
@@ -264,7 +265,7 @@ export const Message: React.ForwardRefRenderFunction<HTMLDivElement, MessageProp
 
                         <Box
                             sx={{
-                                flexDirection: is_document ? "row" : "column",
+                                flexDirection: "column",
                                 gap: is_document ? (isMobile ? "3vw" : "0.5vw") : is_sticker ? "0.2vw" : undefined,
                                 alignItems: is_document ? "center" : undefined,
                                 paddingX: is_document ? (isMobile ? "3vw" : "0.5vw") : undefined,
@@ -278,15 +279,19 @@ export const Message: React.ForwardRefRenderFunction<HTMLDivElement, MessageProp
                                             <Skeleton
                                                 variant="rounded"
                                                 animation="wave"
-                                                sx={{ width: isMobile ? "60vw" : "20vw", height: isMobile ? "70vw" : "20vw", borderRadius: "1vw" }}
+                                                sx={{
+                                                    width: inBoards ? "12vw" : isMobile ? "60vw" : "20vw",
+                                                    height: inBoards ? "12vw" : isMobile ? "70vw" : "20vw",
+                                                    borderRadius: "1vw",
+                                                }}
                                             />
                                         ) : (
                                             <PhotoView src={mediaObj?.source}>
                                                 <MenuItem sx={{ padding: 0, borderRadius: "0.75vw" }}>
                                                     <img
                                                         style={{
-                                                            width: isMobile ? "60vw" : "20vw",
-                                                            maxHeight: isMobile ? "70vw" : "20vw",
+                                                            width: inBoards ? "12vw" : isMobile ? "60vw" : "20vw",
+                                                            maxHeight: inBoards ? "12vw" : isMobile ? "70vw" : "20vw",
                                                             objectFit: "cover",
                                                             borderRadius: "0.75vw",
                                                         }}
@@ -299,12 +304,12 @@ export const Message: React.ForwardRefRenderFunction<HTMLDivElement, MessageProp
                                         ))}
                                     {is_sticker &&
                                         (loading ? (
-                                            <CircularProgress size={isMobile ? "30vw" : "10vw"} sx={{}} />
+                                            <CircularProgress size={inBoards ? "5vw" : isMobile ? "30vw" : "10vw"} sx={{}} />
                                         ) : (
                                             <img
                                                 style={{
-                                                    width: isMobile ? "30vw" : "10vw",
-                                                    height: isMobile ? "30vw" : "10vw",
+                                                    width: inBoards ? "5vw" : isMobile ? "30vw" : "10vw",
+                                                    height: inBoards ? "5vw" : isMobile ? "30vw" : "10vw",
                                                     objectFit: "contain",
                                                     borderRadius: "0.75vw",
                                                 }}
@@ -318,11 +323,18 @@ export const Message: React.ForwardRefRenderFunction<HTMLDivElement, MessageProp
                                             <Skeleton
                                                 variant="rounded"
                                                 animation="wave"
-                                                sx={{ width: isMobile ? "60vw" : "20vw", height: isMobile ? "70vw" : "20vw", borderRadius: "1vw" }}
+                                                sx={{
+                                                    width: inBoards ? "12vw" : isMobile ? "60vw" : "20vw",
+                                                    height: inBoards ? "12vw" : isMobile ? "70vw" : "20vw",
+                                                    borderRadius: "1vw",
+                                                }}
                                             />
                                         ) : mediaObj ? (
                                             <video
-                                                style={{ width: isMobile ? "60vw" : "20vw", height: isMobile ? "70vw" : "20vw" }}
+                                                style={{
+                                                    width: inBoards ? "12vw" : isMobile ? "60vw" : "20vw",
+                                                    height: inBoards ? "12vw" : isMobile ? "70vw" : "20vw",
+                                                }}
                                                 src={mediaObj.source}
                                                 controls
                                                 muted={false}
@@ -334,7 +346,14 @@ export const Message: React.ForwardRefRenderFunction<HTMLDivElement, MessageProp
                                             </Box>
                                         ))}
                                     {is_audio && (
-                                        <AudioPlayer loading={loading} media={mediaObj} washima={washima} chat_id={message.from} message={message} />
+                                        <AudioPlayer
+                                            loading={loading}
+                                            media={mediaObj}
+                                            washima={washima}
+                                            chat_id={message.from}
+                                            message={message}
+                                            inBoards={inBoards}
+                                        />
                                     )}
                                     {is_document &&
                                         (loading ? (
@@ -401,7 +420,7 @@ export const Message: React.ForwardRefRenderFunction<HTMLDivElement, MessageProp
                         <MessageDateContainer message={message} is_audio={is_audio} is_image={is_image} is_document={is_document} />
 
                         {/* //* MENU BUTTON */}
-                        {hovering && !is_deleted && (
+                        {hovering && !is_deleted && !noActions && (
                             <MessageMenu from_me={from_me} onClose={() => setHovering(false)} message={message} onSelect={onSelect} />
                         )}
                     </Box>

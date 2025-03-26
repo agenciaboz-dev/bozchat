@@ -75,6 +75,7 @@ export const Boards: React.FC<BoardsProps> = ({}) => {
     }
 
     const navigateBack = () => {
+        fetchData()
         navigate("/boards")
         setSelectedBoard(null)
     }

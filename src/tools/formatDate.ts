@@ -38,11 +38,21 @@ const days = {
     [7]: "Sáb",
 }
 
+const long_days = {
+    [1]: "Domingo",
+    [2]: "Segunda",
+    [3]: "Terça",
+    [4]: "Quarta",
+    [5]: "Quinta",
+    [6]: "Sexta",
+    [7]: "Sábado",
+}
+
 export const monthName = (month: number) => {
     return months[month + 1] || "Mês inválido"
 }
-const weekDay = (day: 1 | 2 | 3 | 4 | 5 | 6 | 7) => {
-    return days[day]
+const weekDay = (day: number, long?: boolean) => {
+    return long ? long_days[day as keyof typeof long_days] : days[day as keyof typeof days]
 }
 
 const normalize = (date: Date) => {

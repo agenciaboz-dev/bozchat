@@ -78,7 +78,9 @@ export const BoardRoom: React.FC<KanbanColumnProps> = (props) => {
             ) : (
                 <Box sx={{ alignItems: "center", gap: "1vw", flexWrap: "wrap" }}>
                     <Typography sx={{ color: "secondary.main", fontWeight: "bold" }}>{props.room.name}</Typography>
-                    <Chip label={`${props.room.chats.length}`} size="small" color="primary" />
+                    <Tooltip title={`existem ${props.room.chats.length} conversas nesta sala`} arrow>
+                        <Chip label={`${props.room.chats.length}`} size="small" color="primary" />
+                    </Tooltip>
                     {syncedWashimas}
                 </Box>
             )}
@@ -101,7 +103,14 @@ export const BoardRoom: React.FC<KanbanColumnProps> = (props) => {
                                 <Typography sx={{ color: "secondary.main", alignSelf: "center" }}>Nenhuma conversa</Typography>
                             </Box>
                         ) : (
-                            props.room.chats.map((chat, index) => <BoardChat key={chat.id} chat={chat} index={index} />)
+                            props.room.chats.map((chat, index) => (
+                                <BoardChat
+                                    key={chat.id}
+                                    chat={chat}
+                                    index={index}
+                                    washima={props.washimas.find((washima) => washima.id === chat.washima_id)}
+                                />
+                            ))
                         )}
                         {provided.placeholder}
                     </Box>

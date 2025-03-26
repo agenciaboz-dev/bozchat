@@ -22,13 +22,13 @@ interface WashimaChatProps {
     washima: Washima
     chat: Chat | null
     onClose: () => void
+    inBoards?: boolean
 }
 
-export const WashimaChat: React.FC<WashimaChatProps> = ({ washima, chat, onClose }) => {
+export const WashimaChat: React.FC<WashimaChatProps> = ({ washima, chat, onClose, inBoards }) => {
     const io = useIo()
     const isMobile = useMediaQuery("(orientation: portrait)")
     const messagesBoxRef = useRef<HTMLDivElement>(null)
-    const shouldScroll = useRef<boolean>(true)
     const washimaInput = useWashimaInput()
 
     const [messages, setMessages] = useState<WashimaMessage[]>([])
@@ -143,14 +143,23 @@ export const WashimaChat: React.FC<WashimaChatProps> = ({ washima, chat, onClose
     }
 
     const scrollToMessage = async (id: string) => {
-        setLoadingMessageId(id)
+        console.log(id)
+        const group_split = id.split("@g.us_")
+        if (group_split.length >= 2) {
+            setLoadingMessageId(group_split[1].split("_")[0])
+        } else {
+            const contact_split = id.split("@c.us_")
+            if (contact_split.length >= 2) {
+                setLoadingMessageId(contact_split[1])
+            }
+        }
     }
 
     useEffect(() => {
         if (loadingMessageId) {
             const element = document.getElementById(`message:${loadingMessageId}`)
             if (element) {
-                element.scrollIntoView({ behavior: "smooth" })
+                element.scrollIntoView({ behavior: "smooth", block: "nearest", inline: "nearest" })
                 setLoading(false)
                 setLoadingMessageId(null)
             } else {
@@ -233,56 +242,60 @@ export const WashimaChat: React.FC<WashimaChatProps> = ({ washima, chat, onClose
                 flexDirection: "column",
                 overflow: "hidden",
                 position: "relative",
+                background: "transparent",
             }}
+            elevation={0}
         >
-            <Box
-                sx={{
-                    gap: isMobile ? "3vw" : "2vw",
-                    alignItems: "center",
-                    // height: isMobile ? "7vh" : "5vh",
-                    padding: isMobile ? "2vw" : "",
-                }}
-            >
-                {loading ? (
-                    <Skeleton variant="circular" animation="wave" sx={{ width: isMobile ? "12vw" : "3vw", height: isMobile ? "12vw" : "3vw" }} />
-                ) : (
-                    <PhotoProvider>
-                        <PhotoView src={profilePic}>
-                            <Avatar
-                                src={profilePic}
-                                sx={{
-                                    width: isMobile ? "12vw" : "3vw",
-                                    height: isMobile ? "12vw" : "3vw",
-                                    bgcolor: "primary.main",
-                                    cursor: "pointer",
-                                }}
-                                imgProps={{ draggable: false }}
-                                // onClick={() => picture.open(profilePic || "")}
-                            />
-                        </PhotoView>
-                    </PhotoProvider>
-                )}
-                <p style={{ fontWeight: "bold" }}>{chat?.name}</p>
-                {!!chat && (
-                    <Box sx={{ marginLeft: "auto" }}>
-                        <CopyAllButton chat={chat} washima_id={washima.id} />
-                        <IconButton sx={{ color: "text.secondary", padding: isMobile ? "0" : "" }} onClick={onClose}>
-                            <CancelIcon />
-                        </IconButton>
-                    </Box>
-                )}
-            </Box>
+            {!inBoards && (
+                <Box
+                    sx={{
+                        gap: isMobile ? "3vw" : "2vw",
+                        alignItems: "center",
+                        // height: isMobile ? "7vh" : "5vh",
+                        padding: isMobile ? "2vw" : "",
+                    }}
+                >
+                    {loading ? (
+                        <Skeleton variant="circular" animation="wave" sx={{ width: isMobile ? "12vw" : "3vw", height: isMobile ? "12vw" : "3vw" }} />
+                    ) : (
+                        <PhotoProvider>
+                            <PhotoView src={profilePic}>
+                                <Avatar
+                                    src={profilePic}
+                                    sx={{
+                                        width: isMobile ? "12vw" : "3vw",
+                                        height: isMobile ? "12vw" : "3vw",
+                                        bgcolor: "primary.main",
+                                        cursor: "pointer",
+                                    }}
+                                    imgProps={{ draggable: false }}
+                                    // onClick={() => picture.open(profilePic || "")}
+                                />
+                            </PhotoView>
+                        </PhotoProvider>
+                    )}
+                    <p style={{ fontWeight: "bold" }}>{chat?.name}</p>
+                    {!!chat && (
+                        <Box sx={{ marginLeft: "auto" }}>
+                            <CopyAllButton chat={chat} washima_id={washima.id} />
+                            <IconButton sx={{ color: "text.secondary", padding: isMobile ? "0" : "" }} onClick={onClose}>
+                                <CancelIcon />
+                            </IconButton>
+                        </Box>
+                    )}
+                </Box>
+            )}
 
             <Box
                 ref={messagesBoxRef}
                 onScroll={handleScroll}
                 sx={{
                     width: "100%",
-                    height: isMobile ? "60vh" : washimaInput.replyMessage ? "60vh" : "70vh",
+                    height: inBoards ? "20vw" : isMobile ? "60vh" : washimaInput.replyMessage ? "60vh" : "70vh",
                     bgcolor: "background.default",
                     overflowY: "auto",
                     borderRadius: isMobile ? "0 3vw 0 3vw" : "0 1.5vw 0 1.5vw",
-                    padding: isMobile ? "4vw" : "2vw",
+                    padding: inBoards ? "1vw" : isMobile ? "4vw" : "2vw",
                     color: "text.secondary",
                     flexDirection: "column-reverse",
                     gap: isMobile ? "1vw" : "0.25vw",
@@ -305,6 +318,7 @@ export const WashimaChat: React.FC<WashimaChatProps> = ({ washima, chat, onClose
                             scrollTo={scrollToMessage}
                             selectedMessages={selectedMessages}
                             setSelectedMessages={setSelectedMessages}
+                            inBoards={inBoards}
                         />
                     ) : (
                         <GroupUpdateItem key={item.sid} chat={chat} update={item as WashimaGroupUpdate} washima={washima} profilePic={profilePic} />
@@ -319,6 +333,7 @@ export const WashimaChat: React.FC<WashimaChatProps> = ({ washima, chat, onClose
                 chat_id={chat.id._serialized}
                 selectedMessages={selectedMessages}
                 onForwardPress={() => setChooseForwardingContacts(true)}
+                inBoards={inBoards}
             />
             <Paper
                 elevation={5}

@@ -1,17 +1,22 @@
 import React, { useEffect, useMemo, useState } from "react"
-import { Accordion, AccordionDetails, AccordionSummary, Avatar, Box, IconButton, Paper, Typography } from "@mui/material"
+import { Accordion, AccordionDetails, AccordionSummary, Avatar, Box, IconButton, MenuItem, Paper, Typography } from "@mui/material"
 import { Chat } from "../../types/server/class/Board/Chat"
 import { Draggable } from "@hello-pangea/dnd"
-import { ExpandMore, MoreHoriz, Send } from "@mui/icons-material"
+import { Cancel, ChatBubble, ExpandMore, MoreHoriz, Send } from "@mui/icons-material"
 import { api } from "../../api"
 import { MediaChip } from "../../components/MediaChip"
 import { Washima } from "../../types/server/class/Washima/Washima"
-import { Chat as WashimaChat } from "../../types/Chat"
+import { Chat as WashimaChatType } from "../../types/Chat"
+import { WashimaChat } from "../Washima/WashimaChat/WashimaChat"
+import { Nagazap } from "../../types/server/class/Nagazap"
+import Message from "../Zap/Message"
+import formatDate from "../../tools/formatDate"
 
 interface BoardChatProps {
     chat: Chat
     index: number
     washima?: Washima
+    nagazap?: Nagazap
 }
 
 export const BoardChat: React.FC<BoardChatProps> = (props) => {
@@ -24,7 +29,8 @@ export const BoardChat: React.FC<BoardChatProps> = (props) => {
     const [expandedChat, setExpandedChat] = useState(false)
 
     const washimaChat = useMemo(
-        () => (props.washima ? (props.washima.chats.find((chat) => chat.id === props.chat.washima_chat_id) as WashimaChat | null) : null),
+        () =>
+            props.washima ? (props.washima.chats.find((chat) => chat.id._serialized === props.chat.washima_chat_id) as WashimaChatType | null) : null,
         [props.washima]
     )
 
@@ -56,7 +62,7 @@ export const BoardChat: React.FC<BoardChatProps> = (props) => {
                     ref={provided.innerRef}
                     {...provided.draggableProps}
                     {...provided.dragHandleProps}
-                    sx={{ padding: "1vw", flexDirection: "column", height: "10vw", overflow: "hidden", gap: "1vw" }}
+                    sx={{ padding: "1vw", flexDirection: "column", overflow: "hidden", gap: "1vw" }}
                 >
                     <Box sx={{ justifyContent: "space-between", alignItems: "flex-start" }}>
                         <Box sx={{ gap: "1vw" }} color={"secondary.main"}>
@@ -68,13 +74,8 @@ export const BoardChat: React.FC<BoardChatProps> = (props) => {
                                     {props.chat.name}
                                 </Typography>
                                 <Typography sx={{ fontSize: "0.8rem" }}>
-                                    {new Date(props.chat.last_message.timestamp * 1000).toLocaleString("pt-br", {
-                                        day: "2-digit",
-                                        month: "2-digit",
-                                        year: "numeric",
-                                        hour: "2-digit",
-                                        minute: "2-digit",
-                                    })}
+                                    {formatDate.weekDay(new Date(props.chat.last_message.timestamp * 1000).getDay(), true)} -{" "}
+                                    {new Date(props.chat.last_message.timestamp * 1000).toLocaleDateString("pt-br")}
                                 </Typography>
                             </Box>
                         </Box>
@@ -83,31 +84,56 @@ export const BoardChat: React.FC<BoardChatProps> = (props) => {
                         </IconButton>
                     </Box>
 
-                    {!expandedChat && <hr />}
-
-                    <Accordion expanded={expandedChat} onChange={(_, value) => setExpandedChat(value)}>
-                        <AccordionSummary expandIcon={<ExpandMore />}>
-                            <Box sx={{ alignItems: "center", justifyContent: "space-between" }}>
-                                <Typography
-                                    sx={{
-                                        width: "18vw",
-                                        overflow: "hidden",
-                                        display: "-webkit-box",
-                                        WebkitLineClamp: 2,
-                                        WebkitBoxOrient: "vertical",
-                                        textOverflow: "ellipsis",
-                                    }}
-                                >
-                                    {props.chat.last_message.body}
-                                    {props.chat.last_message.hasMedia && mediaMetaData?.mimetype && <MediaChip mimetype={mediaMetaData.mimetype} />}
-                                </Typography>
-                                <IconButton onClick={(ev) => setMenuAnchorEl(ev.currentTarget)}>
-                                    <Send />
-                                </IconButton>
-                            </Box>
+                    <Accordion
+                        expanded={expandedChat}
+                        onChange={(_, value) => setExpandedChat(value)}
+                        slotProps={{ transition: { unmountOnExit: true } }}
+                        sx={{
+                            flexDirection: "column",
+                            boxShadow: "none",
+                            background: "transparent",
+                            border: "none",
+                            "&:before": { display: "none" },
+                            "&.Mui-expanded": {
+                                margin: 0,
+                            },
+                            position: "relative",
+                        }}
+                        disableGutters
+                    >
+                        <AccordionSummary>
+                            <Paper
+                                elevation={0}
+                                sx={{
+                                    bgcolor: "background.default",
+                                    flex: 1,
+                                    flexDirection: "column",
+                                    margin: "-1vw",
+                                    padding: "1vw",
+                                    position: "relative",
+                                    color: "secondary.main",
+                                }}
+                            >
+                                {!expandedChat && props.washima && (
+                                    <Message
+                                        message={props.chat.last_message}
+                                        washima={props.washima}
+                                        inBoards
+                                        isGroup={props.chat.is_group}
+                                        noActions
+                                    />
+                                )}
+                            </Paper>
                         </AccordionSummary>
                         <AccordionDetails>
-                            <Typography>Teste</Typography>
+                            {washimaChat && props.washima && (
+                                <Box sx={{ margin: "-2vw", marginTop: "-4vw", position: "relative" }}>
+                                    <WashimaChat inBoards chat={washimaChat} washima={props.washima} onClose={() => setExpandedChat(false)} />
+                                    <IconButton sx={{ position: "absolute", top: "1vw", right: "1vw" }} onClick={() => setExpandedChat(false)}>
+                                        <Cancel />
+                                    </IconButton>
+                                </Box>
+                            )}
                         </AccordionDetails>
                     </Accordion>
                 </Paper>

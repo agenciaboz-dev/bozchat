@@ -11,9 +11,10 @@ interface RecordAudioContainerProps {
     onSend: (audio: WashimaMediaForm) => void
     onRecordStart: () => void
     onRecordFinish: () => void
+    inBoards?: boolean
 }
 
-export const RecordAudioContainer: React.FC<RecordAudioContainerProps> = ({ onSend, onRecordStart, onRecordFinish }) => {
+export const RecordAudioContainer: React.FC<RecordAudioContainerProps> = ({ onSend, onRecordStart, onRecordFinish, inBoards }) => {
     const { snackbar } = useSnackbar()
     const durationIntervalRef = useRef<ReturnType<typeof setInterval> | null>(null)
     const shouldSendRef = useRef(false)
@@ -119,13 +120,13 @@ export const RecordAudioContainer: React.FC<RecordAudioContainerProps> = ({ onSe
                 sx={{
                     borderRadius: "2vw",
                     padding: "0.1vw 0.5vw",
-                    width: "15vw",
+                    width: inBoards ? undefined : "15vw",
                     justifyContent: "space-between",
                     gap: "0.5vw",
                     alignItems: "center",
                 }}
             >
-                <RecordingAudioVisualizer stream={streamRef.current} paused={recorder.status === "paused"} />
+                {!inBoards && <RecordingAudioVisualizer stream={streamRef.current} paused={recorder.status === "paused"} />}
                 <Box sx={{ width: "3vw" }}>{formatTimeDuration(duration)}</Box>
             </Paper>
 
