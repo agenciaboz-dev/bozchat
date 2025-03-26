@@ -107,7 +107,7 @@ export const NagazapScreen: React.FC<NagazapProps> = ({}) => {
                             overflowY: "auto",
                             padding: isMobile ? "1vw" : "1vw 0",
                             gap: "1.5vw",
-                            borderRadius: isMobile ? " 0 5vw 0 5vw" : "0 0 0 2vw ",
+                            borderRadius: isMobile ? "2vw" : "4px 0 0 4px",
                             color: "secondary.main",
                             overflowX: "hidden",
                             // hiding scrollbar

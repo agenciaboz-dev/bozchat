@@ -62,7 +62,6 @@ export const Login: React.FC<LoginProps> = ({}) => {
                         padding: isMobile ? "6vw" : "3vw",
                         width: isMobile ? "80vw" : "30vw",
                         backgroundColor: "background.default",
-                        borderRadius: isMobile ? "5vw" : "2.5vw",
                         flexDirection: "column",
                         gap: isMobile ? "4vw" : "1vw",
                     }}
