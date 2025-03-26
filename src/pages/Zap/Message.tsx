@@ -182,7 +182,7 @@ export const Message: React.ForwardRefRenderFunction<HTMLDivElement, MessageProp
                     ref={visibleCallbackRef}
                     sx={{
                         flexDirection: "column",
-                        maxWidth: inBoards ? "18vw" : message.hasMedia && is_document ? "25vw" : message.hasMedia ? "20vw" : isMobile ? "90%" : "75%",
+                        maxWidth: inBoards ? "15vw" : message.hasMedia && is_document ? "25vw" : message.hasMedia ? "20vw" : isMobile ? "90%" : "75%",
                     }}
                 >
                     {/*//* MESSAGE AUTHOR  */}
@@ -256,6 +256,7 @@ export const Message: React.ForwardRefRenderFunction<HTMLDivElement, MessageProp
                                     padding: 0,
                                     marginBottom: "0.5vw",
                                     maxWidth: "25vw",
+                                    pointerEvents: noActions ? "none" : undefined,
                                 }}
                                 onClick={() => scrollTo?.(message.replied_to!.sid)}
                             >
@@ -399,10 +400,11 @@ export const Message: React.ForwardRefRenderFunction<HTMLDivElement, MessageProp
                                         style={{
                                             padding: is_image ? "0 0.25vw" : undefined,
                                             wordBreak: "break-word",
-                                            whiteSpace: isMobile && is_document ? "nowrap" : "pre-line",
+                                            whiteSpace: noActions ? undefined : isMobile && is_document ? "nowrap" : "pre-line",
                                             color: isLink ? theme.palette.success.light : undefined,
                                             textAlign: "left",
-                                            WebkitLineClamp: 2,
+                                            WebkitLineClamp: noActions ? 12 : 2,
+                                            display: noActions ? "-webkit-box" : undefined,
                                             WebkitBoxOrient: "vertical",
                                             overflow: "hidden",
                                             textOverflow: "ellipsis",

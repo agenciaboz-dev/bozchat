@@ -1,5 +1,5 @@
 import React, { useEffect, useMemo, useState } from "react"
-import { Accordion, AccordionDetails, AccordionSummary, Avatar, Box, IconButton, MenuItem, Paper, Typography } from "@mui/material"
+import { AccordionDetails, AccordionSummary, Avatar, Box, IconButton, MenuItem, Paper, Typography } from "@mui/material"
 import { Chat } from "../../types/server/class/Board/Chat"
 import { Draggable } from "@hello-pangea/dnd"
 import { Cancel, ChatBubble, ExpandMore, MoreHoriz, Send } from "@mui/icons-material"
@@ -11,6 +11,7 @@ import { WashimaChat } from "../Washima/WashimaChat/WashimaChat"
 import { Nagazap } from "../../types/server/class/Nagazap"
 import Message from "../Zap/Message"
 import formatDate from "../../tools/formatDate"
+import { Accordion } from "../../components/Accordion"
 
 interface BoardChatProps {
     chat: Chat
@@ -84,7 +85,53 @@ export const BoardChat: React.FC<BoardChatProps> = (props) => {
                         </IconButton>
                     </Box>
 
-                    <Accordion
+                    {/* <Accordion
+                        expanded={expandedChat}
+                        titleElement={<div onClick={() => setExpandedChat((value) => !value)}>Click to Expand</div>}
+                        expandedElement={<div>Expanded Content Goes Here</div>}
+                        hideTitle
+                    /> */}
+
+                    {washimaChat && props.washima && (
+                        <Accordion
+                            expanded={expandedChat}
+                            titleElement={
+                                <Paper
+                                    onClick={() => setExpandedChat((value) => !value)}
+                                    elevation={0}
+                                    sx={{
+                                        bgcolor: "background.default",
+                                        flexDirection: "column",
+                                        padding: "1vw",
+                                        position: "relative",
+                                        color: "secondary.main",
+                                        flex: 1,
+                                    }}
+                                >
+                                    {!expandedChat && props.washima && (
+                                        <Message
+                                            message={props.chat.last_message}
+                                            washima={props.washima}
+                                            inBoards
+                                            isGroup={props.chat.is_group}
+                                            noActions
+                                        />
+                                    )}
+                                </Paper>
+                            }
+                            expandedElement={
+                                <Box sx={{ position: "relative", flex: 1 }}>
+                                    <WashimaChat inBoards chat={washimaChat} washima={props.washima} onClose={() => setExpandedChat(false)} />
+                                    <IconButton sx={{ position: "absolute", top: "0", right: "0" }} onClick={() => setExpandedChat(false)}>
+                                        <Cancel />
+                                    </IconButton>
+                                </Box>
+                            }
+                            hideTitle
+                        />
+                    )}
+
+                    {/* <Accordion
                         expanded={expandedChat}
                         onChange={(_, value) => setExpandedChat(value)}
                         slotProps={{ transition: { unmountOnExit: true } }}
@@ -135,7 +182,7 @@ export const BoardChat: React.FC<BoardChatProps> = (props) => {
                                 </Box>
                             )}
                         </AccordionDetails>
-                    </Accordion>
+                    </Accordion> */}
                 </Paper>
             )}
         </Draggable>
