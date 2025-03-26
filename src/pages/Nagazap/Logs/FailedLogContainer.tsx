@@ -35,7 +35,7 @@ export const FailedLogContainer: React.FC<FailedLogContainerProps> = ({ log }) =
             </Grid>
             {!isMobile ? (
                 <Grid item xs={1}>
-                    <Box sx={{ color: "secondary.main", fontSize: "0.8rem" }}>{date}</Box>
+                    <Box sx={{ color: "text.secondary", fontSize: "0.8rem" }}>{date}</Box>
                 </Grid>
             ) : null}
             <Grid item xs={2}>

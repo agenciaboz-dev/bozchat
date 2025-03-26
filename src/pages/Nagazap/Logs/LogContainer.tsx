@@ -24,7 +24,7 @@ export const LogContainer: React.FC<LogContainerProps> = ({ log }) => {
                 />
                 <Box>{number}</Box>
             </Box>
-            <Box sx={{ color: "secondary.main", fontSize: "0.8rem" }}>{date}</Box>
+            <Box sx={{ color: "text.secondary", fontSize: "0.8rem" }}>{date}</Box>
         </Box>
     )
 }
