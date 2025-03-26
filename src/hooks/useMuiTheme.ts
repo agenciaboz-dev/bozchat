@@ -34,6 +34,7 @@ export const useMuiTheme = () => {
                         text: {
                             primary: colors.text.primary,
                             secondary: colors.text.secondary,
+                            disabled: colors.text.terciary,
                         },
 
                         success: {
