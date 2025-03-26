@@ -1,14 +1,17 @@
-import React, { useEffect, useState } from "react"
-import { Avatar, Box, IconButton, Paper, Typography } from "@mui/material"
+import React, { useEffect, useMemo, useState } from "react"
+import { Accordion, AccordionDetails, AccordionSummary, Avatar, Box, IconButton, Paper, Typography } from "@mui/material"
 import { Chat } from "../../types/server/class/Board/Chat"
 import { Draggable } from "@hello-pangea/dnd"
-import { MoreHoriz, Send } from "@mui/icons-material"
+import { ExpandMore, MoreHoriz, Send } from "@mui/icons-material"
 import { api } from "../../api"
 import { MediaChip } from "../../components/MediaChip"
+import { Washima } from "../../types/server/class/Washima/Washima"
+import { Chat as WashimaChat } from "../../types/Chat"
 
 interface BoardChatProps {
     chat: Chat
     index: number
+    washima?: Washima
 }
 
 export const BoardChat: React.FC<BoardChatProps> = (props) => {
@@ -18,6 +21,12 @@ export const BoardChat: React.FC<BoardChatProps> = (props) => {
         filename: string | undefined
         message_id: string
     }>()
+    const [expandedChat, setExpandedChat] = useState(false)
+
+    const washimaChat = useMemo(
+        () => (props.washima ? (props.washima.chats.find((chat) => chat.id === props.chat.washima_chat_id) as WashimaChat | null) : null),
+        [props.washima]
+    )
 
     const fetchMediaMetadata = async () => {
         try {
@@ -74,26 +83,33 @@ export const BoardChat: React.FC<BoardChatProps> = (props) => {
                         </IconButton>
                     </Box>
 
-                    <hr />
+                    {!expandedChat && <hr />}
 
-                    <Box sx={{ alignItems: "center", justifyContent: "space-between" }}>
-                        <Typography
-                            sx={{
-                                width: "18vw",
-                                overflow: "hidden",
-                                display: "-webkit-box",
-                                WebkitLineClamp: 2,
-                                WebkitBoxOrient: "vertical",
-                                textOverflow: "ellipsis",
-                            }}
-                        >
-                            {props.chat.last_message.body}
-                            {props.chat.last_message.hasMedia && mediaMetaData?.mimetype && <MediaChip mimetype={mediaMetaData.mimetype} />}
-                        </Typography>
-                        <IconButton onClick={(ev) => setMenuAnchorEl(ev.currentTarget)}>
-                            <Send />
-                        </IconButton>
-                    </Box>
+                    <Accordion expanded={expandedChat} onChange={(_, value) => setExpandedChat(value)}>
+                        <AccordionSummary expandIcon={<ExpandMore />}>
+                            <Box sx={{ alignItems: "center", justifyContent: "space-between" }}>
+                                <Typography
+                                    sx={{
+                                        width: "18vw",
+                                        overflow: "hidden",
+                                        display: "-webkit-box",
+                                        WebkitLineClamp: 2,
+                                        WebkitBoxOrient: "vertical",
+                                        textOverflow: "ellipsis",
+                                    }}
+                                >
+                                    {props.chat.last_message.body}
+                                    {props.chat.last_message.hasMedia && mediaMetaData?.mimetype && <MediaChip mimetype={mediaMetaData.mimetype} />}
+                                </Typography>
+                                <IconButton onClick={(ev) => setMenuAnchorEl(ev.currentTarget)}>
+                                    <Send />
+                                </IconButton>
+                            </Box>
+                        </AccordionSummary>
+                        <AccordionDetails>
+                            <Typography>Teste</Typography>
+                        </AccordionDetails>
+                    </Accordion>
                 </Paper>
             )}
         </Draggable>

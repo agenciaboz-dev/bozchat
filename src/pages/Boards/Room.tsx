@@ -1,5 +1,5 @@
 import React, { useState } from "react"
-import { Box, Chip, IconButton, Menu, MenuItem, Paper, Typography } from "@mui/material"
+import { Box, Chip, IconButton, Menu, MenuItem, Paper, Tooltip, Typography } from "@mui/material"
 import { Room } from "../../types/server/class/Board/Room"
 import { BoardChat } from "./Chat"
 import { Droppable } from "@hello-pangea/dnd"
@@ -10,6 +10,7 @@ import { WithoutFunctions } from "../../types/server/class/helpers"
 import { More, MoreHoriz, WhatsApp } from "@mui/icons-material"
 import { useConfirmDialog } from "burgos-confirm"
 import { Washima } from "../../types/server/class/Washima/Washima"
+import { IntegrationChip } from "./IntegrationChip"
 
 interface KanbanColumnProps {
     room: Room
@@ -54,16 +55,10 @@ export const BoardRoom: React.FC<KanbanColumnProps> = (props) => {
         setMenuAnchorEl(null)
     }
 
-    const syncedWashimas = props.board.receive_washima_message.map((setting) =>
-        setting.room_id === props.room.id ? (
-            <Chip
-                icon={<WhatsApp color="success" />}
-                label={props.washimas.find((washima) => washima.id === setting.washima_id)?.name}
-                size="small"
-                sx={{ color: "success.main" }}
-            />
-        ) : null
-    )
+    const syncedWashimas = props.board.receive_washima_message.map((setting) => {
+        const washima = props.washimas.find((washima) => washima.id === setting.washima_id)
+        return setting.room_id === props.room.id ? <IntegrationChip washima={washima} /> : null
+    })
 
     return (
         <Paper sx={{ flexDirection: "column", width: "25vw", padding: "1vw", gap: "1vw", overflow: "auto", height: "74vh" }}>
