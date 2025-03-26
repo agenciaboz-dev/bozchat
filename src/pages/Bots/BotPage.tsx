@@ -7,6 +7,7 @@ import { Redo, Settings, SettingsApplications, Undo } from "@mui/icons-material"
 import { BotForm } from "./BotForm"
 import { FlowLayout } from "./FlowLayout"
 import { Edge, Node, ReactFlowInstance, ReactFlowJsonObject } from "@xyflow/react"
+import { useDarkMode } from "../../hooks/useDarkMode"
 
 interface BotPageProps {
     onSave: (bot: Bot) => void
@@ -14,6 +15,7 @@ interface BotPageProps {
 }
 
 export const BotPage: React.FC<BotPageProps> = ({ onSave, onDelete }) => {
+    const { darkMode } = useDarkMode()
     const bot = useLocation().state as Bot
 
     const [showForm, setShowForm] = useState(false)
@@ -53,7 +55,7 @@ export const BotPage: React.FC<BotPageProps> = ({ onSave, onDelete }) => {
                         </>
                     )}
                     <IconButton onClick={() => setShowForm((value) => !value)}>
-                        <Settings color={showForm ? "primary" : "secondary"} />
+                        <Settings color={showForm ? "primary" : darkMode ? "secondary" : "action"} />
                     </IconButton>
                 </Box>
             }

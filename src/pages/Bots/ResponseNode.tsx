@@ -5,19 +5,21 @@ import { Handle, Position } from "@xyflow/react"
 import { AddCircle, Delete, Edit } from "@mui/icons-material"
 import { TrianguloFudido } from "../Zap/TrianguloFudido"
 import { FlowNode } from "../../types/server/class/Bot/Bot"
+import { useDarkMode } from "../../hooks/useDarkMode"
 
 interface ResponseNodeProps extends FlowNode {}
 
 export const ResponseNode: React.FC<ResponseNodeProps> = (node) => {
+    const { darkMode } = useDarkMode()
     const [mouseOver, setMouseOver] = useState(false)
 
     const children = useMemo(() => (node.data.getChildren ? node.data.getChildren(node.id) : []), [node])
 
     const can_add_children = children.length === 0
 
-    const topHandle = node.id !== 'node_0'
+    const topHandle = node.id !== "node_0"
 
-    const bgcolor = "#2a323c"
+    const bgcolor = darkMode ? "#2a323c" : "white"
 
     return (
         <Paper
@@ -41,7 +43,7 @@ export const ResponseNode: React.FC<ResponseNodeProps> = (node) => {
             {node.data.value ? (
                 <Typography
                     sx={{
-                        color: "secondary.main",
+                        color: "text.secondary",
                         fontWeight: "bold",
                         whiteSpace: "pre-wrap",
                         maxHeight: nodeHeight,

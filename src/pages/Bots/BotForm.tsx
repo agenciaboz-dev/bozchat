@@ -177,7 +177,7 @@ export const BotForm: React.FC<BotFormProps> = ({ onSubmit, bot, onDelete }) => 
                 />
                 <Box sx={{ flexDirection: "column", flex: 1 }}>
                     <Box sx={{ alignItems: "center", gap: "0.5vw" }}>
-                        <Typography sx={{ color: "secondary.main" }}>Limiar de diferença entre resposta e gatilhos</Typography>
+                        <Typography sx={{ color: "text.secondary" }}>Limiar de diferença entre resposta e gatilhos</Typography>
                         <Tooltip
                             title={
                                 <Box sx={{ flexDirection: "column", gap: "1vw" }}>

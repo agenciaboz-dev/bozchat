@@ -4,6 +4,7 @@ import { Title2 } from "../../components/Title"
 import { FormikBundle } from "../../types/FormikBundle"
 import { BotForm } from "../../types/server/class/Bot/Bot"
 import { Add, NotInterested } from "@mui/icons-material"
+import { useDarkMode } from "../../hooks/useDarkMode"
 
 interface IntegrationWrapperProps {
     title: string
@@ -13,6 +14,7 @@ interface IntegrationWrapperProps {
 }
 
 export const IntegrationField: React.FC<IntegrationWrapperProps> = ({ title, formik, list, name }) => {
+    const { darkMode } = useDarkMode()
     const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null)
 
     const onItemClick = (id: string) => {
@@ -89,8 +91,8 @@ export const IntegrationField: React.FC<IntegrationWrapperProps> = ({ title, for
                         />
                     ))
                 ) : (
-                    <Box sx={{ justifyContent: "center", alignItems: "center", color: "secondary.main", gap: "0.5vw", flex: 1 }}>
-                        <NotInterested color="secondary" sx={{ width: "2vw", height: "auto" }} />
+                    <Box sx={{ justifyContent: "center", alignItems: "center", color: "text.secondary", gap: "0.5vw", flex: 1 }}>
+                        <NotInterested color={darkMode ? "secondary" : "action"} sx={{ width: "2vw", height: "auto" }} />
                         Nenhuma conta selecionada
                     </Box>
                 )}

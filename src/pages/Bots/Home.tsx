@@ -23,7 +23,7 @@ export const Home: React.FC<HomeProps> = ({ bots, fetchBots }) => {
         label: string
     }> = (props) => {
         return props.active ? (
-            <Paper elevation={5} sx={{ flexDirection: "column", padding: "1vw", bgcolor: "background.default", color: "secondary.main" }}>
+            <Paper elevation={5} sx={{ flexDirection: "column", padding: "1vw", bgcolor: "background.default", color: "text.secondary" }}>
                 <Typography sx={{ fontWeight: "bold", color: "primary.main" }}>{props.label}</Typography>
                 <Typography>
                     {total_label}: <span style={{ fontWeight: "bold", color: colors.primary }}>{props.payload[0].value}</span>
