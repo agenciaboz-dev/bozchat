@@ -40,7 +40,7 @@ export const Token: React.FC<TokenProps> = ({ nagazap }) => {
 
     return (
         <Box sx={{ flexDirection: "column", gap: "1vw" }}>
-            <Box sx={{ fontWeight: "bold", color: "secondary.main", alignItems: "center" }}>
+            <Box sx={{ fontWeight: "bold", color: "text.secondary", alignItems: "center" }}>
                 Token
                 <Switch
                     checked={locked}
