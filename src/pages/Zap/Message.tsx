@@ -271,7 +271,7 @@ export const Message: React.ForwardRefRenderFunction<HTMLDivElement, MessageProp
                             }}
                         >
                             {is_deleted && <DeletedMessage message={message} />}
-                            {message.hasMedia && !is_deleted && (
+                            {message.hasMedia && (
                                 <Box sx={{}}>
                                     {is_image &&
                                         (loading ? (
@@ -373,7 +373,7 @@ export const Message: React.ForwardRefRenderFunction<HTMLDivElement, MessageProp
                                 </Box>
                             )}
                             {/*//* MESSAGE BODY TEXT */}
-                            {!is_deleted && (
+                            {
                                 <Box sx={{ flexDirection: "column" }}>
                                     <p
                                         className={isLink ? "link" : undefined}
@@ -395,7 +395,7 @@ export const Message: React.ForwardRefRenderFunction<HTMLDivElement, MessageProp
                                     </p>
                                     {attachmendMetaData && <p style={{ textAlign: "left" }}>{attachmendMetaData.size}</p>}
                                 </Box>
-                            )}
+                            }
                         </Box>
                         {/*//* TIME */}
                         <MessageDateContainer message={message} is_audio={is_audio} is_image={is_image} is_document={is_document} />

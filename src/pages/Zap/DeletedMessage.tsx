@@ -9,8 +9,8 @@ interface DeletedMessageProps {
 
 export const DeletedMessage: React.FC<DeletedMessageProps> = ({ message }) => {
     return (
-        <Box sx={{ alignItems: "center", gap: "0.25vw" }}>
-            <DoNotDisturb />
+        <Box sx={{ alignItems: "center", gap: "0.25vw", fontSize: "0.8rem" }}>
+            <DoNotDisturb fontSize="small" />
             Mensagem deletada
         </Box>
     )
