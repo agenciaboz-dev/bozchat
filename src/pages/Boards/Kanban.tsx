@@ -138,9 +138,9 @@ export const BoardPage: React.FC<BoardPageProps> = (props) => {
                 rooms[defaultRoomIndex].chats = [...room.chats, ...rooms[defaultRoomIndex].chats]
             }
 
-            for (const [index, setting] of currentBoard.receive_washima_message.entries()) {
+            for (const [index, setting] of currentBoard.washima_settings.entries()) {
                 if (setting.room_id === room_id) {
-                    currentBoard.receive_washima_message[index].room_id = currentBoard.entry_room_id
+                    currentBoard.washima_settings[index].room_id = currentBoard.entry_room_id
                 }
             }
 

@@ -1,5 +1,5 @@
 import React, { useEffect, useMemo, useState } from "react"
-import { AccordionDetails, AccordionSummary, Avatar, Box, IconButton, MenuItem, Paper, Typography } from "@mui/material"
+import { AccordionDetails, AccordionSummary, Avatar, Box, Chip, IconButton, MenuItem, Paper, Typography } from "@mui/material"
 import { Chat } from "../../types/server/class/Board/Chat"
 import { Draggable } from "@hello-pangea/dnd"
 import { Cancel, ChatBubble, ExpandMore, MoreHoriz, Send } from "@mui/icons-material"
@@ -12,6 +12,7 @@ import { Nagazap } from "../../types/server/class/Nagazap"
 import Message from "../Zap/Message"
 import formatDate from "../../tools/formatDate"
 import { Accordion } from "../../components/Accordion"
+import { IntegrationChip } from "./IntegrationChip"
 
 interface BoardChatProps {
     chat: Chat
@@ -74,10 +75,18 @@ export const BoardChat: React.FC<BoardChatProps> = (props) => {
                                 >
                                     {props.chat.name}
                                 </Typography>
-                                <Typography sx={{ fontSize: "0.8rem" }}>
-                                    {formatDate.weekDay(new Date(props.chat.last_message.timestamp * 1000).getDay(), true)} -{" "}
-                                    {new Date(props.chat.last_message.timestamp * 1000).toLocaleDateString("pt-br")}
-                                </Typography>
+                                <Box sx={{ gap: "0.5vw", alignItems: "center" }}>
+                                    <Chip
+                                        size="small"
+                                        label={
+                                            <>
+                                                {formatDate.weekDay(new Date(props.chat.last_message.timestamp * 1000).getDay(), true)} -{" "}
+                                                {new Date(props.chat.last_message.timestamp * 1000).toLocaleDateString("pt-br")}
+                                            </>
+                                        }
+                                    />
+                                    <IntegrationChip washima={props.washima} chatVariant />
+                                </Box>
                             </Box>
                         </Box>
                         <IconButton onClick={(ev) => setMenuAnchorEl(ev.currentTarget)}>
@@ -92,7 +101,7 @@ export const BoardChat: React.FC<BoardChatProps> = (props) => {
                         hideTitle
                     /> */}
 
-                    {washimaChat && props.washima && (
+                    {washimaChat && props.washima ? (
                         <Accordion
                             expanded={expandedChat}
                             titleElement={
@@ -129,6 +138,10 @@ export const BoardChat: React.FC<BoardChatProps> = (props) => {
                             }
                             hideTitle
                         />
+                    ) : (
+                        <Box>
+                            <Typography>Business indisponível</Typography>
+                        </Box>
                     )}
 
                     {/* <Accordion

@@ -24,14 +24,14 @@ export const BoardSettingsModal: React.FC<BoardSettingsModalProps> = (props) => 
 
     const [tab, setTab] = useState(0)
     const [loading, setLoading] = useState(false)
-    const [selectedWashimas, setSelectedWashimas] = useState(props.board.receive_washima_message)
+    const [selectedWashimas, setSelectedWashimas] = useState(props.board.washima_settings)
 
     const onSaveClick = async () => {
         if (loading) return
 
         setLoading(true)
         try {
-            const data: Partial<Board> = { receive_washima_message: selectedWashimas }
+            const data: Partial<Board> = { washima_settings: selectedWashimas }
             const response = await api.patch("/company/boards", data, {
                 params: { company_id: company?.id, user_id: user?.id, board_id: props.board.id },
             })

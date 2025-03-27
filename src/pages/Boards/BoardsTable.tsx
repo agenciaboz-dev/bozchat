@@ -1,5 +1,5 @@
 import React, { useEffect, useMemo, useRef, useState } from "react"
-import { Badge, Box, IconButton, Menu, MenuItem, Paper } from "@mui/material"
+import { Badge, Box, IconButton, Menu, MenuItem, Paper, SvgIconTypeMap } from "@mui/material"
 import { useSnackbar } from "burgos-snackbar"
 import { useUser } from "../../hooks/useUser"
 import {
@@ -20,6 +20,7 @@ import { Board } from "../../types/server/class/Board/Board"
 import { WithoutFunctions } from "../../types/server/class/helpers"
 import { useNavigate } from "react-router-dom"
 import { slugify } from "../../tools/normalize"
+import { OverridableComponent } from "@mui/material/OverridableComponent"
 
 interface BoardsTableProps {
     boards: Board[]
@@ -41,6 +42,20 @@ interface CustomRow extends WithoutFunctions<Board> {
     roomsCount: number
     unreadCount: number
     syncsCount: { washima: number; nagazap: number }
+}
+
+const IntegrationIcon: React.FC<{
+    quantity: number
+    icon: OverridableComponent<SvgIconTypeMap<{}, "svg">> & {
+        muiName: string
+    }
+}> = (props) => {
+    const Icon = props.icon
+    return (
+        <Badge badgeContent={props.quantity} color="primary">
+            <Icon color={props.quantity > 0 ? "success" : "disabled"} />
+        </Badge>
+    )
 }
 
 export const BoardsTable: React.FC<BoardsTableProps> = (props) => {
@@ -69,7 +84,7 @@ export const BoardsTable: React.FC<BoardsTableProps> = (props) => {
                 ...board,
                 roomsCount: board.rooms.length,
                 chats: board.rooms.reduce((total, room) => (total += room.chats.length), 0),
-                syncsCount: { washima: board.receive_washima_message.length, nagazap: 0 },
+                syncsCount: { washima: board.washima_settings.length, nagazap: 0 },
                 unreadCount: board.rooms.reduce((total, room) => (total += room.chats.filter((chat) => chat.unread_count > 0).length), 0),
             })),
         [props.boards]
@@ -84,12 +99,8 @@ export const BoardsTable: React.FC<BoardsTableProps> = (props) => {
             align: "center",
             renderCell: (params) => (
                 <Box sx={{ gap: "1vw" }}>
-                    <Badge badgeContent={params.value.washima} color="primary">
-                        <WhatsApp color={params.value.washima > 0 ? "success" : "disabled"} />
-                    </Badge>
-                    <Badge badgeContent={params.value.nagazap} color="primary">
-                        <Hub color={params.value.nagazap > 0 ? "success" : "disabled"} />
-                    </Badge>
+                    <IntegrationIcon quantity={params.value.washima} icon={WhatsApp} />
+                    <IntegrationIcon quantity={params.value.nagazap} icon={Hub} />
                 </Box>
             ),
         },

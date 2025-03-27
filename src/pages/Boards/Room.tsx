@@ -55,7 +55,7 @@ export const BoardRoom: React.FC<KanbanColumnProps> = (props) => {
         setMenuAnchorEl(null)
     }
 
-    const syncedWashimas = props.board.receive_washima_message.map((setting) => {
+    const syncedWashimas = props.board.washima_settings.map((setting) => {
         const washima = props.washimas.find((washima) => washima.id === setting.washima_id)
         return setting.room_id === props.room.id ? <IntegrationChip washima={washima} /> : null
     })
@@ -76,7 +76,7 @@ export const BoardRoom: React.FC<KanbanColumnProps> = (props) => {
                     <RoomNameInput onSubmit={(name) => editRoomName(props.index, name)} currentName={props.room.name} />
                 </Box>
             ) : (
-                <Box sx={{ alignItems: "center", gap: "1vw", flexWrap: "wrap" }}>
+                <Box sx={{ alignItems: "center", gap: "0.5vw", flexWrap: "wrap" }}>
                     <Typography sx={{ color: "secondary.main", fontWeight: "bold" }}>{props.room.name}</Typography>
                     <Tooltip title={`existem ${props.room.chats.length} conversas nesta sala`} arrow>
                         <Chip label={`${props.room.chats.length}`} size="small" color="primary" />
