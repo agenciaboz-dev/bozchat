@@ -10,7 +10,7 @@ interface MenuDrawerProps {}
 
 export const MenuDrawer: React.FC<MenuDrawerProps> = ({}) => {
     const isMobile = useMediaQuery("(orientation: portrait)")
-    const darkMode = useDarkMode()
+    const { darkMode } = useDarkMode()
 
     const { drawer } = useMenu()
 
@@ -26,7 +26,11 @@ export const MenuDrawer: React.FC<MenuDrawerProps> = ({}) => {
                 sx={{ padding: isMobile ? "6vw" : "2vw", flexDirection: "column", gap: "1vw", width: "100%", alignItems: "center" }}
                 color={"text.secondary"}
             >
-                <img src={darkMode ? "/logos/negativos/1.png" : "/logos/1.png"} style={{ width: isMobile ? "25vw" : "10vw" }} draggable={false} />
+                <img
+                    src={darkMode ? "/logos/negativos/1.png" : "/logos/negativos/3.png"}
+                    style={{ width: isMobile ? "25vw" : "10vw" }}
+                    draggable={false}
+                />
             </Box>
             <Box sx={{ flexDirection: "column", flex: 1 }}>
                 {drawer.menus.map((menu) => (

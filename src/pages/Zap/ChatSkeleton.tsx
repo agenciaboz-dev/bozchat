@@ -19,7 +19,6 @@ export const ChatSkeleton: React.FC<ChatSkeletonProps> = ({}) => {
             }}
         >
             <Skeleton variant="circular" animation="wave" sx={{ width: isMobile ? "15vw" : "3vw", height: isMobile ? "15vw" : "3vw" }} />
-
             <Box
                 sx={{
                     flexDirection: "column",
@@ -32,8 +31,10 @@ export const ChatSkeleton: React.FC<ChatSkeletonProps> = ({}) => {
                     <Skeleton variant="rounded" animation="wave" sx={{ width: isMobile ? "50%" : "8vw" }} />
                     <Skeleton variant="rounded" animation="wave" sx={{ width: isMobile ? "20%" : "3vw", height: isMobile ? "3vw" : "0.6vw" }} />
                 </Box>
-
-                <Skeleton variant="rounded" animation="wave" sx={{ width: isMobile ? "85%" : "18vw" }} />
+                <Box sx={{ justifyContent: "space-between", alignItems: "center", width: "100%" }}>
+                    <Skeleton variant="rounded" animation="wave" sx={{ width: isMobile ? "85%" : "18vw" }} />
+                    <Skeleton variant="circular" animation="wave" sx={{ width: isMobile ? "7vw" : "1.5vw", height: isMobile ? "7vw" : "1.5vw" }} />
+                </Box>
             </Box>
         </Box>
     )

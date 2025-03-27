@@ -169,7 +169,7 @@ export const WashimaPage: React.FC<WashimaProps> = ({}) => {
                                 variant="outlined"
                                 color="primary"
                                 fullWidth
-                                sx={{ borderStyle: "dashed", fontSize: "1rem", marginBottom: "1vw" }}
+                                sx={{ borderStyle: "dashed", fontSize: "1rem", marginBottom: "1vw", fontWeight: "bold" }}
                                 onClick={() => {
                                     setCurrentWashima(null)
                                     if (isMobile) {
