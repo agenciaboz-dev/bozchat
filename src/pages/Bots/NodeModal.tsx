@@ -15,7 +15,7 @@ export const NodeModal: React.FC<NodeModalProps> = ({ node, onClose, saveNode })
     const [nodeValue, setNodeValue] = useState(node?.data.value)
 
     const onSaveClick = () => {
-        if (!node || !nodeValue) return
+        if (!node || (node.type !== "response" && !nodeValue) || nodeValue === undefined) return
 
         saveNode(node.id, nodeValue)
 

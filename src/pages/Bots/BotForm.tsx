@@ -115,11 +115,7 @@ export const BotForm: React.FC<BotFormProps> = ({ onSubmit, bot, onDelete }) => 
             right={
                 <Box sx={{ gap: "1vw" }}>
                     {bot && <Button onClick={onDeleteClick}>{deleting ? <CircularProgress size="1.5rem" /> : "Deletar"}</Button>}
-                    <Button
-                        variant="contained"
-                        onClick={() => formik.handleSubmit()}
-                        disabled={!formik.values.name || !formik.values.trigger || !formik.values.expiry_minutes}
-                    >
+                    <Button variant="contained" onClick={() => formik.handleSubmit()} disabled={!formik.values.name || !formik.values.expiry_minutes}>
                         {loading ? <CircularProgress size={"1.5rem"} color="secondary" /> : "Salvar"}
                     </Button>
                 </Box>
@@ -142,7 +138,7 @@ export const BotForm: React.FC<BotFormProps> = ({ onSubmit, bot, onDelete }) => 
                     value={formik.values.trigger}
                     onChange={formik.handleChange}
                     name="trigger"
-                    required
+                    placeholder="Qualquer mensagem"
                     InputProps={{
                         endAdornment: (
                             <Tooltip
@@ -151,6 +147,7 @@ export const BotForm: React.FC<BotFormProps> = ({ onSubmit, bot, onDelete }) => 
                                         <Typography sx={{ fontSize: "0.8rem" }}>
                                             Você pode especificar múltiplos gatilhos seperados por ";"
                                         </Typography>
+                                        <Typography sx={{ fontSize: "0.8rem" }}>Deixe em branco para ativar o bot com qualquer mensagem</Typography>
                                     </Box>
                                 }
                             >

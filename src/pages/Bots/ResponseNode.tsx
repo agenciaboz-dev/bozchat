@@ -2,7 +2,7 @@ import React, { useMemo, useState } from "react"
 import { Box, Button, IconButton, Menu, MenuItem, Paper, Typography } from "@mui/material"
 import { nodeHeight, nodeWidth } from "./CustomNode"
 import { Handle, Position } from "@xyflow/react"
-import { AddCircle, Delete, Edit } from "@mui/icons-material"
+import { AddCircle, Delete, Edit, EmergencyRecording } from "@mui/icons-material"
 import { TrianguloFudido } from "../Zap/TrianguloFudido"
 import { FlowNode } from "../../types/server/class/Bot/Bot"
 import { useDarkMode } from "../../hooks/useDarkMode"
@@ -55,9 +55,13 @@ export const ResponseNode: React.FC<ResponseNodeProps> = (node) => {
                     {node.data.value}
                 </Typography>
             ) : (
-                <Button color="secondary" sx={{ alignItems: "center", gap: 0.5, flexDirection: "column" }} onClick={() => node.data.editNode(node)}>
-                    <Edit color="secondary" sx={{ width: 45, height: "auto" }} />
-                    Insira um valor
+                <Button
+                    color="secondary"
+                    sx={{ alignItems: "center", gap: 0.5, flexDirection: "column", margin: "0 -1vw", height: "100%" }}
+                    onClick={() => node.data.editNode(node)}
+                >
+                    <Typography sx={{ fontWeight: "bold", fontSize: "5rem", lineHeight: "0.1vw", marginTop: "1.6vw" }}>*</Typography>
+                    Qualquer mensagem
                 </Button>
             )}
 
