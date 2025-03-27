@@ -21,12 +21,18 @@ export const BusinessContainer: React.FC<BusinessContainerProps> = (props) => {
     const [selectedRoom, setSelectedRoom] = useState(props.room || props.board.rooms[props.board.entry_room_index])
 
     const onChangeRoom = (room: Room) => {
-        props.onChange(props.washima.id, props.checked ? { washima_id: props.washima.id, room_id: room.id } : undefined)
+        props.onChange(
+            props.washima.id,
+            props.checked ? { washima_id: props.washima.id, room_id: room.id, washima_name: props.washima.name } : undefined
+        )
         setSelectedRoom(room)
     }
 
     const onChangeCheckbox = (value: boolean) => {
-        props.onChange(props.washima.id, value ? { washima_id: props.washima.id, room_id: selectedRoom.id } : undefined)
+        props.onChange(
+            props.washima.id,
+            value ? { washima_id: props.washima.id, room_id: selectedRoom.id, washima_name: props.washima.name } : undefined
+        )
     }
 
     useEffect(() => {

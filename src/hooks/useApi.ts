@@ -32,8 +32,9 @@ export const useApi = () => {
     const fetchDepartments = async (options?: FetchOptions) => await get("/company/departments", options)
     const fetchUsers = async (options?: FetchOptions) => await get("/company/users", options)
     const fetchBoards = async (options?: FetchOptions) => await get("/company/boards", options)
+    const fetchBoardsAccess = async (options?: FetchOptions) => await get("/company/boards/access", options)
     const fetchWashima = async (options?: FetchOptions) => await get("/washima", options)
     const fetchWashimaProfilePic = async (options?: FetchOptions) => await get("/washima/profile-pic", options)
 
-    return { loading, setLoading, fetchDepartments, fetchUsers, fetchBoards, fetchWashima, fetchWashimaProfilePic }
+    return { loading, setLoading, fetchDepartments, fetchUsers, fetchBoards, fetchWashima, fetchWashimaProfilePic, fetchBoardsAccess }
 }

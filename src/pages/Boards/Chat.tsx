@@ -80,7 +80,7 @@ export const BoardChat: React.FC<BoardChatProps> = (props) => {
                                         size="small"
                                         label={
                                             <>
-                                                {formatDate.weekDay(new Date(props.chat.last_message.timestamp * 1000).getDay(), true)} -{" "}
+                                                {formatDate.weekDay(new Date(props.chat.last_message.timestamp * 1000).getDay() + 1, true)} -{" "}
                                                 {new Date(props.chat.last_message.timestamp * 1000).toLocaleDateString("pt-br")}
                                             </>
                                         }
