@@ -288,9 +288,6 @@ export const Login: React.FC<LoginProps> = ({}) => {
                         alignItems: "center",
                     }}
                 >
-                    <Typography component="label" fontSize={"1.4rem"} color={"text.secondary"} fontFamily={"Futura Medium BT"}>
-                        Tema:
-                    </Typography>
                     <ThemeSwitch sx={{ marginTop: undefined }} />
                 </Box>
             </Box>
