@@ -15,6 +15,12 @@
     font-weight: bold;
 }
 
+@font-face {
+    font-family: 'Futura Medium BT';
+    src: url('/fonts/Futura-Medium-BT.ttf') format('truetype');
+    font-weight: normal;
+    font-style: normal;
+}
 
 .MuiList-root {
     width: 100%;

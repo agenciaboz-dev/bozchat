@@ -3,6 +3,7 @@ import colors, { default_colors } from "./colors"
 
 interface StyleProps {
     darkMode?: boolean
+    noBorder?: boolean
 }
 
 export const webkitbg = {
@@ -19,7 +20,7 @@ export const lightModeWebkitbg = {
     },
 }
 
-export const textFieldStyle = ({ darkMode = true }: StyleProps): SxProps => ({
+export const textFieldStyle = ({ darkMode = true, noBorder = false }: StyleProps): SxProps => ({
     ...(darkMode ? webkitbg : lightModeWebkitbg),
     "& .MuiInputLabel-root": {
         color: "grey",
@@ -36,6 +37,7 @@ export const textFieldStyle = ({ darkMode = true }: StyleProps): SxProps => ({
         "& fieldset": {
             // bgcolor: "background.default",
             // borderColor: "primary.main",
+            border: noBorder ? "none" : undefined,
         },
         fontSize: "1vw",
         "@media (max-width: 600px)": {
