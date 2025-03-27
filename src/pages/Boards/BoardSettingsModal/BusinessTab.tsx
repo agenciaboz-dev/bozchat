@@ -3,7 +3,7 @@ import { Box, Chip, Typography } from "@mui/material"
 import { Washima } from "../../../types/server/class/Washima/Washima"
 import { WithoutFunctions } from "../../../types/server/class/helpers"
 import { Board, BoardWashimaSettings } from "../../../types/server/class/Board/Board"
-import { BusinessContainer } from "./BusinessContainer"
+import { IntegrationContainer } from "./IntegrationContainer"
 
 interface BusinessTabProps {
     washimas: Washima[]
@@ -44,13 +44,14 @@ export const BusinessTab: React.FC<BusinessTabProps> = (props) => {
                 {syncedWashimas.map((washima) => {
                     const setting = props.selectedWashimas.find((item) => item.washima_id === washima.id)
                     return (
-                        <BusinessContainer
-                            washima={washima}
+                        <IntegrationContainer
+                            integration={washima}
                             key={washima.id}
                             checked={!!setting}
                             onChange={onWashimaClick}
                             board={props.board}
                             room={props.board.rooms.find((room) => room.id === setting?.room_id)}
+                            type='washima'
                         />
                     )
                 })}
@@ -62,13 +63,14 @@ export const BusinessTab: React.FC<BusinessTabProps> = (props) => {
                 {remainingWashimas.map((washima) => {
                     const setting = props.selectedWashimas.find((item) => item.washima_id === washima.id)
                     return (
-                        <BusinessContainer
-                            washima={washima}
+                        <IntegrationContainer
+                            integration={washima}
                             key={washima.id}
                             checked={!!setting}
                             onChange={onWashimaClick}
                             board={props.board}
                             room={props.board.rooms.find((room) => room.id === setting?.room_id)}
+                            type='washima'
                         />
                     )
                 })}

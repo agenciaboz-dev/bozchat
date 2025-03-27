@@ -3,41 +3,46 @@ import { Autocomplete, Avatar, Box, Checkbox, Paper, TextField, Typography } fro
 import { Washima, WashimaProfilePic } from "../../../types/server/class/Washima/Washima"
 import { useApi } from "../../../hooks/useApi"
 import { WithoutFunctions } from "../../../types/server/class/helpers"
-import { Board, BoardWashimaSettings } from "../../../types/server/class/Board/Board"
+import { Board, BoardNagazapSettings, BoardWashimaSettings } from "../../../types/server/class/Board/Board"
 import { Room } from "../../../types/server/class/Board/Room"
+import { Nagazap } from "../../../types/server/class/Nagazap"
 
 interface BusinessContainerProps {
     board: WithoutFunctions<Board>
-    washima: Washima
+    integration: Washima|Nagazap
     checked: boolean
     room?: Room
-    onChange: (washima_id: string, setting?: BoardWashimaSettings) => void
+    onChange: (integration_id: string, setting?: BoardWashimaSettings | BoardNagazapSettings) => void
+    type: 'washima' | 'nagazap'
 }
 
-export const BusinessContainer: React.FC<BusinessContainerProps> = (props) => {
+export const IntegrationContainer: React.FC<BusinessContainerProps> = (props) => {
     const { fetchWashimaProfilePic } = useApi()
 
     const [profilePic, setProfilePic] = useState<WashimaProfilePic | null>(null)
     const [selectedRoom, setSelectedRoom] = useState(props.room || props.board.rooms[props.board.entry_room_index])
 
+    const washima = props.integration as Washima
+    const nagazap = props.integration as Nagazap
+
     const onChangeRoom = (room: Room) => {
         props.onChange(
-            props.washima.id,
-            props.checked ? { washima_id: props.washima.id, room_id: room.id, washima_name: props.washima.name } : undefined
+            props.integration.id,
+            props.checked ? props.type === 'nagazap' ? {nagazap_id: nagazap.id, room_id: room.id, nagazap_name: nagazap.displayName || ''} : { washima_id: props.integration.id, room_id: room.id, washima_name: washima.name } : undefined
         )
         setSelectedRoom(room)
     }
 
     const onChangeCheckbox = (value: boolean) => {
         props.onChange(
-            props.washima.id,
-            value ? { washima_id: props.washima.id, room_id: selectedRoom.id, washima_name: props.washima.name } : undefined
+            props.integration.id,
+            value ? props.type === 'nagazap' ? {nagazap_id: nagazap.id, room_id: selectedRoom.id, nagazap_name: nagazap.displayName || ''} : { washima_id: props.integration.id, room_id: selectedRoom.id, washima_name: washima.name } : undefined
         )
     }
 
     useEffect(() => {
-        fetchWashimaProfilePic({ params: { washima_id: props.washima.id } }).then((data) => setProfilePic(data))
-    }, [props.washima])
+        fetchWashimaProfilePic({ params: { washima_id: props.integration.id } }).then((data) => setProfilePic(data))
+    }, [props.integration])
 
     return (
         <Paper sx={{ padding: "1vw" }}>
@@ -46,9 +51,9 @@ export const BusinessContainer: React.FC<BusinessContainerProps> = (props) => {
                 <Avatar src={profilePic?.url} />
                 <Box sx={{ flexDirection: "column" }}>
                     <Typography sx={{ fontWeight: "bold", width: "13vw", whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis" }}>
-                        {props.washima.name}
+                        {washima.name || (nagazap.displayName || '')}
                     </Typography>
-                    <Typography sx={{ fontSize: "0.8rem", color: "secondary.main" }}>{props.washima.number}</Typography>
+                    <Typography sx={{ fontSize: "0.8rem", color: "secondary.main" }}>{washima.number || nagazap.displayPhone}</Typography>
                 </Box>
             </Box>
 

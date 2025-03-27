@@ -8,11 +8,14 @@ import { MediaChip } from "../../components/MediaChip"
 import { Washima } from "../../types/server/class/Washima/Washima"
 import { Chat as WashimaChatType } from "../../types/Chat"
 import { WashimaChat } from "../Washima/WashimaChat/WashimaChat"
-import { Nagazap } from "../../types/server/class/Nagazap"
-import Message from "../Zap/Message"
+import { NagaMessage, Nagazap } from "../../types/server/class/Nagazap"
+import WashimaMessage from "../Zap/Message"
 import formatDate from "../../tools/formatDate"
 import { Accordion } from "../../components/Accordion"
 import { IntegrationChip } from "./IntegrationChip"
+import { WashimaMessage as WashimaMessageType } from "../../types/server/class/Washima/WashimaMessage"
+import { MessageContainer } from "../Nagazap/Messages/MessageContainer"
+import { ChatContainer } from "../Nagazap/Messages/ChatContainer"
 
 interface BoardChatProps {
     chat: Chat
@@ -30,6 +33,14 @@ export const BoardChat: React.FC<BoardChatProps> = (props) => {
     }>()
     const [expandedChat, setExpandedChat] = useState(false)
 
+    const datetime = useMemo(
+        () =>
+            typeof props.chat.last_message.timestamp === "number"
+                ? new Date(props.chat.last_message.timestamp * 1000)
+                : new Date(Number(props.chat.last_message.timestamp)),
+        [props.chat.last_message.timestamp]
+    )
+
     const washimaChat = useMemo(
         () =>
             props.washima ? (props.washima.chats.find((chat) => chat.id._serialized === props.chat.washima_chat_id) as WashimaChatType | null) : null,
@@ -39,7 +50,7 @@ export const BoardChat: React.FC<BoardChatProps> = (props) => {
     const fetchMediaMetadata = async () => {
         try {
             const response = await api.get("/washima/media-metadata", {
-                params: { washima_id: props.chat.washima_id, message_id: props.chat.last_message.sid },
+                params: { washima_id: props.chat.washima_id, message_id: (props.chat.last_message as WashimaMessageType).sid },
             })
             setMediaMetaData(response.data)
         } catch (error) {
@@ -48,7 +59,7 @@ export const BoardChat: React.FC<BoardChatProps> = (props) => {
     }
 
     useEffect(() => {
-        if (props.chat.last_message?.hasMedia) {
+        if ((props.chat.last_message as WashimaMessageType)?.hasMedia) {
             fetchMediaMetadata()
         }
     }, [])
@@ -78,14 +89,9 @@ export const BoardChat: React.FC<BoardChatProps> = (props) => {
                                 <Box sx={{ gap: "0.5vw", alignItems: "center" }}>
                                     <Chip
                                         size="small"
-                                        label={
-                                            <>
-                                                {formatDate.weekDay(new Date(props.chat.last_message.timestamp * 1000).getDay() + 1, true)} -{" "}
-                                                {new Date(props.chat.last_message.timestamp * 1000).toLocaleDateString("pt-br")}
-                                            </>
-                                        }
+                                        label={<Typography sx={{ fontSize: "0.7rem" }}>{datetime.toLocaleDateString("pt-br")}</Typography>}
                                     />
-                                    <IntegrationChip washima={props.washima} chatVariant />
+                                    <IntegrationChip washima={props.washima} chatVariant nagazap={props.nagazap} />
                                 </Box>
                             </Box>
                         </Box>
@@ -101,7 +107,7 @@ export const BoardChat: React.FC<BoardChatProps> = (props) => {
                         hideTitle
                     /> */}
 
-                    {washimaChat && props.washima ? (
+                    {props.washima || props.nagazap ? (
                         <Accordion
                             expanded={expandedChat}
                             titleElement={
@@ -118,19 +124,36 @@ export const BoardChat: React.FC<BoardChatProps> = (props) => {
                                     }}
                                 >
                                     {!expandedChat && props.washima && (
-                                        <Message
-                                            message={props.chat.last_message}
+                                        <WashimaMessage
+                                            message={props.chat.last_message as WashimaMessageType}
                                             washima={props.washima}
                                             inBoards
                                             isGroup={props.chat.is_group}
                                             noActions
                                         />
                                     )}
+                                    {!expandedChat && props.nagazap && (
+                                        <MessageContainer message={props.chat.last_message as NagaMessage} nagazap={props.nagazap} />
+                                    )}
                                 </Paper>
                             }
                             expandedElement={
                                 <Box sx={{ position: "relative", flex: 1 }}>
-                                    <WashimaChat inBoards chat={washimaChat} washima={props.washima} onClose={() => setExpandedChat(false)} />
+                                    {props.washima && (
+                                        <WashimaChat inBoards chat={washimaChat} washima={props.washima} onClose={() => setExpandedChat(false)} />
+                                    )}
+                                    {props.nagazap && (
+                                        <ChatContainer
+                                            nagazap={props.nagazap}
+                                            chat={{
+                                                from: props.chat.phone,
+                                                lastMessage: props.chat.last_message as NagaMessage,
+                                                name: props.chat.name,
+                                                messages: [],
+                                            }}
+                                            onClose={() => setExpandedChat(false)}
+                                        />
+                                    )}
                                     <IconButton sx={{ position: "absolute", top: "0", right: "0" }} onClick={() => setExpandedChat(false)}>
                                         <Cancel />
                                     </IconButton>

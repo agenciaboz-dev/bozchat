@@ -12,6 +12,8 @@ import { Washima } from "../../../types/server/class/Washima/Washima"
 import { WithoutFunctions } from "../../../types/server/class/helpers"
 import { useIo } from "../../../hooks/useIo"
 import { useSnackbar } from "burgos-snackbar"
+import { BroadcastTab } from "./BroadcastTab"
+import { Nagazap } from "../../../types/server/class/Nagazap"
 
 interface BoardSettingsModalProps {
     open: boolean
@@ -26,9 +28,11 @@ export const BoardSettingsModal: React.FC<BoardSettingsModalProps> = (props) => 
     const { snackbar } = useSnackbar()
 
     const [washimas] = useFetchedData<Washima>("washimas")
+    const [nagazaps] = useFetchedData<Nagazap>("nagazaps")
     const [tab, setTab] = useState(2)
     const [loading, setLoading] = useState(false)
     const [selectedWashimas, setSelectedWashimas] = useState(props.board.washima_settings)
+    const [selectedNagazaps, setSelectedNagazaps] = useState(props.board.nagazap_settings)
     const [boardChanges, setBoardChanges] = useState<Partial<Board>>({ name: props.board.name })
     const [access, setAccess] = useState<BoardAccess>({ users: [], departments: [] })
 
@@ -37,7 +41,12 @@ export const BoardSettingsModal: React.FC<BoardSettingsModalProps> = (props) => 
 
         setLoading(true)
         try {
-            const data: Partial<Board> & {access?: BoardAccess} = { ...boardChanges, washima_settings: selectedWashimas, access }
+            const data: Partial<Board> & { access?: BoardAccess } = {
+                ...boardChanges,
+                washima_settings: selectedWashimas,
+                access,
+                nagazap_settings: selectedNagazaps,
+            }
             const response = await api.patch("/company/boards", data, {
                 params: { company_id: company?.id, user_id: user?.id, board_id: props.board.id },
             })
@@ -94,6 +103,14 @@ export const BoardSettingsModal: React.FC<BoardSettingsModalProps> = (props) => 
                         washimas={washimas}
                         selectedWashimas={selectedWashimas}
                         setSelectedWashimas={setSelectedWashimas}
+                    />
+                )}
+                {tab === 1 && (
+                    <BroadcastTab
+                        board={props.board}
+                        nagazaps={nagazaps}
+                        selectedNagazaps={selectedNagazaps}
+                        setSelectedNagazaps={setSelectedNagazaps}
                     />
                 )}
                 {tab === 2 && (

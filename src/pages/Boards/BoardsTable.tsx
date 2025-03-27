@@ -84,7 +84,7 @@ export const BoardsTable: React.FC<BoardsTableProps> = (props) => {
                 ...board,
                 roomsCount: board.rooms.length,
                 chats: board.rooms.reduce((total, room) => (total += room.chats.length), 0),
-                syncsCount: { washima: board.washima_settings.length, nagazap: 0 },
+                syncsCount: { washima: board.washima_settings.length, nagazap: board.nagazap_settings.length },
                 unreadCount: board.rooms.reduce((total, room) => (total += room.chats.filter((chat) => chat.unread_count > 0).length), 0),
             })),
         [props.boards]

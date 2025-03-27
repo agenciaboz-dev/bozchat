@@ -15,6 +15,7 @@ import { useUser } from "../../hooks/useUser"
 import { BoardSettingsModal } from "./BoardSettingsModal/BoardSettingsModal"
 import { useFetchedData } from "../../hooks/useFetchedData"
 import { Washima } from "../../types/server/class/Washima/Washima"
+import { Nagazap } from "../../types/server/class/Nagazap"
 
 interface BoardPageProps {
     board: WithoutFunctions<Board>
@@ -27,6 +28,7 @@ export const BoardPage: React.FC<BoardPageProps> = (props) => {
     const { user } = useUser()
 
     const [washimas] = useFetchedData<Washima>("washimas")
+    const [nagazaps] = useFetchedData<Nagazap>("nagazaps")
     const [board, setBoard] = useState(props.board)
     const [editMode, setEditMode] = useState(false)
     const [saving, setSaving] = useState(false)
@@ -212,6 +214,7 @@ export const BoardPage: React.FC<BoardPageProps> = (props) => {
                                         <Box ref={provided.innerRef} {...provided.draggableProps} {...provided.dragHandleProps}>
                                             <BoardRoom
                                                 washimas={washimas}
+                                                nagazaps={nagazaps}
                                                 room={room}
                                                 editMode={editMode}
                                                 updateRoom={updateRoom}

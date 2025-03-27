@@ -1,10 +1,9 @@
 import React from "react"
 import { Box, IconButton, Paper, useMediaQuery } from "@mui/material"
-import { NagaChat } from "../../../types/NagaChat"
 import { MessageContainer } from "./MessageContainer"
 import { Cancel } from "@mui/icons-material"
 import { MessageAuthor } from "../../Zap/MessageAuthor"
-import { Nagazap } from "../../../types/server/class/Nagazap"
+import { NagaChat, Nagazap } from "../../../types/server/class/Nagazap"
 import { NagazapInput } from "./NagazapInput"
 import { DateChip } from "../../Washima/WashimaChat/DateChip"
 

@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react"
 import { FetchOptions, useApi } from "./useApi"
 
-export type FetchedDataKey = "washimas" | "users" | "departments" | "boards"
+export type FetchedDataKey = "washimas" | "users" | "departments" | "boards" | "nagazaps"
 
 export const useFetchedData = <T>(key: FetchedDataKey, options?: FetchOptions): [T[], React.Dispatch<React.SetStateAction<T[]>>] => {
     const api = useApi()
@@ -13,6 +13,7 @@ export const useFetchedData = <T>(key: FetchedDataKey, options?: FetchOptions): 
         users: api.fetchUsers,
         departments: api.fetchDepartments,
         boards: api.fetchBoards,
+        nagazaps: api.fetchNagazaps,
     }
 
     const fetchData = async () => {

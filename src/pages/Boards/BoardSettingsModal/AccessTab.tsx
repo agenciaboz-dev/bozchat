@@ -40,36 +40,34 @@ export const AccessTab: React.FC<AccessTabProps> = (props) => {
                 onChange={(ev) => props.setBoardChanges((board) => ({ ...board, name: ev.target.value }))}
             />
 
-            <Box sx={{ gap: "1vw" }}>
-                <Autocomplete
-                    fullWidth
-                    options={users}
-                    renderInput={(params) => <TextField {...params} label="Usuários" />}
-                    getOptionKey={(option) => option.id}
-                    getOptionLabel={(option) => option.name}
-                    isOptionEqualToValue={(option, value) => option.id === value.id}
-                    multiple
-                    value={props.access.users}
-                    onChange={(_, value) => handleAccessChange("users", value)}
-                    ChipProps={{ size: "small", color: "primary" }}
-                    ListboxProps={{ sx: { width: "100%", bgcolor: "background.default" } }}
-                    disableCloseOnSelect
-                />
-                <Autocomplete
-                    fullWidth
-                    options={departments}
-                    renderInput={(params) => <TextField {...params} label="Setores" />}
-                    getOptionKey={(option) => option.id}
-                    getOptionLabel={(option) => option.name}
-                    isOptionEqualToValue={(option, value) => option.id === value.id}
-                    multiple
-                    value={props.access.departments}
-                    onChange={(_, value) => handleAccessChange("departments", value)}
-                    ChipProps={{ size: "small", color: "primary" }}
-                    ListboxProps={{ sx: { width: "100%", bgcolor: "background.default" } }}
-                    disableCloseOnSelect
-                />
-            </Box>
+            <Autocomplete
+                fullWidth
+                options={users}
+                renderInput={(params) => <TextField {...params} label="Usuários" />}
+                getOptionKey={(option) => option.id}
+                getOptionLabel={(option) => option.name}
+                isOptionEqualToValue={(option, value) => option.id === value.id}
+                multiple
+                value={props.access.users}
+                onChange={(_, value) => handleAccessChange("users", value)}
+                ChipProps={{ size: "small", color: "primary" }}
+                ListboxProps={{ sx: { width: "100%", bgcolor: "background.default" } }}
+                disableCloseOnSelect
+            />
+            <Autocomplete
+                fullWidth
+                options={departments}
+                renderInput={(params) => <TextField {...params} label="Setores" />}
+                getOptionKey={(option) => option.id}
+                getOptionLabel={(option) => option.name}
+                isOptionEqualToValue={(option, value) => option.id === value.id}
+                multiple
+                value={props.access.departments}
+                onChange={(_, value) => handleAccessChange("departments", value)}
+                ChipProps={{ size: "small", color: "primary" }}
+                ListboxProps={{ sx: { width: "100%", bgcolor: "background.default" } }}
+                disableCloseOnSelect
+            />
         </Box>
     )
 }

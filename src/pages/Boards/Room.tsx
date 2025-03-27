@@ -11,6 +11,7 @@ import { More, MoreHoriz, WhatsApp } from "@mui/icons-material"
 import { useConfirmDialog } from "burgos-confirm"
 import { Washima } from "../../types/server/class/Washima/Washima"
 import { IntegrationChip } from "./IntegrationChip"
+import { Nagazap } from "../../types/server/class/Nagazap"
 
 interface KanbanColumnProps {
     room: Room
@@ -20,6 +21,7 @@ interface KanbanColumnProps {
     index: number
     deleteRoom: (room_id: string) => void
     washimas: Washima[]
+    nagazaps: Nagazap[]
 }
 
 export const BoardRoom: React.FC<KanbanColumnProps> = (props) => {
@@ -55,10 +57,16 @@ export const BoardRoom: React.FC<KanbanColumnProps> = (props) => {
         setMenuAnchorEl(null)
     }
 
-    const syncedWashimas = props.board.washima_settings.map((setting) => {
-        const washima = props.washimas.find((washima) => washima.id === setting.washima_id)
-        return setting.room_id === props.room.id ? <IntegrationChip washima={washima} /> : null
-    })
+    const syncedIntegrations = [
+        ...props.board.washima_settings.map((setting) => {
+            const washima = props.washimas.find((washima) => washima.id === setting.washima_id)
+            return setting.room_id === props.room.id ? <IntegrationChip washima={washima} /> : null
+        }),
+        ...props.board.nagazap_settings.map((setting) => {
+            const nagazap = props.nagazaps.find((nagazap) => nagazap.id === setting.nagazap_id)
+            return setting.room_id === props.room.id ? <IntegrationChip nagazap={nagazap} /> : null
+        }),
+    ]
 
     return (
         <Paper sx={{ flexDirection: "column", width: "25vw", padding: "1vw", gap: "1vw", overflow: "auto", height: "74vh" }}>
@@ -67,7 +75,7 @@ export const BoardRoom: React.FC<KanbanColumnProps> = (props) => {
                     <Box sx={{ justifyContent: "space-between" }}>
                         <Box sx={{ alignItems: "center", gap: "1vw", flexWrap: "wrap" }}>
                             <Chip label={props.index + 1} color="primary" />
-                            {syncedWashimas}
+                            {syncedIntegrations}
                         </Box>
                         <IconButton onClick={(ev) => setMenuAnchorEl(ev.currentTarget)}>
                             <MoreHoriz />
@@ -81,7 +89,7 @@ export const BoardRoom: React.FC<KanbanColumnProps> = (props) => {
                     <Tooltip title={`existem ${props.room.chats.length} conversas nesta sala`} arrow>
                         <Chip label={`${props.room.chats.length}`} size="small" color="primary" />
                     </Tooltip>
-                    {!!props.washimas.length && syncedWashimas}
+                    {!!props.washimas.length && syncedIntegrations}
                 </Box>
             )}
 
@@ -109,6 +117,7 @@ export const BoardRoom: React.FC<KanbanColumnProps> = (props) => {
                                     chat={chat}
                                     index={index}
                                     washima={props.washimas.find((washima) => washima.id === chat.washima_id)}
+                                    nagazap={props.nagazaps.find((nagazap) => nagazap.id === chat.nagazap_id)}
                                 />
                             ))
                         )}

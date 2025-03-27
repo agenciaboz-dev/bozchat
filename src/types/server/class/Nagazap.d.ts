@@ -75,6 +75,12 @@ export interface NagazapForm {
     businessId: string;
     companyId: string;
 }
+export interface NagaChat {
+    name: string;
+    messages: NagaMessage[];
+    from: string;
+    lastMessage: NagaMessage;
+}
 export declare class Nagazap {
     id: string;
     token: string;

@@ -61,28 +61,32 @@ export declare class Board {
         users?: User[];
     }>>): Promise<void>;
     delete(): Promise<{
-        name: string;
         id: string;
-        company_id: string;
+        name: string;
         created_at: string;
         rooms: Prisma.JsonValue;
         receive_washima_message: Prisma.JsonValue;
         entry_room_id: string;
+        company_id: string;
     }>;
     saveRooms(): Promise<void>;
     newRoom(data: RoomForm): void;
     deleteRoom(room_id: string): void;
     updateRoom(updatedRoom: Room): void;
     newChat(chat: Chat, room_id?: string): Promise<void>;
-    getWashimaSetting(washima_id: string): BoardWashimaSettings | undefined;
+    getWashimaSetting(washima_id?: string): BoardWashimaSettings | undefined;
     handleWashimaMessage(chatDto: ChatDto): Promise<false | undefined>;
     handleWashimaSettingsChange(data: BoardWashimaSettings[]): Promise<boolean>;
     unsyncWashima(data: BoardWashimaSettings): void;
     syncWashima(data: BoardWashimaSettings): Promise<void>;
+    handleNagazapSettingsChange(data: BoardNagazapSettings[]): Promise<boolean>;
+    unsyncNagazap(data: BoardNagazapSettings): void;
+    syncNagazap(data: BoardNagazapSettings): Promise<void>;
     handleWashimaDelete(washima_id: string): false | undefined;
     emit(event?: string, data?: any): void;
     getAccess(): Promise<{
         users: User[];
         departments: Department[];
     }>;
+    changeAccess(access: BoardAccess): Promise<void>;
 }
