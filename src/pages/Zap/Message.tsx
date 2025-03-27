@@ -281,8 +281,8 @@ export const Message: React.ForwardRefRenderFunction<HTMLDivElement, MessageProp
                                                 variant="rounded"
                                                 animation="wave"
                                                 sx={{
-                                                    width: inBoards ? "12vw" : isMobile ? "60vw" : "20vw",
-                                                    height: inBoards ? "12vw" : isMobile ? "70vw" : "20vw",
+                                                    width: inBoards ? "15vw" : isMobile ? "60vw" : "20vw",
+                                                    height: inBoards ? "15vw" : isMobile ? "70vw" : "20vw",
                                                     borderRadius: "1vw",
                                                 }}
                                             />
@@ -291,8 +291,8 @@ export const Message: React.ForwardRefRenderFunction<HTMLDivElement, MessageProp
                                                 <MenuItem sx={{ padding: 0, borderRadius: "0.75vw" }}>
                                                     <img
                                                         style={{
-                                                            width: inBoards ? "12vw" : isMobile ? "60vw" : "20vw",
-                                                            maxHeight: inBoards ? "12vw" : isMobile ? "70vw" : "20vw",
+                                                            width: inBoards ? "15vw" : isMobile ? "60vw" : "20vw",
+                                                            maxHeight: inBoards ? "15vw" : isMobile ? "70vw" : "20vw",
                                                             objectFit: "cover",
                                                             borderRadius: "0.75vw",
                                                         }}
@@ -325,16 +325,16 @@ export const Message: React.ForwardRefRenderFunction<HTMLDivElement, MessageProp
                                                 variant="rounded"
                                                 animation="wave"
                                                 sx={{
-                                                    width: inBoards ? "12vw" : isMobile ? "60vw" : "20vw",
-                                                    height: inBoards ? "12vw" : isMobile ? "70vw" : "20vw",
+                                                    width: inBoards ? "15vw" : isMobile ? "60vw" : "20vw",
+                                                    height: inBoards ? "15vw" : isMobile ? "70vw" : "20vw",
                                                     borderRadius: "1vw",
                                                 }}
                                             />
                                         ) : mediaObj ? (
                                             <video
                                                 style={{
-                                                    width: inBoards ? "12vw" : isMobile ? "60vw" : "20vw",
-                                                    height: inBoards ? "12vw" : isMobile ? "70vw" : "20vw",
+                                                    width: inBoards ? "15vw" : isMobile ? "60vw" : "20vw",
+                                                    height: inBoards ? "15vw" : isMobile ? "70vw" : "20vw",
                                                 }}
                                                 src={mediaObj.source}
                                                 controls

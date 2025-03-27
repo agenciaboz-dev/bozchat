@@ -242,6 +242,7 @@ export const WashimaChat: React.FC<WashimaChatProps> = ({ washima, chat, onClose
                 flexDirection: "column",
                 overflow: "hidden",
                 position: "relative",
+                width: "0vw",
             }}
         >
             {!inBoards && (

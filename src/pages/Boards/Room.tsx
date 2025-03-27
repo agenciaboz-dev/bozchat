@@ -81,7 +81,7 @@ export const BoardRoom: React.FC<KanbanColumnProps> = (props) => {
                     <Tooltip title={`existem ${props.room.chats.length} conversas nesta sala`} arrow>
                         <Chip label={`${props.room.chats.length}`} size="small" color="primary" />
                     </Tooltip>
-                    {syncedWashimas}
+                    {!!props.washimas.length && syncedWashimas}
                 </Box>
             )}
 

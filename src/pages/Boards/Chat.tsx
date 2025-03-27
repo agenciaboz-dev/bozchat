@@ -1,5 +1,5 @@
 import React, { useEffect, useMemo, useState } from "react"
-import { AccordionDetails, AccordionSummary, Avatar, Box, Chip, IconButton, MenuItem, Paper, Typography } from "@mui/material"
+import { AccordionDetails, AccordionSummary, Avatar, Box, Chip, IconButton, LinearProgress, MenuItem, Paper, Typography } from "@mui/material"
 import { Chat } from "../../types/server/class/Board/Chat"
 import { Draggable } from "@hello-pangea/dnd"
 import { Cancel, ChatBubble, ExpandMore, MoreHoriz, Send } from "@mui/icons-material"
@@ -139,9 +139,7 @@ export const BoardChat: React.FC<BoardChatProps> = (props) => {
                             hideTitle
                         />
                     ) : (
-                        <Box>
-                            <Typography>Business indisponível</Typography>
-                        </Box>
+                        <LinearProgress variant="indeterminate" />
                     )}
 
                     {/* <Accordion
