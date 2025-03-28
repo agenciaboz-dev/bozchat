@@ -1,7 +1,6 @@
 import React, { useMemo, useState } from "react"
 import { Box, IconButton, TextField } from "@mui/material"
-import { NagaChat } from "../../../types/NagaChat"
-import { Nagazap, NagazapResponseForm } from "../../../types/server/class/Nagazap"
+import { NagaChat, Nagazap, NagazapResponseForm } from "../../../types/server/class/Nagazap"
 import { useIo } from "../../../hooks/useIo"
 import { textFieldStyle } from "../../../style/textfield"
 import { Send } from "@mui/icons-material"

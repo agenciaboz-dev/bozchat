@@ -340,8 +340,8 @@ export const WashimaChat: React.FC<WashimaChatProps> = ({ washima, chat, onClose
                     opacity: isScrolled ? 1 : 0,
                     pointerEvents: isScrolled ? "auto" : "none",
                     position: "absolute",
-                    bottom: washimaInput.replyMessage ? "11vw" : "7vw",
-                    right: "2vw",
+                    bottom: washimaInput.replyMessage ? (inBoards ? "9vw" : "11vw") : inBoards ? "5vw" : "7vw",
+                    right: inBoards ? "1vw" : "2vw",
                     borderRadius: "100%",
                     transition: "0.5s",
                 }}

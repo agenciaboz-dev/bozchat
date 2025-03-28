@@ -155,6 +155,7 @@ export const BoardPage: React.FC<BoardPageProps> = (props) => {
 
     useEffect(() => {
         if (board) {
+            console.log(board)
             io.on(`board:update`, (board: Board) => {
                 setBoard(board)
             })

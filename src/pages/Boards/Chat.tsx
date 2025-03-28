@@ -1,21 +1,20 @@
 import React, { useEffect, useMemo, useState } from "react"
-import { AccordionDetails, AccordionSummary, Avatar, Box, Chip, IconButton, LinearProgress, MenuItem, Paper, Typography } from "@mui/material"
+import { Avatar, Box, Chip, IconButton, LinearProgress, Paper, Typography } from "@mui/material"
 import { Chat } from "../../types/server/class/Board/Chat"
 import { Draggable } from "@hello-pangea/dnd"
-import { Cancel, ChatBubble, ExpandMore, MoreHoriz, Send } from "@mui/icons-material"
+import { Cancel, MoreHoriz } from "@mui/icons-material"
 import { api } from "../../api"
-import { MediaChip } from "../../components/MediaChip"
 import { Washima } from "../../types/server/class/Washima/Washima"
 import { Chat as WashimaChatType } from "../../types/Chat"
 import { WashimaChat } from "../Washima/WashimaChat/WashimaChat"
 import { NagaMessage, Nagazap } from "../../types/server/class/Nagazap"
 import WashimaMessage from "../Zap/Message"
-import formatDate from "../../tools/formatDate"
 import { Accordion } from "../../components/Accordion"
 import { IntegrationChip } from "./IntegrationChip"
 import { WashimaMessage as WashimaMessageType } from "../../types/server/class/Washima/WashimaMessage"
 import { MessageContainer } from "../Nagazap/Messages/MessageContainer"
 import { ChatContainer } from "../Nagazap/Messages/ChatContainer"
+import { useApi } from "../../hooks/useApi"
 
 interface BoardChatProps {
     chat: Chat
@@ -25,6 +24,7 @@ interface BoardChatProps {
 }
 
 export const BoardChat: React.FC<BoardChatProps> = (props) => {
+    const { fetchNagaMessages } = useApi()
     const [menuAnchorEl, setMenuAnchorEl] = useState<HTMLElement | null>(null)
     const [mediaMetaData, setMediaMetaData] = useState<{
         mimetype: string | undefined
@@ -32,6 +32,7 @@ export const BoardChat: React.FC<BoardChatProps> = (props) => {
         message_id: string
     }>()
     const [expandedChat, setExpandedChat] = useState(false)
+    const [nagazapMessages, setNagazapMessages] = useState<NagaMessage[]>([])
 
     const datetime = useMemo(
         () =>
@@ -63,6 +64,12 @@ export const BoardChat: React.FC<BoardChatProps> = (props) => {
             fetchMediaMetadata()
         }
     }, [])
+
+    useEffect(() => {
+        if (props.nagazap) {
+            fetchNagaMessages({ params: { nagazap_id: props.nagazap.id } }).then((result) => setNagazapMessages(result.reverse()))
+        }
+    }, [props.nagazap, props.chat])
 
     useEffect(() => {
         console.log(mediaMetaData)
@@ -100,14 +107,7 @@ export const BoardChat: React.FC<BoardChatProps> = (props) => {
                         </IconButton>
                     </Box>
 
-                    {/* <Accordion
-                        expanded={expandedChat}
-                        titleElement={<div onClick={() => setExpandedChat((value) => !value)}>Click to Expand</div>}
-                        expandedElement={<div>Expanded Content Goes Here</div>}
-                        hideTitle
-                    /> */}
-
-                    {props.washima || props.nagazap ? (
+                    {props.washima || (props.nagazap && nagazapMessages.length > 0) ? (
                         <Accordion
                             expanded={expandedChat}
                             titleElement={
@@ -133,7 +133,7 @@ export const BoardChat: React.FC<BoardChatProps> = (props) => {
                                         />
                                     )}
                                     {!expandedChat && props.nagazap && (
-                                        <MessageContainer message={props.chat.last_message as NagaMessage} nagazap={props.nagazap} />
+                                        <MessageContainer message={props.chat.last_message as NagaMessage} nagazap={props.nagazap} inBoards />
                                     )}
                                 </Paper>
                             }
@@ -144,12 +144,13 @@ export const BoardChat: React.FC<BoardChatProps> = (props) => {
                                     )}
                                     {props.nagazap && (
                                         <ChatContainer
+                                            inBoards
                                             nagazap={props.nagazap}
                                             chat={{
                                                 from: props.chat.phone,
                                                 lastMessage: props.chat.last_message as NagaMessage,
                                                 name: props.chat.name,
-                                                messages: [],
+                                                messages: nagazapMessages,
                                             }}
                                             onClose={() => setExpandedChat(false)}
                                         />
@@ -164,59 +165,6 @@ export const BoardChat: React.FC<BoardChatProps> = (props) => {
                     ) : (
                         <LinearProgress variant="indeterminate" />
                     )}
-
-                    {/* <Accordion
-                        expanded={expandedChat}
-                        onChange={(_, value) => setExpandedChat(value)}
-                        slotProps={{ transition: { unmountOnExit: true } }}
-                        sx={{
-                            flexDirection: "column",
-                            boxShadow: "none",
-                            background: "transparent",
-                            border: "none",
-                            "&:before": { display: "none" },
-                            "&.Mui-expanded": {
-                                margin: 0,
-                            },
-                            position: "relative",
-                        }}
-                        disableGutters
-                    >
-                        <AccordionSummary>
-                            <Paper
-                                elevation={0}
-                                sx={{
-                                    bgcolor: "background.default",
-                                    flex: 1,
-                                    flexDirection: "column",
-                                    margin: "-1vw",
-                                    padding: "1vw",
-                                    position: "relative",
-                                    color: "secondary.main",
-                                }}
-                            >
-                                {!expandedChat && props.washima && (
-                                    <Message
-                                        message={props.chat.last_message}
-                                        washima={props.washima}
-                                        inBoards
-                                        isGroup={props.chat.is_group}
-                                        noActions
-                                    />
-                                )}
-                            </Paper>
-                        </AccordionSummary>
-                        <AccordionDetails>
-                            {washimaChat && props.washima && (
-                                <Box sx={{ margin: "-2vw", marginTop: "-4vw", position: "relative" }}>
-                                    <WashimaChat inBoards chat={washimaChat} washima={props.washima} onClose={() => setExpandedChat(false)} />
-                                    <IconButton sx={{ position: "absolute", top: "1vw", right: "1vw" }} onClick={() => setExpandedChat(false)}>
-                                        <Cancel />
-                                    </IconButton>
-                                </Box>
-                            )}
-                        </AccordionDetails>
-                    </Accordion> */}
                 </Paper>
             )}
         </Draggable>

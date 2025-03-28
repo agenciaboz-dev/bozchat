@@ -69,7 +69,7 @@ export const AudioPlayer: React.FC<AudioPlayerProps> = ({ media, washima, chat_i
     }, [media])
 
     return (
-        <Box sx={{ width: inBoards ? "17vw" : isMobile ? "60vw" : "19.5vw", gap: "0.5vw", alignItems: "center", ...containerSx }}>
+        <Box sx={{ width: inBoards ? "15vw" : isMobile ? "60vw" : "19.5vw", gap: "0.5vw", alignItems: "center", ...containerSx }}>
             <Avatar
                 sx={{ bgcolor: "warning.main", width: isMobile ? "12vw" : "3.5vw", height: isMobile ? "12vw" : "3.5vw" }}
                 src={profilePicUrl}

@@ -11,52 +11,56 @@ interface ChatContainerProps {
     chat: NagaChat
     onClose: () => void
     nagazap: Nagazap
+    inBoards?: boolean
 }
 
-export const ChatContainer: React.FC<ChatContainerProps> = ({ chat, onClose, nagazap }) => {
+export const ChatContainer: React.FC<ChatContainerProps> = ({ chat, onClose, nagazap, inBoards }) => {
     const isMobile = useMediaQuery("(orientation: portrait)")
 
     return (
         <Paper
-            elevation={5}
+            elevation={inBoards ? 0 : 5}
             sx={{
                 flex: 1,
                 // justifyContent: isMobile ? "flex-end" : "center",
-                bgcolor: "background.paper",
+                bgcolor: inBoards ? "transparent" : "background.paper",
                 // height: isMobile ? "77vh" : "90vh",
-                padding: isMobile ? "2vw" : "0.5vw 1vw",
+                padding: inBoards ? 0 : isMobile ? "2vw" : "0.5vw 1vw",
                 color: "secondary.main",
-                gap: "0.5vw",
+                gap: inBoards ? "1vw" : "0.5vw",
                 flexDirection: "column",
                 overflow: "hidden",
                 position: "relative",
-                marginBottom: "-1vw",
+                marginBottom: inBoards ? undefined : "-1vw",
+                width: inBoards ? "0vw" : undefined,
             }}
         >
-            <Box
-                sx={{
-                    gap: isMobile ? "3vw" : "2vw",
-                    alignItems: "center",
-                    // height: isMobile ? "7vh" : "5vh",
-                    padding: isMobile ? "2vw" : "",
-                }}
-            >
-                <MessageAuthor author={chat.name + " - " + chat.from} />
-                <Box sx={{ marginLeft: "auto" }}>
-                    <IconButton sx={{ color: "text.secondary", padding: isMobile ? "0" : "" }} onClick={onClose}>
-                        <Cancel />
-                    </IconButton>
+            {!inBoards && (
+                <Box
+                    sx={{
+                        gap: isMobile ? "3vw" : "2vw",
+                        alignItems: "center",
+                        // height: isMobile ? "7vh" : "5vh",
+                        padding: isMobile ? "2vw" : "",
+                    }}
+                >
+                    <MessageAuthor author={chat.name + " - " + chat.from} />
+                    <Box sx={{ marginLeft: "auto" }}>
+                        <IconButton sx={{ color: "text.secondary", padding: isMobile ? "0" : "" }} onClick={onClose}>
+                            <Cancel />
+                        </IconButton>
+                    </Box>
                 </Box>
-            </Box>
+            )}
 
             <Box
                 sx={{
                     width: "100%",
-                    height: "27vw",
+                    height: inBoards ? "20vw" : "27vw",
                     bgcolor: "background.default",
                     overflowY: "scroll",
                     borderRadius: isMobile ? "2vw" : "4px",
-                    padding: isMobile ? "4vw" : "2vw",
+                    padding: inBoards ? "1vw" : isMobile ? "4vw" : "2vw",
                     color: "text.secondary",
                     flexDirection: "column-reverse",
                     gap: isMobile ? "1vw" : "0.5vw",
@@ -74,7 +78,7 @@ export const ChatContainer: React.FC<ChatContainerProps> = ({ chat, onClose, nag
                         new Date(Number(previous_message.timestamp)).toLocaleDateString() !== new Date(Number(message.timestamp)).toLocaleDateString()
                     return (
                         <>
-                            <MessageContainer key={message.id} message={message} nagazap={nagazap} />
+                            <MessageContainer key={message.id} message={message} nagazap={nagazap} inBoards={inBoards} />
                             {changing_day && <DateChip timestamp={Number(message.timestamp)} />}
                         </>
                     )

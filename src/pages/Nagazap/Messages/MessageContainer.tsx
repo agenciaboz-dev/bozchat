@@ -12,9 +12,10 @@ import { useDarkMode } from "../../../hooks/useDarkMode"
 interface MessageContainerProps {
     message: NagaMessage
     nagazap: Nagazap
+    inBoards?: boolean
 }
 
-export const MessageContainer: React.FC<MessageContainerProps> = ({ message, nagazap }) => {
+export const MessageContainer: React.FC<MessageContainerProps> = ({ message, nagazap, inBoards }) => {
     const isMobile = useMediaQuery("(orientation: portrait)")
     const { darkMode } = useDarkMode()
     const formatTime = useFormatMessageTime()
@@ -37,12 +38,23 @@ export const MessageContainer: React.FC<MessageContainerProps> = ({ message, nag
                 borderTopLeftRadius: from_me ? undefined : 0,
                 borderTopRightRadius: from_me ? 0 : undefined,
                 color: "secondary.main",
-                paddingBottom: message.type === "audio" ? "1vw" : undefined,
+                paddingBottom: inBoards ? undefined : message.type === "audio" ? "1vw" : undefined,
                 width: "fit-content",
                 minWidth: "5vw",
                 minHeight: "2vw",
                 alignSelf: from_me ? "flex-end" : undefined,
-                bgcolor: from_me ? (darkMode ? primary : lightModePrimary) : darkMode ? secondary : lightModeSecondary,
+                bgcolor:
+                    message.type === "sticker"
+                        ? "transparent"
+                        : from_me
+                        ? darkMode
+                            ? primary
+                            : lightModePrimary
+                        : darkMode
+                        ? secondary
+                        : lightModeSecondary,
+                maxWidth: inBoards ? "17vw" : undefined,
+                marginBottom: message.type === "sticker" ? "0.5vw" : undefined,
             }}
         >
             {(message.type === "image" || message.type === "sticker") && (
@@ -51,9 +63,10 @@ export const MessageContainer: React.FC<MessageContainerProps> = ({ message, nag
                         <Avatar
                             variant="rounded"
                             sx={{
-                                width: message.type === "image" ? "20vw" : "10vw",
+                                width: message.type === "image" ? (inBoards ? "15vw" : "20vw") : inBoards ? "5vw" : "10vw",
                                 height: "auto",
-                                maxHeight: isMobile ? "80vw" : "20vw",
+                                maxHeight: inBoards ? "15vw" : isMobile ? "80vw" : "20vw",
+                                borderRadius: message.type === "sticker" ? "0.75vw" : undefined,
                             }}
                             src={message.text}
                         />
@@ -64,11 +77,12 @@ export const MessageContainer: React.FC<MessageContainerProps> = ({ message, nag
                 <Typography
                     color="#fff"
                     sx={{
-                        // wordBreak: "break-all",
+                        wordBreak: "break-word",
                         whiteSpace: "pre-line",
                         color: "text.secondary",
                         fontSize: message.type === "reaction" ? "3rem" : undefined,
                         alignSelf: message.type === "reaction" ? "center" : undefined,
+                        maxWidth: "15vw",
                     }}
                 >
                     {message.text}
@@ -77,8 +91,12 @@ export const MessageContainer: React.FC<MessageContainerProps> = ({ message, nag
 
             {message.type === "audio" && (
                 <AudioPlayer
-                    containerSx={{ height: isMobile ? undefined : "3vw", paddingBottom: isMobile ? "4vw" : undefined }}
+                    containerSx={{
+                        height: isMobile ? undefined : "3vw",
+                        paddingBottom: isMobile ? "4vw" : undefined,
+                    }}
                     media={{ source: message.text, ext: message.text.split(".")[message.text.split(".").length - 1] }}
+                    inBoards={inBoards}
                 />
             )}
 
@@ -88,15 +106,17 @@ export const MessageContainer: React.FC<MessageContainerProps> = ({ message, nag
                     marginLeft: "auto",
                     position: message.type === "audio" || message.type === "sticker" || message.type === "reaction" ? "absolute" : undefined,
                     right: "0.5vw",
-                    bottom: "0.5vw",
+                    bottom: message.type === "sticker" ? "-0.5vw" : "0.5vw",
                 }}
             >
                 {new Date(Number(message.timestamp)).toLocaleTimeString("pt-br", { hour: "2-digit", minute: "2-digit" })}
             </Box>
-            <TrianguloFudido
-                alignment={from_me ? "right" : "left"}
-                color={from_me ? (darkMode ? primary : lightModePrimary) : darkMode ? secondary : lightModeSecondary}
-            />
+            {message.type !== "sticker" && (
+                <TrianguloFudido
+                    alignment={from_me ? "right" : "left"}
+                    color={from_me ? (darkMode ? primary : lightModePrimary) : darkMode ? secondary : lightModeSecondary}
+                />
+            )}
         </Paper>
     )
 }
