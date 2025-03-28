@@ -28,8 +28,6 @@ export const Login: React.FC<LoginProps> = ({}) => {
     const [loading, setLoading] = useState(false)
     const [loginError, setLoginError] = useState("")
 
-    const noBorder = true
-
     const formik = useFormik<LoginForm>({
         initialValues: { login: "", password: "" },
         async onSubmit(values, formikHelpers) {
@@ -191,24 +189,19 @@ export const Login: React.FC<LoginProps> = ({}) => {
                             >
                                 Nome de usuário, e-mail ou CPF
                             </Typography>
-                            <Box
-                                sx={{
-                                    backgroundColor: "background.default",
-                                    padding: "7px",
-                                    borderRadius: "4px",
+                            <TextField
+                                name="login"
+                                value={formik.values.login}
+                                onChange={formik.handleChange}
+                                placeholder="Digite seu login"
+                                autoComplete="off"
+                                required
+                                sx={textFieldStyle({ darkMode })}
+                                InputProps={{
+                                    sx: { bgcolor: "background.default" },
                                 }}
-                            >
-                                <TextField
-                                    name="login"
-                                    value={formik.values.login}
-                                    onChange={formik.handleChange}
-                                    placeholder="Digite seu login"
-                                    autoComplete="off"
-                                    required
-                                    sx={textFieldStyle({ darkMode, noBorder })}
-                                    error={!!loginError}
-                                />
-                            </Box>
+                                error={!!loginError}
+                            />
                         </Box>
                         <Box
                             sx={{
@@ -232,8 +225,8 @@ export const Login: React.FC<LoginProps> = ({}) => {
                                 placeholder="Digite sua senha"
                                 type={showPassword ? "text" : "password"}
                                 autoComplete="off"
-                                // sx={{bgcolor: darkMode ? undefined : 'background.default'}}
                                 required
+                                sx={textFieldStyle({ darkMode })}
                                 InputProps={{
                                     sx: { bgcolor: "background.default" },
                                     endAdornment: (
@@ -254,6 +247,10 @@ export const Login: React.FC<LoginProps> = ({}) => {
                                 fontWeight: "bold",
                                 alignSelf: "flex-end",
                                 color: darkMode ? "secondary.main" : "primary.main",
+                                "&:hover": {
+                                    bgcolor: darkMode ? "primary.dark" : "text.secondary",
+                                    color: darkMode ? "secondary.main" : "primary.main",
+                                },
                             }}
                         >
                             {loading ? <CircularProgress size="1.5rem" color={darkMode ? "secondary" : "primary"} /> : "entrar"}

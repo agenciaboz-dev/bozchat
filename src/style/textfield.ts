@@ -3,24 +3,23 @@ import colors, { default_colors } from "./colors"
 
 interface StyleProps {
     darkMode?: boolean
-    noBorder?: boolean
 }
 
 export const webkitbg = {
     "& .MuiInputBase-input.MuiOutlinedInput-input:-webkit-autofill": {
         "-webkit-box-shadow": ` 0 0 0 100px ${colors.background.primary} inset`,
-        borderRadius: "initial",
+        // borderRadius: "initial",
     },
 }
 
 export const lightModeWebkitbg = {
     "& .MuiInputBase-input.MuiOutlinedInput-input:-webkit-autofill": {
         "-webkit-box-shadow": ` 0 0 0 100px ${default_colors.background.primary} inset`,
-        borderRadius: "initial",
+        // borderRadius: "initial",
     },
 }
 
-export const textFieldStyle = ({ darkMode = true, noBorder = false }: StyleProps): SxProps => ({
+export const textFieldStyle = ({ darkMode = true }: StyleProps): SxProps => ({
     ...(darkMode ? webkitbg : lightModeWebkitbg),
     "& .MuiInputLabel-root": {
         color: "grey",
@@ -37,7 +36,6 @@ export const textFieldStyle = ({ darkMode = true, noBorder = false }: StyleProps
         "& fieldset": {
             // bgcolor: "background.default",
             // borderColor: "primary.main",
-            border: noBorder ? "none" : undefined,
         },
         fontSize: "1vw",
         "@media (max-width: 600px)": {
@@ -57,13 +55,13 @@ export const textFieldStyle = ({ darkMode = true, noBorder = false }: StyleProps
     "& .MuiInputBase-root": {
         // borderRadius: "1vw",
         "@media (max-width: 600px)": {
-            borderRadius: "3vw",
+            // borderRadius: "3vw",
             height: "12vw",
         },
     },
-    "& .MuiInputBase-root:not(.MuiInputBase-multiline)": {
-        height: "3rem",
-    },
+    // "& .MuiInputBase-root:not(.MuiInputBase-multiline)": {
+    //     height: "3rem",
+    // },
     "& .MuiInputLabel-shrink": {
         fontSize: "1vw", // Tamanho da fonte do label quando dentro do input
         "@media (max-width: 600px)": {
@@ -106,10 +104,10 @@ export const textAreaField: SxProps = {
         },
     },
     "& .MuiInputBase-root": {
-        borderRadius: "1vw",
+        // borderRadius: "1vw",
         height: "3vw",
         "@media (max-width: 600px)": {
-            borderRadius: "3vw",
+            // borderRadius: "3vw",
             height: "12vw",
         },
     },
