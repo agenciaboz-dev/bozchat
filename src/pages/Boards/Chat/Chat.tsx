@@ -1,32 +1,35 @@
 import React, { useEffect, useMemo, useState } from "react"
 import { Avatar, Box, Chip, IconButton, LinearProgress, Paper, Typography } from "@mui/material"
-import { Chat } from "../../types/server/class/Board/Chat"
+import { Chat } from "../../../types/server/class/Board/Chat"
 import { Draggable } from "@hello-pangea/dnd"
 import { Cancel, MoreHoriz } from "@mui/icons-material"
-import { api } from "../../api"
-import { Washima } from "../../types/server/class/Washima/Washima"
-import { Chat as WashimaChatType } from "../../types/Chat"
-import { WashimaChat } from "../Washima/WashimaChat/WashimaChat"
-import { NagaMessage, Nagazap } from "../../types/server/class/Nagazap"
-import WashimaMessage from "../Zap/Message"
-import { Accordion } from "../../components/Accordion"
-import { IntegrationChip } from "./IntegrationChip"
-import { WashimaMessage as WashimaMessageType } from "../../types/server/class/Washima/WashimaMessage"
-import { MessageContainer } from "../Nagazap/Messages/MessageContainer"
-import { ChatContainer } from "../Nagazap/Messages/ChatContainer"
-import { useApi } from "../../hooks/useApi"
-import { canRespondNagaChat } from "../../tools/canRespondNagaChat"
+import { api } from "../../../api"
+import { Washima } from "../../../types/server/class/Washima/Washima"
+import { Chat as WashimaChatType } from "../../../types/Chat"
+import { WashimaChat } from "../../Washima/WashimaChat/WashimaChat"
+import { NagaMessage, Nagazap } from "../../../types/server/class/Nagazap"
+import WashimaMessage from "../../Zap/Message"
+import { Accordion } from "../../../components/Accordion"
+import { IntegrationChip } from "../IntegrationChip"
+import { WashimaMessage as WashimaMessageType } from "../../../types/server/class/Washima/WashimaMessage"
+import { MessageContainer } from "../../Nagazap/Messages/MessageContainer"
+import { ChatContainer } from "../../Nagazap/Messages/ChatContainer"
+import { useApi } from "../../../hooks/useApi"
+import { canRespondNagaChat } from "../../../tools/canRespondNagaChat"
+import { ChatMenu } from "./ChatMenu"
 
 interface BoardChatProps {
     chat: Chat
     index: number
     washima?: Washima
     nagazap?: Nagazap
+    board_id: string
+    room_id: string
 }
 
 export const BoardChat: React.FC<BoardChatProps> = (props) => {
     const { fetchNagaMessages } = useApi()
-    const [menuAnchorEl, setMenuAnchorEl] = useState<HTMLElement | null>(null)
+    
     const [mediaMetaData, setMediaMetaData] = useState<{
         mimetype: string | undefined
         filename: string | undefined
@@ -115,9 +118,7 @@ export const BoardChat: React.FC<BoardChatProps> = (props) => {
                                 </Box>
                             </Box>
                         </Box>
-                        <IconButton onClick={(ev) => setMenuAnchorEl(ev.currentTarget)}>
-                            <MoreHoriz />
-                        </IconButton>
+                        <ChatMenu board_id={props.board_id} room_id={props.room_id} chat={props.chat} />
                     </Box>
 
                     {props.washima || (props.nagazap && nagazapMessages.length > 0) ? (

@@ -1,7 +1,7 @@
 import React, { useState } from "react"
 import { Box, Chip, IconButton, Menu, MenuItem, Paper, Tooltip, Typography } from "@mui/material"
 import { Room } from "../../types/server/class/Board/Room"
-import { BoardChat } from "./Chat"
+import { BoardChat } from "./Chat/Chat"
 import { Droppable } from "@hello-pangea/dnd"
 import { RoomNameInput } from "./RoomNameInput"
 import { Board } from "../../types/server/class/Board/Board"
@@ -118,6 +118,8 @@ export const BoardRoom: React.FC<KanbanColumnProps> = (props) => {
                                     index={index}
                                     washima={props.washimas.find((washima) => washima.id === chat.washima_id)}
                                     nagazap={props.nagazaps.find((nagazap) => nagazap.id === chat.nagazap_id)}
+                                    board_id={props.board.id}
+                                    room_id={props.room.id}
                                 />
                             ))
                         )}
