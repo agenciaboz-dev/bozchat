@@ -48,6 +48,13 @@ export const useMuiTheme = () => {
                     components: {
                         MuiMenuList: { defaultProps: { sx: { bgcolor: colors.background.primary } } },
                         MuiList: { defaultProps: { sx: { bgcolor: colors.background.primary } } },
+                        MuiDataGrid: {
+                            styleOverrides: {
+                                cell: {
+                                    color: colors.text.secondary,
+                                },
+                            },
+                        },
                     },
                 },
                 ptBR

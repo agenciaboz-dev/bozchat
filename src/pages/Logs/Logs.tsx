@@ -100,9 +100,6 @@ export const Logs: React.FC<LogsProps> = ({}) => {
                         sx={{
                             border: 0,
                             height: "76vh",
-                            "& .MuiDataGrid-cell": {
-                                color: "text.secondary",
-                            },
                         }}
                         slots={{ filterPanel: () => <GridFilterPanel /> }}
                     />
