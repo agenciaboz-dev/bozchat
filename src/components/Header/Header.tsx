@@ -40,7 +40,7 @@ export const Header: React.FC<HeaderProps> = ({}) => {
                 <MenuIcon />
             </IconButton>
             <img src="/logos/negativos/1.png" style={{ width: isMobile ? "16vw" : "4vw", height: isMobile ? "16vw" : "4vw" }} draggable={false} />
-            <ThemeSwitch />
+            {/* <ThemeSwitch /> */}
             <IconButton sx={{ position: "absolute", right: "2vw" }} onClick={handleClickMenu}>
                 <Avatar sx={{ bgcolor: "secondary.main", color: "primary.main", fontWeight: "bold" }} imgProps={{ draggable: false }}>
                     {splitted_name.map((word) => word[0])}

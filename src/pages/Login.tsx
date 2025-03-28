@@ -225,46 +225,38 @@ export const Login: React.FC<LoginProps> = ({}) => {
                             >
                                 Senha
                             </Typography>
-                            <Box
-                                sx={{
-                                    backgroundColor: "background.default",
-                                    padding: "7px",
-                                    borderRadius: "4px",
+                            <TextField
+                                name="password"
+                                value={formik.values.password}
+                                onChange={formik.handleChange}
+                                placeholder="Digite sua senha"
+                                type={showPassword ? "text" : "password"}
+                                autoComplete="off"
+                                // sx={{bgcolor: darkMode ? undefined : 'background.default'}}
+                                required
+                                InputProps={{
+                                    sx: { bgcolor: "background.default" },
+                                    endAdornment: (
+                                        <IconButton onClick={() => setShowPassword(!showPassword)} color="primary">
+                                            {showPassword ? <VisibilityOffIcon /> : <VisibilityIcon />}
+                                        </IconButton>
+                                    ),
                                 }}
-                            >
-                                <TextField
-                                    name="password"
-                                    value={formik.values.password}
-                                    onChange={formik.handleChange}
-                                    placeholder="Digite sua senha"
-                                    type={showPassword ? "text" : "password"}
-                                    autoComplete="off"
-                                    required
-                                    sx={textFieldStyle({ darkMode, noBorder })}
-                                    InputProps={{
-                                        endAdornment: (
-                                            <IconButton onClick={() => setShowPassword(!showPassword)} color="primary">
-                                                {showPassword ? <VisibilityOffIcon /> : <VisibilityIcon />}
-                                            </IconButton>
-                                        ),
-                                    }}
-                                    helperText={loginError}
-                                    error={!!loginError}
-                                />
-                            </Box>
+                                helperText={loginError}
+                                error={!!loginError}
+                            />
                         </Box>
                         <Button
                             type="submit"
                             variant="contained"
+                            color={darkMode ? "primary" : "secondary"}
                             sx={{
-                                bgcolor: "primary.main",
-                                color: "secondary.main",
                                 fontWeight: "bold",
                                 alignSelf: "flex-end",
-                                border: "2px solid white",
+                                color: darkMode ? "secondary.main" : "primary.main",
                             }}
                         >
-                            {loading ? <CircularProgress size="1.5rem" color="secondary" /> : "entrar"}
+                            {loading ? <CircularProgress size="1.5rem" color={darkMode ? "secondary" : "primary"} /> : "entrar"}
                         </Button>
                     </Box>
                 </form>
