@@ -6,7 +6,7 @@ import { Header } from "../../components/Header/Header"
 import { DataGrid, GridColDef, GridFilterPanel } from "@mui/x-data-grid"
 import { useUser } from "../../hooks/useUser"
 import { api } from "../../api"
-import { Check, Delete, Edit, Engineering, Help, Hub, People, Refresh, SafetyDivider, Warning, WhatsApp } from "@mui/icons-material"
+import { Engineering, Help, Hub, People, Refresh, SafetyDivider, ViewWeek, WhatsApp } from "@mui/icons-material"
 import { Title2 } from "../../components/Title"
 
 interface LogsProps {}
@@ -17,6 +17,7 @@ const icons = {
     chatbot: Engineering,
     users: People,
     departments: SafetyDivider,
+    boards: ViewWeek,
     default: Help,
 }
 
