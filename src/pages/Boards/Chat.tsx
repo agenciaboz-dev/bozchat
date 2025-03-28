@@ -15,6 +15,7 @@ import { WashimaMessage as WashimaMessageType } from "../../types/server/class/W
 import { MessageContainer } from "../Nagazap/Messages/MessageContainer"
 import { ChatContainer } from "../Nagazap/Messages/ChatContainer"
 import { useApi } from "../../hooks/useApi"
+import { canRespondNagaChat } from "../../tools/canRespondNagaChat"
 
 interface BoardChatProps {
     chat: Chat
@@ -33,6 +34,16 @@ export const BoardChat: React.FC<BoardChatProps> = (props) => {
     }>()
     const [expandedChat, setExpandedChat] = useState(false)
     const [nagazapMessages, setNagazapMessages] = useState<NagaMessage[]>([])
+    const nagaChat = useMemo(
+        () => ({
+            from: props.chat.phone,
+            lastMessage: props.chat.last_message as NagaMessage,
+            name: props.chat.name,
+            messages: nagazapMessages,
+        }),
+        [props.chat, nagazapMessages]
+    )
+    const cannotRespondNagazap = useMemo(() => (props.nagazap ? !canRespondNagaChat(nagaChat, props.nagazap) : false), [props.nagazap, nagaChat])
 
     const datetime = useMemo(
         () =>
@@ -67,7 +78,9 @@ export const BoardChat: React.FC<BoardChatProps> = (props) => {
 
     useEffect(() => {
         if (props.nagazap) {
-            fetchNagaMessages({ params: { nagazap_id: props.nagazap.id } }).then((result) => setNagazapMessages(result.reverse()))
+            fetchNagaMessages({ params: { nagazap_id: props.nagazap.id, from: props.chat.phone } }).then((result) =>
+                setNagazapMessages(result.reverse())
+            )
         }
     }, [props.nagazap, props.chat])
 
@@ -133,7 +146,12 @@ export const BoardChat: React.FC<BoardChatProps> = (props) => {
                                         />
                                     )}
                                     {!expandedChat && props.nagazap && (
-                                        <MessageContainer message={props.chat.last_message as NagaMessage} nagazap={props.nagazap} inBoards />
+                                        <MessageContainer
+                                            message={props.chat.last_message as NagaMessage}
+                                            nagazap={props.nagazap}
+                                            inBoards
+                                            disabledIcon={cannotRespondNagazap}
+                                        />
                                     )}
                                 </Paper>
                             }
@@ -143,17 +161,7 @@ export const BoardChat: React.FC<BoardChatProps> = (props) => {
                                         <WashimaChat inBoards chat={washimaChat} washima={props.washima} onClose={() => setExpandedChat(false)} />
                                     )}
                                     {props.nagazap && (
-                                        <ChatContainer
-                                            inBoards
-                                            nagazap={props.nagazap}
-                                            chat={{
-                                                from: props.chat.phone,
-                                                lastMessage: props.chat.last_message as NagaMessage,
-                                                name: props.chat.name,
-                                                messages: nagazapMessages,
-                                            }}
-                                            onClose={() => setExpandedChat(false)}
-                                        />
+                                        <ChatContainer inBoards nagazap={props.nagazap} chat={nagaChat} onClose={() => setExpandedChat(false)} />
                                     )}
                                     <IconButton sx={{ position: "absolute", top: "0", right: "0" }} onClick={() => setExpandedChat(false)}>
                                         <Cancel />

@@ -43,7 +43,7 @@ export const useApi = () => {
     const fetchWashimaProfilePic = async (options?: FetchOptions & { params: { washima_id: string } }): Promise<WashimaProfilePic> =>
         await get("/washima/profile-pic", options)
     const fetchNagazaps = async (options?: FetchOptions & { params?: { nagazap_id: string } }) => await get("/nagazap", options)
-    const fetchNagaMessages = async (options: FetchOptions & { params: { nagazap_id: string } }): Promise<NagaMessage[]> =>
+    const fetchNagaMessages = async (options: FetchOptions & { params: { nagazap_id: string; from?: string } }): Promise<NagaMessage[]> =>
         await get("/nagazap/messages", options)
 
     return {

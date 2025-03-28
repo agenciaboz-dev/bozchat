@@ -8,14 +8,16 @@ import { PhotoView } from "react-photo-view"
 import { AudioPlayer } from "../../Washima/AudioComponents/AudioPlayer"
 import { MessageAuthor } from "../../Zap/MessageAuthor"
 import { useDarkMode } from "../../../hooks/useDarkMode"
+import { DeletedMessage } from "../../Zap/DeletedMessage"
 
 interface MessageContainerProps {
     message: NagaMessage
     nagazap: Nagazap
     inBoards?: boolean
+    disabledIcon?: boolean
 }
 
-export const MessageContainer: React.FC<MessageContainerProps> = ({ message, nagazap, inBoards }) => {
+export const MessageContainer: React.FC<MessageContainerProps> = ({ message, nagazap, inBoards, disabledIcon }) => {
     const isMobile = useMediaQuery("(orientation: portrait)")
     const { darkMode } = useDarkMode()
     const formatTime = useFormatMessageTime()
@@ -57,6 +59,7 @@ export const MessageContainer: React.FC<MessageContainerProps> = ({ message, nag
                 marginBottom: message.type === "sticker" ? "0.5vw" : undefined,
             }}
         >
+            {disabledIcon && <DeletedMessage customText="Tempo de resposta excedido (24 horas)" />}
             {(message.type === "image" || message.type === "sticker") && (
                 <PhotoView src={message.text}>
                     <MenuItem sx={{ padding: 0, justifyContent: "center", pointerEvents: message.type === "sticker" ? "none" : undefined }}>

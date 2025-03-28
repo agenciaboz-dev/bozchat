@@ -45,7 +45,7 @@ export const Accordion: React.FC<AccordionProps> = (props) => {
             <AnimatePresence>
                 {props.expanded && (
                     <motion.div initial="closed" animate={props.expanded ? "opened" : "closed"} exit="closed" variants={contentVariants}>
-                        <Box sx={{ bgcolor: "background.paper", color: "text.primary", width: "100%" }}>{props.expandedElement}</Box>
+                        <Box sx={{ color: "text.primary", width: "100%" }}>{props.expandedElement}</Box>
                     </motion.div>
                 )}
             </AnimatePresence>

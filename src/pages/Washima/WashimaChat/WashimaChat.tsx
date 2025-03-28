@@ -231,10 +231,11 @@ export const WashimaChat: React.FC<WashimaChatProps> = ({ washima, chat, onClose
 
     return chat ? (
         <Paper
+            elevation={inBoards ? 0 : undefined}
             sx={{
                 flex: 1,
                 justifyContent: isMobile ? "flex-end" : "center",
-                bgcolor: "background.paper",
+                bgcolor: inBoards ? "transparent" : "background.paper",
                 // height: isMobile ? "77vh" : "90vh",
                 padding: inBoards ? 0 : isMobile ? "2vw" : "1vw",
                 color: "text.secondary",

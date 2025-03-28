@@ -1,4 +1,4 @@
-import React from "react"
+import React, { useMemo } from "react"
 import { Box, IconButton, Paper, useMediaQuery } from "@mui/material"
 import { MessageContainer } from "./MessageContainer"
 import { Cancel } from "@mui/icons-material"
@@ -6,6 +6,8 @@ import { MessageAuthor } from "../../Zap/MessageAuthor"
 import { NagaChat, Nagazap } from "../../../types/server/class/Nagazap"
 import { NagazapInput } from "./NagazapInput"
 import { DateChip } from "../../Washima/WashimaChat/DateChip"
+import { DeletedMessage } from "../../Zap/DeletedMessage"
+import { canRespondNagaChat } from "../../../tools/canRespondNagaChat"
 
 interface ChatContainerProps {
     chat: NagaChat
@@ -16,6 +18,7 @@ interface ChatContainerProps {
 
 export const ChatContainer: React.FC<ChatContainerProps> = ({ chat, onClose, nagazap, inBoards }) => {
     const isMobile = useMediaQuery("(orientation: portrait)")
+    const can_respond = useMemo(() => canRespondNagaChat(chat, nagazap), [chat])
 
     return (
         <Paper
@@ -84,7 +87,7 @@ export const ChatContainer: React.FC<ChatContainerProps> = ({ chat, onClose, nag
                     )
                 })}
             </Box>
-            <NagazapInput nagazap={nagazap} chat={chat} />
+            {can_respond ? <NagazapInput nagazap={nagazap} chat={chat} /> : <DeletedMessage customText="Tempo de resposta excedido (24 horas)" />}
         </Paper>
     )
 }

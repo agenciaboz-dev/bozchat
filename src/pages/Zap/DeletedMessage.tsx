@@ -4,14 +4,14 @@ import { WashimaMessage } from "../../types/server/class/Washima/WashimaMessage"
 import { DoNotDisturb } from "@mui/icons-material"
 
 interface DeletedMessageProps {
-    message: WashimaMessage
+    customText?: string
 }
 
-export const DeletedMessage: React.FC<DeletedMessageProps> = ({ message }) => {
+export const DeletedMessage: React.FC<DeletedMessageProps> = ({ customText }) => {
     return (
         <Box sx={{ alignItems: "center", gap: "0.25vw", fontSize: "0.8rem" }}>
             <DoNotDisturb fontSize="small" />
-            Mensagem deletada
+            {customText || "Mensagem deletada"}
         </Box>
     )
 }
