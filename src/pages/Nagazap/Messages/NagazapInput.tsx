@@ -2,7 +2,7 @@ import React, { useState } from "react"
 import { Box, IconButton, TextField } from "@mui/material"
 import { NagaChat, Nagazap, NagazapResponseForm } from "../../../types/server/class/Nagazap"
 import { useIo } from "../../../hooks/useIo"
-import { DoDisturb } from "@mui/icons-material"
+import { Send } from "@mui/icons-material"
 
 interface NagazapInputProps {
     chat: NagaChat
@@ -51,7 +51,7 @@ export const NagazapInput: React.FC<NagazapInputProps> = ({ chat, nagazap }) => 
                     endAdornment: (
                         <Box sx={{ marginRight: "0.5vw" }}>
                             <IconButton color="primary" type="submit" onClick={handleSubmit}>
-                                <DoDisturb />
+                                <Send />
                             </IconButton>
                         </Box>
                     ),
