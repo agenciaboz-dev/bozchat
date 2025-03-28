@@ -28,9 +28,6 @@ export const Settings: React.FC<SettingsProps> = ({}) => {
                                     <NotificationSwitch key={item.event} notification={item} />
                                 ))}
                             </Box>
-
-                            <Title2 name="Tema" />
-                            <ThemeSwitch />
                         </Box>
                     </Grid>
                     <Grid item xs={1}>
