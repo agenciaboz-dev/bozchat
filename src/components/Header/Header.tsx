@@ -1,11 +1,12 @@
 import React from 'react'
-import { Avatar, IconButton, Menu, MenuItem, Paper, useMediaQuery } from "@mui/material"
+import { Avatar, IconButton, Menu, MenuItem, Paper, Typography, useMediaQuery } from "@mui/material"
 import { Menu as MenuIcon } from "@mui/icons-material"
 import { useMenu } from "../../hooks/useMenu"
 import { useUser } from "../../hooks/useUser"
 import { CompanyCard } from "./CompanyCard"
 import { ThemeSwitch } from "../../pages/Settings/ThemeSwitch"
 import { useDarkMode } from "../../hooks/useDarkMode"
+import { version } from "../../version"
 
 interface HeaderProps {}
 
@@ -53,6 +54,7 @@ export const Header: React.FC<HeaderProps> = ({}) => {
                 slotProps={{ paper: { sx: { bgcolor: "background.default" } } }}
             >
                 <CompanyCard />
+                <Typography sx={{ padding: "0 1vw", fontSize: "0.7rem", color: "secondary.main" }}>v {version}</Typography>
                 <MenuItem onClick={logout}>Sair</MenuItem>
             </Menu>
         </Paper>
