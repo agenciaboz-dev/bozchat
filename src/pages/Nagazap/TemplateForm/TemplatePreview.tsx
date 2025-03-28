@@ -44,7 +44,6 @@ export const TemplatePreview: React.FC<TemplatePreviewProps> = ({ components, im
                     borderRadius: "0.5vw",
                     borderTopLeftRadius: 0,
                     color: "secondary.main",
-                    backgroundColor: "#eaeaea",
                 }}
             >
                 <TrianguloFudido alignment="left" color={darkMode ? "#2a323c" : "#eaeaea"} />
