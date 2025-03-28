@@ -58,9 +58,9 @@ export const Header: React.FC<HeaderProps> = ({}) => {
                 }}
             >
                 <ThemeSwitch sx={{ marginTop: 0, justifyContent: "center", padding: "0 0 8px" }} />
-                <Divider />
+                <Divider sx={{ margin: "0 16px" }} />
                 <CompanyCard />
-                <Divider />
+                <Divider sx={{ margin: "0 16px" }} />
                 <Typography sx={{ padding: "0.5vw 16px 0", fontSize: "0.7rem", color: "text.secondary" }}>App v{version}</Typography>
                 <MenuItem onClick={logout}>Sair</MenuItem>
             </Menu>

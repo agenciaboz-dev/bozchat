@@ -55,7 +55,10 @@ export const NagazapInput: React.FC<NagazapInputProps> = ({ chat, nagazap }) => 
                 disabled={!can_respond}
                 onChange={(ev) => setText(ev.target.value)}
                 sx={{
-                    ...textFieldStyle({ darkMode }),
+                    // ...textFieldStyle({ darkMode }),
+                    "& .MuiInputBase-root:not(.MuiInputBase-multiline)": {
+                        height: "3rem",
+                    },
                     input: !can_respond
                         ? {
                               "&::placeholder": {
