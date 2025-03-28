@@ -53,6 +53,7 @@ export const BoardFormComponent: React.FC<BoardFormComponentProps> = (props) => 
                     name="name"
                     label="Nome"
                     sx={textFieldStyle({ darkMode })}
+                    autoComplete="off"
                 />
 
                 <Box sx={{ gap: "1vw", flexDirection: "row-reverse" }}>

@@ -126,6 +126,7 @@ export const BoardsTable: React.FC<BoardsTableProps> = (props) => {
     ]
 
     const onActionsButtonPress = (ev: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
+        // ev.stopPropagation()
         isMenu.current = true
         setMenuAnchor(ev.currentTarget)
     }
@@ -133,11 +134,12 @@ export const BoardsTable: React.FC<BoardsTableProps> = (props) => {
     const closeMenu = () => {
         setMenuAnchor(null)
         isMenu.current = false
+        props.setSelectedBoard(null)
     }
 
     const onRowClick = (params: GridRowParams<Board>) => {
         const board = params.row
-        if (board.id === props.selectedBoard?.id) {
+        if (board.id === props.selectedBoard?.id || isMenu.current === false) {
             navigateToBoard(board)
         } else {
             props.setSelectedBoard(board)

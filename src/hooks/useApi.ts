@@ -37,7 +37,7 @@ export const useApi = () => {
     const fetchDepartments = async (options?: FetchOptions & { params?: { department_id: string } }) => await get("/company/departments", options)
     const fetchUsers = async (options?: FetchOptions & { params?: { user_id: string } }) => await get("/company/users", options)
     const fetchBoards = async (options?: FetchOptions & { params?: { board_id: string } }) => await get("/company/boards", options)
-    const fetchBoardsAccess = async (options?: FetchOptions & { params: { board_id: string } }): Promise<BoardAccess[]> =>
+    const fetchBoardsAccess = async (options?: FetchOptions & { params: { board_id: string } }): Promise<BoardAccess> =>
         await get("/company/boards/access", options)
     const fetchWashima = async (options?: FetchOptions & { params?: { washima_id: string } }) => await get("/washima", options)
     const fetchWashimaProfilePic = async (options?: FetchOptions & { params: { washima_id: string } }): Promise<WashimaProfilePic> =>

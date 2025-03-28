@@ -29,7 +29,7 @@ export const BoardSettingsModal: React.FC<BoardSettingsModalProps> = (props) => 
 
     const [washimas] = useFetchedData<Washima>("washimas")
     const [nagazaps] = useFetchedData<Nagazap>("nagazaps")
-    const [tab, setTab] = useState(2)
+    const [tab, setTab] = useState(0)
     const [loading, setLoading] = useState(false)
     const [selectedWashimas, setSelectedWashimas] = useState(props.board.washima_settings)
     const [selectedNagazaps, setSelectedNagazaps] = useState(props.board.nagazap_settings)
@@ -91,13 +91,22 @@ export const BoardSettingsModal: React.FC<BoardSettingsModalProps> = (props) => 
                 }
             />
             <Tabs value={tab} onChange={(_, value) => setTab(value)} variant="fullWidth">
-                <Tab label="Business" value={0} />
-                <Tab label="Broadcast" value={1} />
-                <Tab label="Configurações" value={2} />
+                <Tab label="Configurações" value={0} />
+                <Tab label="Business" value={1} />
+                <Tab label="Broadcast" value={2} />
             </Tabs>
 
             <Box sx={{ paddingTop: "1vw", height: "30vw", overflow: "auto", flexDirection: "column" }}>
                 {tab === 0 && (
+                    <AccessTab
+                        board={props.board}
+                        boardChanges={boardChanges}
+                        setBoardChanges={setBoardChanges}
+                        access={access}
+                        setAccess={setAccess}
+                    />
+                )}
+                {tab === 1 && (
                     <BusinessTab
                         board={props.board}
                         washimas={washimas}
@@ -105,21 +114,12 @@ export const BoardSettingsModal: React.FC<BoardSettingsModalProps> = (props) => 
                         setSelectedWashimas={setSelectedWashimas}
                     />
                 )}
-                {tab === 1 && (
+                {tab === 2 && (
                     <BroadcastTab
                         board={props.board}
                         nagazaps={nagazaps}
                         selectedNagazaps={selectedNagazaps}
                         setSelectedNagazaps={setSelectedNagazaps}
-                    />
-                )}
-                {tab === 2 && (
-                    <AccessTab
-                        board={props.board}
-                        boardChanges={boardChanges}
-                        setBoardChanges={setBoardChanges}
-                        access={access}
-                        setAccess={setAccess}
                     />
                 )}
             </Box>
