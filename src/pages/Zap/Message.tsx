@@ -60,7 +60,7 @@ export const Message: React.ForwardRefRenderFunction<HTMLDivElement, MessageProp
         !previousItem || new Date(previousItem.timestamp * 1000).toLocaleDateString() !== new Date(message.timestamp * 1000).toLocaleDateString()
     const show_triangle = !same_as_previous || day_changing
 
-    const from_me = isGroup ? message.author === washima.info.pushname : message.fromMe
+    const from_me = isGroup ? message.author === washima.info?.pushname : message.fromMe
     const show_author = (!same_as_previous || day_changing) && isGroup && !from_me
 
     const [mediaObj, setMediaObj] = useState<{ source: string; ext: string; size: string }>()
@@ -272,7 +272,7 @@ export const Message: React.ForwardRefRenderFunction<HTMLDivElement, MessageProp
                                 paddingX: is_document ? (isMobile ? "3vw" : "0.5vw") : undefined,
                             }}
                         >
-                            {is_deleted && <DeletedMessage message={message} />}
+                            {is_deleted && <DeletedMessage />}
                             {message.hasMedia && (
                                 <Box sx={{}}>
                                     {is_image &&
@@ -287,7 +287,7 @@ export const Message: React.ForwardRefRenderFunction<HTMLDivElement, MessageProp
                                                 }}
                                             />
                                         ) : (
-                                            <PhotoView src={mediaObj?.source}>
+                                            <PhotoView src={mediaObj?.source} triggers={noActions ? ["onDoubleClick"] : undefined}>
                                                 <MenuItem sx={{ padding: 0, borderRadius: "0.75vw" }}>
                                                     <img
                                                         style={{

@@ -14,9 +14,10 @@ interface ChatContainerProps {
     onClose: () => void
     nagazap: Nagazap
     inBoards?: boolean
+    disabledResponse?: boolean
 }
 
-export const ChatContainer: React.FC<ChatContainerProps> = ({ chat, onClose, nagazap, inBoards }) => {
+export const ChatContainer: React.FC<ChatContainerProps> = ({ chat, onClose, nagazap, inBoards, disabledResponse }) => {
     const isMobile = useMediaQuery("(orientation: portrait)")
     const can_respond = useMemo(() => canRespondNagaChat(chat, nagazap), [chat])
 
@@ -59,7 +60,7 @@ export const ChatContainer: React.FC<ChatContainerProps> = ({ chat, onClose, nag
             <Box
                 sx={{
                     width: "100%",
-                    height: inBoards ? "20vw" : "27vw",
+                    height: inBoards ? (disabledResponse ? "21.5vw" : "20vw") : "27vw",
                     bgcolor: "background.default",
                     overflowY: "scroll",
                     borderRadius: isMobile ? "2vw" : "4px",

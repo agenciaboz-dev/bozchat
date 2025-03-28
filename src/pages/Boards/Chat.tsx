@@ -161,7 +161,13 @@ export const BoardChat: React.FC<BoardChatProps> = (props) => {
                                         <WashimaChat inBoards chat={washimaChat} washima={props.washima} onClose={() => setExpandedChat(false)} />
                                     )}
                                     {props.nagazap && (
-                                        <ChatContainer inBoards nagazap={props.nagazap} chat={nagaChat} onClose={() => setExpandedChat(false)} />
+                                        <ChatContainer
+                                            inBoards
+                                            nagazap={props.nagazap}
+                                            chat={nagaChat}
+                                            onClose={() => setExpandedChat(false)}
+                                            disabledResponse={cannotRespondNagazap}
+                                        />
                                     )}
                                     <IconButton sx={{ position: "absolute", top: "0", right: "0" }} onClick={() => setExpandedChat(false)}>
                                         <Cancel />
