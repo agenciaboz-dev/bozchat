@@ -1,5 +1,5 @@
 import React from 'react'
-import { Avatar, IconButton, Menu, MenuItem, Paper, Typography, useMediaQuery } from "@mui/material"
+import { Avatar, Divider, IconButton, Menu, MenuItem, Paper, Typography, useMediaQuery } from "@mui/material"
 import { Menu as MenuIcon } from "@mui/icons-material"
 import { useMenu } from "../../hooks/useMenu"
 import { useUser } from "../../hooks/useUser"
@@ -51,10 +51,17 @@ export const Header: React.FC<HeaderProps> = ({}) => {
                 anchorEl={menuAnchor}
                 open={!!menuAnchor}
                 onClose={handleCloseMenu}
-                slotProps={{ paper: { sx: { bgcolor: "background.default" } } }}
+                slotProps={{
+                    paper: {
+                        sx: { flexDirection: "column", bgcolor: "background.default", minWidth: isMobile ? "" : "15vw", alignItems: "center" },
+                    },
+                }}
             >
+                <ThemeSwitch sx={{ marginTop: 0, justifyContent: "center", padding: "0 0 8px" }} />
+                <Divider />
                 <CompanyCard />
-                <Typography sx={{ padding: "0 1vw", fontSize: "0.7rem", color: "secondary.main" }}>v {version}</Typography>
+                <Divider />
+                <Typography sx={{ padding: "0.5vw 16px 0", fontSize: "0.7rem", color: "text.secondary" }}>App v{version}</Typography>
                 <MenuItem onClick={logout}>Sair</MenuItem>
             </Menu>
         </Paper>
