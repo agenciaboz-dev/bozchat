@@ -15,8 +15,8 @@ export const Home: React.FC<HomeProps> = ({}) => {
             <Box
                 sx={{
                     flex: 1,
-                    gap: "2vw",
-                    padding: "2vw",
+                    gap: isMobile ? "5vw" : "2vw",
+                    padding: isMobile ? "5vw" : "2vw",
                     flexDirection: isMobile ? "column" : "row",
                 }}
             >
