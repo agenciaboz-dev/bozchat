@@ -98,12 +98,7 @@ export const WashimaInput: React.FC<WashimaInputProps> = ({ onSubmit, disabled, 
                 }
                 disabled={textDisabled}
                 onChange={(ev) => setMessage(ev.target.value)}
-                // sx={textFieldStyle({ darkMode })}
-                sx={{
-                    "& .MuiInputBase-root:not(.MuiInputBase-multiline)": {
-                        height: "3rem",
-                    },
-                }}
+                sx={textFieldStyle({ darkMode })}
                 autoComplete="off"
                 InputProps={{
                     readOnly: is_forwarding,

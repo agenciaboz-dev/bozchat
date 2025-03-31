@@ -59,9 +59,9 @@ export const textFieldStyle = ({ darkMode = true }: StyleProps): SxProps => ({
             height: "12vw",
         },
     },
-    // "& .MuiInputBase-root:not(.MuiInputBase-multiline)": {
-    //     height: "3rem",
-    // },
+    "& .MuiInputBase-root:not(.MuiInputBase-multiline)": {
+        height: "3rem",
+    },
     "& .MuiInputLabel-shrink": {
         fontSize: "1vw", // Tamanho da fonte do label quando dentro do input
         "@media (max-width: 600px)": {
@@ -70,7 +70,7 @@ export const textFieldStyle = ({ darkMode = true }: StyleProps): SxProps => ({
     },
     "& .MuiInputBase-input::placeholder": {
         // color: "text.primary",
-        opacity: darkMode ? 0.5 : 1,
+        opacity: darkMode ? 0.5 : 0.7,
     },
 })
 
