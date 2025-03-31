@@ -8,14 +8,14 @@ interface StyleProps {
 export const webkitbg = {
     "& .MuiInputBase-input.MuiOutlinedInput-input:-webkit-autofill": {
         "-webkit-box-shadow": ` 0 0 0 100px ${colors.background.primary} inset`,
-        // borderRadius: "initial",
+        borderRadius: "initial",
     },
 }
 
 export const lightModeWebkitbg = {
     "& .MuiInputBase-input.MuiOutlinedInput-input:-webkit-autofill": {
         "-webkit-box-shadow": ` 0 0 0 100px ${default_colors.background.primary} inset`,
-        // borderRadius: "initial",
+        borderRadius: "initial",
     },
 }
 
