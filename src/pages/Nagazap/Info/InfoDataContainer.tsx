@@ -18,13 +18,12 @@ export const InfoDataContainer: React.FC<InfoDataContainerProps> = ({ data }) =>
     const clipboard = useClipboard({ timeout: 1000 })
 
     return (
-        <Box sx={{}}>
+        <Box>
             <Box
                 sx={{
                     flexDirection: "column",
                     justifyContent: "space-between",
                     height: "100%",
-                    gap: isMobile ? "1vw" : "",
                 }}
             >
                 <Box
@@ -51,13 +50,13 @@ export const InfoDataContainer: React.FC<InfoDataContainerProps> = ({ data }) =>
                         <Tooltip title={data.value} placement="bottom" arrow>
                             <Typography
                                 sx={{
-                                    fontSize: "1.5rem",
+                                    fontSize: isMobile ? "1.2rem" : "1.5rem",
                                     fontWeight: "bold",
                                     color: "primary.main",
                                     whiteSpace: "nowrap",
                                     overflow: "hidden",
                                     textOverflow: "ellipsis",
-                                    maxWidth: isMobile ? undefined : "15vw",
+                                    maxWidth: isMobile ? "65vw" : "15vw",
                                 }}
                             >
                                 {data.value}
@@ -65,8 +64,14 @@ export const InfoDataContainer: React.FC<InfoDataContainerProps> = ({ data }) =>
                         </Tooltip>
 
                         {data.copy && !!data.value && (
-                            <IconButton onClick={() => clipboard.copy(data.value?.toString())} sx={{ padding: 0, width: "2vw", height: "2vw" }}>
-                                <CopyAll sx={{ width: "1.5vw", height: "1.5vw" }} color={clipboard.copied ? "success" : undefined} />
+                            <IconButton
+                                onClick={() => clipboard.copy(data.value?.toString())}
+                                sx={{ padding: isMobile ? "0 5vw" : 0, width: "2vw", height: "2vw" }}
+                            >
+                                <CopyAll
+                                    sx={{ width: isMobile ? "5vw" : "1.5vw", height: isMobile ? "5vw" : "1.5vw" }}
+                                    color={clipboard.copied ? "success" : undefined}
+                                />
                             </IconButton>
                         )}
                     </Box>

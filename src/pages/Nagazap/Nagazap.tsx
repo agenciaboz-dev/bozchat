@@ -96,7 +96,7 @@ export const NagazapScreen: React.FC<NagazapProps> = ({}) => {
     return (
         <Box sx={{ ...backgroundStyle, overflow: isMobile ? "auto" : "hidden" }}>
             <Header />
-            <Box sx={{ padding: "2vw", height: "90vh" }}>
+            <Box sx={{ padding: isMobile ? "5vw" : "2vw", height: "90vh" }}>
                 {!showInformations ? (
                     <Paper
                         sx={{
@@ -105,7 +105,7 @@ export const NagazapScreen: React.FC<NagazapProps> = ({}) => {
                             bgcolor: "background.paper",
                             flexDirection: "column",
                             overflowY: "auto",
-                            padding: isMobile ? "1vw" : "1vw 0",
+                            padding: isMobile ? undefined : "1vw 0",
                             gap: "1.5vw",
                             borderRadius: isMobile ? "2vw" : "4px 0 0 4px",
                             color: "secondary.main",
@@ -125,7 +125,7 @@ export const NagazapScreen: React.FC<NagazapProps> = ({}) => {
                                     gap: "2vw",
                                 }}
                             >
-                                <Box sx={{ padding: isMobile ? "2vw" : "0 2vw", paddingBottom: isMobile ? 0 : undefined }}>
+                                <Box sx={{ padding: isMobile ? "5vw" : "0 1vw", paddingBottom: isMobile ? 0 : undefined }}>
                                     <TextField
                                         sx={textFieldStyle({ darkMode })}
                                         select
@@ -133,12 +133,14 @@ export const NagazapScreen: React.FC<NagazapProps> = ({}) => {
                                         label="Selecione uma conta"
                                         SelectProps={{
                                             MenuProps: {
-                                                MenuListProps: { sx: { maxHeight: "20vw", bgcolor: "background.default", overflowY: "scroll" } },
+                                                MenuListProps: {
+                                                    sx: { maxHeight: isMobile ? "30vh" : "20vw", bgcolor: "background.default", overflowY: "scroll" },
+                                                },
                                             },
                                         }}
                                     >
                                         <MenuItem
-                                            sx={{ fontWeight: "bold", gap: "1vw" }}
+                                            sx={{ fontWeight: "bold", gap: isMobile ? "3vw" : "1vw" }}
                                             onClick={() => {
                                                 onNewNagazapPress()
                                                 if (isMobile) {

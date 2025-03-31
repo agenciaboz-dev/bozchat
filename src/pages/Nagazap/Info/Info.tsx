@@ -111,12 +111,12 @@ export const Info: React.FC<InfoProps> = ({ nagazap, setShowInformations }) => {
                 ) : null
             }
         >
-            <Grid container columns={isMobile ? 1 : 4} sx={{ height: "64vh", gap: isMobile ? "3vw" : undefined }}>
+            <Grid container columns={isMobile ? 1 : 4} sx={{ height: "64vh", gap: isMobile ? "5vw" : undefined }}>
                 <Grid item xs={1}>
                     <Box
                         sx={{
                             flexDirection: "column",
-                            gap: isMobile ? "3vw" : "0.5vw",
+                            gap: isMobile ? "5vw" : "0.5vw",
                         }}
                     >
                         {infos.map((info) => (
@@ -125,7 +125,7 @@ export const Info: React.FC<InfoProps> = ({ nagazap, setShowInformations }) => {
                     </Box>
                 </Grid>
                 <Grid item xs={1}>
-                    <Box sx={{ flexDirection: "column", gap: isMobile ? "3vw" : "0.5vw" }}>
+                    <Box sx={{ flexDirection: "column", gap: isMobile ? "5vw" : "0.5vw" }}>
                         {ids.map((info) => (
                             <InfoDataContainer key={info.title} data={info} />
                         ))}

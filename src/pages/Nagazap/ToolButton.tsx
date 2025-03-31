@@ -27,6 +27,7 @@ export const ToolButton: React.FC<ToolButtonProps> = ({ label, route, setShowInf
                 color: active ? "white" : darkMode ? "" : default_colors.text.secondary,
                 fontWeight: active ? "bold" : "normal",
                 pointerEvents: active ? "none" : "",
+                padding: isMobile ? "3vw 5vw" : "",
             }}
             onClick={() => {
                 navigate(`/${father_route}${route}`, { state: payload })

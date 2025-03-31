@@ -47,7 +47,7 @@ export const MessagesChart: React.FC<MessagesChartProps> = ({ messages }) => {
                 sx={{
                     color: "text.secondary",
                     fontWeight: "bold",
-                    paddingLeft: "2vw",
+                    paddingLeft: isMobile ? undefined : "2vw",
                 }}
             >
                 Mensagens enviadas
