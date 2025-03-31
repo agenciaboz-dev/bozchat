@@ -1,11 +1,13 @@
 import { useState } from "react"
 import { useUser } from "./useUser"
 import { api } from "../api"
-import { NagaMessage, Nagazap } from "../types/server/class/Nagazap"
-import { Washima, WashimaProfilePic } from "../types/server/class/Washima/Washima"
-import { Board, BoardAccess } from "../types/server/class/Board/Board"
-import { User } from "../types/server/class/User"
-import { Department } from "../types/server/class/Department"
+import { NagaMessage } from "../types/server/class/Nagazap"
+import { WashimaProfilePic } from "../types/server/class/Washima/Washima"
+import { BoardAccess } from "../types/server/class/Board/Board"
+import { Chat } from "../types/server/class/Board/Chat"
+import { RoomTrigger } from "../types/server/class/Board/Room"
+import { useIo } from "./useIo"
+import { useSnackbar } from "burgos-snackbar"
 
 export interface FetchOptions {
     ignoreLoading?: boolean
@@ -13,7 +15,9 @@ export interface FetchOptions {
 }
 
 export const useApi = () => {
+    const io = useIo()
     const { user, company } = useUser()
+    const { snackbar } = useSnackbar()
 
     const [loading, setLoading] = useState(false)
 
@@ -32,6 +36,11 @@ export const useApi = () => {
                 setLoading(false)
             }
         }
+    }
+
+    const emitRommTrigger = (chat: Chat, trigger: RoomTrigger) => {
+        io.emit("board:room:chat:clone", chat, trigger)
+        snackbar({ severity: "info", text: `Sala copiada para ${trigger.board_name}` })
     }
 
     const fetchDepartments = async (options?: FetchOptions & { params?: { department_id: string } }) => await get("/company/departments", options)
@@ -57,5 +66,6 @@ export const useApi = () => {
         fetchBoardsAccess,
         fetchNagazaps,
         fetchNagaMessages,
+        emitRommTrigger,
     }
 }

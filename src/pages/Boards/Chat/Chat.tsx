@@ -41,7 +41,7 @@ export const BoardChat: React.FC<BoardChatProps> = (props) => {
     }>()
     const [expandedChat, setExpandedChat] = useState(false)
     const [nagazapMessages, setNagazapMessages] = useState<NagaMessage[]>([])
-    const [showTranferModal, setShowTranferModal] = useState(false)
+    const [showTranferModal, setShowTranferModal] = useState<null | "transfer" | "copy">(null)
     const nagaChat = useMemo(
         () => ({
             from: props.chat.phone,
@@ -78,8 +78,8 @@ export const BoardChat: React.FC<BoardChatProps> = (props) => {
         }
     }
 
-    const onTransferClick = () => {
-        setShowTranferModal(true)
+    const onTransferClick = (action: "transfer" | "copy" = "transfer") => {
+        setShowTranferModal(action)
     }
 
     useEffect(() => {
@@ -126,12 +126,13 @@ export const BoardChat: React.FC<BoardChatProps> = (props) => {
 
                         <ChatMenu board_id={props.board.id} room_id={props.room_id} chat={props.chat} onTransfer={onTransferClick} />
                         <TransferModal
-                            open={showTranferModal}
-                            onClose={() => setShowTranferModal(false)}
+                            open={!!showTranferModal}
+                            onClose={() => setShowTranferModal(null)}
                             onSubmit={(board) => props.updateBoard(board)}
                             board={props.board}
                             room_id={props.room_id}
-                            chat_id={props.chat.id}
+                            chat={props.chat}
+                            action={showTranferModal}
                         />
                     </Box>
 

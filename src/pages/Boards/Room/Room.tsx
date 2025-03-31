@@ -1,20 +1,21 @@
 import React, { useState } from "react"
 import { Box, Chip, IconButton, Menu, MenuItem, Paper, Tooltip, Typography } from "@mui/material"
-import { Room } from "../../types/server/class/Board/Room"
-import { BoardChat } from "./Chat/Chat"
+import { Room } from "../../../types/server/class/Board/Room"
+import { BoardChat } from "../Chat/Chat"
 import { Droppable } from "@hello-pangea/dnd"
 import { RoomNameInput } from "./RoomNameInput"
-import { Board } from "../../types/server/class/Board/Board"
+import { Board } from "../../../types/server/class/Board/Board"
 import { useSnackbar } from "burgos-snackbar"
-import { WithoutFunctions } from "../../types/server/class/helpers"
+import { WithoutFunctions } from "../../../types/server/class/helpers"
 import { Home, More, MoreHoriz, WhatsApp } from "@mui/icons-material"
 import { useConfirmDialog } from "burgos-confirm"
-import { Washima } from "../../types/server/class/Washima/Washima"
-import { IntegrationChip } from "./IntegrationChip"
-import { Nagazap } from "../../types/server/class/Nagazap"
+import { Washima } from "../../../types/server/class/Washima/Washima"
+import { IntegrationChip } from "../IntegrationChip"
+import { Nagazap } from "../../../types/server/class/Nagazap"
 import { EntryRoomIcon } from "./EntryRoomIcon"
-import { api } from "../../api"
-import { useUser } from "../../hooks/useUser"
+import { api } from "../../../api"
+import { useUser } from "../../../hooks/useUser"
+import { RoomSettingsModal } from "./RoomSettingsModal"
 
 interface KanbanColumnProps {
     room: Room
@@ -34,6 +35,7 @@ export const BoardRoom: React.FC<KanbanColumnProps> = (props) => {
     const { confirm } = useConfirmDialog()
 
     const [menuAnchorEl, setMenuAnchorEl] = useState<HTMLElement | null>(null)
+    const [showSettingsModal, setShowSettingsModal] = useState(false)
 
     const editRoomName = (index: number, name: string) => {
         if (props.board.rooms.find((item) => item.name === name)) {
@@ -164,7 +166,23 @@ export const BoardRoom: React.FC<KanbanColumnProps> = (props) => {
                 <MenuItem disabled={props.room.entry_point} onClick={setEntryRoom}>
                     Definir como sala inicial
                 </MenuItem>
+                <MenuItem
+                    onClick={() => {
+                        onMenuClose()
+                        setShowSettingsModal(true)
+                    }}
+                >
+                    Configurações
+                </MenuItem>
             </Menu>
+
+            <RoomSettingsModal
+                open={showSettingsModal}
+                onClose={() => setShowSettingsModal(false)}
+                room={props.room}
+                board={props.board}
+                updateBoard={props.updateBoard}
+            />
         </Paper>
     )
 }

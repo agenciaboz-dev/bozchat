@@ -16,11 +16,12 @@ interface TransferModalProps {
     onSubmit: (board: Board) => void
     board: WithoutFunctions<Board>
     room_id: string
-    chat_id: string
+    chat: Chat
+    action: "transfer" | "copy" | null
 }
 
 export const TransferModal: React.FC<TransferModalProps> = (props) => {
-    const {user, company} = useUser()
+    const { user, company } = useUser()
     const { snackbar } = useSnackbar()
 
     const [boards] = useFetchedData<Board>("boards", { params: { all: true } })
@@ -36,20 +37,22 @@ export const TransferModal: React.FC<TransferModalProps> = (props) => {
         setLoading(true)
         try {
             const data: TransferChatForm = {
-                chat_id: props.chat_id,
+                chat_id: props.chat.id,
                 destination_board_id: destinationBoard.id,
-                destination_room_id: destinationRoom.id
+                destination_room_id: destinationRoom.id,
+                copy: props.action === "copy" ? true : false,
             }
             const response = await api.post("/company/boards/transfer", data, {
                 params: {
-                board_id: props.board.id,
-                user_id: user?.id,
-                company_id: company?.id
-            }})
+                    board_id: props.board.id,
+                    user_id: user?.id,
+                    company_id: company?.id,
+                },
+            })
 
             props.onSubmit(response.data)
             props.onClose()
-            snackbar({severity: 'success', text: 'Conversa transferida'})
+            snackbar({ severity: "success", text: "Conversa transferida" })
         } catch (error) {
             console.log(error)
         } finally {
@@ -69,14 +72,16 @@ export const TransferModal: React.FC<TransferModalProps> = (props) => {
         >
             <Box sx={{ flexDirection: "column" }}>
                 <Title2
-                    name="Transferir conversa"
+                    name={props.action === "copy" ? "Copiar conversa" : "Transferir conversa"}
                     right={
                         <IconButton onClick={props.onClose}>
                             <Close />
                         </IconButton>
                     }
                 />
-                <Typography color={"secondary.main"}>Escolha o quadro e a sala para onde vai transferir esta conversa</Typography>
+                <Typography color={"secondary.main"}>
+                    Escolha o quadro e a sala para onde vai {props.action === "copy" ? "copiar" : "transferir"} esta conversa
+                </Typography>
             </Box>
 
             <Box sx={{ gap: "1vw" }}>
@@ -103,7 +108,7 @@ export const TransferModal: React.FC<TransferModalProps> = (props) => {
             </Box>
 
             <Button sx={{ alignSelf: "flex-end" }} variant="contained" onClick={onSubmitPress} disabled={destinationRoom.id === props.room_id}>
-                {loading ? <CircularProgress /> : "Transferir"}
+                {loading ? <CircularProgress /> : props.action === "copy" ? "Copiar" : "Transferir"}
             </Button>
         </Dialog>
     )

@@ -3,19 +3,18 @@ import { Box, Button, CircularProgress, IconButton, MenuItem, Paper, TextField, 
 import { Board } from "../../types/server/class/Board/Board"
 import { Title2 } from "../../components/Title"
 import { Add, ArrowBack, Edit, EditOff, EditRounded, Refresh, Save, Settings } from "@mui/icons-material"
-import { BoardRoom } from "./Room"
+import { BoardRoom } from "./Room/Room"
 import { DragDropContext, Draggable, Droppable, DropResult } from "@hello-pangea/dnd"
 import { WithoutFunctions } from "../../types/server/class/helpers"
 import { useIo } from "../../hooks/useIo"
-import { NewRoomForm } from "./NewRoomForm"
 import { uid } from "uid"
-import { useSnackbar } from "burgos-snackbar"
 import { Room } from "../../types/server/class/Board/Room"
 import { useUser } from "../../hooks/useUser"
 import { BoardSettingsModal } from "./BoardSettingsModal/BoardSettingsModal"
 import { useFetchedData } from "../../hooks/useFetchedData"
 import { Washima } from "../../types/server/class/Washima/Washima"
 import { Nagazap } from "../../types/server/class/Nagazap"
+import { useApi } from "../../hooks/useApi"
 
 interface BoardPageProps {
     board: WithoutFunctions<Board>
@@ -24,8 +23,8 @@ interface BoardPageProps {
 
 export const BoardPage: React.FC<BoardPageProps> = (props) => {
     const io = useIo()
-    const { snackbar } = useSnackbar()
     const { user } = useUser()
+    const api = useApi()
 
     const [washimas] = useFetchedData<Washima>("washimas")
     const [nagazaps] = useFetchedData<Nagazap>("nagazaps")
@@ -69,6 +68,10 @@ export const BoardPage: React.FC<BoardPageProps> = (props) => {
                 const board = { ...currentBoard, rooms }
 
                 save(board)
+
+                if (destinationRoom.on_new_chat) {
+                    api.emitRommTrigger(chat, destinationRoom.on_new_chat)
+                }
 
                 return board
             })

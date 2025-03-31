@@ -41,6 +41,7 @@ export interface TransferChatForm {
     chat_id: string;
     destination_board_id: string;
     destination_room_id: string;
+    copy?: boolean;
 }
 export declare class Board {
     id: string;
@@ -105,5 +106,6 @@ export declare class Board {
     };
     getChat(chat_id: string): Chat;
     removeChat(chat_id: string): void;
-    transferChat(data: TransferChatForm): Promise<void>;
+    transferChat(data: TransferChatForm): Promise<Chat | undefined>;
+    getRoom(room_id: string): Room;
 }
