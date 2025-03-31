@@ -67,9 +67,18 @@ export const WashimaTools: React.FC<WashimaToolsProps> = ({ washima, fetchingMes
     }, [washima])
 
     return (
-        <Box sx={{ flexDirection: "column", gap: "1vw", flex: 1, width: "100%", padding: "2vw", color: "text.secondary" }}>
+        <Box
+            sx={{
+                flexDirection: "column",
+                gap: isMobile ? "5vw" : "1vw",
+                flex: 1,
+                width: "100%",
+                padding: isMobile ? "5vw" : "2vw",
+                color: "text.secondary",
+            }}
+        >
             Uso de disco
-            <Box sx={{ gap: "1vw", flexDirection: isMobile ? "column" : "row" }}>
+            <Box sx={{ gap: isMobile ? "5vw" : "1vw", flexDirection: isMobile ? "column" : "row" }}>
                 <DiskMetricContainer label="Mensagens" value={diskMetrics?.messages} onDeletePress={deleteMessages} deleting={deletingMessages} />
                 <DiskMetricContainer label="Mídia" value={diskMetrics?.media} onDeletePress={deleteMedia} deleting={deletingMedia} />
             </Box>

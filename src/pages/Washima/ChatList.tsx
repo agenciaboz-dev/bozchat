@@ -109,7 +109,7 @@ export const ChatList: React.FC<ChatsProps> = ({
     }, [chats])
 
     return (
-        <Box sx={{ flexDirection: "column", gap: isMobile ? "3vw" : "0.1vw", alignItems: "center" }}>
+        <Box sx={{ flexDirection: "column", gap: isMobile ? "5vw" : "0.1vw", alignItems: "center" }}>
             {!loading ? (
                 !!chats.length ? (
                     chats
@@ -125,7 +125,7 @@ export const ChatList: React.FC<ChatsProps> = ({
                             />
                         ))
                 ) : (
-                    <Box sx={{ color: "secondary.main" }}>Nenhum resultado</Box>
+                    <Box sx={{ color: "text.secondary" }}>Nenhum resultado</Box>
                 )
             ) : (
                 new Array(20).fill(0).map((_, index) => <ChatSkeleton key={index} />)

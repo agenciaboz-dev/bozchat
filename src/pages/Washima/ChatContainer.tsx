@@ -101,7 +101,7 @@ export const ChatContainer: React.FC<ChatProps> = ({ chat, onChatClick, washima,
                 "&:hover": {
                     // outline: "2px solid",
                 },
-                width: isMobile ? "95vw" : "100%",
+                width: isMobile ? "90vw" : "100%",
                 flex: 1,
             }}
             onClick={handleClick}

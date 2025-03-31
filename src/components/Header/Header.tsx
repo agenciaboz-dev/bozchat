@@ -41,7 +41,6 @@ export const Header: React.FC<HeaderProps> = ({}) => {
                 <MenuIcon />
             </IconButton>
             <img src="/logos/negativos/horizontal.svg" style={{ width: isMobile ? "32vw" : "8vw", height: "auto" }} draggable={false} />
-            {/* <ThemeSwitch /> */}
             <IconButton sx={{ position: "absolute", right: "2vw" }} onClick={handleClickMenu}>
                 <Avatar sx={{ bgcolor: "secondary.main", color: "primary.main", fontWeight: "bold" }} imgProps={{ draggable: false }}>
                     {splitted_name.map((word) => word[0])}
@@ -53,7 +52,7 @@ export const Header: React.FC<HeaderProps> = ({}) => {
                 onClose={handleCloseMenu}
                 slotProps={{
                     paper: {
-                        sx: { flexDirection: "column", bgcolor: "background.default", minWidth: isMobile ? "" : "15vw", alignItems: "center" },
+                        sx: { flexDirection: "column", bgcolor: "background.default", minWidth: isMobile ? "60vw" : "15vw", alignItems: "center" },
                     },
                 }}
             >

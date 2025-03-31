@@ -69,11 +69,11 @@ export const WashimaZap: React.FC<WashimaZapProps> = ({ washima, onEdit }) => {
                         flex: isMobile ? 1 : 0.5,
                         flexDirection: "column",
                         alignItems: isMobile ? "center" : "",
-                        padding: "2vw",
-                        height: !isMobile ? "90vh" : "72vh",
+                        padding: isMobile ? "5vw" : "2vw",
+                        height: !isMobile ? "90vh" : "80vh",
                         overflowX: isMobile ? "hidden" : "auto",
                         overflowY: loading ? "hidden" : "auto",
-                        gap: "1vw",
+                        gap: isMobile ? "5vw" : "1vw",
                         color: "primary.main",
                         "::-webkit-scrollbar-thumb": {
                             backgroundColor: "primary.main",
@@ -81,7 +81,7 @@ export const WashimaZap: React.FC<WashimaZapProps> = ({ washima, onEdit }) => {
                         width: isMobile ? "100vw" : undefined,
                     }}
                 >
-                    <Box sx={{ alignItems: "center", justifyContent: "space-between" }}>
+                    <Box sx={{ alignItems: "center", justifyContent: "space-between", width: "100%" }}>
                         <p
                             style={{
                                 fontSize: isMobile ? "6vw" : "",

@@ -151,7 +151,7 @@ export const WashimaFormPage: React.FC<WashimaFormPageProps> = ({ currentWashima
                 flexDirection: isMobile ? "column" : "row",
             }}
         >
-            <Box sx={{ padding: "2vw", flexDirection: "column", gap: "1vw", flex: 0.5 }}>
+            <Box sx={{ padding: isMobile ? "5vw" : "2vw", flexDirection: "column", gap: isMobile ? "5vw" : "1vw", flex: 0.5 }}>
                 <>
                     <Box sx={{ fontSize: "1.5rem", color: "text.secondary", fontWeight: "bold", gap: "1vw" }}>
                         {showForm && (
@@ -234,7 +234,7 @@ export const WashimaFormPage: React.FC<WashimaFormPageProps> = ({ currentWashima
                         </Paper>
                     )
                 ) : isMobile ? (
-                    <Box sx={{ flexDirection: "column", alignItems: "center", justifyContent: "center" }}>
+                    <Box sx={{ flexDirection: "column", alignItems: "center", justifyContent: "center", width: "100%", padding: "5vw" }}>
                         <Box>O QRCode aparecerá aqui após cadastrar o número.</Box>
                         <Box>Pode ser que o primeiro carregamento demore.</Box>
                     </Box>

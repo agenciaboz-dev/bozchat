@@ -8,7 +8,7 @@ export const ChatSkeleton: React.FC<ChatSkeletonProps> = ({}) => {
     return (
         <Box
             sx={{
-                width: isMobile ? "95vw" : "100%",
+                width: isMobile ? "90vw" : "100%",
                 height: isMobile ? "20vw" : "5vw",
                 borderRadius: isMobile ? "3vw" : "0.5vw",
                 borderBottom: "2px solid",

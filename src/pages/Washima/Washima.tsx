@@ -154,7 +154,7 @@ export const WashimaPage: React.FC<WashimaProps> = ({}) => {
                             flex: isMobile ? 1 : 0.1,
                             flexDirection: "column",
                             alignItems: "center",
-                            padding: "2vw",
+                            padding: isMobile ? "5vw" : "2vw",
                         }}
                     >
                         <Box sx={{ alignItems: "center", gap: "1vw", color: "text.secondary", marginBottom: "1vw" }}>
@@ -169,7 +169,7 @@ export const WashimaPage: React.FC<WashimaProps> = ({}) => {
                                 variant="outlined"
                                 color="primary"
                                 fullWidth
-                                sx={{ borderStyle: "dashed", fontSize: "1rem", marginBottom: "1vw", fontWeight: "bold" }}
+                                sx={{ borderStyle: "dashed", fontSize: "1rem", marginBottom: isMobile ? "5vw" : "1vw", fontWeight: "bold" }}
                                 onClick={() => {
                                     setCurrentWashima(null)
                                     if (isMobile) {
