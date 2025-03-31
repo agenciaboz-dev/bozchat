@@ -110,6 +110,7 @@ export const MessageContainer: React.FC<MessageContainerProps> = ({ message, nag
                     position: message.type === "audio" || message.type === "sticker" || message.type === "reaction" ? "absolute" : undefined,
                     right: "0.5vw",
                     bottom: message.type === "sticker" ? "-0.5vw" : "0.5vw",
+                    color: "text.secondary",
                 }}
             >
                 {new Date(Number(message.timestamp)).toLocaleTimeString("pt-br", { hour: "2-digit", minute: "2-digit" })}
