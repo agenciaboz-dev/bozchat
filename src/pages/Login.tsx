@@ -196,7 +196,12 @@ export const Login: React.FC<LoginProps> = ({}) => {
                                 placeholder="Digite seu login"
                                 autoComplete="off"
                                 required
-                                sx={textFieldStyle({ darkMode })}
+                                sx={{
+                                    ...textFieldStyle({ darkMode }),
+                                    "& .MuiInputBase-root:not(.MuiInputBase-multiline)": {
+                                        height: undefined,
+                                    },
+                                }}
                                 InputProps={{
                                     sx: { bgcolor: "background.default" },
                                 }}
@@ -226,7 +231,12 @@ export const Login: React.FC<LoginProps> = ({}) => {
                                 type={showPassword ? "text" : "password"}
                                 autoComplete="off"
                                 required
-                                sx={textFieldStyle({ darkMode })}
+                                sx={{
+                                    ...textFieldStyle({ darkMode }),
+                                    "& .MuiInputBase-root:not(.MuiInputBase-multiline)": {
+                                        height: undefined,
+                                    },
+                                }}
                                 InputProps={{
                                     sx: { bgcolor: "background.default" },
                                     endAdornment: (

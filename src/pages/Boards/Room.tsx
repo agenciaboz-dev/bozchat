@@ -112,7 +112,7 @@ export const BoardRoom: React.FC<KanbanColumnProps> = (props) => {
                 </Box>
             ) : (
                 <Box sx={{ alignItems: "center", gap: "0.5vw", flexWrap: "wrap" }}>
-                    <Typography sx={{ color: "secondary.main", fontWeight: "bold" }}>{props.room.name}</Typography>
+                    <Typography sx={{ color: "text.secondary", fontWeight: "bold" }}>{props.room.name}</Typography>
                     <Tooltip title={`existem ${props.room.chats.length} conversas nesta sala`} arrow>
                         <Chip label={`${props.room.chats.length}`} size="small" color="primary" />
                     </Tooltip>
@@ -136,7 +136,7 @@ export const BoardRoom: React.FC<KanbanColumnProps> = (props) => {
                     >
                         {props.room.chats.length === 0 ? (
                             <Box sx={{ justifyContent: "center", alignItems: "center", height: "100%" }}>
-                                <Typography sx={{ color: "secondary.main", alignSelf: "center" }}>Nenhuma conversa</Typography>
+                                <Typography sx={{ color: "text.secondary", alignSelf: "center" }}>Nenhuma conversa</Typography>
                             </Box>
                         ) : (
                             props.room.chats.map((chat, index) => (

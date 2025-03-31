@@ -3,6 +3,8 @@ import { Box, IconButton, TextField } from "@mui/material"
 import { NagaChat, Nagazap, NagazapResponseForm } from "../../../types/server/class/Nagazap"
 import { useIo } from "../../../hooks/useIo"
 import { Send } from "@mui/icons-material"
+import { textFieldStyle } from "../../../style/textfield"
+import { useDarkMode } from "../../../hooks/useDarkMode"
 
 interface NagazapInputProps {
     chat: NagaChat
@@ -10,6 +12,7 @@ interface NagazapInputProps {
 }
 
 export const NagazapInput: React.FC<NagazapInputProps> = ({ chat, nagazap }) => {
+    const { darkMode } = useDarkMode()
     const io = useIo()
 
     const [text, setText] = useState("")
@@ -33,12 +36,7 @@ export const NagazapInput: React.FC<NagazapInputProps> = ({ chat, nagazap }) => 
                 name="message"
                 value={text}
                 onChange={(ev) => setText(ev.target.value)}
-                sx={{
-                    // ...textFieldStyle({ darkMode }),
-                    "& .MuiInputBase-root:not(.MuiInputBase-multiline)": {
-                        height: "3rem",
-                    },
-                }}
+                sx={textFieldStyle({ darkMode })}
                 autoComplete="off"
                 InputLabelProps={{ sx: { color: "green" } }}
                 InputProps={{

@@ -106,7 +106,7 @@ export const BoardChat: React.FC<BoardChatProps> = (props) => {
                     sx={{ padding: "1vw", flexDirection: "column", overflow: "hidden", gap: "1vw" }}
                 >
                     <Box sx={{ justifyContent: "space-between", alignItems: "flex-start" }}>
-                        <Box sx={{ gap: "1vw" }} color={"secondary.main"}>
+                        <Box sx={{ gap: "1vw" }} color={"text.secondary"}>
                             <Avatar src={props.chat.profile_pic} sx={{ width: "3vw", height: "3vw" }} />
                             <Box sx={{ flexDirection: "column", alignSelf: "center" }}>
                                 <Typography
@@ -147,7 +147,7 @@ export const BoardChat: React.FC<BoardChatProps> = (props) => {
                                         flexDirection: "column",
                                         padding: "1vw",
                                         position: "relative",
-                                        color: "secondary.main",
+                                        color: "text.secondary",
                                         flex: 1,
                                     }}
                                 >

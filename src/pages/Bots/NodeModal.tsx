@@ -37,7 +37,7 @@ export const NodeModal: React.FC<NodeModalProps> = ({ node, onClose, saveNode })
             {node ? (
                 <>
                     <Box sx={{ alignItems: "center", justifyContent: "space-between" }}>
-                        <Typography sx={{ color: "secondary.main", fontWeight: "bold" }}>
+                        <Typography sx={{ color: "text.secondary", fontWeight: "bold" }}>
                             {node.type === "message" ? "Enviar mensagem" : "Ao receber resposta"}
                         </Typography>
                         <IconButton onClick={onClose}>

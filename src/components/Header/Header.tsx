@@ -40,7 +40,7 @@ export const Header: React.FC<HeaderProps> = ({}) => {
             <IconButton sx={{ position: "absolute", left: "2vw", color: "white" }} onClick={() => menu.drawer.handlers.toggle()}>
                 <MenuIcon />
             </IconButton>
-            <img src="/logos/negativos/1.png" style={{ width: isMobile ? "16vw" : "4vw", height: isMobile ? "16vw" : "4vw" }} draggable={false} />
+            <img src="/logos/negativos/horizontal.svg" style={{ width: isMobile ? "32vw" : "8vw", height: "auto" }} draggable={false} />
             {/* <ThemeSwitch /> */}
             <IconButton sx={{ position: "absolute", right: "2vw" }} onClick={handleClickMenu}>
                 <Avatar sx={{ bgcolor: "secondary.main", color: "primary.main", fontWeight: "bold" }} imgProps={{ draggable: false }}>

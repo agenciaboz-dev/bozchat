@@ -22,82 +22,85 @@ export const ResponseNode: React.FC<ResponseNodeProps> = (node) => {
     const bgcolor = darkMode ? "#2a323c" : "white"
 
     return (
-        <Paper
-            sx={{
-                flexDirection: "column",
-                height: nodeHeight,
-                width: nodeWidth,
-                bgcolor: "background.default",
-                padding: 2,
-                position: "relative",
-                borderTopLeftRadius: 0,
-            }}
-            elevation={5}
-            onMouseEnter={() => setMouseOver(true)}
-            onMouseLeave={() => setMouseOver(false)}
-        >
-            <TrianguloFudido alignment="left" color={bgcolor} />
+        <>
+            <Paper
+                sx={{
+                    flexDirection: "column",
+                    height: nodeHeight,
+                    width: nodeWidth,
+                    bgcolor: "background.default",
+                    padding: 2,
+                    position: "relative",
+                    borderTopLeftRadius: 0,
+                }}
+                elevation={5}
+                onMouseEnter={() => setMouseOver(true)}
+                onMouseLeave={() => setMouseOver(false)}
+            >
+                <TrianguloFudido alignment="left" color={bgcolor} />
 
-            {topHandle && <Handle type="target" position={Position.Top} />}
+                {topHandle && <Handle type="target" position={Position.Top} />}
 
-            {node.data.value ? (
-                <Typography
-                    sx={{
-                        color: "text.secondary",
-                        fontWeight: "bold",
-                        whiteSpace: "pre-wrap",
-                        maxHeight: nodeHeight,
-                        overflow: "scroll",
-                        margin: -2,
-                        padding: 2,
-                    }}
-                >
-                    {node.data.value}
-                </Typography>
-            ) : (
-                <Button
-                    color="secondary"
-                    sx={{ alignItems: "center", gap: 0.5, flexDirection: "column", margin: "0 -1vw", height: "100%" }}
-                    onClick={() => node.data.editNode(node)}
-                >
-                    <Typography sx={{ fontWeight: "bold", fontSize: "5rem", lineHeight: "0.1vw", marginTop: "1.6vw" }}>*</Typography>
-                    Qualquer mensagem
-                </Button>
-            )}
+                {node.data.value ? (
+                    <Typography
+                        sx={{
+                            color: "text.secondary",
+                            fontWeight: "bold",
+                            whiteSpace: "pre-wrap",
+                            maxHeight: nodeHeight,
+                            overflow: "scroll",
+                            margin: -2,
+                            padding: 2,
+                        }}
+                    >
+                        {node.data.value}
+                    </Typography>
+                ) : (
+                    <Button
+                        color="secondary"
+                        sx={{ alignItems: "center", gap: 0.5, flexDirection: "column", margin: "0 -1vw", height: "100%" }}
+                        onClick={() => node.data.editNode(node)}
+                    >
+                        <Typography sx={{ fontWeight: "bold", fontSize: "5rem", lineHeight: "0.1vw", marginTop: "1.6vw" }}>*</Typography>
+                        Qualquer mensagem
+                    </Button>
+                )}
 
-            {mouseOver && (
-                <Box
-                    sx={{
-                        justifyContent: "flex-end",
-                        position: "absolute",
-                        bottom: -20,
-                        right: 0,
-                    }}
-                >
-                    {node.data.value && (
-                        <IconButton onClick={() => node.data.editNode(node)}>
-                            <Edit sx={{}} />
+                {mouseOver && (
+                    <Box
+                        sx={{
+                            justifyContent: "flex-end",
+                            position: "absolute",
+                            bottom: -20,
+                            right: 0,
+                        }}
+                    >
+                        {node.data.value && (
+                            <IconButton onClick={() => node.data.editNode(node)}>
+                                <Edit sx={{}} />
+                            </IconButton>
+                        )}
+                        {node.data.deleteNode && (
+                            <IconButton onClick={() => node.data.deleteNode!(node)}>
+                                <Delete sx={{}} />
+                            </IconButton>
+                        )}
+                    </Box>
+                )}
+
+                <Handle type="source" position={Position.Bottom} style={{}} isConnectable={false} />
+
+                {can_add_children && (
+                    <Box sx={{ justifyContent: "center" }}>
+                        {/* {data.lastNode && ( */}
+                        <IconButton sx={{ position: "absolute", bottom: -20 }} onClick={() => node.data.onAddChild("message")}>
+                            <AddCircle />
                         </IconButton>
-                    )}
-                    {node.data.deleteNode && (
-                        <IconButton onClick={() => node.data.deleteNode!(node)}>
-                            <Delete sx={{}} />
-                        </IconButton>
-                    )}
-                </Box>
-            )}
-
-            <Handle type="source" position={Position.Bottom} style={{}} isConnectable={false} />
-
-            {can_add_children && (
-                <Box sx={{ justifyContent: "center" }}>
-                    {/* {data.lastNode && ( */}
-                    <IconButton sx={{ position: "absolute", bottom: -20 }} onClick={() => node.data.onAddChild("message")}>
-                        <AddCircle />
-                    </IconButton>
-                    {/* // )} */}
-                </Box>
-            )}
-        </Paper>
+                        {/* // )} */}
+                    </Box>
+                )}
+            </Paper>
+            <Typography sx={{ position: "absolute", top: -10, left: -42, color: "text.disabled" }}>Msg</Typography>
+        </>
     )
 }

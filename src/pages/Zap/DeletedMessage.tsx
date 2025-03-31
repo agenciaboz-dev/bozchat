@@ -9,7 +9,7 @@ interface DeletedMessageProps {
 
 export const DeletedMessage: React.FC<DeletedMessageProps> = ({ customText }) => {
     return (
-        <Box sx={{ alignItems: "center", gap: "0.25vw", fontSize: "0.8rem" }}>
+        <Box sx={{ alignItems: "center", gap: "0.25vw", fontSize: "0.8rem", color: "text.secondary" }}>
             <DoNotDisturb fontSize="small" />
             {customText || "Mensagem deletada"}
         </Box>

@@ -10,13 +10,13 @@ interface HomeProps {}
 export const Home: React.FC<HomeProps> = ({}) => {
     const isMobile = useMediaQuery("(orientation: portrait)")
     return (
-        <Box sx={{ ...backgroundStyle, overflow: "auto" }}>
+        <Box sx={{ ...backgroundStyle, overflow: isMobile ? "auto" : "hidden" }}>
             <Header />
             <Box
                 sx={{
                     flex: 1,
-                    gap: "2vw",
-                    padding: "2vw",
+                    gap: isMobile ? "5vw" : "2vw",
+                    padding: isMobile ? "5vw" : "2vw",
                     flexDirection: isMobile ? "column" : "row",
                 }}
             >

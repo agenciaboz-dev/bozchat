@@ -36,7 +36,7 @@ export const BusinessTab: React.FC<BusinessTabProps> = (props) => {
 
     return (
         <Box sx={{ flexDirection: "column", gap: "1vw", flex: 1 }}>
-            <Box sx={{ alignItems: "center", gap: "1vw" }} color="secondary.main">
+            <Box sx={{ alignItems: "center", gap: "1vw" }} color="text.secondary">
                 <Typography>Atualmente sincronizado com:</Typography>
                 <Chip label={props.board.washima_settings.length} size="small" />
             </Box>
@@ -51,13 +51,13 @@ export const BusinessTab: React.FC<BusinessTabProps> = (props) => {
                             onChange={onWashimaClick}
                             board={props.board}
                             room={props.board.rooms.find((room) => room.id === setting?.room_id)}
-                            type='washima'
+                            type="washima"
                         />
                     )
                 })}
             </Box>
 
-            <Box sx={{ flexDirection: "column", gap: "1vw" }} color="secondary.main">
+            <Box sx={{ flexDirection: "column", gap: "1vw" }} color="text.secondary">
                 <Typography>Não sincronizados:</Typography>
 
                 {remainingWashimas.map((washima) => {
@@ -70,7 +70,7 @@ export const BusinessTab: React.FC<BusinessTabProps> = (props) => {
                             onChange={onWashimaClick}
                             board={props.board}
                             room={props.board.rooms.find((room) => room.id === setting?.room_id)}
-                            type='washima'
+                            type="washima"
                         />
                     )
                 })}

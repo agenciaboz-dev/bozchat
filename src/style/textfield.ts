@@ -8,14 +8,14 @@ interface StyleProps {
 export const webkitbg = {
     "& .MuiInputBase-input.MuiOutlinedInput-input:-webkit-autofill": {
         "-webkit-box-shadow": ` 0 0 0 100px ${colors.background.primary} inset`,
-        // borderRadius: "initial",
+        borderRadius: "initial",
     },
 }
 
 export const lightModeWebkitbg = {
     "& .MuiInputBase-input.MuiOutlinedInput-input:-webkit-autofill": {
         "-webkit-box-shadow": ` 0 0 0 100px ${default_colors.background.primary} inset`,
-        // borderRadius: "initial",
+        borderRadius: "initial",
     },
 }
 
@@ -59,9 +59,9 @@ export const textFieldStyle = ({ darkMode = true }: StyleProps): SxProps => ({
             height: "12vw",
         },
     },
-    // "& .MuiInputBase-root:not(.MuiInputBase-multiline)": {
-    //     height: "3rem",
-    // },
+    "& .MuiInputBase-root:not(.MuiInputBase-multiline)": {
+        height: "3rem",
+    },
     "& .MuiInputLabel-shrink": {
         fontSize: "1vw", // Tamanho da fonte do label quando dentro do input
         "@media (max-width: 600px)": {
@@ -70,7 +70,7 @@ export const textFieldStyle = ({ darkMode = true }: StyleProps): SxProps => ({
     },
     "& .MuiInputBase-input::placeholder": {
         // color: "text.primary",
-        opacity: darkMode ? 0.5 : 1,
+        opacity: darkMode ? 0.5 : 0.7,
     },
 })
 

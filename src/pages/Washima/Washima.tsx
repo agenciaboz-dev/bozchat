@@ -100,7 +100,7 @@ export const WashimaPage: React.FC<WashimaProps> = ({}) => {
     }, [])
 
     return (
-        <Box sx={backgroundStyle}>
+        <Box sx={{ ...backgroundStyle, overflow: isMobile ? "auto" : "hidden" }}>
             <Header />
             {isMobile ? (
                 <Box sx={{ flexDirection: "row" }}>

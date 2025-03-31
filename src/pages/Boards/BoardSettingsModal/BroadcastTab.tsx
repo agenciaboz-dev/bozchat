@@ -35,45 +35,47 @@ export const BroadcastTab: React.FC<BroadcastTabProps> = (props) => {
         })
     }
 
-    return <Box sx={{ flexDirection: "column", gap: "1vw", flex: 1 }}>
-                <Box sx={{ alignItems: "center", gap: "1vw" }} color="secondary.main">
-                    <Typography>Atualmente sincronizado com:</Typography>
-                    <Chip label={props.board.nagazap_settings.length} size="small" />
-                </Box>
-                <Box sx={{ flexDirection: "column", gap: "1vw" }}>
-                    {syncedNagazaps.map((nagazap) => {
-                        const setting = props.selectedNagazaps.find((item) => item.nagazap_id === nagazap.id)
-                        return (
-                            <IntegrationContainer
-                                type='nagazap'
-                                integration={nagazap}
-                                key={nagazap.id}
-                                checked={!!setting}
-                                onChange={onNagazapClick}
-                                board={props.board}
-                                room={props.board.rooms.find((room) => room.id === setting?.room_id)}
-                            />
-                        )
-                    })}
-                </Box>
-    
-                <Box sx={{ flexDirection: "column", gap: "1vw" }} color="secondary.main">
-                    <Typography>Não sincronizados:</Typography>
-    
-                    {remainingNagazaps.map((nagazap) => {
-                        const setting = props.selectedNagazaps.find((item) => item.nagazap_id === nagazap.id)
-                        return (
-                            <IntegrationContainer
-                                type='nagazap'
-                                integration={nagazap}
-                                key={nagazap.id}
-                                checked={!!setting}
-                                onChange={onNagazapClick}
-                                board={props.board}
-                                room={props.board.rooms.find((room) => room.id === setting?.room_id)}
-                            />
-                        )
-                    })}
-                </Box>
+    return (
+        <Box sx={{ flexDirection: "column", gap: "1vw", flex: 1 }}>
+            <Box sx={{ alignItems: "center", gap: "1vw" }} color="text.secondary">
+                <Typography>Atualmente sincronizado com:</Typography>
+                <Chip label={props.board.nagazap_settings.length} size="small" />
             </Box>
+            <Box sx={{ flexDirection: "column", gap: "1vw" }}>
+                {syncedNagazaps.map((nagazap) => {
+                    const setting = props.selectedNagazaps.find((item) => item.nagazap_id === nagazap.id)
+                    return (
+                        <IntegrationContainer
+                            type="nagazap"
+                            integration={nagazap}
+                            key={nagazap.id}
+                            checked={!!setting}
+                            onChange={onNagazapClick}
+                            board={props.board}
+                            room={props.board.rooms.find((room) => room.id === setting?.room_id)}
+                        />
+                    )
+                })}
+            </Box>
+
+            <Box sx={{ flexDirection: "column", gap: "1vw" }} color="text.secondary">
+                <Typography>Não sincronizados:</Typography>
+
+                {remainingNagazaps.map((nagazap) => {
+                    const setting = props.selectedNagazaps.find((item) => item.nagazap_id === nagazap.id)
+                    return (
+                        <IntegrationContainer
+                            type="nagazap"
+                            integration={nagazap}
+                            key={nagazap.id}
+                            checked={!!setting}
+                            onChange={onNagazapClick}
+                            board={props.board}
+                            room={props.board.rooms.find((room) => room.id === setting?.room_id)}
+                        />
+                    )
+                })}
+            </Box>
+        </Box>
+    )
 }

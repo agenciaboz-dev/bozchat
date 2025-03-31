@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react"
-import { Box, CircularProgress, Dialog, IconButton, Typography } from "@mui/material"
+import { Box, CircularProgress, Dialog, IconButton, Typography, useMediaQuery } from "@mui/material"
 import { backgroundStyle } from "../../style/background"
 import { Header } from "../../components/Header/Header"
 import { useUser } from "../../hooks/useUser"
@@ -15,6 +15,7 @@ import { User } from "../../types/server/class/User"
 interface DepartmentsProps {}
 
 export const Departments: React.FC<DepartmentsProps> = ({}) => {
+    const isMobile = useMediaQuery("(orientation: portrait)")
     const { company, user } = useUser()
     const { confirm } = useConfirmDialog()
 
@@ -91,7 +92,7 @@ export const Departments: React.FC<DepartmentsProps> = ({}) => {
     }, [])
 
     return (
-        <Box sx={{ ...backgroundStyle, overflow: "auto" }}>
+        <Box sx={{ ...backgroundStyle, overflow: isMobile ? "auto" : "hidden" }}>
             <Header />
             <Box sx={{ flexDirection: "column", flex: 1, gap: "1vw", padding: "2vw" }}>
                 <Title2
