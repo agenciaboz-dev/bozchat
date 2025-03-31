@@ -23,7 +23,7 @@ export type LogPrisma = Prisma.LogGetPayload<{
 export type LogForm = Omit<WithoutFunctions<Log>, "id" | "user" | "timestamp" | "type"> & {
     type?: LogType;
 };
-export type LogType = "washima" | "nagazap" | "chatbot" | "users" | "default" | "departments";
+export type LogType = "washima" | "nagazap" | "chatbot" | "users" | "default" | "departments" | "boards";
 export declare class Log {
     id: string;
     timestamp: number;

@@ -17,19 +17,23 @@ import { ChatContainer } from "../../Nagazap/Messages/ChatContainer"
 import { useApi } from "../../../hooks/useApi"
 import { canRespondNagaChat } from "../../../tools/canRespondNagaChat"
 import { ChatMenu } from "./ChatMenu"
+import { TransferModal } from "./TransferModal"
+import { WithoutFunctions } from "../../../types/server/class/helpers"
+import { Board } from "../../../types/server/class/Board/Board"
 
 interface BoardChatProps {
     chat: Chat
     index: number
     washima?: Washima
     nagazap?: Nagazap
-    board_id: string
     room_id: string
+    board: WithoutFunctions<Board>
+    updateBoard: (board: Board) => void
 }
 
 export const BoardChat: React.FC<BoardChatProps> = (props) => {
     const { fetchNagaMessages } = useApi()
-    
+
     const [mediaMetaData, setMediaMetaData] = useState<{
         mimetype: string | undefined
         filename: string | undefined
@@ -37,6 +41,7 @@ export const BoardChat: React.FC<BoardChatProps> = (props) => {
     }>()
     const [expandedChat, setExpandedChat] = useState(false)
     const [nagazapMessages, setNagazapMessages] = useState<NagaMessage[]>([])
+    const [showTranferModal, setShowTranferModal] = useState(false)
     const nagaChat = useMemo(
         () => ({
             from: props.chat.phone,
@@ -73,6 +78,10 @@ export const BoardChat: React.FC<BoardChatProps> = (props) => {
         }
     }
 
+    const onTransferClick = () => {
+        setShowTranferModal(true)
+    }
+
     useEffect(() => {
         if ((props.chat.last_message as WashimaMessageType)?.hasMedia) {
             fetchMediaMetadata()
@@ -86,10 +95,6 @@ export const BoardChat: React.FC<BoardChatProps> = (props) => {
             )
         }
     }, [props.nagazap, props.chat])
-
-    useEffect(() => {
-        console.log(mediaMetaData)
-    }, [mediaMetaData])
 
     return (
         <Draggable draggableId={props.chat.id} index={props.index}>
@@ -118,7 +123,16 @@ export const BoardChat: React.FC<BoardChatProps> = (props) => {
                                 </Box>
                             </Box>
                         </Box>
-                        <ChatMenu board_id={props.board_id} room_id={props.room_id} chat={props.chat} />
+
+                        <ChatMenu board_id={props.board.id} room_id={props.room_id} chat={props.chat} onTransfer={onTransferClick} />
+                        <TransferModal
+                            open={showTranferModal}
+                            onClose={() => setShowTranferModal(false)}
+                            onSubmit={(board) => props.updateBoard(board)}
+                            board={props.board}
+                            room_id={props.room_id}
+                            chat_id={props.chat.id}
+                        />
                     </Box>
 
                     {props.washima || (props.nagazap && nagazapMessages.length > 0) ? (

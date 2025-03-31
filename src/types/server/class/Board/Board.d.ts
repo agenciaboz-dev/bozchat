@@ -8,6 +8,7 @@ import WAWebJS from "whatsapp-web.js";
 import { Washima } from "../Washima/Washima";
 import { WashimaMessage } from "../Washima/WashimaMessage";
 import { Socket } from "socket.io";
+import { NagaMessage } from "../Nagazap";
 export type BoardPrisma = Prisma.BoardGetPayload<{}>;
 export interface BoardForm {
     name: string;
@@ -36,6 +37,11 @@ export interface BoardAccess {
     users: User[];
     departments: Department[];
 }
+export interface TransferChatForm {
+    chat_id: string;
+    destination_board_id: string;
+    destination_room_id: string;
+}
 export declare class Board {
     id: string;
     name: string;
@@ -47,6 +53,7 @@ export declare class Board {
     washima_settings: BoardWashimaSettings[];
     nagazap_settings: BoardNagazapSettings[];
     static handleSocket(socket: Socket): void;
+    static handleNagazapNewMessage(message: NagaMessage, company_id: string): Promise<void>;
     static handleWashimaNewMessage(data: HandleWashimaMessageDto): Promise<void>;
     static getCompanyBoards(company_id: string): Promise<Board[]>;
     static find(board_id: string): Promise<Board>;
@@ -61,13 +68,14 @@ export declare class Board {
         users?: User[];
     }>>): Promise<void>;
     delete(): Promise<{
-        id: string;
         name: string;
+        id: string;
+        company_id: string;
         created_at: string;
         rooms: Prisma.JsonValue;
-        receive_washima_message: Prisma.JsonValue;
+        washima_settings: Prisma.JsonValue;
+        nagazap_settings: Prisma.JsonValue;
         entry_room_id: string;
-        company_id: string;
     }>;
     saveRooms(): Promise<void>;
     newRoom(data: RoomForm): void;
@@ -75,7 +83,8 @@ export declare class Board {
     updateRoom(updatedRoom: Room): void;
     newChat(chat: Chat, room_id?: string): Promise<void>;
     getWashimaSetting(washima_id?: string): BoardWashimaSettings | undefined;
-    handleWashimaMessage(chatDto: ChatDto): Promise<false | undefined>;
+    getNagazapSetting(nagazap_id?: string): BoardNagazapSettings | undefined;
+    handleMessage(chatDto: ChatDto): Promise<false | undefined>;
     handleWashimaSettingsChange(data: BoardWashimaSettings[]): Promise<boolean>;
     unsyncWashima(data: BoardWashimaSettings): void;
     syncWashima(data: BoardWashimaSettings): Promise<void>;
@@ -89,4 +98,12 @@ export declare class Board {
         departments: Department[];
     }>;
     changeAccess(access: BoardAccess): Promise<void>;
+    getDestinationBoard(board_id: string): Promise<Board>;
+    getChatRoomIndex(chat_id: string): {
+        room: number;
+        chat: number;
+    };
+    getChat(chat_id: string): Chat;
+    removeChat(chat_id: string): void;
+    transferChat(data: TransferChatForm): Promise<void>;
 }

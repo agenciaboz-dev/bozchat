@@ -7,6 +7,7 @@ interface ChatMenuProps {
     chat: Chat
     board_id: string
     room_id: string
+    onTransfer: () => void
 }
 
 export const ChatMenu: React.FC<ChatMenuProps> = (props) => {
@@ -23,7 +24,7 @@ export const ChatMenu: React.FC<ChatMenuProps> = (props) => {
             </IconButton>
 
             <Menu open={!!menuAnchorEl} onClose={closeMenu} anchorEl={menuAnchorEl}>
-                <MenuItem >Transferir</MenuItem>
+                <MenuItem onClick={props.onTransfer}>Transferir</MenuItem>
             </Menu>
         </Box>
     )

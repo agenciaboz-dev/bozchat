@@ -51,7 +51,7 @@ export const IntegrationContainer: React.FC<BusinessContainerProps> = (props) =>
                 <Avatar src={profilePic?.url} />
                 <Box sx={{ flexDirection: "column" }}>
                     <Typography sx={{ fontWeight: "bold", width: "13vw", whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis" }}>
-                        {washima.name || (nagazap.displayName || '')}
+                        {washima.name || nagazap.displayName || ""}
                     </Typography>
                     <Typography sx={{ fontSize: "0.8rem", color: "secondary.main" }}>{washima.number || nagazap.displayPhone}</Typography>
                 </Box>
@@ -67,7 +67,6 @@ export const IntegrationContainer: React.FC<BusinessContainerProps> = (props) =>
                     getOptionKey={(option) => option.id}
                     getOptionLabel={(option) => option.name}
                     ChipProps={{ size: "small", color: "primary" }}
-                    ListboxProps={{ sx: { width: "100%", bgcolor: "background.default" } }}
                     disableClearable
                 />
             </Box>

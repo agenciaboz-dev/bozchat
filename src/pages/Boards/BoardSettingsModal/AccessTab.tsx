@@ -51,7 +51,6 @@ export const AccessTab: React.FC<AccessTabProps> = (props) => {
                 value={props.access.users}
                 onChange={(_, value) => handleAccessChange("users", value)}
                 ChipProps={{ size: "small", color: "primary" }}
-                ListboxProps={{ sx: { width: "100%", bgcolor: "background.default" } }}
                 disableCloseOnSelect
             />
             <Autocomplete
@@ -65,7 +64,6 @@ export const AccessTab: React.FC<AccessTabProps> = (props) => {
                 value={props.access.departments}
                 onChange={(_, value) => handleAccessChange("departments", value)}
                 ChipProps={{ size: "small", color: "primary" }}
-                ListboxProps={{ sx: { width: "100%", bgcolor: "background.default" } }}
                 disableCloseOnSelect
             />
         </Box>

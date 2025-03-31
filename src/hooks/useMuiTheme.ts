@@ -46,8 +46,8 @@ export const useMuiTheme = () => {
                         },
                     },
                     components: {
-                        MuiMenuList: { defaultProps: { sx: { bgcolor: colors.background.primary } } },
-                        MuiList: { defaultProps: { sx: { bgcolor: colors.background.primary } } },
+                        MuiMenuList: { defaultProps: { sx: { backgroundColor: colors.background.primary } } },
+                        MuiList: { defaultProps: { sx: { backgroundColor: colors.background.primary } } },
                         MuiDataGrid: {
                             styleOverrides: {
                                 cell: {
@@ -55,6 +55,13 @@ export const useMuiTheme = () => {
                                 },
                             },
                         },
+                        MuiAutocomplete: {
+                            styleOverrides: {
+                                listbox: { width: "100%", backgroundColor: colors.background.primary },
+                            },
+                        },
+                        MuiButton: { styleOverrides: { contained: { color: colors.secondary } } },
+                        MuiCircularProgress: { defaultProps: { size: "1.5rem", color: "secondary" } },
                     },
                 },
                 ptBR

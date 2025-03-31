@@ -65,7 +65,6 @@ export const DepartmentFormComponent: React.FC<DepartmentFormComponentProps> = (
                     onChange={(_, users) => formik.setFieldValue("users", users)}
                     disableCloseOnSelect
                     ChipProps={{ size: "small", color: "primary" }}
-                    ListboxProps={{ sx: { width: "100%", bgcolor: "background.default" } }}
                 />
 
                 <Box sx={{ gap: "1vw", flexDirection: "row-reverse" }}>

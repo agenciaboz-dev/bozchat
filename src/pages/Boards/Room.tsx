@@ -7,11 +7,14 @@ import { RoomNameInput } from "./RoomNameInput"
 import { Board } from "../../types/server/class/Board/Board"
 import { useSnackbar } from "burgos-snackbar"
 import { WithoutFunctions } from "../../types/server/class/helpers"
-import { More, MoreHoriz, WhatsApp } from "@mui/icons-material"
+import { Home, More, MoreHoriz, WhatsApp } from "@mui/icons-material"
 import { useConfirmDialog } from "burgos-confirm"
 import { Washima } from "../../types/server/class/Washima/Washima"
 import { IntegrationChip } from "./IntegrationChip"
 import { Nagazap } from "../../types/server/class/Nagazap"
+import { EntryRoomIcon } from "./EntryRoomIcon"
+import { api } from "../../api"
+import { useUser } from "../../hooks/useUser"
 
 interface KanbanColumnProps {
     room: Room
@@ -22,9 +25,11 @@ interface KanbanColumnProps {
     deleteRoom: (room_id: string) => void
     washimas: Washima[]
     nagazaps: Nagazap[]
+    updateBoard: (board: Board) => void
 }
 
 export const BoardRoom: React.FC<KanbanColumnProps> = (props) => {
+    const { user, company } = useUser()
     const { snackbar } = useSnackbar()
     const { confirm } = useConfirmDialog()
 
@@ -68,6 +73,27 @@ export const BoardRoom: React.FC<KanbanColumnProps> = (props) => {
         }),
     ]
 
+    const setEntryRoom = async () => {
+        onMenuClose()
+        try {
+            const rooms = props.board.rooms
+            rooms[props.index].entry_point = true
+            rooms[props.board.entry_room_index].entry_point = false
+
+            const data: Partial<Board> = { rooms, entry_room_id: props.room.id, entry_room_index: props.index }
+            const response = await api.patch("/company/boards", data, {
+                params: {
+                    user_id: user?.id,
+                    company_id: company?.id,
+                    board_id: props.board.id,
+                },
+            })
+            props.updateBoard(response.data)
+        } catch (error) {
+            console.log(error)
+        }
+    }
+
     return (
         <Paper sx={{ flexDirection: "column", width: "25vw", padding: "1vw", gap: "1vw", overflow: "auto", height: "74vh" }}>
             {props.editMode ? (
@@ -75,6 +101,7 @@ export const BoardRoom: React.FC<KanbanColumnProps> = (props) => {
                     <Box sx={{ justifyContent: "space-between" }}>
                         <Box sx={{ alignItems: "center", gap: "1vw", flexWrap: "wrap" }}>
                             <Chip label={props.index + 1} color="primary" />
+                            {props.room.entry_point && <EntryRoomIcon />}
                             {syncedIntegrations}
                         </Box>
                         <IconButton onClick={(ev) => setMenuAnchorEl(ev.currentTarget)}>
@@ -89,6 +116,7 @@ export const BoardRoom: React.FC<KanbanColumnProps> = (props) => {
                     <Tooltip title={`existem ${props.room.chats.length} conversas nesta sala`} arrow>
                         <Chip label={`${props.room.chats.length}`} size="small" color="primary" />
                     </Tooltip>
+                    {props.room.entry_point && <EntryRoomIcon />}
                     {!!props.washimas.length && syncedIntegrations}
                 </Box>
             )}
@@ -118,8 +146,9 @@ export const BoardRoom: React.FC<KanbanColumnProps> = (props) => {
                                     index={index}
                                     washima={props.washimas.find((washima) => washima.id === chat.washima_id)}
                                     nagazap={props.nagazaps.find((nagazap) => nagazap.id === chat.nagazap_id)}
-                                    board_id={props.board.id}
+                                    board={props.board}
                                     room_id={props.room.id}
+                                    updateBoard={(board) => props.updateBoard(board)}
                                 />
                             ))
                         )}
@@ -131,6 +160,9 @@ export const BoardRoom: React.FC<KanbanColumnProps> = (props) => {
             <Menu open={!!menuAnchorEl} anchorEl={menuAnchorEl} onClose={onMenuClose}>
                 <MenuItem disabled={props.room.entry_point} onClick={deleteRoom}>
                     Deletar
+                </MenuItem>
+                <MenuItem disabled={props.room.entry_point} onClick={setEntryRoom}>
+                    Definir como sala inicial
                 </MenuItem>
             </Menu>
         </Paper>

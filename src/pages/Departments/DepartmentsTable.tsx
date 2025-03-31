@@ -57,7 +57,6 @@ export const DepartmentsTable: React.FC<DepartmentsTableProps> = (props) => {
                             newUsersValue.current = newValue
                         }}
                         disableCloseOnSelect
-                        ListboxProps={{ sx: { width: "100%", bgcolor: "background.default" } }}
                         renderTags={(value) => ""}
                         isOptionEqualToValue={(option, value) => option.id === value.id}
                     />

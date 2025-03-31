@@ -222,6 +222,7 @@ export const BoardPage: React.FC<BoardPageProps> = (props) => {
                                                 index={index}
                                                 board={board}
                                                 deleteRoom={deleteRoom}
+                                                updateBoard={(board) => setBoard(board)}
                                             />
                                         </Box>
                                     )}

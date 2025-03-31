@@ -66,6 +66,7 @@ export declare class NagaMessage {
     text: string;
     name: string;
     type: NagaMessageType;
+    nagazap_id: string;
     constructor(data: NagaMessagePrisma);
 }
 export interface NagazapForm {
@@ -129,7 +130,7 @@ export declare class Nagazap {
     static sendResponse(id: string, data: NagazapResponseForm, socket?: Socket): Promise<void>;
     constructor(data: NagazapPrisma);
     loadBlacklist(saved_list: any[]): BlacklistLog[];
-    getMessages(): Promise<NagaMessage[]>;
+    getMessages(from?: string): Promise<NagaMessage[]>;
     update(data: Partial<WithoutFunctions<Nagazap>>): Promise<this>;
     updateToken(token: string): Promise<void>;
     buildHeaders(options?: BuildHeadersOptions): {
