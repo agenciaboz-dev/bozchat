@@ -94,7 +94,7 @@ export const NagazapScreen: React.FC<NagazapProps> = ({}) => {
     }, [])
 
     return (
-        <Box sx={{ ...backgroundStyle, overflow: "auto" }}>
+        <Box sx={{ ...backgroundStyle, overflow: isMobile ? "auto" : "hidden" }}>
             <Header />
             <Box sx={{ padding: "2vw", height: "90vh" }}>
                 {!showInformations ? (

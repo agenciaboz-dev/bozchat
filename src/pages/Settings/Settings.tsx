@@ -1,5 +1,5 @@
 import React from "react"
-import { Box, Grid } from "@mui/material"
+import { Box, Grid, useMediaQuery } from "@mui/material"
 import { Header } from "../../components/Header/Header"
 import { backgroundStyle } from "../../style/background"
 import { Title2 } from "../../components/Title"
@@ -11,8 +11,10 @@ import { ThemeSwitch } from "./ThemeSwitch"
 interface SettingsProps {}
 
 export const Settings: React.FC<SettingsProps> = ({}) => {
+    const isMobile = useMediaQuery("(orientation: portrait)")
+
     return (
-        <Box sx={backgroundStyle}>
+        <Box sx={{ ...backgroundStyle, overflow: isMobile ? "auto" : "hidden" }}>
             <Header />
 
             <Box sx={{ padding: "2vw", flexDirection: "column", gap: "1vw" }}>

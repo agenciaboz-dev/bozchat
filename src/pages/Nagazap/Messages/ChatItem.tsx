@@ -30,7 +30,7 @@ export const ChatItem: React.FC<ChatItemProps> = ({ chat, onChatClick, active })
                     position: "relative",
                     borderRadius: "0.5vw",
                     borderTopLeftRadius: 0,
-                    color: "secondary.main",
+                    color: "text.secondary",
                     flex: 1,
                     backgroundColor: darkMode ? undefined : active ? "#d9d9d9" : undefined,
                 }}

@@ -1,5 +1,5 @@
 import React, { useEffect, useMemo, useState } from "react"
-import { Box, IconButton, Paper } from "@mui/material"
+import { Box, IconButton, Paper, useMediaQuery } from "@mui/material"
 import { Log } from "../../types/server/class/Log"
 import { backgroundStyle } from "../../style/background"
 import { Header } from "../../components/Header/Header"
@@ -22,6 +22,7 @@ const icons = {
 }
 
 export const Logs: React.FC<LogsProps> = ({}) => {
+    const isMobile = useMediaQuery("(orientation: portrait)")
     const { company } = useUser()
 
     const [logs, setLogs] = useState<Log[]>([])
@@ -76,7 +77,7 @@ export const Logs: React.FC<LogsProps> = ({}) => {
     }, [])
 
     return (
-        <Box sx={backgroundStyle}>
+        <Box sx={{ ...backgroundStyle, overflow: isMobile ? "auto" : "hidden" }}>
             <Header />
             <Box sx={{ padding: "2vw", flex: 1, flexDirection: "column" }}>
                 <Title2

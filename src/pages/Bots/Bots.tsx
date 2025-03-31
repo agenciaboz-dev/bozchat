@@ -49,7 +49,7 @@ export const Bots: React.FC<BotsProps> = ({}) => {
     }, [])
 
     return (
-        <Box sx={{ ...backgroundStyle, overflow: "auto" }}>
+        <Box sx={{ ...backgroundStyle, overflow: isMobile ? "auto" : "hidden" }}>
             <Header />
             <Box sx={{ padding: "2vw", height: "90vh" }}>
                 <Paper

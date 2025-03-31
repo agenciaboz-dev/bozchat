@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react"
-import { Box, CircularProgress, Dialog, IconButton, Typography } from "@mui/material"
+import { Box, CircularProgress, Dialog, IconButton, Typography, useMediaQuery } from "@mui/material"
 import { useUser } from "../../hooks/useUser"
 import { useConfirmDialog } from "burgos-confirm"
 import { Board } from "../../types/server/class/Board/Board"
@@ -20,6 +20,8 @@ import { BoardSettingsModal } from "./BoardSettingsModal/BoardSettingsModal"
 interface BoardsProps {}
 
 export const Boards: React.FC<BoardsProps> = ({}) => {
+    const isMobile = useMediaQuery("(orientation: portrait)")
+
     const { company, user } = useUser()
     const { confirm } = useConfirmDialog()
     const navigate = useNavigate()
@@ -87,7 +89,7 @@ export const Boards: React.FC<BoardsProps> = ({}) => {
     }, [])
 
     return (
-        <Box sx={{ ...backgroundStyle, overflow: "auto" }}>
+        <Box sx={{ ...backgroundStyle, overflow: isMobile ? "auto" : "hidden" }}>
             <Header />
             <Routes>
                 <Route

@@ -88,7 +88,7 @@ export const Users: React.FC<UsersProps> = ({}) => {
     }, [])
 
     return (
-        <Box sx={{ ...backgroundStyle, overflow: "auto" }}>
+        <Box sx={{ ...backgroundStyle, overflow: isMobile ? "auto" : "hidden" }}>
             <Header />
             <Box sx={{ flexDirection: "column", flex: 1, gap: "1vw", padding: "2vw" }}>
                 <Title2
