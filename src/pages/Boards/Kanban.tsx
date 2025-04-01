@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react"
+import React, { useEffect, useRef, useState } from "react"
 import { Box, Button, CircularProgress, IconButton, MenuItem, Paper, TextField, Typography } from "@mui/material"
 import { Board } from "../../types/server/class/Board/Board"
 import { Title2 } from "../../components/Title"
@@ -25,6 +25,8 @@ export const BoardPage: React.FC<BoardPageProps> = (props) => {
     const io = useIo()
     const { user } = useUser()
     const api = useApi()
+
+    const columnsBoxRef = useRef<HTMLDivElement | null>(null)
 
     const [washimas] = useFetchedData<Washima>("washimas")
     const [nagazaps] = useFetchedData<Nagazap>("nagazaps")
@@ -129,6 +131,15 @@ export const BoardPage: React.FC<BoardPageProps> = (props) => {
             const board = { ...currentBoard, rooms }
             save(board)
 
+            setTimeout(
+                () =>
+                    columnsBoxRef.current?.scroll({
+                        left: columnsBoxRef.current.scrollWidth - columnsBoxRef.current.clientWidth,
+                        behavior: "smooth",
+                    }),
+                500
+            )
+
             return board
         })
     }
@@ -206,11 +217,21 @@ export const BoardPage: React.FC<BoardPageProps> = (props) => {
                     }
                 />
                 <Droppable droppableId={props.board.id} type="room" direction="horizontal">
-                    {(provided, snapshort) => (
+                    {(provided) => (
                         <Box
-                            ref={provided.innerRef}
+                            ref={(node: HTMLDivElement) => {
+                                provided.innerRef(node)
+                                columnsBoxRef.current = node
+                            }}
                             {...provided.droppableProps}
-                            sx={{ gap: "2vw", overflow: "auto", margin: "0 -2vw", padding: "0 2vw", marginBottom: "-2vw", paddingBottom: "2vw" }}
+                            sx={{
+                                gap: "2vw",
+                                overflow: "auto",
+                                margin: "0 -2vw",
+                                padding: "0 2vw",
+                                marginBottom: "-2vw",
+                                paddingBottom: "2vw",
+                            }}
                         >
                             {board.rooms.map((room, index) => (
                                 <Draggable key={room.id} draggableId={room.id} index={index} isDragDisabled={!editMode}>
