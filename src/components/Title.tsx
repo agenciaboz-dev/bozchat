@@ -42,13 +42,13 @@ export const Title2: React.FC<{ name: string; right?: React.ReactNode; left?: Re
                 borderBottom: "1px solid",
                 paddingBottom: isMobile ? "2vw" : "0.5vw",
                 width: "100%",
-                fontSize: isMobile ? "6vw" : "1.1vw",
+                fontSize: isMobile ? "1.4rem" : "1.1vw",
                 justifyContent: isMobile ? "center" : "space-between",
                 alignItems: "center",
                 marginBottom: isMobile ? "2vw" : "0.5vw",
             }}
         >
-            <Box sx={{ alignItems: "center", gap: "0.5vw" }}>
+            <Box sx={{ alignItems: "center", gap: "0.5vw", flex: 1 }}>
                 {left ? <Box>{left}</Box> : isMobile && !space ? <Box sx={{ flex: 0.1 }}></Box> : null}
                 <p
                     style={{

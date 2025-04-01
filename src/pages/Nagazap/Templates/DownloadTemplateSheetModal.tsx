@@ -1,5 +1,5 @@
 import React from "react"
-import { Box, Button, Dialog, IconButton, Typography } from "@mui/material"
+import { Box, Button, Dialog, IconButton, Typography, useMediaQuery } from "@mui/material"
 import { NagaTemplate, Nagazap } from "../../../types/server/class/Nagazap"
 import { Close } from "@mui/icons-material"
 import { api } from "../../../api"
@@ -13,6 +13,7 @@ interface DownloadTemplateSheetProps {
 }
 
 export const DownloadTemplateSheetModal: React.FC<DownloadTemplateSheetProps> = (props) => {
+    const isMobile = useMediaQuery("(orientation: portrait)")
     const { user } = useUser()
 
     const onDownloadClick = async (type: "csv" | "xlsx") => {
@@ -32,15 +33,23 @@ export const DownloadTemplateSheetModal: React.FC<DownloadTemplateSheetProps> = 
         <Dialog
             open={props.open}
             onClose={props.onClose}
-            PaperProps={{ sx: { bgcolor: "background.default", flexDirection: "column", padding: "2vw", gap: "2vw" } }}
+            PaperProps={{
+                sx: {
+                    bgcolor: "background.default",
+                    flexDirection: "column",
+                    padding: isMobile ? "5vw" : "2vw",
+                    gap: isMobile ? "5vw" : "2vw",
+                    minWidth: isMobile ? "90%" : "25vw",
+                },
+            }}
         >
-            <Box sx={{ alignItems: "center", gap: "1vw" }}>
-                <Typography sx={{ fontWeight: "bold", color: "secondary.main" }}>Selecione o formato da planilha</Typography>
+            <Box sx={{ alignItems: "center", justifyContent: "space-between" }}>
+                <Typography sx={{ fontWeight: "bold", color: "text.secondary" }}>Selecione o formato da planilha</Typography>
                 <IconButton onClick={props.onClose}>
                     <Close />
                 </IconButton>
             </Box>
-            <Box sx={{ gap: "1vw", justifyContent: "flex-end" }}>
+            <Box sx={{ gap: isMobile ? "5vw" : "1vw", justifyContent: "flex-end" }}>
                 <Button variant="contained" onClick={() => onDownloadClick("csv")}>
                     Csv
                 </Button>

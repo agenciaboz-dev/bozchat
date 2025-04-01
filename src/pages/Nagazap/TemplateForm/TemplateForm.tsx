@@ -197,7 +197,16 @@ export const TemplateForm: React.FC<TemplateFormProps> = ({ nagazap, setShowInfo
     }, [currentTemplate])
 
     return (
-        <Paper sx={{ flexDirection: "column", bgcolor: "background.default", padding: "2vw", gap: "1vw", height: "90vh", overflow: "auto" }}>
+        <Paper
+            sx={{
+                flexDirection: "column",
+                bgcolor: "background.default",
+                padding: isMobile ? "5vw" : "2vw",
+                gap: isMobile ? "3vw" : "1vw",
+                height: "90vh",
+                overflow: "auto",
+            }}
+        >
             <Title2
                 name={currentTemplate ? "Editar Template" : "Novo Template"}
                 right={
@@ -271,7 +280,11 @@ export const TemplateForm: React.FC<TemplateFormProps> = ({ nagazap, setShowInfo
                     </Grid>
                 </Grid>
             </form>
-            <Button variant="contained" onClick={() => formik.handleSubmit()} sx={{ position: "absolute", bottom: "2vw", right: "2vw" }}>
+            <Button
+                variant="contained"
+                onClick={() => formik.handleSubmit()}
+                sx={{ position: "absolute", bottom: isMobile ? "5vw" : "2vw", right: isMobile ? "5vw" : "2vw" }}
+            >
                 {loading ? <CircularProgress size="1.5rem" color="secondary" /> : "Enviar template para análise"}
             </Button>
         </Paper>

@@ -1,13 +1,27 @@
-import React, { useEffect, useMemo, useState } from "react"
+import React, { Dispatch, SetStateAction, useEffect, useMemo, useState } from "react"
 import { AlertColor, Box, Chip, CircularProgress, IconButton, Menu, MenuItem, Paper } from "@mui/material"
 import { NagaTemplate, Nagazap } from "../../../types/server/class/Nagazap"
 import { Subroute } from "../Subroute"
 import { TemplateInfo, TemplateStatus } from "../../../types/server/Meta/WhatsappBusiness/TemplatesInfo"
 import { api } from "../../../api"
 import { useUser } from "../../../hooks/useUser"
-import { Add, Check, CopyAll, Delete, Download, Edit, Error, HourglassFull, MoreHoriz, Refresh, Send, WatchLater } from "@mui/icons-material"
+import {
+    Add,
+    ArrowBack,
+    Check,
+    CopyAll,
+    Delete,
+    Download,
+    Edit,
+    Error,
+    HourglassFull,
+    MoreHoriz,
+    Refresh,
+    Send,
+    WatchLater,
+} from "@mui/icons-material"
 import { DataGrid, GridColDef } from "@mui/x-data-grid"
-import { useClipboard } from "@mantine/hooks"
+import { useClipboard, useMediaQuery } from "@mantine/hooks"
 import { useSnackbar } from "burgos-snackbar"
 import { TemplateModal } from "./TemplateModal"
 import { useIo } from "../../../hooks/useIo"
@@ -17,6 +31,7 @@ import { useConfirmDialog } from "burgos-confirm"
 
 interface TemplatesProps {
     nagazap: Nagazap
+    setShowInformations: Dispatch<SetStateAction<boolean>>
 }
 
 const status_options: { [key: string]: { label: string; color: AlertColor; icon: typeof Check } } = {
@@ -32,7 +47,8 @@ const category_options = {
     AUTHENTICATION: "Autenticação",
 }
 
-export const Templates: React.FC<TemplatesProps> = ({ nagazap }) => {
+export const Templates: React.FC<TemplatesProps> = ({ nagazap, setShowInformations }) => {
+    const isMobile = useMediaQuery("(orientation: portrait)")
     const io = useIo()
     const { user } = useUser()
     const clipboard = useClipboard({ timeout: 1000 })
@@ -74,6 +90,7 @@ export const Templates: React.FC<TemplatesProps> = ({ nagazap }) => {
                 const Icon = option.icon
                 return <Chip label={option.label} color={option.color} size="small" />
             },
+            minWidth: isMobile ? 150 : undefined,
         },
         {
             field: "created_at",
@@ -83,6 +100,7 @@ export const Templates: React.FC<TemplatesProps> = ({ nagazap }) => {
                 const date = new Date(cell.value)
                 return date.toLocaleString("pt-br")
             },
+            minWidth: isMobile ? 200 : undefined,
         },
         {
             field: "last_update",
@@ -92,8 +110,9 @@ export const Templates: React.FC<TemplatesProps> = ({ nagazap }) => {
                 const date = new Date(cell.value)
                 return date.toLocaleString("pt-br")
             },
+            minWidth: isMobile ? 200 : undefined,
         },
-        { field: "name", headerName: "Nome", flex: 0.28 },
+        { field: "name", headerName: "Nome", flex: 0.28, minWidth: isMobile ? 250 : undefined },
 
         {
             field: "category",
@@ -102,8 +121,9 @@ export const Templates: React.FC<TemplatesProps> = ({ nagazap }) => {
             valueFormatter(value) {
                 return category_options[value]
             },
+            minWidth: isMobile ? 150 : undefined,
         },
-        { field: "sent", headerName: "Envios", flex: 0.05 },
+        { field: "sent", headerName: "Envios", flex: 0.05, minWidth: isMobile ? 120 : undefined },
 
         {
             field: "id",
@@ -118,6 +138,7 @@ export const Templates: React.FC<TemplatesProps> = ({ nagazap }) => {
             align: "center",
             sortable: false,
             filterable: false,
+            minWidth: isMobile ? 120 : undefined,
         },
     ]
 
@@ -236,64 +257,72 @@ export const Templates: React.FC<TemplatesProps> = ({ nagazap }) => {
                     <IconButton onClick={fetchTemplates}>{loading ? <CircularProgress size={"1.5rem"} color="secondary" /> : <Refresh />}</IconButton>
                 </Box>
             }
-        >
-            <Box sx={{ gap: "1vw" }}>
-                <Paper sx={{ flex: 1 }}>
-                    <DataGrid
-                        loading={loading}
-                        rows={mescled_templates}
-                        columns={columns}
-                        initialState={{
-                            sorting: {
-                                sortModel: [{ field: "last_update", sort: "desc" }],
-                            },
-                            pagination: { paginationModel: { page: 0, pageSize: 10 } },
-                        }}
-                        pageSizeOptions={[10, 20, 50, 100]}
-                        sx={{ border: 0, height: "61vh" }}
-                        onRowSelectionModelChange={(params) => {
-                            if (params.length === 0) return
-                            console.log(params[0])
-                            const selected_template = templates.find((template) => template.id === params[0])
-                            if (selected_template) {
-                                setSelectedTemplate(selected_template)
-                            }
-                        }}
-                    />
-
-                    <Menu
-                        open={!!menuAnchor}
-                        anchorEl={menuAnchor}
-                        onClose={() => setMenuAnchor(null)}
-                        MenuListProps={{
-                            sx: {
-                                ".MuiButtonBase-root": {
-                                    gap: "0.5vw",
-                                },
-                            },
+            left={
+                isMobile ? (
+                    <IconButton
+                        onClick={() => {
+                            setShowInformations(false)
                         }}
                     >
-                        <MenuItem onClick={copyId}>
-                            <CopyAll />
-                            Copiar ID
-                        </MenuItem>
-                        <MenuItem disabled={selectedTemplate?.info.status !== "APPROVED"} onClick={sendThisTemplate}>
-                            <Send />
-                            Preparar envio
-                        </MenuItem>
-                        <MenuItem onClick={downloadTemplateSheet}>
-                            <Download />
-                            Baixar modelo de planilha
-                        </MenuItem>
-                        <MenuItem onClick={editTemplate} disabled={!can_edit}>
-                            <Edit /> Editar
-                        </MenuItem>
-                        <MenuItem onClick={deleteTemplate}>
-                            <Delete /> Deletar
-                        </MenuItem>
-                    </Menu>
-                </Paper>
-            </Box>
+                        <ArrowBack />
+                    </IconButton>
+                ) : null
+            }
+        >
+            <Paper sx={{ flex: 1 }}>
+                <DataGrid
+                    loading={loading}
+                    rows={mescled_templates}
+                    columns={columns}
+                    initialState={{
+                        sorting: {
+                            sortModel: [{ field: "last_update", sort: "desc" }],
+                        },
+                        pagination: { paginationModel: { page: 0, pageSize: 10 } },
+                    }}
+                    pageSizeOptions={[10, 20, 50, 100]}
+                    sx={{ border: 0, height: isMobile ? "100%" : "61vh" }}
+                    onRowSelectionModelChange={(params) => {
+                        if (params.length === 0) return
+                        console.log(params[0])
+                        const selected_template = templates.find((template) => template.id === params[0])
+                        if (selected_template) {
+                            setSelectedTemplate(selected_template)
+                        }
+                    }}
+                />
+                <Menu
+                    open={!!menuAnchor}
+                    anchorEl={menuAnchor}
+                    onClose={() => setMenuAnchor(null)}
+                    MenuListProps={{
+                        sx: {
+                            ".MuiButtonBase-root": {
+                                gap: "0.5vw",
+                            },
+                        },
+                    }}
+                >
+                    <MenuItem onClick={copyId}>
+                        <CopyAll />
+                        Copiar ID
+                    </MenuItem>
+                    <MenuItem disabled={selectedTemplate?.info.status !== "APPROVED"} onClick={sendThisTemplate}>
+                        <Send />
+                        Preparar envio
+                    </MenuItem>
+                    <MenuItem onClick={downloadTemplateSheet}>
+                        <Download />
+                        Baixar modelo de planilha
+                    </MenuItem>
+                    <MenuItem onClick={editTemplate} disabled={!can_edit}>
+                        <Edit /> Editar
+                    </MenuItem>
+                    <MenuItem onClick={deleteTemplate}>
+                        <Delete /> Deletar
+                    </MenuItem>
+                </Menu>
+            </Paper>
 
             <TemplateModal
                 nagazap={nagazap}
