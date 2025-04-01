@@ -98,7 +98,7 @@ export const BoardChat: React.FC<BoardChatProps> = (props) => {
 
     return (
         <Draggable draggableId={props.chat.id} index={props.index}>
-            {(provided, snapshot) => (
+            {(provided) => (
                 <Paper
                     ref={provided.innerRef}
                     {...provided.draggableProps}

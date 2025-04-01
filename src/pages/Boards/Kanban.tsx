@@ -236,6 +236,7 @@ export const BoardPage: React.FC<BoardPageProps> = (props) => {
                                     {(provided) => (
                                         <Box ref={provided.innerRef} {...provided.draggableProps} {...provided.dragHandleProps}>
                                             <BoardRoom
+                                                key={room.id}
                                                 washimas={washimas}
                                                 nagazaps={nagazaps}
                                                 room={room}
