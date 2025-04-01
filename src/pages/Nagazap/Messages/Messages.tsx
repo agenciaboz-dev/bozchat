@@ -137,35 +137,65 @@ export const MessagesScreen: React.FC<MessagesScreenProps> = ({ nagazap, setShow
                 ) : null
             }
         >
-            <Box sx={{ gap: "1vw", marginTop: "-1vw" }}>
-                <Box sx={{ flexDirection: "column", gap: "1vw" }}>
-                    <TextField
-                        placeholder="Nome, número ou texto da mensagem"
-                        label="Buscar mensagens"
-                        InputProps={{ startAdornment: <Search />, sx: { gap: "0.5vw" } }}
-                        onChange={(ev) => debouncedSearch(ev.target.value)}
-                        sx={textFieldStyle({ darkMode })}
-                    />
-                    <Box
-                        sx={{
-                            flexDirection: "column",
-                            width: "25vw",
-                            gap: "1vw",
-                            overflow: "scroll",
-                            maxHeight: "30vw",
-                            margin: "-1vw",
-                            padding: "1vw",
-                            marginTop: "0",
-                            paddingTop: "0",
-                        }}
-                    >
-                        {chats.map((chat) => (
-                            <ChatItem key={chat.from} chat={chat} onChatClick={onChatClick} active={selectedChat?.from === chat.from} />
-                        ))}
+            {isMobile ? (
+                selectedChat ? (
+                    <ChatContainer chat={selectedChat} onClose={() => setSelectedChat(null)} nagazap={nagazap} />
+                ) : (
+                    <Box sx={{ flexDirection: "column", gap: "5vw" }}>
+                        <TextField
+                            placeholder="Nome, número ou texto"
+                            label="Buscar mensagens"
+                            InputProps={{ startAdornment: <Search />, sx: { gap: "2vw" } }}
+                            onChange={(ev) => debouncedSearch(ev.target.value)}
+                            sx={textFieldStyle({ darkMode })}
+                        />
+                        <Box
+                            sx={{
+                                flexDirection: "column",
+                                gap: "5vw",
+                                margin: "-2vw",
+                                padding: "2vw",
+                                marginTop: "0",
+                                paddingTop: "0",
+                            }}
+                        >
+                            {chats.map((chat) => (
+                                <ChatItem key={chat.from} chat={chat} onChatClick={onChatClick} />
+                            ))}
+                        </Box>
                     </Box>
+                )
+            ) : (
+                <Box sx={{ gap: "1vw", marginTop: "-1vw" }}>
+                    <Box sx={{ flexDirection: "column", gap: "1vw" }}>
+                        <TextField
+                            placeholder="Nome, número ou texto da mensagem"
+                            label="Buscar mensagens"
+                            InputProps={{ startAdornment: <Search />, sx: { gap: "0.5vw" } }}
+                            onChange={(ev) => debouncedSearch(ev.target.value)}
+                            sx={textFieldStyle({ darkMode })}
+                        />
+                        <Box
+                            sx={{
+                                flexDirection: "column",
+                                width: "25vw",
+                                gap: "1vw",
+                                overflow: "scroll",
+                                maxHeight: "30vw",
+                                margin: "-1vw",
+                                padding: "1vw",
+                                marginTop: "0",
+                                paddingTop: "0",
+                            }}
+                        >
+                            {chats.map((chat) => (
+                                <ChatItem key={chat.from} chat={chat} onChatClick={onChatClick} active={selectedChat?.from === chat.from} />
+                            ))}
+                        </Box>
+                    </Box>
+                    {selectedChat && <ChatContainer chat={selectedChat} onClose={() => setSelectedChat(null)} nagazap={nagazap} />}
                 </Box>
-                {selectedChat && <ChatContainer chat={selectedChat} onClose={() => setSelectedChat(null)} nagazap={nagazap} />}
-            </Box>
+            )}
         </Subroute>
     )
 }

@@ -53,7 +53,13 @@ export const MessageAuthor: React.FC<MessageAuthorProps> = ({ author, small }) =
             }}
         >
             <Box
-                sx={{ color: authorColor, maxWidth: small ? "15vw" : undefined, textOverflow: "ellipsis", whiteSpace: "nowrap", overflow: "hidden" }}
+                sx={{
+                    color: authorColor,
+                    maxWidth: isMobile ? "25vw" : small ? "15vw" : undefined,
+                    textOverflow: "ellipsis",
+                    whiteSpace: "nowrap",
+                    overflow: "hidden",
+                }}
             >
                 {!!author_phone && "~ "}
                 {author_name}

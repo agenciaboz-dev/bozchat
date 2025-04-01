@@ -28,7 +28,7 @@ export const ChatItem: React.FC<ChatItemProps> = ({ chat, onChatClick, active })
                     gap: isMobile ? "2vw" : "0.5vw",
                     padding: isMobile ? "4vw" : "0.5vw",
                     position: "relative",
-                    borderRadius: "0.5vw",
+                    borderRadius: "4px",
                     borderTopLeftRadius: 0,
                     color: "text.secondary",
                     flex: 1,
@@ -52,11 +52,11 @@ export const ChatItem: React.FC<ChatItemProps> = ({ chat, onChatClick, active })
                     <Typography
                         color="#fff"
                         sx={{
-                            wordBreak: "break-all",
+                            wordBreak: "break-word",
                             color: "text.secondary",
                             fontSize: chat.lastMessage.type === "reaction" ? "3rem" : undefined,
                             alignSelf: chat.lastMessage.type === "reaction" ? "center" : undefined,
-                            maxHeight: "3vw",
+                            maxHeight: isMobile ? "10vh" : "3vw",
                             textOverflow: "ellipsis",
                             overflow: "hidden",
                         }}

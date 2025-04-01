@@ -25,6 +25,7 @@ export const Subroute: React.FC<SubrouteProps> = ({ children, title, right, left
                 bgcolor: "background.paper",
                 borderRadius: isMobile ? "2vw" : "0 4px 4px 0",
                 overflowY: "auto",
+                overflowX: isMobile ? "hidden" : "auto",
             }}
         >
             <Title2 name={title} right={right ? right : undefined} left={left ? left : undefined} space={space} />

@@ -36,13 +36,13 @@ export const MessageContainer: React.FC<MessageContainerProps> = ({ message, nag
                 gap: isMobile ? "2vw" : "0.5vw",
                 padding: isMobile ? "4vw" : "0.5vw",
                 position: "relative",
-                borderRadius: "0.5vw",
+                borderRadius: "4px",
                 borderTopLeftRadius: from_me ? undefined : 0,
                 borderTopRightRadius: from_me ? 0 : undefined,
-                color: "secondary.main",
+                color: "text.secondary",
                 paddingBottom: inBoards ? undefined : message.type === "audio" ? "1vw" : undefined,
                 width: "fit-content",
-                minWidth: "5vw",
+                minWidth: isMobile ? "70%" : "5vw",
                 minHeight: "2vw",
                 alignSelf: from_me ? "flex-end" : undefined,
                 bgcolor:
@@ -57,6 +57,7 @@ export const MessageContainer: React.FC<MessageContainerProps> = ({ message, nag
                         : lightModeSecondary,
                 maxWidth: inBoards ? "17vw" : undefined,
                 marginBottom: message.type === "sticker" ? "0.5vw" : undefined,
+                margin: isMobile ? "1vw 0" : undefined,
             }}
         >
             {disabledIcon && <DeletedMessage customText="Tempo de resposta excedido (24 horas)" />}
@@ -66,10 +67,21 @@ export const MessageContainer: React.FC<MessageContainerProps> = ({ message, nag
                         <Avatar
                             variant="rounded"
                             sx={{
-                                width: message.type === "image" ? (inBoards ? "15vw" : "20vw") : inBoards ? "5vw" : "10vw",
+                                width:
+                                    message.type === "image"
+                                        ? inBoards
+                                            ? "15vw"
+                                            : isMobile
+                                            ? "33vw"
+                                            : "20vw"
+                                        : inBoards
+                                        ? "5vw"
+                                        : isMobile
+                                        ? "33vw"
+                                        : "10vw",
                                 height: "auto",
                                 maxHeight: inBoards ? "15vw" : isMobile ? "80vw" : "20vw",
-                                borderRadius: message.type === "sticker" ? "0.75vw" : undefined,
+                                borderRadius: message.type === "sticker" ? (isMobile ? "4px" : "0.75vw") : undefined,
                             }}
                             src={message.text}
                         />
@@ -85,7 +97,7 @@ export const MessageContainer: React.FC<MessageContainerProps> = ({ message, nag
                         color: "text.secondary",
                         fontSize: message.type === "reaction" ? "3rem" : undefined,
                         alignSelf: message.type === "reaction" ? "center" : undefined,
-                        maxWidth: "15vw",
+                        maxWidth: isMobile ? "100%" : "15vw",
                     }}
                 >
                     {message.text}

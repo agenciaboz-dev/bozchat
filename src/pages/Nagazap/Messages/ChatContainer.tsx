@@ -29,9 +29,9 @@ export const ChatContainer: React.FC<ChatContainerProps> = ({ chat, onClose, nag
                 // justifyContent: isMobile ? "flex-end" : "center",
                 bgcolor: inBoards ? "transparent" : "background.paper",
                 // height: isMobile ? "77vh" : "90vh",
-                padding: inBoards ? 0 : isMobile ? "2vw" : "0.5vw 1vw",
-                color: "secondary.main",
-                gap: inBoards ? "1vw" : "0.5vw",
+                padding: inBoards ? 0 : isMobile ? "5vw" : "0.5vw 1vw",
+                // color: "secondary.main",
+                gap: inBoards ? "1vw" : isMobile ? "5vw" : "0.5vw",
                 flexDirection: "column",
                 overflow: "hidden",
                 position: "relative",
@@ -42,27 +42,28 @@ export const ChatContainer: React.FC<ChatContainerProps> = ({ chat, onClose, nag
             {!inBoards && (
                 <Box
                     sx={{
-                        gap: isMobile ? "3vw" : "2vw",
+                        // gap: isMobile ? "3vw" : "2vw",
                         alignItems: "center",
+                        justifyContent: "space-between",
                         // height: isMobile ? "7vh" : "5vh",
-                        padding: isMobile ? "2vw" : "",
+                        // padding: isMobile ? "2vw" : "",
                     }}
                 >
                     <MessageAuthor author={chat.name + " - " + chat.from} />
-                    <Box sx={{ marginLeft: "auto" }}>
-                        <IconButton sx={{ color: "text.secondary", padding: isMobile ? "0" : "" }} onClick={onClose}>
-                            <Cancel />
-                        </IconButton>
-                    </Box>
+                    <IconButton sx={{ color: "text.secondary", padding: isMobile ? "0" : "" }} onClick={onClose}>
+                        <Cancel />
+                    </IconButton>
                 </Box>
             )}
 
             <Box
                 sx={{
                     width: "100%",
-                    height: inBoards ? (disabledResponse ? "21.5vw" : "20vw") : "27vw",
+                    height: inBoards ? (disabledResponse ? "21.5vw" : "20vw") : isMobile ? undefined : "27vw",
+                    flex: isMobile ? 1 : undefined,
                     bgcolor: "background.default",
                     overflowY: "scroll",
+                    overflowX: "hidden",
                     borderRadius: isMobile ? "2vw" : "4px",
                     padding: inBoards ? "1vw" : isMobile ? "4vw" : "2vw",
                     color: "text.secondary",
