@@ -11,11 +11,11 @@ import { Add, Close, Refresh, Replay } from "@mui/icons-material"
 import { BoardsTable } from "./BoardsTable"
 import { BoardFormComponent } from "./BoardForm"
 import { Route, Routes, useNavigate } from "react-router-dom"
-import { BoardPage } from "./Kanban"
 import { useApi } from "../../hooks/useApi"
 import { api } from "../../api"
 import { useFetchedData } from "../../hooks/useFetchedData"
 import { BoardSettingsModal } from "./BoardSettingsModal/BoardSettingsModal"
+import { BoardPage } from "./Kanban"
 
 interface BoardsProps {}
 

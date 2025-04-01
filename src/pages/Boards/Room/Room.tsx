@@ -97,7 +97,7 @@ export const BoardRoom: React.FC<KanbanColumnProps> = (props) => {
     }
 
     return (
-        <Paper sx={{ flexDirection: "column", width: "25vw", padding: "1vw", gap: "1vw", overflow: "auto", height: "74vh" }}>
+        <Paper sx={{ flexDirection: "column", width: "25vw", padding: "1vw", gap: "1vw", height: "max-content" }}>
             {props.editMode ? (
                 <Box sx={{ flexDirection: "column", marginBottom: "0.2vw" }}>
                     <Box sx={{ justifyContent: "space-between" }}>

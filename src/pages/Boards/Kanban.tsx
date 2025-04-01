@@ -190,7 +190,7 @@ export const BoardPage: React.FC<BoardPageProps> = (props) => {
 
     return (
         <DragDropContext onDragEnd={onDragEnd}>
-            <Box sx={{ flexDirection: "column", flex: 1, gap: "1vw", padding: "2vw" }}>
+            <Box sx={{ padding: "2vw", paddingBottom: 0, marginBottom: "-0.5vw" }}>
                 <Title2
                     name={`${props.board.name}`}
                     left={
@@ -216,17 +216,15 @@ export const BoardPage: React.FC<BoardPageProps> = (props) => {
                         </Box>
                     }
                 />
+            </Box>
+            <Box ref={columnsBoxRef} sx={{ flexDirection: "column", flex: 1, gap: "1vw", padding: "2vw", width: "100vw", overflow: "auto" }}>
                 <Droppable droppableId={props.board.id} type="room" direction="horizontal">
                     {(provided) => (
                         <Box
-                            ref={(node: HTMLDivElement) => {
-                                provided.innerRef(node)
-                                columnsBoxRef.current = node
-                            }}
+                            ref={provided.innerRef}
                             {...provided.droppableProps}
                             sx={{
                                 gap: "2vw",
-                                overflow: "auto",
                                 margin: "0 -2vw",
                                 padding: "0 2vw",
                                 marginBottom: "-2vw",
