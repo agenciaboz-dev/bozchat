@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState } from "react"
-import { Box, Button, CircularProgress, IconButton, MenuItem, Paper, TextField, Typography } from "@mui/material"
+import { Box, Button, CircularProgress, IconButton, MenuItem, Paper, TextField, Tooltip, Typography } from "@mui/material"
 import { Board } from "../../types/server/class/Board/Board"
 import { Title2 } from "../../components/Title"
 import { Add, ArrowBack, Edit, EditOff, EditRounded, Refresh, Save, Settings } from "@mui/icons-material"
@@ -15,6 +15,7 @@ import { useFetchedData } from "../../hooks/useFetchedData"
 import { Washima } from "../../types/server/class/Washima/Washima"
 import { Nagazap } from "../../types/server/class/Nagazap"
 import { useApi } from "../../hooks/useApi"
+import { useSnackbar } from "burgos-snackbar"
 
 interface BoardPageProps {
     board: WithoutFunctions<Board>
@@ -25,6 +26,7 @@ export const BoardPage: React.FC<BoardPageProps> = (props) => {
     const io = useIo()
     const { user } = useUser()
     const api = useApi()
+    const { snackbar } = useSnackbar()
 
     const columnsBoxRef = useRef<HTMLDivElement | null>(null)
 
@@ -34,6 +36,7 @@ export const BoardPage: React.FC<BoardPageProps> = (props) => {
     const [editMode, setEditMode] = useState(false)
     const [saving, setSaving] = useState(false)
     const [showSettings, setShowSettings] = useState(false)
+    const [syncing, setSyncing] = useState(false)
 
     const isSame = (result: DropResult<string>) =>
         result.destination?.droppableId === result.source.droppableId && result.destination.index === result.source.index
@@ -183,8 +186,21 @@ export const BoardPage: React.FC<BoardPageProps> = (props) => {
     useEffect(() => {
         io.emit("board:subscribe", board.id)
 
+        io.on("sync:pending", () => {
+            snackbar({ severity: "info", text: "Sincronização iniciada. Você receberá um alerta quando concluída." })
+            setSyncing(true)
+        })
+
+        io.on("sync:done", () => {
+            snackbar({ severity: "info", text: "Sincronização concluída." })
+            setSyncing(false)
+        })
+
         return () => {
             io.emit("board:unsubscribe", board.id)
+
+            io.off("sync:pending")
+            io.off("sync:done")
         }
     }, [])
 
@@ -199,7 +215,12 @@ export const BoardPage: React.FC<BoardPageProps> = (props) => {
                         </IconButton>
                     }
                     right={
-                        <Box>
+                        <Box sx={{ alignItems: "center" }}>
+                            {syncing && (
+                                <Tooltip title="Sincronizando" arrow>
+                                    <CircularProgress color="success" />
+                                </Tooltip>
+                            )}
                             {user?.admin && (
                                 <>
                                     <IconButton onClick={addRoom}>

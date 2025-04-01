@@ -59,21 +59,6 @@ export const BoardSettingsModal: React.FC<BoardSettingsModalProps> = (props) => 
         }
     }
 
-    useEffect(() => {
-        io.on("sync:pending", () => {
-            snackbar({ severity: "info", text: "Sincronização iniciada. Você receberá um alerta quando concluída." })
-        })
-
-        io.on("sync:done", () => {
-            snackbar({ severity: "info", text: "Sincronização concluída." })
-        })
-
-        return () => {
-            io.off("sync:pending")
-            io.off("sync:done")
-        }
-    }, [])
-
     return (
         <Dialog
             open={props.open}
