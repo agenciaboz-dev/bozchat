@@ -16,6 +16,7 @@ export interface WashimaMessageForm {
     washima_id: string;
     chat_id: string;
     isGroup?: boolean;
+    createOnly?: boolean;
 }
 export declare class WashimaMessage {
     sid: string;

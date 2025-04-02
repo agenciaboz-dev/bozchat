@@ -1,7 +1,7 @@
 import React, { useMemo } from "react"
-import { Box, IconButton, Paper, useMediaQuery } from "@mui/material"
+import { Box, Chip, IconButton, Paper, Tooltip, useMediaQuery } from "@mui/material"
 import { MessageContainer } from "./MessageContainer"
-import { Cancel } from "@mui/icons-material"
+import { Cancel, Hub } from "@mui/icons-material"
 import { MessageAuthor } from "../../Zap/MessageAuthor"
 import { NagaChat, Nagazap } from "../../../types/server/class/Nagazap"
 import { NagazapInput } from "./NagazapInput"
@@ -20,6 +20,14 @@ interface ChatContainerProps {
 export const ChatContainer: React.FC<ChatContainerProps> = ({ chat, onClose, nagazap, inBoards, disabledResponse }) => {
     const isMobile = useMediaQuery("(orientation: portrait)")
     const can_respond = useMemo(() => canRespondNagaChat(chat, nagazap), [chat])
+
+    const last_template = useMemo(
+        () =>
+            nagazap.sentMessages
+                .filter((item) => item.data.contacts[0].wa_id.slice(2) === chat.from)
+                .reduce((last, log) => (last.timestamp > log.timestamp ? last : log)).template_name,
+        [nagazap, chat]
+    )
 
     return (
         <Paper
@@ -49,7 +57,12 @@ export const ChatContainer: React.FC<ChatContainerProps> = ({ chat, onClose, nag
                         // padding: isMobile ? "2vw" : "",
                     }}
                 >
-                    <MessageAuthor author={chat.name + " - " + chat.from} />
+                    <Box sx={{ gap: "0.5vw", alignItems: "center" }}>
+                        <MessageAuthor author={chat.name + " - " + chat.from} />
+                        <Tooltip title="último template enviado para este contato" arrow>
+                            <Chip icon={<Hub color="primary" />} label={last_template} size="small" />
+                        </Tooltip>
+                    </Box>
                     <IconButton sx={{ color: "text.secondary", padding: isMobile ? "0" : "" }} onClick={onClose}>
                         <Cancel />
                     </IconButton>
