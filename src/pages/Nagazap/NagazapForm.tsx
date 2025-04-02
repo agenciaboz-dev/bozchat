@@ -26,6 +26,15 @@ const urls = {
     facebook_developers: "https://developers.facebook.com/apps/",
 }
 
+const webhooks = [
+    "message_template_quality_update",
+    "message_template_status_update",
+    "messages",
+    "phone_number_name_update",
+    "phone_number_quality_update",
+    "template_category_update",
+]
+
 export const NagazapForm: React.FC<NagazapFormProps> = ({ onSuccess, setShowInformations }) => {
     const { darkMode } = useDarkMode()
     const { company, user } = useUser()
@@ -34,8 +43,8 @@ export const NagazapForm: React.FC<NagazapFormProps> = ({ onSuccess, setShowInfo
     const clipboard = useClipboard({ timeout: 1000 })
     const { snackbar } = useSnackbar()
 
-    const copyWebhookUrl = () => {
-        clipboard.copy(urls.webhook)
+    const copy = (text: string) => {
+        clipboard.copy(text)
         snackbar({ severity: "success", text: "copiado" })
     }
 
@@ -148,7 +157,7 @@ export const NagazapForm: React.FC<NagazapFormProps> = ({ onSuccess, setShowInfo
                         variant="standard"
                         InputProps={{
                             endAdornment: (
-                                <IconButton onClick={copyWebhookUrl}>
+                                <IconButton onClick={() => copy(urls.webhook)}>
                                     <CopyAll />
                                 </IconButton>
                             ),
@@ -169,9 +178,9 @@ export const NagazapForm: React.FC<NagazapFormProps> = ({ onSuccess, setShowInfo
                 <Typography>
                     7. Ainda na seção de Webhook, você verá uma lista chamada{" "}
                     <InlineTypography highlight>Campos de Webhook (Webhook Fields)</InlineTypography>. Marque os seguintes campos:{" "}
-                    <Chip label="message_template_quality_update" size="small" />, <Chip label="message_template_status_update" size="small" />,{" "}
-                    <Chip label="messages" size="small" />, <Chip label="phone_number_name_update" size="small" />,{" "}
-                    <Chip label="phone_number_quality_update" size="small" />, <Chip label="template_category_update" size="small" />
+                    {webhooks.map((hook) => (
+                        <Chip label={hook} key={hook} size="small" sx={{ marginRight: "0.5vw" }} onClick={() => copy(hook)} />
+                    ))}
                 </Typography>
 
                 <form onSubmit={formik.handleSubmit}>
