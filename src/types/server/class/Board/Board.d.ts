@@ -69,8 +69,8 @@ export declare class Board {
         users?: User[];
     }>>): Promise<void>;
     delete(): Promise<{
-        name: string;
         id: string;
+        name: string;
         company_id: string;
         created_at: string;
         rooms: Prisma.JsonValue;
@@ -104,8 +104,8 @@ export declare class Board {
         room: number;
         chat: number;
     };
-    getChat(chat_id: string): Chat;
+    getChat(chat_id: string): Chat | undefined;
     removeChat(chat_id: string): void;
-    transferChat(data: TransferChatForm): Promise<Chat | undefined>;
+    transferChat(data: TransferChatForm): Promise<void>;
     getRoom(room_id: string): Room;
 }

@@ -1,7 +1,7 @@
 import { useState } from "react"
 import { useUser } from "./useUser"
 import { api } from "../api"
-import { NagaMessage } from "../types/server/class/Nagazap"
+import { NagaMessage, Nagazap } from "../types/server/class/Nagazap"
 import { WashimaProfilePic } from "../types/server/class/Washima/Washima"
 import { BoardAccess } from "../types/server/class/Board/Board"
 import { Chat } from "../types/server/class/Board/Chat"
@@ -38,6 +38,23 @@ export const useApi = () => {
         }
     }
 
+    const patch = async (url: string, data: any, options?: { ignoreLoading?: boolean; params?: any }) => {
+        if (!options?.ignoreLoading) {
+            setLoading(true)
+        }
+
+        try {
+            const response = await api.patch(url, data, { params: { company_id: company?.id, user_id: user?.id, ...options?.params } })
+            return response.data
+        } catch (error) {
+            console.log(error)
+        } finally {
+            if (!options?.ignoreLoading) {
+                setLoading(false)
+            }
+        }
+    }
+
     const emitRommTrigger = (chat: Chat, trigger: RoomTrigger) => {
         io.emit("board:room:chat:clone", chat, trigger)
         snackbar({ severity: "info", text: `Sala copiada para ${trigger.board_name}` })
@@ -55,6 +72,9 @@ export const useApi = () => {
     const fetchNagaMessages = async (options: FetchOptions & { params: { nagazap_id: string; from?: string } }): Promise<NagaMessage[]> =>
         await get("/nagazap/messages", options)
 
+    const patchNagazap = async (data: Partial<Nagazap>, options: FetchOptions & { params: { nagazap_id: string } }): Promise<Nagazap> =>
+        await patch("/nagazap", data, options)
+
     return {
         loading,
         setLoading,
@@ -67,5 +87,6 @@ export const useApi = () => {
         fetchNagazaps,
         fetchNagaMessages,
         emitRommTrigger,
+        patchNagazap,
     }
 }

@@ -1,5 +1,5 @@
 import React, { Dispatch, SetStateAction, useState } from "react"
-import { Box, Button, CircularProgress, Grid, IconButton, TextField, useMediaQuery, useTheme } from "@mui/material"
+import { Box, Button, CircularProgress, Grid, IconButton, TextField, Typography, useMediaQuery, useTheme } from "@mui/material"
 import { Subroute } from "./Subroute"
 import { useFormik } from "formik"
 import { Nagazap, NagazapForm as NagazapFormType } from "../../types/server/class/Nagazap"
@@ -77,6 +77,19 @@ export const NagazapForm: React.FC<NagazapFormProps> = ({ onSuccess, setShowInfo
                     <PrimaryText>configuração da API</PrimaryText>. O Token é gerado na primeira seção dessa página, e logo abaixo estão os IDs que
                     faltam.
                 </p>
+
+                <Typography>
+                    1. Adicione um usuário do sistema ao seu aplicativo do Facebook se ele ainda não existir. Certifique-se de que ele tenha a função
+                    de administrador. (https://business.facebook.com/settings/system-users) 2. Na mesma página, na seção "Ativos atribuídos" ou
+                    "Assigned Assets", verifique se seu aplicativo está listado aqui. Caso contrário, adicione seu aplicativo por meio do botão
+                    "Adicionar ativo" ou "Add asset", concedendo "Controle total" sobre seu aplicativo. 3. Adicione o usuário do sistema à sua conta
+                    do Whatsapp na seção "Pessoas", concedendo "Controle total" sobre sua conta do Whatsapp.
+                    (https://business.facebook.com/settings/whatsapp-business-accounts/) 4. Agora clique no botão "Gerar novo token" para o usuário do
+                    sistema criado acima, que revela um pop-up "Gerar token". Selecione as 2 permissões "whatsapp_business_management" e
+                    "whatsapp_business_messaging" e confirme. 5. Um novo token de acesso é apresentado a você como um link. Clique nele e armazene o
+                    token gerado com segurança, pois ele não será armazenado para você pelo Facebook. Este token não expirará.
+                </Typography>
+
                 <form onSubmit={formik.handleSubmit}>
                     <Box sx={{ fontWeight: "bold", color: "primary.main" }}>Formulário</Box>
                     <Grid container columns={isMobile ? 1 : 3} spacing={3}>

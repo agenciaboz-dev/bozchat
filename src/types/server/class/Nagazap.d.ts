@@ -101,6 +101,7 @@ export declare class Nagazap {
     displayPhone: string | null;
     companyId: string;
     company: Company;
+    blacklistTrigger: string;
     static initialize(): Promise<void>;
     static new(data: NagazapForm): Promise<Nagazap>;
     static getByBusinessId(business_id: string): Promise<Nagazap>;
@@ -123,6 +124,7 @@ export declare class Nagazap {
         paused: boolean;
         sentMessages: string;
         failedMessages: string;
+        blacklistTrigger: string;
         displayName: string | null;
         displayPhone: string | null;
         companyId: string;
