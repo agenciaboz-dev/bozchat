@@ -72,6 +72,8 @@ export const MessagesScreen: React.FC<MessagesScreenProps> = ({ nagazap, setShow
     const onChatClick = (chat: NagaChat) => setSelectedChat(chat)
 
     useEffect(() => {
+        setMessages([])
+        setSelectedChat(null)
         fetchMessages()
     }, [nagazap])
 

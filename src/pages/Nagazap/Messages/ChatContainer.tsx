@@ -59,9 +59,11 @@ export const ChatContainer: React.FC<ChatContainerProps> = ({ chat, onClose, nag
                 >
                     <Box sx={{ gap: "0.5vw", alignItems: "center" }}>
                         <MessageAuthor author={chat.name + " - " + chat.from} />
-                        <Tooltip title="último template enviado para este contato" arrow>
-                            <Chip icon={<Hub color="primary" />} label={last_template} size="small" />
-                        </Tooltip>
+                        {!!last_template && (
+                            <Tooltip title="último template enviado para este contato" arrow>
+                                <Chip icon={<Hub color="primary" />} label={last_template} size="small" />
+                            </Tooltip>
+                        )}
                     </Box>
                     <IconButton sx={{ color: "text.secondary", padding: isMobile ? "0" : "" }} onClick={onClose}>
                         <Cancel />
