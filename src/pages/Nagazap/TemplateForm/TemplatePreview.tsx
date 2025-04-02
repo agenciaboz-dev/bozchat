@@ -27,12 +27,11 @@ export const TemplatePreview: React.FC<TemplatePreviewProps> = ({ components, im
             sx={{
                 flex: 1,
                 overflowY: "auto",
-                maxHeight: "36vw",
                 flexDirection: "column",
-                padding: "1vw",
-                margin: "-1vw",
-                marginBottom: "-2vw",
-                paddingBottom: "2vw",
+                padding: isMobile ? "2vw" : "1vw",
+                margin: isMobile ? "-2vw" : "-1vw",
+                marginBottom: isMobile ? "-5vw" : "-2vw",
+                paddingBottom: isMobile ? "5vw" : "2vw",
             }}
         >
             <Paper
@@ -43,7 +42,7 @@ export const TemplatePreview: React.FC<TemplatePreviewProps> = ({ components, im
                     position: "relative",
                     borderRadius: "0.5vw",
                     borderTopLeftRadius: 0,
-                    color: "secondary.main",
+                    color: "text.secondary",
                 }}
             >
                 <TrianguloFudido alignment="left" color={darkMode ? "#2a323c" : "#eaeaea"} />

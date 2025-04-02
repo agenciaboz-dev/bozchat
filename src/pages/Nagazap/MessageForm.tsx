@@ -257,24 +257,37 @@ export const MessageFormScreen: React.FC<MessageFormProps> = ({ nagazap, setShow
                 ) : undefined
             }
             right={
-                <Button
-                    variant="contained"
-                    onClick={() => formik.handleSubmit()}
-                    disabled={formik.values.to.length === 0 || !formik.values.template || (isImageRequired && !image)}
-                >
-                    {loading ? <CircularProgress size="1.5rem" color="inherit" /> : "Adicionar ao forno"}
-                </Button>
+                !isMobile && (
+                    <Button
+                        variant="contained"
+                        onClick={() => formik.handleSubmit()}
+                        disabled={formik.values.to.length === 0 || !formik.values.template || (isImageRequired && !image)}
+                    >
+                        {loading ? <CircularProgress size="1.5rem" color="inherit" /> : "Adicionar ao forno"}
+                    </Button>
+                )
             }
         >
             <form onSubmit={formik.handleSubmit}>
-                <Grid container columns={isMobile ? 1 : 3} spacing={"1vw"}>
+                <Grid container columns={isMobile ? 1 : 3} spacing={isMobile ? "5vw" : "1vw"} height={"100%"}>
                     <Grid item xs={1}>
                         <Box
                             sx={{
                                 flexDirection: "column",
-                                gap: isMobile ? "2vw" : "2vw",
+                                gap: isMobile ? "5vw" : "2vw",
                             }}
                         >
+                            {isMobile && (
+                                <Button
+                                    variant="contained"
+                                    onClick={() => formik.handleSubmit()}
+                                    disabled={formik.values.to.length === 0 || !formik.values.template || (isImageRequired && !image)}
+                                    sx={{ width: "100%", margin: "5vw 0" }}
+                                >
+                                    {loading ? <CircularProgress size="1.5rem" color="inherit" /> : "Adicionar ao forno"}
+                                </Button>
+                            )}
+
                             <Box sx={{ flexDirection: "column", gap: isMobile ? "2vw" : "1vw" }}>
                                 <Typography sx={{ color: "text.secondary", fontWeight: 600 }}>Selecionar template:</Typography>
                                 <TextField
@@ -288,7 +301,9 @@ export const MessageFormScreen: React.FC<MessageFormProps> = ({ nagazap, setShow
                                     SelectProps={{
                                         SelectDisplayProps: { style: { display: "flex", alignItems: "center", gap: "0.5vw" } },
                                         MenuProps: {
-                                            MenuListProps: { sx: { maxHeight: "20vw", bgcolor: "background.default", overflowY: "scroll" } },
+                                            MenuListProps: {
+                                                sx: { maxHeight: isMobile ? "33vh" : "20vw", bgcolor: "background.default", overflowY: "scroll" },
+                                            },
                                         },
                                     }}
                                 >
@@ -304,7 +319,7 @@ export const MessageFormScreen: React.FC<MessageFormProps> = ({ nagazap, setShow
                                 </TextField>
                             </Box>
 
-                            <Box sx={{ flexDirection: "column", gap: "1vw" }}>
+                            <Box sx={{ flexDirection: "column", gap: isMobile ? "2vw" : "1vw" }}>
                                 <Typography sx={{ fontWeight: 600, color: "text.secondary" }}>Planilha modelo:</Typography>
                                 <Button
                                     variant="outlined"
@@ -333,13 +348,13 @@ export const MessageFormScreen: React.FC<MessageFormProps> = ({ nagazap, setShow
                                                 borderStyle: invalidNumbersOnSheetError || invalidSheetError ? undefined : "dashed",
                                                 borderColor: invalidNumbersOnSheetError || invalidSheetError ? "red" : undefined,
                                                 height: "100%",
-                                                gap: isMobile ? "2vw" : "1vw",
+                                                gap: "2vw",
                                             }}
                                             fullWidth
                                             disabled={!formik.values.template}
                                         >
                                             <CloudUpload />
-                                            {!!sheetData.length ? `${sheetData.length} números importados` : "Importar planilha"}
+                                            {!!sheetData.length ? `${sheetData.length} número(s) importado(s)` : "Importar planilha"}
                                             <input onChange={handleSheetsUpload} style={{ display: "none" }} type="file" multiple />
                                         </Button>
                                         {invalidSheetError && (
@@ -363,11 +378,11 @@ export const MessageFormScreen: React.FC<MessageFormProps> = ({ nagazap, setShow
                                             <Button
                                                 component="label"
                                                 variant="outlined"
-                                                sx={{ borderStyle: "dashed", height: "100%", gap: isMobile ? "2vw" : "1vw" }}
+                                                sx={{ borderStyle: "dashed", height: "100%", gap: "2vw" }}
                                                 fullWidth
                                             >
                                                 <CloudUpload />
-                                                {!!sheetData.length ? `${sheetData.length} números importados` : "Importar planilha"}
+                                                {!!sheetData.length ? `${sheetData.length} número(s) importado(s)` : "Importar planilha"}
                                                 <input onChange={handleSheetsUpload} style={{ display: "none" }} type="file" multiple />
                                             </Button>
                                         </Grid>
@@ -377,11 +392,10 @@ export const MessageFormScreen: React.FC<MessageFormProps> = ({ nagazap, setShow
                         </Box>
                     </Grid>
                     <Grid item xs={1}>
-                        <Box sx={{ flexDirection: "column", gap: "1vw" }}>
+                        <Box sx={{ flexDirection: "column", gap: isMobile ? "5vw" : "1vw" }}>
                             {formik.values.template && (
                                 <Typography sx={{ color: "text.secondary", fontWeight: "bold" }}>ID: {formik.values.template_id}</Typography>
                             )}
-
                             {formik.values.template?.components.map((component, index) => {
                                 if (component.format == "IMAGE") {
                                     return (
@@ -394,12 +408,11 @@ export const MessageFormScreen: React.FC<MessageFormProps> = ({ nagazap, setShow
                                                 accept={"image/jpeg,image/png"}
                                                 onChange={handleImageChange}
                                             />
-
                                             {!image && (
                                                 <Button
                                                     variant="outlined"
                                                     onClick={() => inputRef.current?.click()}
-                                                    sx={{ borderStyle: "dashed", gap: "1vw" }}
+                                                    sx={{ borderStyle: "dashed", gap: isMobile ? "2vw" : "1vw" }}
                                                 >
                                                     <CloudUpload />
                                                     {"Escolher arquivo"}
@@ -409,14 +422,14 @@ export const MessageFormScreen: React.FC<MessageFormProps> = ({ nagazap, setShow
                                                 <Typography
                                                     sx={{
                                                         color: imageError ? "error.main" : "text.secondary",
-                                                        maxWidth: !image ? undefined : "22vw",
+                                                        maxWidth: !image ? undefined : isMobile ? "100%" : "22vw",
                                                         overflow: !image ? undefined : "hidden",
                                                         whiteSpace: !image ? undefined : "nowrap",
                                                         textOverflow: "ellipsis",
                                                     }}
                                                 >
                                                     {imageError ||
-                                                        (image ? image.name : "Selecione uma imagem de até 5 MB para ser adicionada a mensagem")}
+                                                        (image ? image.name : "Selecione uma imagem de até 5 MB para ser adicionada à mensagem")}
                                                 </Typography>
                                                 {image && (
                                                     <IconButton onClick={clearImage} sx={{ padding: 0 }}>
@@ -433,10 +446,12 @@ export const MessageFormScreen: React.FC<MessageFormProps> = ({ nagazap, setShow
                             {!!formik.values.template && <TemplateFields variables={variables} to={formik.values.to} />}
                         </Box>
                     </Grid>
-
                     <Grid item xs={1}>
                         {formik.values.template?.components.length && (
-                            <TemplatePreview components={formik.values.template.components} image={image} />
+                            <Box sx={{ flexDirection: "column", gap: isMobile ? "2vw" : "1vw" }}>
+                                <Typography sx={{ color: "text.secondary", fontWeight: "bold" }}>Pré-visualização:</Typography>
+                                <TemplatePreview components={formik.values.template.components} image={image} />
+                            </Box>
                         )}
                     </Grid>
                 </Grid>

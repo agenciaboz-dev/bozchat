@@ -1,5 +1,5 @@
 import React from "react"
-import { Box, Paper, useMediaQuery } from "@mui/material"
+import { Paper, useMediaQuery } from "@mui/material"
 import { Title2 } from "../../components/Title"
 
 interface SubrouteProps {

@@ -1,5 +1,19 @@
 import React, { useEffect, useState } from "react"
-import { Box, Button, CircularProgress, Grid, IconButton, MenuItem, Paper, Tab, Tabs, TextField, useMediaQuery } from "@mui/material"
+import {
+    Box,
+    Button,
+    CircularProgress,
+    Divider,
+    Grid,
+    IconButton,
+    MenuItem,
+    Paper,
+    Tab,
+    Tabs,
+    TextField,
+    Typography,
+    useMediaQuery,
+} from "@mui/material"
 import { NagaTemplate, Nagazap } from "../../../types/server/class/Nagazap"
 import { useFormik } from "formik"
 import {
@@ -21,6 +35,7 @@ import { useUser } from "../../../hooks/useUser"
 import { Title2 } from "../../../components/Title"
 import { Close } from "@mui/icons-material"
 import { TemplatePreview } from "./TemplatePreview"
+import { useDarkMode } from "../../../hooks/useDarkMode"
 
 interface TemplateFormProps {
     nagazap: Nagazap
@@ -31,8 +46,9 @@ interface TemplateFormProps {
 }
 
 export const TemplateForm: React.FC<TemplateFormProps> = ({ nagazap, setShowInformations, onSubmit, currentTemplate, onClose }) => {
-    const { snackbar } = useSnackbar()
     const isMobile = useMediaQuery("(orientation: portrait)")
+    const { darkMode } = useDarkMode()
+    const { snackbar } = useSnackbar()
     const { user } = useUser()
 
     const [loading, setLoading] = useState(false)
@@ -203,7 +219,7 @@ export const TemplateForm: React.FC<TemplateFormProps> = ({ nagazap, setShowInfo
                 bgcolor: "background.default",
                 padding: isMobile ? "5vw" : "2vw",
                 gap: isMobile ? "3vw" : "1vw",
-                height: "90vh",
+                minHeight: "90vh",
                 overflow: "auto",
             }}
         >
@@ -216,13 +232,13 @@ export const TemplateForm: React.FC<TemplateFormProps> = ({ nagazap, setShowInfo
                 }
             />
             <form onSubmit={formik.handleSubmit}>
-                <Grid container columns={isMobile ? 1 : 3} spacing={"1vw"}>
+                <Grid container columns={isMobile ? 1 : 3} spacing={"1vw"} sx={{ flex: 1 }}>
                     <Grid item xs={isMobile ? 1 : 2}>
                         <Box
                             sx={{
                                 flexDirection: "column",
-                                gap: isMobile ? "3vw" : "1vw",
-                                paddingBottom: "2vw",
+                                gap: isMobile ? "5vw" : "1vw",
+                                paddingBottom: isMobile ? "5vw" : "2vw",
                                 marginTop: "-1vw",
                                 paddingTop: "1vw",
                             }}
@@ -257,12 +273,29 @@ export const TemplateForm: React.FC<TemplateFormProps> = ({ nagazap, setShowInfo
                                     ))}
                                 </TextField>
                             </Box>
-                            <Tabs value={currentType} onChange={(_, value) => setCurrentType(value)} variant="fullWidth">
+                            <Divider />
+                            <Tabs
+                                value={currentType}
+                                onChange={(_, value) => setCurrentType(value)}
+                                variant={isMobile ? "scrollable" : "fullWidth"}
+                                allowScrollButtonsMobile
+                                TabIndicatorProps={{
+                                    sx: isMobile
+                                        ? {
+                                              left: 0,
+                                              height: "100%",
+                                              backgroundColor: darkMode ? "background.primary" : "text.disabled",
+                                              opacity: 0.2,
+                                          }
+                                        : {},
+                                }}
+                            >
                                 <Tab value={"HEADER"} label="Cabeçalho" />
                                 <Tab value={"BODY"} label="Corpo" />
                                 <Tab value={"FOOTER"} label="Rodapé" />
                                 <Tab value={"BUTTONS"} label="Botões" />
                             </Tabs>
+                            <Divider />
                             {currentComponent && (
                                 <TemplateComponentForm
                                     component={currentComponent}
@@ -276,17 +309,19 @@ export const TemplateForm: React.FC<TemplateFormProps> = ({ nagazap, setShowInfo
                         </Box>
                     </Grid>
                     <Grid item xs={1}>
-                        <TemplatePreview components={[templateHeader, templateBody, templateFooter, templateButtons]} />
+                        <Box sx={{ flexDirection: "column", height: "100%", gap: isMobile ? "5vw" : "1vw" }}>
+                            {isMobile && <Divider />}
+                            <Box sx={{ flexDirection: "column", gap: isMobile ? "2vw" : "1vw" }}>
+                                <Typography sx={{ color: "text.secondary", fontWeight: "bold" }}>Pré-visualização:</Typography>
+                                <TemplatePreview components={[templateHeader, templateBody, templateFooter, templateButtons]} />
+                            </Box>
+                            <Button variant="contained" onClick={() => formik.handleSubmit()} sx={{ marginTop: "auto" }}>
+                                {loading ? <CircularProgress size="1.5rem" color="secondary" /> : "Enviar template para análise"}
+                            </Button>
+                        </Box>
                     </Grid>
                 </Grid>
             </form>
-            <Button
-                variant="contained"
-                onClick={() => formik.handleSubmit()}
-                sx={{ position: "absolute", bottom: isMobile ? "5vw" : "2vw", right: isMobile ? "5vw" : "2vw" }}
-            >
-                {loading ? <CircularProgress size="1.5rem" color="secondary" /> : "Enviar template para análise"}
-            </Button>
         </Paper>
     )
 }

@@ -80,7 +80,11 @@ export const TemplateComponentForm: React.FC<TemplateComponentFormProps> = ({
                         })
                     }}
                     select
-                    SelectProps={{ MenuProps: { MenuListProps: { sx: { maxHeight: "20vw", bgcolor: "background.default", overflowY: "scroll" } } } }}
+                    SelectProps={{
+                        MenuProps: {
+                            MenuListProps: { sx: { maxHeight: isMobile ? "40vh" : "20vw", bgcolor: "background.default", overflowY: "scroll" } },
+                        },
+                    }}
                 >
                     <MenuItem value={"TEXT"}>Texto</MenuItem>
                     <MenuItem value={"IMAGE"}>Imagem</MenuItem>
@@ -140,7 +144,7 @@ export const TemplateComponentForm: React.FC<TemplateComponentFormProps> = ({
 
             {/* BOTOES */}
             {component.type === "BUTTONS" && (
-                <Box sx={{ flexDirection: "column", gap: isMobile ? "3vw" : "1vw" }}>
+                <Box sx={{ flexDirection: "column", gap: isMobile ? "5vw" : "2vw" }}>
                     {component.buttons?.map((button, index) => (
                         <ButtonForm key={index} component={component} setComponent={setComponent} button={button} index={index} />
                     ))}
