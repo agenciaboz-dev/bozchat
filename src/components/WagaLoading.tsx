@@ -11,7 +11,7 @@ export const WagaLoading: React.FC<WagaLoadingProps> = ({}) => {
     return (
         <Box sx={{ flexDirection: "column", gap: "1vw", position: "relative", justifyContent: "center", alignItems: "center" }}>
             <img src={"/logos/1.png"} style={{ width: isMobile ? "25vw" : "13vw", position: "absolute" }} draggable={false} />
-            <CircularProgress size={isMobile ? "40vw" : "20vw"} sx={{ color: darkMode ? undefined : "text.disabled" }} />
+            <CircularProgress size={isMobile ? "40vw" : "20vw"} sx={{ color: "primary.main" }} />
             {/* <LinearProgress sx={{ width: "30vw" }} /> */}
         </Box>
     )

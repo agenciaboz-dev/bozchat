@@ -111,8 +111,8 @@ export const MessageNode: React.FC<MessageNodeProps> = (node) => {
                     transformOrigin={{ horizontal: "center", vertical: "top" }}
                     MenuListProps={{ sx: { bgcolor: "background.default" } }}
                 >
-                    <MenuItem onClick={() => addNode("message")}>Mensagem</MenuItem>
-                    <MenuItem onClick={() => addNode("response")}>Resposta</MenuItem>
+                    <MenuItem onClick={() => addNode("message")}>Resposta do bot</MenuItem>
+                    <MenuItem onClick={() => addNode("response")}>Interação do usuário</MenuItem>
                 </Menu>
             </Paper>
             <Typography sx={{ position: "absolute", top: -10, right: -35, color: "text.disabled" }}>Bot</Typography>
