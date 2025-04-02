@@ -16,7 +16,7 @@ export const Batch: React.FC<BatchProps> = ({ batch, nagazap, index }) => {
     const { darkMode } = useDarkMode()
 
     return nagazap ? (
-        <Paper sx={{ flexDirection: "column", padding: "1vw", gap: "1vw", height: "100%", opacity: nagazap.paused ? 0.4 : 1 }}>
+        <Paper sx={{ flexDirection: "column", padding: isMobile ? "5vw" : "1vw", gap: "1vw", height: "100%", opacity: nagazap.paused ? 0.4 : 1 }}>
             <Title2
                 name={`${index + 1}`}
                 center

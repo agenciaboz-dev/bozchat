@@ -18,6 +18,7 @@ interface OvenProps {
 }
 
 export const Oven: React.FC<OvenProps> = ({ nagazap: initialNagazap, setNagazap: setInitialNagazap, setShowInformations }) => {
+    const isMobile = useMediaQuery("(orientation: portrait)")
     const { darkMode } = useDarkMode()
 
     function chunkArray<T>(array: T[], chunkSize: number): T[][] {
@@ -30,8 +31,6 @@ export const Oven: React.FC<OvenProps> = ({ nagazap: initialNagazap, setNagazap:
     }
 
     const { company, user } = useUser()
-    const isMobile = useMediaQuery("(orientation: portrait)")
-
     const [nagazap, setNagazap] = useState(initialNagazap)
     const [frequency, setFrequency] = useState(nagazap?.frequency || "")
     const [batchSize, setBatchSize] = useState(nagazap?.batchSize || 0)
@@ -218,7 +217,7 @@ export const Oven: React.FC<OvenProps> = ({ nagazap: initialNagazap, setNagazap:
             }
         >
             {isMobile ? (
-                <Box sx={{ gap: "2vw", flexDirection: "column", paddingBlock: "5vw" }}>
+                <Box sx={{ gap: "5vw", flexDirection: "column", paddingBlock: "5vw" }}>
                     <TextField
                         label="Intervalo entre fornadas"
                         value={frequency}
@@ -255,7 +254,7 @@ export const Oven: React.FC<OvenProps> = ({ nagazap: initialNagazap, setNagazap:
                             ),
                         }}
                     />
-                    <Box sx={{ justifyContent: "space-around", gap: "2vw" }}>
+                    <Box sx={{ justifyContent: "space-around", gap: "5vw" }}>
                         {/* {!!batches.length && (
                             <IconButton sx={{ alignSelf: "center" }} onClick={onClearOvenClick} disabled={loading} color="error">
                                 {<DeleteForever />}
@@ -298,7 +297,7 @@ export const Oven: React.FC<OvenProps> = ({ nagazap: initialNagazap, setNagazap:
                         fontSize: "2rem",
                     }}
                 >
-                    <Cake sx={{ width: "15vw", height: "auto" }} />O forno está vazio
+                    <Cake sx={{ width: isMobile ? "30vw" : "15vw", height: "auto" }} />O forno está vazio
                 </Box>
             )}
         </Subroute>
