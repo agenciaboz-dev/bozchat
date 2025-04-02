@@ -1,5 +1,5 @@
 import React, { Dispatch, SetStateAction, useState } from "react"
-import { Box, Button, CircularProgress, Grid, IconButton, TextField, Typography, useMediaQuery, useTheme } from "@mui/material"
+import { Box, Button, Chip, CircularProgress, Grid, IconButton, TextField, Typography, useMediaQuery, useTheme } from "@mui/material"
 import { Subroute } from "./Subroute"
 import { useFormik } from "formik"
 import { Nagazap, NagazapForm as NagazapFormType } from "../../types/server/class/Nagazap"
@@ -8,12 +8,22 @@ import { textFieldStyle } from "../../style/textfield"
 import { api } from "../../api"
 import { AxiosError } from "axios"
 import { HandledError } from "../../types/server/class/HandledError"
-import { ArrowBack, Refresh } from "@mui/icons-material"
+import { ArrowBack, CopyAll, Refresh } from "@mui/icons-material"
 import { useDarkMode } from "../../hooks/useDarkMode"
+import { InlineTypography } from "../../components/InlineTypography"
+import { useClipboard } from "@mantine/hooks"
+import { useSnackbar } from "burgos-snackbar"
 
 interface NagazapFormProps {
     onSuccess: (nagazap: Nagazap) => void
     setShowInformations: Dispatch<SetStateAction<boolean>>
+}
+
+const urls = {
+    webhook: "https://apichat.boz.app.br/nagazap/webhook/messages",
+    system_users: "https://business.facebook.com/settings/system-users",
+    accounts: "https://business.facebook.com/settings/whatsapp-business-accounts/",
+    facebook_developers: "https://developers.facebook.com/apps/",
 }
 
 export const NagazapForm: React.FC<NagazapFormProps> = ({ onSuccess, setShowInformations }) => {
@@ -21,6 +31,13 @@ export const NagazapForm: React.FC<NagazapFormProps> = ({ onSuccess, setShowInfo
     const { company, user } = useUser()
     const theme = useTheme()
     const isMobile = useMediaQuery("(orientation: portrait)")
+    const clipboard = useClipboard({ timeout: 1000 })
+    const { snackbar } = useSnackbar()
+
+    const copyWebhookUrl = () => {
+        clipboard.copy(urls.webhook)
+        snackbar({ severity: "success", text: "copiado" })
+    }
 
     const PrimaryText: React.FC<{ children: React.ReactNode }> = ({ children }) => (
         <span style={{ color: theme.palette.primary.main }}>{children}</span>
@@ -78,16 +95,83 @@ export const NagazapForm: React.FC<NagazapFormProps> = ({ onSuccess, setShowInfo
                     faltam.
                 </p>
 
+                <Typography sx={{ fontWeight: "bold", color: "primary.main" }}>Token permanente</Typography>
                 <Typography>
                     1. Adicione um usuário do sistema ao seu aplicativo do Facebook se ele ainda não existir. Certifique-se de que ele tenha a função
-                    de administrador. (https://business.facebook.com/settings/system-users) 2. Na mesma página, na seção "Ativos atribuídos" ou
-                    "Assigned Assets", verifique se seu aplicativo está listado aqui. Caso contrário, adicione seu aplicativo por meio do botão
-                    "Adicionar ativo" ou "Add asset", concedendo "Controle total" sobre seu aplicativo. 3. Adicione o usuário do sistema à sua conta
-                    do Whatsapp na seção "Pessoas", concedendo "Controle total" sobre sua conta do Whatsapp.
-                    (https://business.facebook.com/settings/whatsapp-business-accounts/) 4. Agora clique no botão "Gerar novo token" para o usuário do
-                    sistema criado acima, que revela um pop-up "Gerar token". Selecione as 2 permissões "whatsapp_business_management" e
-                    "whatsapp_business_messaging" e confirme. 5. Um novo token de acesso é apresentado a você como um link. Clique nele e armazene o
-                    token gerado com segurança, pois ele não será armazenado para você pelo Facebook. Este token não expirará.
+                    de administrador.
+                    <InlineTypography url={urls.system_users}>({urls.system_users})</InlineTypography>
+                </Typography>
+
+                <Typography>
+                    2. Na mesma página, na seção <InlineTypography highlight>Ativos atribuídos</InlineTypography> ou{" "}
+                    <InlineTypography highlight>Assigned Assets</InlineTypography>, verifique se seu aplicativo está listado aqui. Caso contrário,
+                    adicione seu aplicativo por meio do botão <InlineTypography highlight>Adicionar ativo</InlineTypography> ou{" "}
+                    <InlineTypography highlight>Add asset</InlineTypography>, concedendo <InlineTypography highlight>Controle total</InlineTypography>{" "}
+                    sobre seu aplicativo.
+                </Typography>
+                <Typography>
+                    3. Adicione o usuário do sistema à sua conta do Whatsapp na seção <InlineTypography highlight>Pessoas</InlineTypography>,
+                    concedendo <InlineTypography>Controle highlight total</InlineTypography> sobre sua conta do Whatsapp.{" "}
+                    <InlineTypography url={urls.accounts}>({urls.accounts})</InlineTypography>
+                </Typography>
+                <Typography>
+                    4. Agora clique no botão <InlineTypography>Gerar novo highlight token</InlineTypography> para o usuário do sistema criado acima,
+                    que revela um pop-up <InlineTypography>Gerar highlight token</InlineTypography>. Selecione as 2 permissões{" "}
+                    <InlineTypography highlight>whatsapp_business_management</InlineTypography> e{" "}
+                    <InlineTypography highlight>whatsapp_business_messaging</InlineTypography> e confirme.
+                </Typography>
+
+                <Typography>
+                    5. Um novo token de acesso é apresentado a você como um link. Clique nele e armazene o token gerado com segurança, pois ele não
+                    será armazenado para você pelo Facebook. Este token não expirará.
+                </Typography>
+
+                <Typography sx={{ fontWeight: "bold", color: "primary.main" }}>Configurar webhooks</Typography>
+                <Typography>
+                    1. Acesse o site do Facebook for Developers. Vá para:{" "}
+                    <InlineTypography url={urls.facebook_developers}>{urls.facebook_developers}</InlineTypography>
+                </Typography>
+
+                <Typography>2. Selecione o seu aplicativo. Na lista de aplicativos, clique no nome do app que você quer configurar.</Typography>
+
+                <Typography>
+                    3. Acesse as configurações do WhatsApp. No menu lateral esquerdo: Clique em{" "}
+                    <InlineTypography highlight>WhatsApp</InlineTypography>. Em seguida, selecione{" "}
+                    <InlineTypography highlight>Configurações</InlineTypography> (ou <InlineTypography highlight>Configuration</InlineTypography>)
+                </Typography>
+
+                <Box sx={{ alignItems: "center", gap: "1vw", margin: "-0.5vw 0" }}>
+                    <Typography sx={{}}>4. Configure o webhook. No campo Callback URL, insira a seguinte URL: </Typography>
+                    <TextField
+                        value={urls.webhook}
+                        sx={{ flex: 0.7 }}
+                        variant="standard"
+                        InputProps={{
+                            endAdornment: (
+                                <IconButton onClick={copyWebhookUrl}>
+                                    <CopyAll />
+                                </IconButton>
+                            ),
+                        }}
+                    />
+                </Box>
+
+                <Typography>
+                    5. No campo Token de Verificação, insira o CNPJ da sua empresa (o mesmo usado no cadastro), sem pontos, traços ou espaços.
+                    Exemplo: 12345678000199
+                </Typography>
+
+                <Typography>
+                    6. Salve as alterações. Após preencher os campos, clique em <InlineTypography highlight>Verificar</InlineTypography> e{" "}
+                    <InlineTypography highlight>Salvar</InlineTypography> ou o botão correspondente na interface.
+                </Typography>
+
+                <Typography>
+                    7. Ainda na seção de Webhook, você verá uma lista chamada{" "}
+                    <InlineTypography highlight>Campos de Webhook (Webhook Fields)</InlineTypography>. Marque os seguintes campos:{" "}
+                    <Chip label="message_template_quality_update" size="small" />, <Chip label="message_template_status_update" size="small" />,{" "}
+                    <Chip label="messages" size="small" />, <Chip label="phone_number_name_update" size="small" />,{" "}
+                    <Chip label="phone_number_quality_update" size="small" />, <Chip label="template_category_update" size="small" />
                 </Typography>
 
                 <form onSubmit={formik.handleSubmit}>
