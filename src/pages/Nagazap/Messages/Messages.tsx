@@ -11,6 +11,7 @@ import { useUser } from "../../../hooks/useUser"
 import { textFieldStyle } from "../../../style/textfield"
 import { useDarkMode } from "../../../hooks/useDarkMode"
 import { NoChat } from "../../Washima/WashimaChat/NoChat"
+import { normalizePhonenumber } from "../../../tools/normalize"
 
 interface MessagesScreenProps {
     nagazap: Nagazap
@@ -31,16 +32,23 @@ export const MessagesScreen: React.FC<MessagesScreenProps> = ({ nagazap, setShow
 
     const chats = useMemo(() => {
         const chats: NagaChat[] = []
-        filteredMessages.forEach((message) => {
-            const chat_index = chats.findIndex((chat) => chat.from === message.from)
-            if (chat_index > -1) {
-                const current_chat = chats[chat_index]
-                current_chat.messages.push(message)
-                current_chat.lastMessage = message
-                chats[chat_index] = current_chat
-            } else {
-                chats.push({ from: message.from, messages: [message], lastMessage: message, name: message.name })
+
+        const conversations = new Map<string, NagaMessage[]>()
+
+        messages.forEach((message) => {
+            const normalizedFrom = normalizePhonenumber(message.from)
+            if (!conversations.has(normalizedFrom)) {
+                conversations.set(normalizedFrom, [])
             }
+            conversations.get(normalizedFrom)!.push(message)
+        })
+        conversations.forEach((messages) => {
+            chats.push({
+                from: messages[0].from,
+                lastMessage: messages[messages.length - 1],
+                messages,
+                name: messages.find((item) => item.name !== nagazap.displayPhone)?.name || "EITA PREULA",
+            })
         })
 
         return chats

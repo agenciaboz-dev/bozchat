@@ -8,6 +8,7 @@ import { useDarkMode } from "../../../hooks/useDarkMode"
 interface TemplatePreviewProps {
     components: TemplateComponent[]
     image?: File
+    realMessage?: boolean
 }
 
 const maxSize = "23vw"
@@ -18,7 +19,7 @@ const icons = [
     { type: "PHONE_NUMBER", icon: <LocalPhone /> },
 ]
 
-export const TemplatePreview: React.FC<TemplatePreviewProps> = ({ components, image }) => {
+export const TemplatePreview: React.FC<TemplatePreviewProps> = ({ components, image, realMessage }) => {
     const isMobile = useMediaQuery("(orientation: portrait)")
     const { darkMode } = useDarkMode()
 
@@ -26,30 +27,32 @@ export const TemplatePreview: React.FC<TemplatePreviewProps> = ({ components, im
         <Box
             sx={{
                 flex: 1,
-                overflowY: "auto",
+                overflowY: realMessage ? undefined : "auto",
                 flexDirection: "column",
-                padding: isMobile ? "2vw" : "1vw",
-                margin: isMobile ? "-2vw" : "-1vw",
-                marginBottom: isMobile ? "-5vw" : "-2vw",
-                paddingBottom: isMobile ? "5vw" : "2vw",
+                padding: realMessage ? undefined : isMobile ? "2vw" : "1vw",
+                margin: realMessage ? undefined : isMobile ? "-2vw" : "-1vw",
+                marginBottom: realMessage ? undefined : isMobile ? "-5vw" : "-2vw",
+                paddingBottom: realMessage ? undefined : isMobile ? "5vw" : "2vw",
             }}
         >
             <Paper
                 sx={{
                     flexDirection: "column",
                     gap: isMobile ? "2vw" : "1vw",
-                    padding: isMobile ? "4vw" : "0.5vw",
+                    padding: realMessage ? undefined : isMobile ? "4vw" : "0.5vw",
                     position: "relative",
                     borderRadius: "0.5vw",
                     borderTopLeftRadius: 0,
                     color: "text.secondary",
+                    bgcolor: realMessage ? "transparent" : undefined,
                 }}
+                elevation={realMessage ? 0 : undefined}
             >
-                <TrianguloFudido alignment="left" color={darkMode ? "#2a323c" : "#eaeaea"} />
+                {!realMessage && <TrianguloFudido alignment="left" color={darkMode ? "#2a323c" : "#eaeaea"} />}
                 {components.map((component, index) => {
                     if (!component) return null
                     if (component.format == "IMAGE") {
-                        const imageSrc = image ? URL.createObjectURL(image) : undefined
+                        const imageSrc = realMessage ? component.text : image ? URL.createObjectURL(image) : undefined
                         return (
                             <Box key={index} sx={{ justifyContent: "center" }}>
                                 <Avatar

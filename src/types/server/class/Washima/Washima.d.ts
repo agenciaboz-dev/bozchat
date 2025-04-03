@@ -61,6 +61,7 @@ export declare class Washima {
     contact: string;
     diskMetrics?: WashimaDiskMetrics;
     companies: Company[];
+    syncing: boolean;
     static washimas: Washima[];
     static waitingList: Washima[];
     static find(id: string): Washima | undefined;

@@ -1,12 +1,13 @@
 import React from "react"
 import { Avatar, Box, MenuItem, Paper, Typography, useMediaQuery } from "@mui/material"
-import { NagaChat } from "../../../types/NagaChat"
 import { MessageAuthor } from "../../Zap/MessageAuthor"
 import { AudioPlayer } from "../../Washima/AudioComponents/AudioPlayer"
 import { useFormatMessageTime } from "../../../hooks/useFormatMessageTime"
 import { TrianguloFudido } from "../../Zap/TrianguloFudido"
 import { useDarkMode } from "../../../hooks/useDarkMode"
 import colors, { default_colors } from "../../../style/colors"
+import { TemplatePreview } from "../TemplateForm/TemplatePreview"
+import { NagaChat } from "../../../types/server/class/Nagazap"
 
 interface ChatItemProps {
     chat: NagaChat
@@ -64,6 +65,8 @@ export const ChatItem: React.FC<ChatItemProps> = ({ chat, onChatClick, active })
                         {chat.lastMessage.text}
                     </Typography>
                 )}
+
+                {chat.lastMessage.type === "template" && <TemplatePreview components={chat.lastMessage.template?.components || []} realMessage />}
 
                 {chat.lastMessage.type === "audio" && (
                     <AudioPlayer

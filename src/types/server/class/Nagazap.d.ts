@@ -1,16 +1,25 @@
 import { Prisma } from "@prisma/client";
-import { OvenForm, WhatsappForm } from "../types/shared/Meta/WhatsappBusiness/WhatsappForm";
+import { OvenForm, WhatsappForm, WhatsappTemplateComponent } from "../types/shared/Meta/WhatsappBusiness/WhatsappForm";
 import { UploadedFile } from "express-fileupload";
-import { BlacklistLog, FailedMessageLog, SentMessageLog } from "../Meta/WhatsappBusiness/Logs"
+import { BlacklistLog, FailedMessageLog, SentMessageLog } from "../types/shared/Meta/WhatsappBusiness/Logs";
 import { WithoutFunctions } from "./helpers";
 import { BusinessInfo } from "../types/shared/Meta/WhatsappBusiness/BusinessInfo";
-import { TemplateCategory, TemplateComponent, TemplateForm, TemplateInfo } from "../types/shared/Meta/WhatsappBusiness/TemplatesInfo";
+import { TemplateCategory, TemplateComponent, TemplateForm, TemplateInfo } from "../Meta/WhatsappBusiness/TemplatesInfo";
 import { Company } from "./Company";
 import { Socket } from "socket.io";
 import { NagazapLink } from "./NagazapLink";
-export type NagaMessageType = "text" | "reaction" | "sticker" | "image" | "audio" | "video" | "button";
+export type NagaMessageType = "text" | "reaction" | "sticker" | "image" | "audio" | "video" | "button" | "template";
 export type NagaMessagePrisma = Prisma.NagazapMessageGetPayload<{}>;
-export type NagaMessageForm = Omit<Prisma.NagazapMessageGetPayload<{}>, "id" | "nagazap_id">;
+export type NagaMessageTemplate = {
+    name: string;
+    language: {
+        code: "en_US" | "pt_BR";
+    };
+    components?: WhatsappTemplateComponent[];
+};
+export type NagaMessageForm = Omit<Prisma.NagazapMessageGetPayload<{}>, "id" | "nagazap_id" | "template"> & {
+    template?: NagaMessageTemplate;
+};
 export type NagaTemplatePrisma = Prisma.NagaTemplateGetPayload<{}>;
 export declare const nagazap_include: {
     company: {
@@ -46,7 +55,7 @@ export declare class NagaTemplate {
     info: TemplateInfo;
     nagazap_id: string;
     static updateSentNumber(template_name: string, batch_size: number): Promise<NagaTemplate>;
-    static getByName(name: string): Promise<NagaTemplate>;
+    static getByName(name: string, nagazap_id?: string): Promise<NagaTemplate>;
     static getById(id: string): Promise<NagaTemplate>;
     static new(data: TemplateInfo, nagazap_id: string): Promise<NagaTemplate>;
     static update(data: Omit<Partial<NagaTemplate>, "info"> & {
@@ -58,6 +67,7 @@ export declare class NagaTemplate {
     update(data: Omit<Partial<NagaTemplate>, "info"> & {
         info?: Partial<TemplateInfo>;
     }): Promise<void>;
+    convertWhatsappComponentsToTemplateInfo(formComponents: WhatsappTemplateComponent[]): TemplateInfo;
 }
 export declare class NagaMessage {
     id: number;
@@ -67,6 +77,7 @@ export declare class NagaMessage {
     name: string;
     type: NagaMessageType;
     nagazap_id: string;
+    template: TemplateInfo | null;
     constructor(data: NagaMessagePrisma);
 }
 export interface NagazapForm {
@@ -83,101 +94,102 @@ export interface NagaChat {
     lastMessage: NagaMessage;
 }
 export declare class Nagazap {
-    id: string
-    token: string
-    appId: string
-    phoneId: string
-    businessId: string
-    lastUpdated: string
-    stack: WhatsappForm[]
-    blacklist: BlacklistLog[]
-    frequency: string
-    batchSize: number
-    lastMessageTime: string
-    paused: boolean
-    sentMessages: SentMessageLog[]
-    failedMessages: FailedMessageLog[]
-    displayName: string | null
-    displayPhone: string | null
-    companyId: string
-    company: Company
-    blacklistTrigger: string
-    static initialize(): Promise<void>
-    static new(data: NagazapForm): Promise<Nagazap>
-    static getByBusinessId(business_id: string): Promise<Nagazap>
-    static getById(id: string): Promise<Nagazap>
-    static getByCompanyId(company_id: string): Promise<Nagazap[]>
-    static getAll(): Promise<Nagazap[]>
-    static shouldBake(): Promise<void>
+    id: string;
+    token: string;
+    appId: string;
+    phoneId: string;
+    businessId: string;
+    lastUpdated: string;
+    stack: WhatsappForm[];
+    blacklist: BlacklistLog[];
+    frequency: string;
+    batchSize: number;
+    lastMessageTime: string;
+    paused: boolean;
+    sentMessages: SentMessageLog[];
+    failedMessages: FailedMessageLog[];
+    displayName: string | null;
+    displayPhone: string | null;
+    companyId: string;
+    company: Company;
+    blacklistTrigger: string;
+    static initialize(): Promise<void>;
+    static new(data: NagazapForm): Promise<Nagazap>;
+    static getByBusinessId(business_id: string): Promise<Nagazap>;
+    static getById(id: string): Promise<Nagazap>;
+    static getByCompanyId(company_id: string): Promise<Nagazap[]>;
+    static getAll(): Promise<Nagazap[]>;
+    static shouldBake(): Promise<void>;
     static delete(id: string): Promise<{
-        id: string
-        token: string
-        lastUpdated: string
-        appId: string
-        phoneId: string
-        businessId: string
-        stack: string
-        blacklist: string
-        frequency: string
-        batchSize: number
-        lastMessageTime: string
-        paused: boolean
-        sentMessages: string
-        failedMessages: string
-        blacklistTrigger: string
-        displayName: string | null
-        displayPhone: string | null
-        companyId: string
-    }>
-    static sendResponse(id: string, data: NagazapResponseForm, socket?: Socket): Promise<void>
-    constructor(data: NagazapPrisma)
-    loadBlacklist(saved_list: any[]): BlacklistLog[]
-    getMessages(from?: string): Promise<NagaMessage[]>
-    update(data: Partial<WithoutFunctions<Nagazap>>): Promise<this>
-    updateToken(token: string): Promise<void>
+        id: string;
+        token: string;
+        lastUpdated: string;
+        appId: string;
+        phoneId: string;
+        businessId: string;
+        stack: string;
+        blacklist: string;
+        frequency: string;
+        batchSize: number;
+        lastMessageTime: string;
+        paused: boolean;
+        sentMessages: string;
+        failedMessages: string;
+        blacklistTrigger: string;
+        displayName: string | null;
+        displayPhone: string | null;
+        companyId: string;
+    }>;
+    static sendResponse(id: string, data: NagazapResponseForm, socket?: Socket): Promise<void>;
+    constructor(data: NagazapPrisma);
+    loadBlacklist(saved_list: any[]): BlacklistLog[];
+    filterTemplatesOnlyMessages(messages: NagaMessage[]): NagaMessage[];
+    getMessages(from?: string): Promise<NagaMessage[]>;
+    update(data: Partial<WithoutFunctions<Nagazap>>): Promise<this>;
+    updateToken(token: string): Promise<void>;
     buildHeaders(options?: BuildHeadersOptions): {
-        Authorization: string
-        "Content-Type": string
-    }
-    getInfo(): Promise<BusinessInfo | undefined>
-    saveMessage(data: NagaMessageForm): Promise<NagaMessage>
-    addToBlacklist(number: string): Promise<void>
-    removeFromBlacklist(number: string): Promise<void>
-    getMetaTemplates(): Promise<TemplateInfo[]>
-    getMetaTemplate(template_id: string): Promise<TemplateInfo>
-    uploadMedia(file: UploadedFile, filepath: string): Promise<string>
-    sendMessage(message: WhatsappForm): Promise<void>
-    queueMessage(data: WhatsappForm): Promise<WhatsappForm[]>
-    queueBatch(data: WhatsappForm[]): Promise<WhatsappForm[]>
-    prepareBatch(data: OvenForm, image_id?: string): Promise<void>
-    saveStack(): Promise<void>
-    bake(): Promise<void>
-    pause(): Promise<void>
-    start(): Promise<void>
-    clearOven(): Promise<void>
-    log(data: any, template_name: string): Promise<void>
-    errorLog(data: any, number: string): Promise<void>
-    createTemplate(data: TemplateForm): Promise<NagaTemplate>
-    updateTemplate(
-        template_id: string,
-        data: {
-            components?: TemplateComponent[]
-            category?: TemplateCategory
-        }
-    ): Promise<NagaTemplate>
-    getTemplateSheet(template_name: string, type?: string): string
-    exportTemplateModel(template: TemplateForm, type?: string): Promise<string>
-    uploadTemplateMedia(file: UploadedFile): Promise<any>
-    downloadMedia(media_id: string): Promise<string>
-    emit(): void
-    sendResponse(data: NagazapResponseForm, socket?: Socket): Promise<void>
-    getLinks(): Promise<NagazapLink[]>
-    newLink(url: string, template_name?: string): Promise<NagazapLink>
-    findOriginalLink(url: string): Promise<NagazapLink | undefined>
-    getTemplates(): Promise<NagaTemplate[]>
-    getTemplate(id: string): Promise<NagaTemplate>
-    syncTemplates(): Promise<void>
-    deleteTemplate(template_id: string): Promise<NagaTemplate>
-    getLastTemplateSentToNumber(number: string): Promise<void>
+        Authorization: string;
+        "Content-Type": string;
+    };
+    getInfo(): Promise<BusinessInfo | undefined>;
+    isMessageFromMe(message: NagaMessage): boolean;
+    mergeTemplateInfoWithSentData(templateInfo: TemplateInfo, sentComponents: WhatsappTemplateComponent[]): void;
+    saveMessage(data: NagaMessageForm): Promise<NagaMessage>;
+    addToBlacklist(number: string): Promise<void>;
+    removeFromBlacklist(number: string): Promise<void>;
+    getMetaTemplates(): Promise<TemplateInfo[]>;
+    getMetaTemplate(template_id: string): Promise<TemplateInfo>;
+    uploadMedia(file: UploadedFile, filepath: string): Promise<string>;
+    sendMessage(message: WhatsappForm): Promise<void>;
+    queueMessage(data: WhatsappForm): Promise<WhatsappForm[]>;
+    queueBatch(data: WhatsappForm[]): Promise<WhatsappForm[]>;
+    prepareBatch(data: OvenForm, image_id?: string): Promise<void>;
+    saveStack(): Promise<void>;
+    bake(): Promise<void>;
+    pause(): Promise<void>;
+    start(): Promise<void>;
+    clearOven(): Promise<void>;
+    log(data: any, template_name: string): Promise<void>;
+    errorLog(data: any, number: string): Promise<void>;
+    createTemplate(data: TemplateForm): Promise<NagaTemplate>;
+    updateTemplate(template_id: string, data: {
+        components?: TemplateComponent[];
+        category?: TemplateCategory;
+    }): Promise<NagaTemplate>;
+    getTemplateSheet(template_name: string, type?: string): string;
+    exportTemplateModel(template: TemplateForm, type?: string): Promise<string>;
+    uploadTemplateMedia(file: UploadedFile): Promise<any>;
+    downloadMedia(media_id: string): Promise<string>;
+    emit(): void;
+    sendResponse(data: NagazapResponseForm, socket?: Socket): Promise<void>;
+    getLinks(): Promise<NagazapLink[]>;
+    newLink(url: string, template_name?: string): Promise<NagazapLink>;
+    findOriginalLink(url: string): Promise<NagazapLink | undefined>;
+    getTemplates(): Promise<NagaTemplate[]>;
+    getTemplate(id: string): Promise<NagaTemplate>;
+    getTemplateByName(name: string): Promise<NagaTemplate>;
+    syncTemplates(): Promise<void>;
+    deleteTemplate(template_id: string): Promise<NagaTemplate>;
+    getLastTemplateSentToNumber(number: string): Promise<void>;
 }
 export {};

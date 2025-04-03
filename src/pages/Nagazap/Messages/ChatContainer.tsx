@@ -21,13 +21,7 @@ export const ChatContainer: React.FC<ChatContainerProps> = ({ chat, onClose, nag
     const isMobile = useMediaQuery("(orientation: portrait)")
     const can_respond = useMemo(() => canRespondNagaChat(chat, nagazap), [chat])
 
-    const last_template = useMemo(
-        () =>
-            nagazap.sentMessages
-                .filter((item) => item.data.contacts[0].wa_id.slice(2) === chat.from)
-                .reduce((last, log) => (last.timestamp > log.timestamp ? last : log)).template_name,
-        [nagazap, chat]
-    )
+    console.log(chat)
 
     return (
         <Paper
@@ -59,11 +53,6 @@ export const ChatContainer: React.FC<ChatContainerProps> = ({ chat, onClose, nag
                 >
                     <Box sx={{ gap: "0.5vw", alignItems: "center" }}>
                         <MessageAuthor author={chat.name + " - " + chat.from} />
-                        {!!last_template && (
-                            <Tooltip title="último template enviado para este contato" arrow>
-                                <Chip icon={<Hub color="primary" />} label={last_template} size="small" />
-                            </Tooltip>
-                        )}
                     </Box>
                     <IconButton sx={{ color: "text.secondary", padding: isMobile ? "0" : "" }} onClick={onClose}>
                         <Cancel />

@@ -9,6 +9,7 @@ import { AudioPlayer } from "../../Washima/AudioComponents/AudioPlayer"
 import { MessageAuthor } from "../../Zap/MessageAuthor"
 import { useDarkMode } from "../../../hooks/useDarkMode"
 import { DeletedMessage } from "../../Zap/DeletedMessage"
+import { TemplatePreview } from "../TemplateForm/TemplatePreview"
 
 interface MessageContainerProps {
     message: NagaMessage
@@ -113,6 +114,12 @@ export const MessageContainer: React.FC<MessageContainerProps> = ({ message, nag
                     media={{ source: message.text, ext: message.text.split(".")[message.text.split(".").length - 1] }}
                     inBoards={inBoards}
                 />
+            )}
+
+            {message.type === "template" && message.template?.components && (
+                <Box sx={{ width: inBoards ? "15vw" : "20vw" }}>
+                    <TemplatePreview components={message.template.components} realMessage />
+                </Box>
             )}
 
             <Box
