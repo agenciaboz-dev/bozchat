@@ -225,7 +225,7 @@ export const NagazapScreen: React.FC<NagazapProps> = ({}) => {
                                     }
                                 />
                                 <Route path="/form" element={<NagazapForm onSuccess={onAddNagazap} setShowInformations={setShowInformations} />} />
-                                <Route path="/results" element={<Results nagazap={nagazap} />} />
+                                <Route path="/results" element={<Results nagazap={nagazap} setShowInformations={setShowInformations} />} />
                             </Routes>
                         ) : (
                             <Routes>
