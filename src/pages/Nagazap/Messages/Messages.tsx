@@ -10,6 +10,7 @@ import { ChatContainer } from "./ChatContainer"
 import { useUser } from "../../../hooks/useUser"
 import { textFieldStyle } from "../../../style/textfield"
 import { useDarkMode } from "../../../hooks/useDarkMode"
+import { NoChat } from "../../Washima/WashimaChat/NoChat"
 
 interface MessagesScreenProps {
     nagazap: Nagazap
@@ -168,7 +169,7 @@ export const MessagesScreen: React.FC<MessagesScreenProps> = ({ nagazap, setShow
                     </Box>
                 )
             ) : (
-                <Box sx={{ gap: "1vw", marginTop: "-1vw" }}>
+                <Box sx={{ gap: "1vw", marginTop: "-1vw", flex: 1 }}>
                     <Box sx={{ flexDirection: "column", gap: "1vw" }}>
                         <TextField
                             placeholder="Nome, número ou texto da mensagem"
@@ -195,7 +196,11 @@ export const MessagesScreen: React.FC<MessagesScreenProps> = ({ nagazap, setShow
                             ))}
                         </Box>
                     </Box>
-                    {selectedChat && <ChatContainer chat={selectedChat} onClose={() => setSelectedChat(null)} nagazap={nagazap} />}
+                    {selectedChat ? (
+                        <ChatContainer chat={selectedChat} onClose={() => setSelectedChat(null)} nagazap={nagazap} />
+                    ) : (
+                        <NoChat nagazap />
+                    )}
                 </Box>
             )}
         </Subroute>
