@@ -21,11 +21,6 @@ import {
     TemplateComponent as TemplateComponentType,
     TemplateForm as TemplateFormType,
 } from "../../../types/server/Meta/WhatsappBusiness/TemplatesInfo"
-import { TrianguloFudido } from "../../Zap/TrianguloFudido"
-import { TemplateHeader } from "./TemplateHeader/TemplateHeader"
-import { TemplateFooter } from "./TemplateFooter/TemplateFooter"
-import { TemplateBody } from "./TemplateBody/TemplateBody"
-import { TemplateButtons } from "./TemplateButtons/TemplateButtons"
 import { TemplateComponentForm } from "./TemplateComponentForm"
 import { api } from "../../../api"
 import { AxiosError } from "axios"
@@ -313,7 +308,10 @@ export const TemplateForm: React.FC<TemplateFormProps> = ({ nagazap, setShowInfo
                             {isMobile && <Divider />}
                             <Box sx={{ flexDirection: "column", gap: isMobile ? "2vw" : "1vw" }}>
                                 <Typography sx={{ color: "text.secondary", fontWeight: "bold" }}>Pré-visualização:</Typography>
-                                <TemplatePreview components={[templateHeader, templateBody, templateFooter, templateButtons]} />
+                                <TemplatePreview
+                                    components={[templateHeader, templateBody, templateFooter, templateButtons]}
+                                    image={templateHeader.file}
+                                />
                             </Box>
                             <Button variant="contained" onClick={() => formik.handleSubmit()} sx={{ marginTop: "auto" }}>
                                 {loading ? <CircularProgress size="1.5rem" color="secondary" /> : "Enviar template para análise"}
