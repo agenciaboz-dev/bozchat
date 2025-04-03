@@ -1,8 +1,8 @@
-import React, { useEffect, useMemo, useState } from "react"
+import React, { Dispatch, SetStateAction, useEffect, useMemo, useState } from "react"
 import { Box, Button, CircularProgress, IconButton, LinearProgress, Paper, Typography, useMediaQuery } from "@mui/material"
 import { Nagazap } from "../../../types/server/class/Nagazap"
 import { Subroute } from "../Subroute"
-import { Refresh } from "@mui/icons-material"
+import { ArrowBack, Refresh } from "@mui/icons-material"
 import { api } from "../../../api"
 import { NagazapLink } from "../../../types/server/class/NagazapLink"
 import { Area, AreaChart, Bar, BarChart, CartesianGrid, Rectangle, ResponsiveContainer, Tooltip, XAxis, YAxis } from "recharts"
@@ -15,6 +15,7 @@ import { useDarkMode } from "../../../hooks/useDarkMode"
 
 interface ResultsProps {
     nagazap: Nagazap
+    setShowInformations: Dispatch<SetStateAction<boolean>>
 }
 
 type DataLink = Omit<WithoutFunctions<NagazapLink>, "clicks"> & { clicks: number }
@@ -40,16 +41,16 @@ const CustomTooltip: React.FC<{
     }, [props.active, props.label])
 
     return props.active ? (
-        <Paper elevation={5} sx={{ flexDirection: "column", padding: "1vw" }}>
+        <Paper elevation={5} sx={{ flexDirection: "column", padding: "1vw", color: "text.secondary", backgroundColor: "background.default" }}>
             <Typography sx={{ fontWeight: "bold" }}>{props.label}</Typography>
             <Typography>Total de acessos: {props.payload[0].value}</Typography>
 
-            <Typography sx={{ fontSize: "0.75rem", opacity: darkMode ? 0.5 : 1 }}>Clique na barra para ver mais detalhes</Typography>
+            <Typography sx={{ fontSize: "0.75rem" }}>Clique na barra para ver mais detalhes</Typography>
         </Paper>
     ) : null
 }
 
-export const Results: React.FC<ResultsProps> = ({ nagazap }) => {
+export const Results: React.FC<ResultsProps> = ({ nagazap, setShowInformations }) => {
     const isMobile = useMediaQuery("(orientation: portrait)")
     const { darkMode } = useDarkMode()
     const colors = useColors()
@@ -95,6 +96,17 @@ export const Results: React.FC<ResultsProps> = ({ nagazap }) => {
                 <IconButton onClick={fetchLinks} disabled={loading}>
                     {loading ? <CircularProgress size="1.5rem" color={darkMode ? "secondary" : "inherit"} /> : <Refresh />}
                 </IconButton>
+            }
+            left={
+                isMobile ? (
+                    <IconButton
+                        onClick={() => {
+                            setShowInformations(false)
+                        }}
+                    >
+                        <ArrowBack />
+                    </IconButton>
+                ) : null
             }
         >
             {loading ? (
