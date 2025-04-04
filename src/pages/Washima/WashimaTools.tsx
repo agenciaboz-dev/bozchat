@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react"
-import { Box, Button, CircularProgress, useMediaQuery } from "@mui/material"
+import { Box, Button, CircularProgress, Typography, useMediaQuery } from "@mui/material"
 import { Washima, WashimaDiskMetrics } from "../../types/server/class/Washima/Washima"
 import { DiskMetricContainer } from "./DiskMetricContainer"
 import { api } from "../../api"
@@ -79,10 +79,25 @@ export const WashimaTools: React.FC<WashimaToolsProps> = ({ washima, fetchingMes
         >
             Uso de disco
             <Box sx={{ gap: isMobile ? "5vw" : "1vw", flexDirection: isMobile ? "column" : "row" }}>
-                <DiskMetricContainer label="Mensagens" value={diskMetrics?.messages} onDeletePress={deleteMessages} deleting={deletingMessages} />
-                <DiskMetricContainer label="Mídia" value={diskMetrics?.media} onDeletePress={deleteMedia} deleting={deletingMedia} />
+                <DiskMetricContainer
+                    label="Mensagens"
+                    value={diskMetrics?.messages}
+                    onDeletePress={deleteMessages}
+                    deleting={deletingMessages}
+                    disabled={fetchingMessages}
+                />
+                <DiskMetricContainer
+                    label="Mídia"
+                    value={diskMetrics?.media}
+                    onDeletePress={deleteMedia}
+                    deleting={deletingMedia}
+                    disabled={fetchingMessages}
+                />
             </Box>
-            Sincronizar mensagens
+            <Box sx={{ gap: "1vw", alignItems: "center" }}>
+                <Typography>Sincronizar mensagens</Typography>
+                {fetchingMessages && <CircularProgress />}
+            </Box>
             <SyncMessagesContainer washima={washima} syncing={fetchingMessages} onSyncPress={onSyncMessages} />
         </Box>
     )

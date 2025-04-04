@@ -8,9 +8,10 @@ interface DiskMetricContainerProps {
     max_value?: number
     onDeletePress?: () => void
     deleting?: boolean
+    disabled?: boolean
 }
 
-export const DiskMetricContainer: React.FC<DiskMetricContainerProps> = ({ label, value, onDeletePress, deleting, max_value = 100 }) => {
+export const DiskMetricContainer: React.FC<DiskMetricContainerProps> = ({ label, value, onDeletePress, deleting, max_value = 100, disabled }) => {
     const progress_value = value ? (value * 100) / (max_value >= value ? max_value : value) : 0
 
     console.log(progress_value)
@@ -22,7 +23,7 @@ export const DiskMetricContainer: React.FC<DiskMetricContainerProps> = ({ label,
                     {label}: {value !== undefined ? `${value.toFixed(2).replace(".", ",")} Mb` : null}
                 </Box>
                 {onDeletePress && (
-                    <IconButton onClick={onDeletePress} sx={{ padding: 0 }}>
+                    <IconButton onClick={onDeletePress} sx={{ padding: 0 }} disabled={disabled}>
                         {deleting ? <CircularProgress size={"1.5rem"} color="warning" /> : <Delete />}
                     </IconButton>
                 )}

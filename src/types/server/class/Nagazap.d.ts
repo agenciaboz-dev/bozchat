@@ -4,7 +4,7 @@ import { UploadedFile } from "express-fileupload";
 import { BlacklistLog, FailedMessageLog, SentMessageLog } from "../types/shared/Meta/WhatsappBusiness/Logs";
 import { WithoutFunctions } from "./helpers";
 import { BusinessInfo } from "../types/shared/Meta/WhatsappBusiness/BusinessInfo";
-import { TemplateCategory, TemplateComponent, TemplateForm, TemplateInfo } from "../Meta/WhatsappBusiness/TemplatesInfo";
+import { TemplateCategory, TemplateComponent, TemplateForm, TemplateInfo } from "../types/shared/Meta/WhatsappBusiness/TemplatesInfo";
 import { Company } from "./Company";
 import { Socket } from "socket.io";
 import { NagazapLink } from "./NagazapLink";
@@ -153,7 +153,6 @@ export declare class Nagazap {
     };
     getInfo(): Promise<BusinessInfo | undefined>;
     isMessageFromMe(message: NagaMessage): boolean;
-    mergeTemplateInfoWithSentData(templateInfo: TemplateInfo, sentComponents: WhatsappTemplateComponent[]): void;
     saveMessage(data: NagaMessageForm): Promise<NagaMessage>;
     addToBlacklist(number: string): Promise<void>;
     removeFromBlacklist(number: string): Promise<void>;
@@ -163,7 +162,7 @@ export declare class Nagazap {
     sendMessage(message: WhatsappForm): Promise<void>;
     queueMessage(data: WhatsappForm): Promise<WhatsappForm[]>;
     queueBatch(data: WhatsappForm[]): Promise<WhatsappForm[]>;
-    prepareBatch(data: OvenForm, image_id?: string): Promise<void>;
+    prepareBatch(data: OvenForm, image_id?: string, image_url?: string): Promise<void>;
     saveStack(): Promise<void>;
     bake(): Promise<void>;
     pause(): Promise<void>;

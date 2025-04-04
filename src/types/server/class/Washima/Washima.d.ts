@@ -12,7 +12,7 @@ export interface WashimaDiskMetrics {
     messages: number;
     media: number;
 }
-export type WashimaForm = Omit<WithoutFunctions<Washima>, "id" | "created_at" | "active" | "client" | "qrcode" | "ready" | "info" | "chats" | "contact" | "companies"> & {
+export type WashimaForm = Omit<WithoutFunctions<Washima>, "id" | "created_at" | "active" | "client" | "qrcode" | "ready" | "info" | "chats" | "contact" | "companies" | "syncing"> & {
     company_id: string;
 };
 export interface WashimaMessageId {

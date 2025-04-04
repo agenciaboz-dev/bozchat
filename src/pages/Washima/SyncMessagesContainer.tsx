@@ -35,7 +35,7 @@ export const SyncMessagesContainer: React.FC<SyncMessagesContainerProps> = ({ wa
             io.off(`washima:${washima.id}:sync:chat`)
             io.off(`washima:${washima.id}:sync:messages`)
         }
-    }, [])
+    }, [washima])
 
     return syncing ? (
         <Box sx={{ flexDirection: "column", gap: "1vw", color: "primary.main" }}>

@@ -31,7 +31,7 @@ export const WashimaFormPage: React.FC<WashimaFormPageProps> = ({ currentWashima
 
     const [loading, setLoading] = useState(false)
     const [restarting, setRestarting] = useState(false)
-    const [fetchingMessages, setFetchingMessages] = useState(false)
+    const [fetchingMessages, setFetchingMessages] = useState(currentWashima?.syncing || false)
     const [syncStatus, setSyncStatus] = useState("Inicializando")
     const [syncProgress, setSyncProgress] = useState(0)
 
@@ -118,6 +118,7 @@ export const WashimaFormPage: React.FC<WashimaFormPageProps> = ({ currentWashima
     }
 
     useEffect(() => {
+        setFetchingMessages(!!currentWashima?.syncing)
         if (currentWashima) {
             io.on("washima:ready", (id) => {
                 if (id === currentWashima.id) {
@@ -137,9 +138,14 @@ export const WashimaFormPage: React.FC<WashimaFormPageProps> = ({ currentWashima
                 }
             })
 
+            io.on(`washima:${currentWashima.id}:sync:messages`, () => {
+                setFetchingMessages(true)
+            })
+
             return () => {
                 io.off("washima:ready")
                 io.off(`washima:${currentWashima.id}:init`)
+                io.off(`washima:${currentWashima.id}:sync:messages`)
             }
         }
     }, [currentWashima])
