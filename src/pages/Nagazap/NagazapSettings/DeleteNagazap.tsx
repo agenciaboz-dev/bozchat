@@ -40,10 +40,8 @@ export const DeleteNagazap: React.FC<DeleteNagazapProps> = ({ nagazap, setNagaza
     }
 
     return (
-        <Box sx={{}}>
-            <Button variant="contained" color="error" onClick={onDeletePress}>
-                {loading ? <CircularProgress size={"1.5rem"} color="secondary" /> : "Deletar nagazap"}
-            </Button>
-        </Box>
+        <Button variant="outlined" color="error" onClick={onDeletePress}>
+            {loading ? <CircularProgress size={"1.5rem"} color="secondary" /> : "Deletar Broadcast"}
+        </Button>
     )
 }

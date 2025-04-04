@@ -15,7 +15,7 @@ export const Token: React.FC<TokenProps> = ({ nagazap, formik }) => {
     
 
     return (
-        <Box sx={{ flexDirection: "column", gap: "1vw" }}>
+        <Box sx={{ flexDirection: "column", gap: isMobile ? "5vw" : "1vw" }}>
             <Box sx={{ fontWeight: "bold", color: "text.secondary", alignItems: "center" }}>
                 Token
                 <Switch
@@ -26,16 +26,15 @@ export const Token: React.FC<TokenProps> = ({ nagazap, formik }) => {
                     icon={<LockOpen />}
                 />
             </Box>
-                <TextField
-                    label={new Date(Number(nagazap.lastUpdated)).toLocaleString("pt-br")}
-                    name="token"
-                    value={formik.values.token}
-                    onChange={formik.handleChange}
-                    multiline
-                    maxRows={isMobile ? 7 : 2}
-                    disabled={locked}
-                />
-            
+            <TextField
+                label={new Date(Number(nagazap.lastUpdated)).toLocaleString("pt-br")}
+                name="token"
+                value={formik.values.token}
+                onChange={formik.handleChange}
+                multiline
+                maxRows={isMobile ? 7 : 2}
+                disabled={locked}
+            />
         </Box>
     )
 }

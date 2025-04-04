@@ -30,7 +30,7 @@ export const SyncTemplates: React.FC<SyncTemplatesProps> = ({ nagazap }) => {
     }
 
     return (
-        <Button variant="contained" onClick={onClick}>
+        <Button variant="outlined" onClick={onClick}>
             {loading ? <CircularProgress size="1.5rem" color="secondary" /> : "Sincronizar Templates"}
         </Button>
     )
