@@ -100,7 +100,7 @@ export const ResponseNode: React.FC<ResponseNodeProps> = (node) => {
                     </Box>
                 )}
             </Paper>
-            <Typography sx={{ position: "absolute", top: -10, left: -42, color: "text.disabled" }}>Msg</Typography>
+            <Typography sx={{ position: "absolute", top: -10, left: -42, color: "text.disabled" }}>User</Typography>
         </>
     )
 }
