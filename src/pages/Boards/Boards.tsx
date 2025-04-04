@@ -96,7 +96,7 @@ export const Boards: React.FC<BoardsProps> = ({}) => {
                     index
                     path="/"
                     element={
-                        <Box sx={{ flexDirection: "column", flex: 1, gap: "1vw", padding: "2vw" }}>
+                        <Box sx={{ flexDirection: "column", flex: 1, gap: isMobile ? "5vw" : "1vw", padding: isMobile ? "5vw" : "2vw" }}>
                             <Title2
                                 name="Quadros"
                                 right={
@@ -130,9 +130,9 @@ export const Boards: React.FC<BoardsProps> = ({}) => {
                 open={showBoardForm}
                 keepMounted
                 onClose={() => setShowBoardForm(false)}
-                PaperProps={{ sx: { bgcolor: "background.default", width: "40vw" }, elevation: 2 }}
+                PaperProps={{ sx: { bgcolor: "background.default", width: isMobile ? "80vw" : "40vw" }, elevation: 2 }}
             >
-                <Box sx={{ padding: "1vw", paddingBottom: 0, justifyContent: "space-between", alignItems: "center" }}>
+                <Box sx={{ padding: isMobile ? "5vw" : "1vw", paddingBottom: 0, justifyContent: "space-between", alignItems: "center" }}>
                     <Typography sx={{ fontWeight: "bold" }}>Novo quadro</Typography>
                     <IconButton onClick={() => setShowBoardForm(false)}>
                         <Close />

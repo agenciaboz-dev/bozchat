@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react"
-import { Autocomplete, Box, TextField } from "@mui/material"
+import { Autocomplete, Box, TextField, useMediaQuery } from "@mui/material"
 import { WithoutFunctions } from "../../../types/server/class/helpers"
 import { Board, BoardAccess } from "../../../types/server/class/Board/Board"
 import { useFetchedData } from "../../../hooks/useFetchedData"
@@ -16,6 +16,7 @@ interface AccessTabProps {
 }
 
 export const AccessTab: React.FC<AccessTabProps> = (props) => {
+    const isMobile = useMediaQuery("(orientation: portrait)")
     const api = useApi()
 
     const [users] = useFetchedData<User>("users")
@@ -33,7 +34,7 @@ export const AccessTab: React.FC<AccessTabProps> = (props) => {
     }, [])
 
     return (
-        <Box sx={{ flexDirection: "column", gap: "1vw" }}>
+        <Box sx={{ flexDirection: "column", gap: isMobile ? "5vw" : "1vw" }}>
             <TextField
                 label="Nome do quadro"
                 value={props.boardChanges.name}

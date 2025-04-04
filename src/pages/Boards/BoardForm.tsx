@@ -1,5 +1,5 @@
 import React, { useState } from "react"
-import { Autocomplete, Box, Button, CircularProgress, TextField } from "@mui/material"
+import { Autocomplete, Box, Button, CircularProgress, TextField, useMediaQuery } from "@mui/material"
 import { useFormik } from "formik"
 import { api } from "../../api"
 import { useUser } from "../../hooks/useUser"
@@ -15,6 +15,7 @@ interface BoardFormComponentProps {
 }
 
 export const BoardFormComponent: React.FC<BoardFormComponentProps> = (props) => {
+    const isMobile = useMediaQuery("(orientation: portrait)")
     const { darkMode } = useDarkMode()
     const { company, user } = useUser()
     const { snackbar } = useSnackbar()
@@ -44,7 +45,7 @@ export const BoardFormComponent: React.FC<BoardFormComponentProps> = (props) => 
     })
 
     return (
-        <Box sx={{ flexDirection: "column", flex: 1, gap: "1vw", padding: "1vw" }}>
+        <Box sx={{ flexDirection: "column", flex: 1, gap: isMobile ? "5vw" : "1vw", padding: isMobile ? "5vw" : "1vw" }}>
             <form onSubmit={formik.handleSubmit}>
                 <TextField
                     required

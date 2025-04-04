@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react"
-import { Autocomplete, Avatar, Box, Checkbox, Paper, TextField, Typography } from "@mui/material"
+import { Autocomplete, Avatar, Box, Checkbox, Paper, TextField, Typography, useMediaQuery } from "@mui/material"
 import { Washima, WashimaProfilePic } from "../../../types/server/class/Washima/Washima"
 import { useApi } from "../../../hooks/useApi"
 import { WithoutFunctions } from "../../../types/server/class/helpers"
@@ -9,14 +9,16 @@ import { Nagazap } from "../../../types/server/class/Nagazap"
 
 interface BusinessContainerProps {
     board: WithoutFunctions<Board>
-    integration: Washima|Nagazap
+    integration: Washima | Nagazap
     checked: boolean
     room?: Room
     onChange: (integration_id: string, setting?: BoardWashimaSettings | BoardNagazapSettings) => void
-    type: 'washima' | 'nagazap'
+    type: "washima" | "nagazap"
 }
 
 export const IntegrationContainer: React.FC<BusinessContainerProps> = (props) => {
+    const isMobile = useMediaQuery("(orientation: portrait)")
+
     const { fetchWashimaProfilePic } = useApi()
 
     const [profilePic, setProfilePic] = useState<WashimaProfilePic | null>(null)
@@ -28,7 +30,11 @@ export const IntegrationContainer: React.FC<BusinessContainerProps> = (props) =>
     const onChangeRoom = (room: Room) => {
         props.onChange(
             props.integration.id,
-            props.checked ? props.type === 'nagazap' ? {nagazap_id: nagazap.id, room_id: room.id, nagazap_name: nagazap.displayName || ''} : { washima_id: props.integration.id, room_id: room.id, washima_name: washima.name } : undefined
+            props.checked
+                ? props.type === "nagazap"
+                    ? { nagazap_id: nagazap.id, room_id: room.id, nagazap_name: nagazap.displayName || "" }
+                    : { washima_id: props.integration.id, room_id: room.id, washima_name: washima.name }
+                : undefined
         )
         setSelectedRoom(room)
     }
@@ -36,7 +42,11 @@ export const IntegrationContainer: React.FC<BusinessContainerProps> = (props) =>
     const onChangeCheckbox = (value: boolean) => {
         props.onChange(
             props.integration.id,
-            value ? props.type === 'nagazap' ? {nagazap_id: nagazap.id, room_id: selectedRoom.id, nagazap_name: nagazap.displayName || ''} : { washima_id: props.integration.id, room_id: selectedRoom.id, washima_name: washima.name } : undefined
+            value
+                ? props.type === "nagazap"
+                    ? { nagazap_id: nagazap.id, room_id: selectedRoom.id, nagazap_name: nagazap.displayName || "" }
+                    : { washima_id: props.integration.id, room_id: selectedRoom.id, washima_name: washima.name }
+                : undefined
         )
     }
 
@@ -45,15 +55,23 @@ export const IntegrationContainer: React.FC<BusinessContainerProps> = (props) =>
     }, [props.integration])
 
     return (
-        <Paper sx={{ padding: "1vw" }}>
-            <Box sx={{ flex: 1, alignItems: "center", gap: "1vw" }}>
-                <Checkbox checked={props.checked} onChange={(_, value) => onChangeCheckbox(value)} />
+        <Paper sx={{ padding: isMobile ? "5vw" : "1vw", flexDirection: isMobile ? "column" : "row", gap: isMobile ? "5vw" : undefined }}>
+            <Box sx={{ flex: 1, alignItems: "center", gap: isMobile ? "2vw" : "1vw" }}>
+                <Checkbox checked={props.checked} onChange={(_, value) => onChangeCheckbox(value)} sx={{ padding: isMobile ? 0 : undefined }} />
                 <Avatar src={profilePic?.url} />
                 <Box sx={{ flexDirection: "column" }}>
-                    <Typography sx={{ fontWeight: "bold", width: "13vw", whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis" }}>
+                    <Typography
+                        sx={{
+                            fontWeight: "bold",
+                            width: isMobile ? "100%" : "13vw",
+                            whiteSpace: "nowrap",
+                            overflow: "hidden",
+                            textOverflow: "ellipsis",
+                        }}
+                    >
                         {washima.name || nagazap.displayName || ""}
                     </Typography>
-                    <Typography sx={{ fontSize: "0.8rem", color: "secondary.main" }}>{washima.number || nagazap.displayPhone}</Typography>
+                    <Typography sx={{ fontSize: "0.8rem", color: "text.secondary" }}>{washima.number || nagazap.displayPhone}</Typography>
                 </Box>
             </Box>
 

@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react"
-import { Box, Button, CircularProgress, Dialog, IconButton, Tab, Tabs } from "@mui/material"
+import { Box, Button, CircularProgress, Dialog, IconButton, Tab, Tabs, useMediaQuery } from "@mui/material"
 import { Board, BoardAccess } from "../../../types/server/class/Board/Board"
 import { Title2 } from "../../../components/Title"
 import { Close } from "@mui/icons-material"
@@ -23,6 +23,7 @@ interface BoardSettingsModalProps {
 }
 
 export const BoardSettingsModal: React.FC<BoardSettingsModalProps> = (props) => {
+    const isMobile = useMediaQuery("(orientation: portrait)")
     const { company, user } = useUser()
     const io = useIo()
     const { snackbar } = useSnackbar()
@@ -64,7 +65,13 @@ export const BoardSettingsModal: React.FC<BoardSettingsModalProps> = (props) => 
             open={props.open}
             onClose={props.onClose}
             PaperProps={{
-                sx: { maxWidth: "80vw", padding: "2vw", bgcolor: "background.default", flexDirection: "column", width: "50vw" },
+                sx: {
+                    maxWidth: isMobile ? "90vw" : "80vw",
+                    padding: isMobile ? "5vw" : "2vw",
+                    bgcolor: "background.default",
+                    flexDirection: "column",
+                    width: isMobile ? "90vw" : "50vw",
+                },
             }}
         >
             <Title2
@@ -81,7 +88,7 @@ export const BoardSettingsModal: React.FC<BoardSettingsModalProps> = (props) => 
                 <Tab label="Broadcast" value={2} />
             </Tabs>
 
-            <Box sx={{ paddingTop: "1vw", height: "30vw", overflow: "auto", flexDirection: "column" }}>
+            <Box sx={{ paddingTop: isMobile ? "5vw" : "1vw", height: isMobile ? "fit-content" : "30vw", overflow: "auto", flexDirection: "column" }}>
                 {tab === 0 && (
                     <AccessTab
                         board={props.board}
@@ -108,7 +115,7 @@ export const BoardSettingsModal: React.FC<BoardSettingsModalProps> = (props) => 
                     />
                 )}
             </Box>
-            <Box sx={{ marginTop: "auto", justifyContent: "flex-end" }}>
+            <Box sx={{ marginTop: isMobile ? "5vw" : "auto", justifyContent: "flex-end" }}>
                 <Button variant="contained" onClick={() => onSaveClick()}>
                     {loading ? <CircularProgress size={"1.5rem"} color="secondary" /> : "Salvar"}
                 </Button>

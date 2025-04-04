@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState } from "react"
-import { Box, Button, CircularProgress, IconButton, MenuItem, Paper, TextField, Tooltip, Typography } from "@mui/material"
+import { Box, Button, CircularProgress, IconButton, MenuItem, Paper, TextField, Tooltip, Typography, useMediaQuery } from "@mui/material"
 import { Board } from "../../types/server/class/Board/Board"
 import { Title2 } from "../../components/Title"
 import { Add, ArrowBack, Edit, EditOff, EditRounded, Refresh, Save, Settings } from "@mui/icons-material"
@@ -23,6 +23,7 @@ interface BoardPageProps {
 }
 
 export const BoardPage: React.FC<BoardPageProps> = (props) => {
+    const isMobile = useMediaQuery("(orientation: portrait)")
     const io = useIo()
     const { user } = useUser()
     const api = useApi()
@@ -206,7 +207,7 @@ export const BoardPage: React.FC<BoardPageProps> = (props) => {
 
     return (
         <DragDropContext onDragEnd={onDragEnd}>
-            <Box sx={{ padding: "2vw", paddingBottom: 0, marginBottom: "-0.5vw" }}>
+            <Box sx={{ padding: isMobile ? "5vw" : "2vw", paddingBottom: 0, marginBottom: isMobile ? 0 : "-0.5vw" }}>
                 <Title2
                     name={`${props.board.name}`}
                     left={
@@ -238,18 +239,28 @@ export const BoardPage: React.FC<BoardPageProps> = (props) => {
                     }
                 />
             </Box>
-            <Box ref={columnsBoxRef} sx={{ flexDirection: "column", flex: 1, gap: "1vw", padding: "2vw", width: "100vw", overflow: "auto" }}>
+            <Box
+                ref={columnsBoxRef}
+                sx={{
+                    flexDirection: "column",
+                    flex: 1,
+                    gap: isMobile ? "5vw" : "1vw",
+                    padding: isMobile ? "5vw" : "2vw",
+                    width: "100vw",
+                    overflow: "auto",
+                }}
+            >
                 <Droppable droppableId={props.board.id} type="room" direction="horizontal">
                     {(provided) => (
                         <Box
                             ref={provided.innerRef}
                             {...provided.droppableProps}
                             sx={{
-                                gap: "2vw",
-                                margin: "0 -2vw",
-                                padding: "0 2vw",
-                                marginBottom: "-2vw",
-                                paddingBottom: "2vw",
+                                gap: isMobile ? "5vw" : "2vw",
+                                margin: isMobile ? "0 -5vw" : "0 -2vw",
+                                padding: isMobile ? "0 5vw" : "0 2vw",
+                                marginBottom: isMobile ? "-5vw" : "-2vw",
+                                paddingBottom: isMobile ? "5vw" : "2vw",
                             }}
                         >
                             {board.rooms.map((room, index) => (

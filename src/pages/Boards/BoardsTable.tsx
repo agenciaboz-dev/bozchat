@@ -1,5 +1,5 @@
 import React, { useEffect, useMemo, useRef, useState } from "react"
-import { Badge, Box, IconButton, Menu, MenuItem, Paper, SvgIconTypeMap } from "@mui/material"
+import { Badge, Box, IconButton, Menu, MenuItem, Paper, SvgIconTypeMap, useMediaQuery } from "@mui/material"
 import { useSnackbar } from "burgos-snackbar"
 import { useUser } from "../../hooks/useUser"
 import {
@@ -59,6 +59,7 @@ const IntegrationIcon: React.FC<{
 }
 
 export const BoardsTable: React.FC<BoardsTableProps> = (props) => {
+    const isMobile = useMediaQuery("(orientation: portrait)")
     const { snackbar } = useSnackbar()
     const { user } = useUser()
     const isMenu = useRef(false)
@@ -98,17 +99,17 @@ export const BoardsTable: React.FC<BoardsTableProps> = (props) => {
             display: "flex",
             align: "center",
             renderCell: (params) => (
-                <Box sx={{ gap: "1vw" }}>
+                <Box sx={{ gap: isMobile ? "5vw" : "1vw" }}>
                     <IntegrationIcon quantity={params.value.washima} icon={WhatsApp} />
                     <IntegrationIcon quantity={params.value.nagazap} icon={Hub} />
                 </Box>
             ),
+            minWidth: isMobile ? 150 : undefined,
         },
-        { field: "name", headerName: "Nome", flex: 0.1, editable: user?.admin },
-        { field: "roomsCount", headerName: "Salas", flex: 0.1 },
-        { field: "chats", headerName: "Conversas", flex: 0.1 },
-        { field: "unreadCount", headerName: "Não respondidas", flex: 0.1 },
-
+        { field: "name", headerName: "Nome", flex: 0.1, editable: user?.admin, minWidth: isMobile ? 150 : undefined },
+        { field: "roomsCount", headerName: "Salas", flex: 0.1, minWidth: isMobile ? 150 : undefined },
+        { field: "chats", headerName: "Conversas", flex: 0.1, minWidth: isMobile ? 150 : undefined },
+        { field: "unreadCount", headerName: "Não respondidas", flex: 0.1, minWidth: isMobile ? 200 : undefined },
         {
             field: "id",
             headerName: "Ações",
@@ -122,6 +123,7 @@ export const BoardsTable: React.FC<BoardsTableProps> = (props) => {
             align: "center",
             sortable: false,
             filterable: false,
+            minWidth: isMobile ? 150 : undefined,
         },
     ]
 
