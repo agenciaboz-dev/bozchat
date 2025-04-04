@@ -41,7 +41,9 @@ export const FailedLogContainer: React.FC<FailedLogContainerProps> = ({ log }) =
                 </Grid>
             ) : null}
             <Grid item xs={2}>
-                <Box sx={{ width: "100%", justifyContent: "flex-end", color: darkMode ? undefined : "text.secondary" }}>{log.data.error.message}</Box>
+                <Box sx={{ width: "100%", justifyContent: "flex-end", color: darkMode ? undefined : "text.secondary" }}>
+                    {log.data.error?.message}
+                </Box>
             </Grid>
         </Grid>
     )
