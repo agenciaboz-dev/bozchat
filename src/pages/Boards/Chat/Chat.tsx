@@ -20,6 +20,7 @@ import { ChatMenu } from "./ChatMenu"
 import { TransferModal } from "./TransferModal"
 import { WithoutFunctions } from "../../../types/server/class/helpers"
 import { Board } from "../../../types/server/class/Board/Board"
+import { normalizePhonenumber } from "../../../tools/normalize"
 
 interface BoardChatProps {
     chat: Chat
@@ -90,8 +91,10 @@ export const BoardChat: React.FC<BoardChatProps> = (props) => {
 
     useEffect(() => {
         if (props.nagazap) {
-            fetchNagaMessages({ params: { nagazap_id: props.nagazap.id, from: props.chat.phone } }).then((result) =>
-                setNagazapMessages(result.reverse())
+            fetchNagaMessages({ params: { nagazap_id: props.nagazap.id, from: normalizePhonenumber(props.chat.last_message.from) } }).then(
+                (result) => {
+                    setNagazapMessages(result.reverse())
+                }
             )
         }
     }, [props.nagazap, props.chat])

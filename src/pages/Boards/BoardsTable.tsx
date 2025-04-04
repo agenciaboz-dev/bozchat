@@ -203,6 +203,9 @@ export const BoardsTable: React.FC<BoardsTableProps> = (props) => {
                 sx={{
                     border: 0,
                     height: "74vh",
+                    "& .MuiDataGrid-row": {
+                        cursor: "pointer",
+                    },
                 }}
                 onCellEditStop={onCellEditStop}
                 onRowSelectionModelChange={onRowSelectionModelChange}

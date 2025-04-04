@@ -168,7 +168,7 @@ export const ChatContainer: React.FC<ChatProps> = ({ chat, onChatClick, washima,
                     {chat.lastMessage && <MessageAck message={mocked_last_message} />}
                     {chat.lastMessage?.hasMedia && mediaMetaData?.mimetype && <MediaChip mimetype={mediaMetaData.mimetype} />}
                     {chat.lastMessage?.type === "revoked" ? (
-                        <DeletedMessage message={{ ...mocked_last_message, deleted: true }} />
+                        <DeletedMessage />
                     ) : (
                         <p
                             style={{
