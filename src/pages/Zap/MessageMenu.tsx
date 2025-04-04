@@ -55,6 +55,7 @@ export const MessageMenu: React.FC<MessageMenuProps> = ({ from_me, onClose, mess
     const handleToggleMenu = (event: React.MouseEvent<HTMLElement>) => {
         setAnchorEl(event.currentTarget)
         setMenuIsOpen(!menuIsOpen)
+        console.log(message)
     }
 
     const handleCloseMenu = () => {

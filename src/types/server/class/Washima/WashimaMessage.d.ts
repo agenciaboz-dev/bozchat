@@ -36,6 +36,7 @@ export declare class WashimaMessage {
     deleted: boolean;
     replied_to?: WashimaMessage | null;
     forwarded: boolean;
+    phone_only: boolean | null;
     static getChatMessages(washima_id: string, chat_id: string, is_group: boolean, offset?: number, take?: number | null): Promise<WashimaMessage[]>;
     static getWashimaMessages(washima_id: string, body?: any): Promise<WashimaMessage[]>;
     static search(value: string): Promise<WashimaMessage[]>;

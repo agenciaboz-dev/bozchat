@@ -143,7 +143,8 @@ export declare class Nagazap {
     static sendResponse(id: string, data: NagazapResponseForm, socket?: Socket): Promise<void>;
     constructor(data: NagazapPrisma);
     loadBlacklist(saved_list: any[]): BlacklistLog[];
-    filterTemplatesOnlyMessages(messages: NagaMessage[]): NagaMessage[];
+    getConversations(messages?: NagaMessage[]): Promise<Map<string, NagaMessage[]>>;
+    filterTemplatesOnlyMessages(conversations: Map<string, NagaMessage[]>): NagaMessage[];
     getMessages(from?: string): Promise<NagaMessage[]>;
     update(data: Partial<WithoutFunctions<Nagazap>>): Promise<this>;
     updateToken(token: string): Promise<void>;

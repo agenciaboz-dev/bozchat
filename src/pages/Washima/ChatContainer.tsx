@@ -48,6 +48,7 @@ export const ChatContainer: React.FC<ChatProps> = ({ chat, onChatClick, washima,
         deleted: false,
         edited: false,
         forwarded: false,
+        phone_only: false,
     }
 
     const handleClick = () => {

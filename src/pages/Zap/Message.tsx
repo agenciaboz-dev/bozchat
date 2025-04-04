@@ -23,6 +23,7 @@ import { MessageAuthor } from "./MessageAuthor"
 import { MessageMenu } from "./MessageMenu"
 import { QuotedMessage } from "../Washima/QuotedMessage"
 import { useDarkMode } from "../../hooks/useDarkMode"
+import { PhoneOnly } from "./PhoneOnly"
 
 interface MessageProps {
     washima: Washima
@@ -213,7 +214,7 @@ export const Message: React.ForwardRefRenderFunction<HTMLDivElement, MessageProp
                                 : lightModeSecondary,
                             marginTop: !same_as_previous && !day_changing ? (isMobile ? "2vw" : "0.5vw") : undefined,
                             gap: is_sticker ? "0.2vw" : undefined,
-                            opacity: is_deleted ? 0.3 : undefined,
+                            opacity: is_deleted || message.phone_only ? 0.3 : undefined,
                             transition: "0.5s",
                         }}
                     >
@@ -273,6 +274,7 @@ export const Message: React.ForwardRefRenderFunction<HTMLDivElement, MessageProp
                             }}
                         >
                             {is_deleted && <DeletedMessage />}
+                            {message.phone_only && <PhoneOnly />}
                             {message.hasMedia && (
                                 <Box sx={{}}>
                                     {is_image &&
