@@ -76,7 +76,11 @@ export const BoardPage: React.FC<BoardPageProps> = (props) => {
                 save(board)
 
                 if (destinationRoom.on_new_chat) {
-                    api.emitRommTrigger(chat, destinationRoom.on_new_chat)
+                    api.emitRommTrigger(chat, destinationRoom.on_new_chat, "in")
+                }
+
+                if (sourceRoom.on_new_chat) {
+                    api.emitRommTrigger(chat, sourceRoom.on_new_chat, "out")
                 }
 
                 return board

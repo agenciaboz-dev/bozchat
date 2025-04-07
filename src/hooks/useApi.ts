@@ -56,9 +56,12 @@ export const useApi = () => {
         }
     }
 
-    const emitRommTrigger = (chat: Chat, trigger: RoomTrigger) => {
-        io.emit("board:room:chat:clone", chat, trigger)
-        snackbar({ severity: "info", text: `Sala copiada para ${trigger.board_name}` })
+    const emitRommTrigger = (chat: Chat, trigger: RoomTrigger, direction: "in" | "out") => {
+        io.emit(`board:room:chat:${direction === "in" ? "clone" : "remove"}`, chat, trigger)
+        snackbar({
+            severity: "info",
+            text: direction === "in" ? `Sala copiada para ${trigger.board_name}` : `Sala removida de ${trigger.board_name}`,
+        })
     }
 
     const fetchDepartments = async (options?: FetchOptions & { params?: { department_id: string } }) => await get("/company/departments", options)
