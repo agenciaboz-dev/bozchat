@@ -1,28 +1,16 @@
 import HomeIcon from "@mui/icons-material/Home"
 import WhatsAppIcon from "@mui/icons-material/WhatsApp"
-import FormatListNumberedRtlIcon from "@mui/icons-material/FormatListNumberedRtl"
-import CalendarMonthIcon from "@mui/icons-material/CalendarMonth"
-import AdminPanelSettingsIcon from "@mui/icons-material/AdminPanelSettings"
-import SettingsIcon from "@mui/icons-material/Settings"
-import Groups3Icon from "@mui/icons-material/Groups3"
-import BusinessIcon from "@mui/icons-material/Business"
-import CategoryIcon from "@mui/icons-material/Category"
-import BarChartIcon from "@mui/icons-material/BarChart"
-import QrCodeScannerIcon from "@mui/icons-material/QrCodeScanner"
 import { useNavigate } from "react-router-dom"
-import BrowserUpdatedIcon from "@mui/icons-material/BrowserUpdated"
-import NewReleasesIcon from "@mui/icons-material/NewReleases"
 import { useUser } from "./useUser"
 import { Badge, BadgeProps, styled } from "@mui/material"
-import ApiIcon from "@mui/icons-material/Api"
-import PaletteIcon from "@mui/icons-material/Palette"
-import { AccountTree, Engineering, Groups, Hub, List, People, SafetyDivider, Settings, SmartToy, ViewWeek } from "@mui/icons-material"
+import { Engineering, Hub, List, People, SafetyDivider, Security, Settings, ViewWeek } from "@mui/icons-material"
 import { Menu } from "../types/Menu"
+import { useMemo } from "react"
 
 export const useMenuList = () => {
     const navigate = useNavigate()
 
-    const { user } = useUser()
+    const { boz } = useUser()
 
     const StyledBadge = styled(Badge)<BadgeProps>(({ theme }) => ({
         "& .MuiBadge-badge": {
@@ -38,61 +26,75 @@ export const useMenuList = () => {
         },
     }))
 
-    const menus: Menu[] = [
-        {
-            name: "Início",
-            path: "/",
-            icon: <HomeIcon />,
-            onClick: () => navigate("/"),
-        },
-        {
-            name: "Business",
-            path: "/business",
-            icon: <WhatsAppIcon />,
-            onClick: () => navigate("/business"),
-        },
-        {
-            icon: <Hub />,
-            name: "Broadcast",
-            path: "/broadcast",
-            onClick: () => navigate("/broadcast/"),
-        },
-        {
-            icon: <ViewWeek />,
-            name: "Quadros",
-            path: "/boards",
-            onClick: () => navigate("/boards/"),
-        },
-        {
-            icon: <Engineering />,
-            name: "Chatbots",
-            path: "/bots",
-            onClick: () => navigate("/bots/"),
-        },
-        {
-            icon: <People />,
-            name: "Usuários",
-            path: "/users",
-            onClick: () => navigate("/users/"),
-        },
-        {
-            icon: <SafetyDivider />,
-            name: "Setores",
-            path: "/departments",
-            onClick: () => navigate("/departments/"),
-        },
-        {
-            icon: <List />,
-            name: "Logs",
-            path: "/logs",
-            onClick: () => navigate("/logs/"),
-        },
-        {
+    const menus: Menu[] = useMemo(() => {
+        const list = [
+            {
+                name: "Início",
+                path: "/",
+                icon: <HomeIcon />,
+                onClick: () => navigate("/"),
+            },
+            {
+                name: "Business",
+                path: "/business",
+                icon: <WhatsAppIcon />,
+                onClick: () => navigate("/business"),
+            },
+            {
+                icon: <Hub />,
+                name: "Broadcast",
+                path: "/broadcast",
+                onClick: () => navigate("/broadcast/"),
+            },
+            {
+                icon: <ViewWeek />,
+                name: "Quadros",
+                path: "/boards",
+                onClick: () => navigate("/boards/"),
+            },
+            {
+                icon: <Engineering />,
+                name: "Chatbots",
+                path: "/bots",
+                onClick: () => navigate("/bots/"),
+            },
+            {
+                icon: <People />,
+                name: "Usuários",
+                path: "/users",
+                onClick: () => navigate("/users/"),
+            },
+            {
+                icon: <SafetyDivider />,
+                name: "Setores",
+                path: "/departments",
+                onClick: () => navigate("/departments/"),
+            },
+            {
+                icon: <List />,
+                name: "Logs",
+                path: "/logs",
+                onClick: () => navigate("/logs/"),
+            },
+        ]
+
+        if (boz)
+            list.push({
+                icon: <Security />,
+                name: "Administração",
+                path: "/admin",
+                onClick: () => navigate("/admin/"),
+            })
+
+        list.push({
             icon: <Settings />,
             name: "Configurações",
             path: "/settings",
             onClick: () => navigate("/settings/"),
-        },
-    ]
+        })
+
+        return list
+    }, [boz])
+
     return menus
 }

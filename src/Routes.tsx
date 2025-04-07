@@ -14,11 +14,12 @@ import { Bots } from "./pages/Bots/Bots"
 import { Logs } from "./pages/Logs/Logs"
 import { Departments } from "./pages/Departments/Departments"
 import { Boards } from "./pages/Boards/Boards"
+import { Admin } from "./pages/Admin/Admin"
 
 interface RoutesProps {}
 
 export const Routes: React.FC<RoutesProps> = ({}) => {
-    const { user } = useUser()
+    const { user, boz } = useUser()
 
     return user ? (
         <ReactRoutes>
@@ -31,6 +32,7 @@ export const Routes: React.FC<RoutesProps> = ({}) => {
             <Route path="/bots/*" element={<Bots />} />
             <Route path="/logs/*" element={<Logs />} />
             <Route path="/boards/*" element={<Boards />} />
+            {boz && <Route path="/admin/*" element={<Admin />} />}
             <Route path="*" element={<WildCard />} />
         </ReactRoutes>
     ) : (

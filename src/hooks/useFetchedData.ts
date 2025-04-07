@@ -1,9 +1,12 @@
 import { useEffect, useState } from "react"
 import { FetchOptions, useApi } from "./useApi"
 
-export type FetchedDataKey = "washimas" | "users" | "departments" | "boards" | "nagazaps"
+export type FetchedDataKey = "washimas" | "users" | "departments" | "boards" | "nagazaps" | "companies"
 
-export const useFetchedData = <T>(key: FetchedDataKey, options?: FetchOptions): [T[], React.Dispatch<React.SetStateAction<T[]>>] => {
+export const useFetchedData = <T>(
+    key: FetchedDataKey,
+    options?: FetchOptions
+): [T[], React.Dispatch<React.SetStateAction<T[]>>, { refresh: () => Promise<void>; loading: boolean }] => {
     const api = useApi()
 
     const [data, setData] = useState<T[]>([])
@@ -14,6 +17,7 @@ export const useFetchedData = <T>(key: FetchedDataKey, options?: FetchOptions): 
         departments: api.fetchDepartments,
         boards: api.fetchBoards,
         nagazaps: api.fetchNagazaps,
+        companies: api.admin.fetchCompanies,
     }
 
     const fetchData = async () => {
@@ -24,5 +28,5 @@ export const useFetchedData = <T>(key: FetchedDataKey, options?: FetchOptions): 
         fetchData()
     }, [key])
 
-    return [data, setData]
+    return [data, setData, { refresh: fetchData, loading: api.loading }]
 }

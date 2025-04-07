@@ -8,6 +8,7 @@ import { Chat } from "../types/server/class/Board/Chat"
 import { RoomTrigger } from "../types/server/class/Board/Room"
 import { useIo } from "./useIo"
 import { useSnackbar } from "burgos-snackbar"
+import { Company } from "../types/server/class/Company"
 
 export interface FetchOptions {
     ignoreLoading?: boolean
@@ -75,6 +76,12 @@ export const useApi = () => {
     const patchNagazap = async (data: Partial<Nagazap>, options: FetchOptions & { params: { nagazap_id: string } }): Promise<Nagazap> =>
         await patch("/nagazap", data, options)
 
+    const admin = {
+        fetchCompanies: async (options?: FetchOptions & { params?: any }) => await get("/admin/companies", options),
+        patchCompany: async (data: Partial<Company>, options: FetchOptions & { params: { company_id: string; user_id: string } }): Promise<Company> =>
+            await patch("/company", data, options),
+    }
+
     return {
         loading,
         setLoading,
@@ -88,5 +95,6 @@ export const useApi = () => {
         fetchNagaMessages,
         emitRommTrigger,
         patchNagazap,
+        admin,
     }
 }

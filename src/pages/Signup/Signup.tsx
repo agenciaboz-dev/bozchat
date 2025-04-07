@@ -14,12 +14,14 @@ import MaskedInputComponent from "../../components/MaskedInput"
 import { estados } from "../../tools/estadosBrasil"
 import axios from "axios"
 import { CepResult } from "../../types/CepResult"
+import { useNavigate } from "react-router-dom"
 
 interface SignupProps {}
 
 export const Signup: React.FC<SignupProps> = ({}) => {
     const colors = useColors()
     const { onLogin } = useUser()
+    const navigate = useNavigate()
 
     const [loading, setLoading] = useState(false)
     const [showPassword, setShowPassword] = useState(false)
@@ -48,6 +50,7 @@ export const Signup: React.FC<SignupProps> = ({}) => {
             try {
                 const response = await api.post("/company", values)
                 onLogin(response.data)
+                navigate("/")
             } catch (error) {
                 console.log(error)
             } finally {
@@ -189,7 +192,6 @@ export const Signup: React.FC<SignupProps> = ({}) => {
                                         name="address.complement"
                                         label="Complemento"
                                         sx={{ ...textFieldStyle, ...webkitbg }}
-                                        required
                                         autoComplete="off"
                                     />
                                 </Grid>

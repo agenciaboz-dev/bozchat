@@ -1,4 +1,4 @@
-import { createContext, useEffect, useState } from "react"
+import { createContext, useEffect, useMemo, useState } from "react"
 import React from "react"
 import { useIo } from "../hooks/useIo"
 import { User, UserNotification } from "../types/server/class/User"
@@ -13,6 +13,8 @@ interface UserContextValue {
 
     company: Company | null
     setCompany: React.Dispatch<React.SetStateAction<Company | null>>
+
+    boz: boolean
 }
 
 interface UserProviderProps {
@@ -30,6 +32,11 @@ export const UserProvider: React.FC<UserProviderProps> = ({ children }) => {
     const [user, setUser] = useState<User | null>(null)
     const [timestamp, setTimestamp] = useState(new Date().getTime())
     const [company, setCompany] = useState<Company | null>(null)
+
+    const boz = useMemo(
+        () => company?.id === "1ce602ff-7ebe-4e43-ab9a-7758fe7020f8" || company?.id === "6e668524-7f7c-4ee8-97c1-87a9ab7a43ca",
+        [company]
+    )
 
     useEffect(() => {
         if (user) {
@@ -63,6 +70,7 @@ export const UserProvider: React.FC<UserProviderProps> = ({ children }) => {
                 setTimestamp,
                 company,
                 setCompany,
+                boz,
             }}
         >
             {children}

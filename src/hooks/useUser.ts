@@ -7,7 +7,7 @@ import { Company } from "../types/server/class/Company"
 export const useUser = () => {
     const userContext = useContext(UserContext)
     const navigate = useNavigate()
-    const { user, setUser, setTimestamp, company, setCompany } = userContext
+    const { user, setUser, setTimestamp, company, setCompany, boz } = userContext
 
     const firstname = user?.name.split(" ")[0] || ""
 
@@ -30,5 +30,6 @@ export const useUser = () => {
         setTimestamp,
         company,
         setCompany,
+        boz,
     }
 }
