@@ -63,7 +63,7 @@ export const ChatMediaButton: React.FC<ChatMediaButtonProps> = (props) => {
 
     return (
         <Box sx={{ marginLeft: "0.5vw" }}>
-            <IconButton color="primary" onClick={() => inputRef.current?.click()}>
+            <IconButton onClick={() => inputRef.current?.click()}>
                 <Photo />
             </IconButton>
             <input type="file" ref={inputRef} style={{ display: "none" }} accept={"image/*, video/*"} onChange={handleFileChange} />

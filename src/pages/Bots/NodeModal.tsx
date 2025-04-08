@@ -161,9 +161,15 @@ export const NodeModal: React.FC<NodeModalProps> = ({ node, onClose, saveNode })
                         />
                     </Paper>
 
-                    <ChatInput data={nodeData} setData={setNodeData} isBot={node.type === "message"} />
+                    <ChatInput
+                        data={nodeData}
+                        setData={setNodeData}
+                        isBot={node.type === "message"}
+                        onSubmit={onSaveClick}
+                        disabled={nodeData?.value === node.data.value && nodeData?.media?.base64 === node.data.media?.base64}
+                    />
 
-                    <Box sx={{ justifyContent: "flex-end" }}>
+                    {/* <Box sx={{ justifyContent: "flex-end" }}>
                         <Button
                             variant="contained"
                             onClick={onSaveClick}
@@ -171,7 +177,7 @@ export const NodeModal: React.FC<NodeModalProps> = ({ node, onClose, saveNode })
                         >
                             Salvar
                         </Button>
-                    </Box>
+                    </Box> */}
                 </>
             ) : null}
         </Dialog>
