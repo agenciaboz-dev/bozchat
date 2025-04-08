@@ -1,5 +1,6 @@
 import { Prisma } from "@prisma/client";
 import { WithoutFunctions } from "../helpers";
+import { WashimaMediaForm } from "../Washima/Washima";
 import { Edge, Node, ReactFlowJsonObject } from "@xyflow/react";
 export declare const bot_include: {
     washimas: {
@@ -23,6 +24,11 @@ export interface FlowNode extends Node {
         editNode: (node: FlowNode | null) => void;
         deleteNode?: (node: FlowNode) => void;
         getChildren: (parentId: string, type?: "direct" | "recursive") => FlowNode[];
+        media?: {
+            url: string;
+            mimetype: string;
+            type: "audio" | "image" | "video" | "document";
+        };
     };
 }
 export interface FlowEdge extends Edge {
@@ -68,7 +74,7 @@ export declare class Bot {
     update(data: Partial<Bot>): Promise<void>;
     getChannels(): Promise<void>;
     delete(): Promise<void>;
-    handleIncomingMessage(message: string, chat_id: string, response: (text: string) => Promise<void>, other_bots: Bot[]): Promise<void>;
+    handleIncomingMessage(message: string, chat_id: string, response: (text: string, media?: WashimaMediaForm) => Promise<void>, other_bots: Bot[]): Promise<void>;
     getActiveChat(chat_id: string, incoming_message?: string): ActiveBot | undefined;
     newChat(chat_id: string): ActiveBot | undefined;
     getNodeChildren(nodeId: string, type?: "direct" | "recursive"): FlowNode[];
