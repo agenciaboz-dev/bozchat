@@ -1,5 +1,5 @@
 import { Prisma } from "@prisma/client";
-import { FileUpload, WithoutFunctions } from "../helpers";
+import { WithoutFunctions } from "../helpers";
 import { WashimaMediaForm } from "../Washima/Washima";
 import { Edge, Node, ReactFlowJsonObject } from "@xyflow/react";
 export declare const bot_include: {
@@ -24,10 +24,11 @@ export interface FlowNodeData {
     deleteNode?: (node: FlowNode) => void;
     getChildren: (parentId: string, type?: "direct" | "recursive") => FlowNode[];
     media?: {
-        base64: string;
+        url: string;
         mimetype: string;
         type: "audio" | "image" | "video" | "document";
-        file?: FileUpload;
+        name: string;
+        base64?: string;
     };
 }
 export interface FlowNode extends Node {
@@ -38,10 +39,11 @@ export interface FlowNode extends Node {
         deleteNode?: (node: FlowNode) => void;
         getChildren: (parentId: string, type?: "direct" | "recursive") => FlowNode[];
         media?: {
-            base64: string;
+            url: string;
             mimetype: string;
             type: "audio" | "image" | "video" | "document";
-            file?: FileUpload;
+            name: string;
+            base64?: string;
         };
     };
 }
@@ -88,7 +90,13 @@ export declare class Bot {
     update(data: Partial<Bot>): Promise<void>;
     getChannels(): Promise<void>;
     delete(): Promise<void>;
-    handleIncomingMessage(message: string, chat_id: string, response: (text: string, media?: WashimaMediaForm) => Promise<void>, other_bots: Bot[]): Promise<void>;
+    handleIncomingMessage(data: {
+        message: string;
+        chat_id: string;
+        response: (text: string, media?: WashimaMediaForm | string) => Promise<void>;
+        other_bots: Bot[];
+        platform: "nagazap" | "washima";
+    }): Promise<void>;
     getActiveChat(chat_id: string, incoming_message?: string): ActiveBot | undefined;
     newChat(chat_id: string): ActiveBot | undefined;
     getNodeChildren(nodeId: string, type?: "direct" | "recursive"): FlowNode[];
@@ -102,6 +110,5 @@ export declare class Bot {
     closeChat(chat_id: string): void;
     normalize(text: string): string;
     compareIncomingMessage(message: string, trigger?: string): string | undefined;
-    convert2base64(file: FileUpload): Promise<string>;
 }
 export {};

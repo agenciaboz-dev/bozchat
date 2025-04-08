@@ -95,7 +95,7 @@ export const NodeModal: React.FC<NodeModalProps> = ({ node, onClose, saveNode })
                         {nodeData?.media && (
                             <>
                                 {nodeData.media.type === "image" && (
-                                    <PhotoView src={`data:${nodeData.media.mimetype};base64,${nodeData.media.base64}`}>
+                                    <PhotoView src={nodeData.media.url}>
                                         <MenuItem sx={{ padding: 0, justifyContent: "center" }}>
                                             <Avatar
                                                 variant="rounded"
@@ -104,7 +104,7 @@ export const NodeModal: React.FC<NodeModalProps> = ({ node, onClose, saveNode })
                                                     height: "auto",
                                                     maxHeight: limited_size ? "15vw" : isMobile ? "80vw" : "20vw",
                                                 }}
-                                                src={`data:${nodeData.media.mimetype};base64,${nodeData.media.base64}`}
+                                                src={nodeData.media.url}
                                             />
                                         </MenuItem>
                                     </PhotoView>
@@ -112,7 +112,7 @@ export const NodeModal: React.FC<NodeModalProps> = ({ node, onClose, saveNode })
 
                                 {nodeData.media.type === "video" && (
                                     <video
-                                        src={`data:${nodeData.media.mimetype};base64,${nodeData.media.base64}`}
+                                        src={nodeData.media.url}
                                         style={{
                                             width: limited_size ? "15vw" : isMobile ? "33vw" : "20vw",
                                             height: "auto",
@@ -148,8 +148,8 @@ export const NodeModal: React.FC<NodeModalProps> = ({ node, onClose, saveNode })
                                     paddingBottom: isMobile ? "4vw" : undefined,
                                 }}
                                 media={{
-                                    source: nodeData?.media.base64,
-                                    ext: nodeData?.media.base64.split(".")[nodeData?.media.base64.split(".").length - 1],
+                                    source: nodeData?.media.url,
+                                    ext: nodeData?.media.url.split(".")[nodeData?.media.url.split(".").length - 1],
                                 }}
                                 inBoards={limited_size}
                             />

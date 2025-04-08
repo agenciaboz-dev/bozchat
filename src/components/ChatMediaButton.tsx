@@ -47,12 +47,13 @@ export const ChatMediaButton: React.FC<ChatMediaButtonProps> = (props) => {
                 const currentFile = files_array[0]
                 setCurrentFile(currentFile)
                 const base64 = await file2base64(currentFile)
-                console.log({ base64 })
                 props.setNodeData((data) => ({
                     ...data,
                     media: {
                         mimetype: currentFile.type,
                         type: currentFile?.type.split("/")[0] as "image" | "video",
+                        url: URL.createObjectURL(currentFile),
+                        name: currentFile.name,
                         base64: base64,
                     },
                 }))

@@ -58,13 +58,13 @@ export const MessageNode: React.FC<MessageNodeProps> = (node) => {
                                     objectFit: "cover",
                                     borderRadius: "100%",
                                 }}
-                                src={`data:${node.data.media.mimetype};base64,${node.data?.media.base64}`}
+                                src={node.data.media.url}
                             />
                         )}
 
                         {node.data.media.type === "video" && (
                             <video
-                                src={`data:${node.data.media.mimetype};base64,${node.data.media.base64}`}
+                                src={node.data.media.url}
                                 style={{ width: nodeWidth / 4, height: nodeWidth / 4, objectFit: "cover", borderRadius: "100%" }}
                                 autoPlay
                                 loop
@@ -102,7 +102,7 @@ export const MessageNode: React.FC<MessageNodeProps> = (node) => {
                         onClick={() => node.data.editNode(node)}
                     >
                         <Edit color="secondary" sx={{ width: 45, height: "auto" }} />
-                        Inserir texto
+                        Inserir resposta
                     </Button>
                 )}
                 <Handle type="target" position={Position.Top} />
