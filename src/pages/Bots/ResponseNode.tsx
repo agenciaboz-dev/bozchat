@@ -1,5 +1,5 @@
 import React, { useMemo, useState } from "react"
-import { Box, Button, IconButton, Menu, MenuItem, Paper, Typography } from "@mui/material"
+import { Box, Button, IconButton, Menu, MenuItem, Paper, TextField, Typography } from "@mui/material"
 import { nodeHeight, nodeWidth } from "./CustomNode"
 import { Handle, Position } from "@xyflow/react"
 import { AddCircle, Delete, Edit, EmergencyRecording } from "@mui/icons-material"
@@ -29,7 +29,7 @@ export const ResponseNode: React.FC<ResponseNodeProps> = (node) => {
                     height: nodeHeight,
                     width: nodeWidth,
                     bgcolor: "background.default",
-                    padding: 2,
+                    padding: 1,
                     position: "relative",
                     borderTopLeftRadius: 0,
                 }}
@@ -42,20 +42,27 @@ export const ResponseNode: React.FC<ResponseNodeProps> = (node) => {
                 {topHandle && <Handle type="target" position={Position.Top} />}
 
                 {node.data.value ? (
-                    <Typography
-                        sx={{
-                            color: "text.secondary",
-                            fontWeight: "bold",
-                            whiteSpace: "pre-wrap",
-                            maxHeight: nodeHeight,
-                            overflow: "scroll",
-                            margin: -2,
-                            padding: 2,
-                        }}
-                    >
-                        {node.data.value}
-                    </Typography>
+                    <TextField
+                        value={node.data.value}
+                        multiline
+                        InputProps={{ sx: { fontSize: "0.8rem", padding: 1, color: "secondary.main" }, readOnly: true }}
+                        inputProps={{ style: { cursor: "grab" } }}
+                        rows={5}
+                    />
                 ) : (
+                    // <Typography
+                    //     sx={{
+                    //         color: "text.secondary",
+                    //         fontWeight: "bold",
+                    //         whiteSpace: "pre-wrap",
+                    //         maxHeight: nodeHeight,
+                    //         overflow: "scroll",
+                    //         margin: -2,
+                    //         padding: 2,
+                    //     }}
+                    // >
+                    //     {node.data.value}
+                    // </Typography>
                     <Button
                         color="secondary"
                         sx={{ alignItems: "center", gap: 0.5, flexDirection: "column", margin: "0 -1vw", height: "100%" }}
