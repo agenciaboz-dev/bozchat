@@ -51,7 +51,7 @@ export const NodeModal: React.FC<NodeModalProps> = ({ node, onClose, saveNode })
     }, [inputRef.current])
 
     return (
-        <Dialog open={!!node} onClose={onClose} PaperProps={{ sx: { bgcolor: "background.default", padding: "2vw", gap: "1vw", minWidth: "30vw" } }}>
+        <Dialog open={!!node} onClose={onClose} PaperProps={{ sx: { bgcolor: "background.default", padding: "1vw", gap: "1vw", minWidth: "30vw" } }}>
             {node ? (
                 <>
                     <Box sx={{ alignItems: "center", justifyContent: "space-between" }}>
