@@ -1,5 +1,5 @@
 import React from "react"
-import { Box, Chip, Tooltip, Typography } from "@mui/material"
+import { Box, Chip, CircularProgress, Tooltip, Typography } from "@mui/material"
 import { Hub, WhatsApp } from "@mui/icons-material"
 import { Washima } from "../../types/server/class/Washima/Washima"
 import { Nagazap } from "../../types/server/class/Nagazap"
@@ -11,7 +11,13 @@ interface IntegrationChipProps {
 }
 
 export const IntegrationChip: React.FC<IntegrationChipProps> = (props) => {
-    const Icon = props.washima ? <WhatsApp color="success" /> : <Hub color="success" />
+    const Icon = props.washima ? (
+        <WhatsApp color="success" />
+    ) : props.nagazap ? (
+        <Hub color="success" />
+    ) : (
+        <CircularProgress size={"1rem"} color="primary" sx={{}} />
+    )
     const name = props.washima ? props.washima.name : props.nagazap?.displayName
 
     const IntegrationName = () => (

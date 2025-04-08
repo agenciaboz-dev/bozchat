@@ -60,7 +60,7 @@ export const useApi = () => {
         io.emit(`board:room:chat:${direction === "in" ? "clone" : "remove"}`, chat, trigger)
         snackbar({
             severity: "info",
-            text: direction === "in" ? `Sala copiada para ${trigger.board_name}` : `Sala removida de ${trigger.board_name}`,
+            text: direction === "in" ? `Conversa copiada para ${trigger.board_name}` : `Conversa removida de ${trigger.board_name}`,
         })
     }
 
