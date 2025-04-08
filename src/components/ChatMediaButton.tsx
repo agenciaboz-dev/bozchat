@@ -2,10 +2,12 @@ import React, { useCallback, useMemo, useRef, useState } from "react"
 import { Box, Dialog, IconButton } from "@mui/material"
 import { Close, Photo } from "@mui/icons-material"
 import { useSnackbar } from "burgos-snackbar"
+import { FlowNodeData } from "../types/server/class/Bot/Bot"
+import { file2base64 } from "../tools/toBase64"
 
 interface ChatMediaButtonProps {
-    currentFile: File | null
-    setCurrentFile: React.Dispatch<React.SetStateAction<File | null>>
+    nodeData?: FlowNodeData
+    setNodeData: React.Dispatch<React.SetStateAction<FlowNodeData>>
 }
 
 const isMkv = (file: File) => {
@@ -17,12 +19,14 @@ export const ChatMediaButton: React.FC<ChatMediaButtonProps> = (props) => {
     const inputRef = useRef<HTMLInputElement>(null)
     const { snackbar } = useSnackbar()
 
+    const [currentFile, setCurrentFile] = useState<File | null>(null)
+
     const [showingMediaChooser, setShowingMediaChooser] = useState(false)
-    const type = useMemo(() => props.currentFile?.type.split("/")[0], [props.currentFile])
-    const url = useMemo(() => (props.currentFile ? URL.createObjectURL(props.currentFile) : ""), [props.currentFile])
+    const type = useMemo(() => currentFile?.type.split("/")[0], [currentFile])
+    const url = useMemo(() => (currentFile ? URL.createObjectURL(currentFile) : ""), [currentFile])
 
     const resetMediaChooser = () => {
-        props.setCurrentFile(null)
+        setCurrentFile(null)
     }
 
     const closeMediaModal = () => {
@@ -30,7 +34,7 @@ export const ChatMediaButton: React.FC<ChatMediaButtonProps> = (props) => {
         setShowingMediaChooser(false)
     }
 
-    const handleFileChange = useCallback((event: React.ChangeEvent<HTMLInputElement>) => {
+    const handleFileChange = useCallback(async (event: React.ChangeEvent<HTMLInputElement>) => {
         const files = event.target.files
 
         if (files) {
@@ -40,14 +44,25 @@ export const ChatMediaButton: React.FC<ChatMediaButtonProps> = (props) => {
             }
 
             if (files_array.length > 0) {
-                props.setCurrentFile(files_array[0])
+                const currentFile = files_array[0]
+                setCurrentFile(currentFile)
+                const base64 = await file2base64(currentFile)
+                console.log({ base64 })
+                props.setNodeData((data) => ({
+                    ...data,
+                    media: {
+                        mimetype: currentFile.type,
+                        type: currentFile?.type.split("/")[0] as "image" | "video",
+                        base64: base64,
+                    },
+                }))
             }
         }
     }, [])
 
     return (
         <Box sx={{ marginLeft: "0.5vw" }}>
-            <IconButton color="primary" onClick={() => setShowingMediaChooser(true)}>
+            <IconButton color="primary" onClick={() => inputRef.current?.click()}>
                 <Photo />
             </IconButton>
             <input type="file" ref={inputRef} style={{ display: "none" }} accept={"image/*, video/*"} onChange={handleFileChange} />

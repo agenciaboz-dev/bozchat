@@ -1,5 +1,5 @@
 import React, { useMemo, useState } from "react"
-import { Box, Button, IconButton, Menu, MenuItem, Paper, TextField, Typography } from "@mui/material"
+import { Avatar, Box, Button, IconButton, Menu, MenuItem, Paper, TextField, Typography } from "@mui/material"
 import { AddCircle, Delete, Edit } from "@mui/icons-material"
 import { nodeHeight, nodeWidth } from "./CustomNode"
 import { Handle, Position } from "@xyflow/react"
@@ -7,6 +7,7 @@ import { TrianguloFudido } from "../Zap/TrianguloFudido"
 import { NodeModal } from "./NodeModal"
 import { FlowNode } from "../../types/server/class/Bot/Bot"
 import { useDarkMode } from "../../hooks/useDarkMode"
+import { PhotoView } from "react-photo-view"
 
 interface MessageNodeProps extends FlowNode {}
 
@@ -37,7 +38,7 @@ export const MessageNode: React.FC<MessageNodeProps> = (node) => {
                     height: nodeHeight,
                     width: nodeWidth,
                     bgcolor: bgcolor,
-                    padding: 2,
+                    padding: 1,
                     position: "relative",
                     borderTopRightRadius: 0,
                 }}
@@ -46,28 +47,62 @@ export const MessageNode: React.FC<MessageNodeProps> = (node) => {
                 onMouseLeave={() => setMouseOver(false)}
             >
                 <TrianguloFudido alignment="right" color={darkMode ? "#287793" : "#0f6787"} />
+                {node.data.media && (
+                    <Paper sx={{ position: "absolute", top: -(nodeWidth / 8), left: -(nodeWidth / 8), borderRadius: "100%", pointerEvents: "none" }}>
+                        {node.data?.media?.type === "image" && (
+                            <Avatar
+                                variant="rounded"
+                                sx={{
+                                    width: nodeWidth / 4,
+                                    height: nodeWidth / 4,
+                                    objectFit: "cover",
+                                    borderRadius: "100%",
+                                }}
+                                src={`data:${node.data.media.mimetype};base64,${node.data?.media.base64}`}
+                            />
+                        )}
+
+                        {node.data.media.type === "video" && (
+                            <video
+                                src={`data:${node.data.media.mimetype};base64,${node.data.media.base64}`}
+                                style={{ width: nodeWidth / 4, height: nodeWidth / 4, objectFit: "cover", borderRadius: "100%" }}
+                                autoPlay
+                                loop
+                                muted
+                            />
+                        )}
+                    </Paper>
+                )}
                 {node.data.value ? (
-                    <Typography
-                        sx={{
-                            color: "secondary.main",
-                            fontWeight: "bold",
-                            whiteSpace: "pre-wrap",
-                            maxHeight: nodeHeight,
-                            overflow: "scroll",
-                            margin: -2,
-                            padding: 2,
-                        }}
-                    >
-                        {node.data.value}
-                    </Typography>
+                    <TextField
+                        value={node.data.value}
+                        multiline
+                        InputProps={{ sx: { fontSize: "0.8rem", padding: 1, color: "secondary.main" }, readOnly: true }}
+                        inputProps={{ style: { cursor: "grab" } }}
+                        rows={5}
+                    />
                 ) : (
+                    // <Typography
+                    //     sx={{
+                    //         color: "secondary.main",
+                    //         fontWeight: "bold",
+                    //         whiteSpace: "pre-wrap",
+                    //         maxHeight: nodeHeight,
+                    //         overflow: "scroll",
+                    //         // fontSize: "0.8rem",
+                    //         margin: -2,
+                    //         padding: 2,
+                    //     }}
+                    // >
+                    //     {node.data.value}
+                    // </Typography>
                     <Button
                         color="secondary"
                         sx={{ alignItems: "center", gap: 0.5, flexDirection: "column" }}
                         onClick={() => node.data.editNode(node)}
                     >
                         <Edit color="secondary" sx={{ width: 45, height: "auto" }} />
-                        Insira um valor
+                        Inserir texto
                     </Button>
                 )}
                 <Handle type="target" position={Position.Top} />

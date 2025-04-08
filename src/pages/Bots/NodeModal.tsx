@@ -1,7 +1,7 @@
 import React, { useEffect, useRef, useState } from "react"
 import { Avatar, Box, Button, Dialog, IconButton, MenuItem, Paper, TextField, Typography, useMediaQuery } from "@mui/material"
-import { Close } from "@mui/icons-material"
-import { FlowNode } from "../../types/server/class/Bot/Bot"
+import { Close, Delete } from "@mui/icons-material"
+import { FlowNode, FlowNodeData } from "../../types/server/class/Bot/Bot"
 import { useDarkMode } from "../../hooks/useDarkMode"
 import { PhotoView } from "react-photo-view"
 import { AudioPlayer } from "../Washima/AudioComponents/AudioPlayer"
@@ -11,7 +11,7 @@ import { ChatInput } from "../../components/ChatInput"
 interface NodeModalProps {
     node: FlowNode | null
     onClose: () => void
-    saveNode: (node_id: string, value: string) => void
+    saveNode: (node_id: string, value: FlowNodeData) => void
 }
 
 export const NodeModal: React.FC<NodeModalProps> = ({ node, onClose, saveNode }) => {
@@ -26,18 +26,22 @@ export const NodeModal: React.FC<NodeModalProps> = ({ node, onClose, saveNode })
 
     const limited_size = true
 
-    const [nodeValue, setNodeValue] = useState(node?.data.value)
+    const [nodeData, setNodeData] = useState(node?.data)
 
     const onSaveClick = () => {
-        if (!node || (node.type !== "response" && !nodeValue) || nodeValue === undefined) return
+        if (!node || (node.type !== "response" && !nodeData) || nodeData === undefined) return
 
-        saveNode(node.id, nodeValue)
+        saveNode(node.id, nodeData)
 
         onClose()
     }
 
+    const removeMedia = () => {
+        setNodeData((data) => ({ ...data!, media: undefined }))
+    }
+
     useEffect(() => {
-        setNodeValue(node?.data.value)
+        setNodeData(node?.data)
     }, [node])
 
     useEffect(() => {
@@ -88,20 +92,42 @@ export const NodeModal: React.FC<NodeModalProps> = ({ node, onClose, saveNode })
                             margin: isMobile ? "1vw 0" : undefined,
                         }}
                     >
-                        {node.data.media?.type === "image" && (
-                            <PhotoView src={node.data.media.url}>
-                                <MenuItem sx={{ padding: 0, justifyContent: "center" }}>
-                                    <Avatar
-                                        variant="rounded"
-                                        sx={{
+                        {nodeData?.media && (
+                            <>
+                                {nodeData.media.type === "image" && (
+                                    <PhotoView src={`data:${nodeData.media.mimetype};base64,${nodeData.media.base64}`}>
+                                        <MenuItem sx={{ padding: 0, justifyContent: "center" }}>
+                                            <Avatar
+                                                variant="rounded"
+                                                sx={{
+                                                    width: limited_size ? "15vw" : isMobile ? "33vw" : "20vw",
+                                                    height: "auto",
+                                                    maxHeight: limited_size ? "15vw" : isMobile ? "80vw" : "20vw",
+                                                }}
+                                                src={`data:${nodeData.media.mimetype};base64,${nodeData.media.base64}`}
+                                            />
+                                        </MenuItem>
+                                    </PhotoView>
+                                )}
+
+                                {nodeData.media.type === "video" && (
+                                    <video
+                                        src={`data:${nodeData.media.mimetype};base64,${nodeData.media.base64}`}
+                                        style={{
                                             width: limited_size ? "15vw" : isMobile ? "33vw" : "20vw",
                                             height: "auto",
                                             maxHeight: limited_size ? "15vw" : isMobile ? "80vw" : "20vw",
                                         }}
-                                        src={node.data.media.url}
+                                        controls
                                     />
-                                </MenuItem>
-                            </PhotoView>
+                                )}
+
+                                <Box sx={{ position: "absolute", top: 0, right: 0 }}>
+                                    <IconButton onClick={removeMedia}>
+                                        <Delete color="error" />
+                                    </IconButton>
+                                </Box>
+                            </>
                         )}
                         <Typography
                             color="#fff"
@@ -112,18 +138,18 @@ export const NodeModal: React.FC<NodeModalProps> = ({ node, onClose, saveNode })
                                 maxWidth: isMobile ? "100%" : "15vw",
                             }}
                         >
-                            {nodeValue}
+                            {nodeData?.value}
                         </Typography>
 
-                        {node.data.media?.type === "audio" && (
+                        {nodeData?.media?.type === "audio" && (
                             <AudioPlayer
                                 containerSx={{
                                     height: isMobile ? undefined : "3vw",
                                     paddingBottom: isMobile ? "4vw" : undefined,
                                 }}
                                 media={{
-                                    source: node.data.media.url,
-                                    ext: node.data.media.url.split(".")[node.data.media.url.split(".").length - 1],
+                                    source: nodeData?.media.base64,
+                                    ext: nodeData?.media.base64.split(".")[nodeData?.media.base64.split(".").length - 1],
                                 }}
                                 inBoards={limited_size}
                             />
@@ -135,10 +161,14 @@ export const NodeModal: React.FC<NodeModalProps> = ({ node, onClose, saveNode })
                         />
                     </Paper>
 
-                    {node.type === "message" && <ChatInput value={nodeValue || ""} setValue={setNodeValue} />}
+                    <ChatInput data={nodeData} setData={setNodeData} isBot={node.type === "message"} />
 
                     <Box sx={{ justifyContent: "flex-end" }}>
-                        <Button variant="contained" onClick={onSaveClick} disabled={nodeValue === node.data.value}>
+                        <Button
+                            variant="contained"
+                            onClick={onSaveClick}
+                            disabled={nodeData?.value === node.data.value && nodeData?.media?.base64 === node.data.media?.base64}
+                        >
                             Salvar
                         </Button>
                     </Box>

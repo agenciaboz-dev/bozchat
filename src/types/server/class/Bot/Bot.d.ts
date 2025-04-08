@@ -1,5 +1,5 @@
 import { Prisma } from "@prisma/client";
-import { WithoutFunctions } from "../helpers";
+import { FileUpload, WithoutFunctions } from "../helpers";
 import { WashimaMediaForm } from "../Washima/Washima";
 import { Edge, Node, ReactFlowJsonObject } from "@xyflow/react";
 export declare const bot_include: {
@@ -17,6 +17,19 @@ export declare const bot_include: {
 type BotPrisma = Prisma.BotGetPayload<{
     include: typeof bot_include;
 }>;
+export interface FlowNodeData {
+    onAddChild: (type: "message" | "response") => void;
+    value: string;
+    editNode: (node: FlowNode | null) => void;
+    deleteNode?: (node: FlowNode) => void;
+    getChildren: (parentId: string, type?: "direct" | "recursive") => FlowNode[];
+    media?: {
+        base64: string;
+        mimetype: string;
+        type: "audio" | "image" | "video" | "document";
+        file?: FileUpload;
+    };
+}
 export interface FlowNode extends Node {
     data: {
         onAddChild: (type: "message" | "response") => void;
@@ -25,9 +38,10 @@ export interface FlowNode extends Node {
         deleteNode?: (node: FlowNode) => void;
         getChildren: (parentId: string, type?: "direct" | "recursive") => FlowNode[];
         media?: {
-            url: string;
+            base64: string;
             mimetype: string;
             type: "audio" | "image" | "video" | "document";
+            file?: FileUpload;
         };
     };
 }
@@ -79,11 +93,15 @@ export declare class Bot {
     newChat(chat_id: string): ActiveBot | undefined;
     getNodeChildren(nodeId: string, type?: "direct" | "recursive"): FlowNode[];
     getAnsweredNode(node_id: string, incoming_message: string): FlowNode | undefined;
-    advanceChat(chat: ActiveBot, incoming_message: string): string[];
+    advanceChat(chat: ActiveBot, incoming_message: string): FlowNodeData[] | {
+        value: string;
+        media: undefined;
+    }[];
     getNextNode(node_id: string): FlowNode | undefined;
     save(): Promise<void>;
     closeChat(chat_id: string): void;
     normalize(text: string): string;
     compareIncomingMessage(message: string, trigger?: string): string | undefined;
+    convert2base64(file: FileUpload): Promise<string>;
 }
 export {};

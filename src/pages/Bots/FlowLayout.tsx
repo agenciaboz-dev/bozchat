@@ -19,7 +19,7 @@ import dagre, { layout } from "@dagrejs/dagre"
 
 import "@xyflow/react/dist/style.css"
 import { CustomNodeComponent, nodeHeight, nodeWidth } from "./CustomNode"
-import { Bot, FlowEdge, FlowNode } from "../../types/server/class/Bot/Bot"
+import { Bot, FlowEdge, FlowNode, FlowNodeData } from "../../types/server/class/Bot/Bot"
 import { api } from "../../api"
 import { useUser } from "../../hooks/useUser"
 import { WagaLoading } from "../../components/WagaLoading"
@@ -40,8 +40,6 @@ interface FlowLayoutProps {
     undoToInstance: ReactFlowJsonObject<Node, Edge> | null
     setUndoToInstance: React.Dispatch<React.SetStateAction<ReactFlowJsonObject<Node, Edge> | null>>
 }
-
-
 
 const viewport_duration = 800
 
@@ -231,14 +229,14 @@ export const FlowLayout: React.FC<FlowLayoutProps> = ({ bot_id, botInstances, se
         }
     }
 
-    const onEditNode = (node_id: string, value: string) => {
+    const onEditNode = (node_id: string, data: FlowNodeData) => {
         if (instance.current) {
             //this is just for the undo function
             const flow = instance.current.toObject()
             setBotInstances((instances) => [...instances, flow])
         }
 
-        const updatedNodes = nodes.map((n) => (n.id === node_id ? { ...n, data: { ...n.data, value: value } } : n))
+        const updatedNodes = nodes.map((n) => (n.id === node_id ? { ...n, data: { ...n.data, value: data.value, media: data.media } } : n))
         console.log({ updatedNodes })
         setNodes(updatedNodes)
         onSave()
