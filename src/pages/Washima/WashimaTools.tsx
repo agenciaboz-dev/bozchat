@@ -96,7 +96,7 @@ export const WashimaTools: React.FC<WashimaToolsProps> = ({ washima, fetchingMes
             </Box>
             <Box sx={{ gap: "1vw", alignItems: "center" }}>
                 <Typography>Sincronizar mensagens</Typography>
-                {fetchingMessages && <CircularProgress />}
+                {fetchingMessages && <CircularProgress color="inherit" />}
             </Box>
             <SyncMessagesContainer washima={washima} syncing={fetchingMessages} onSyncPress={onSyncMessages} />
         </Box>
