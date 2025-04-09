@@ -104,7 +104,9 @@ export declare class Board {
         room: number;
         chat: number;
     };
-    getChat(chat_id: string): Chat | undefined;
+    getChatByPlatform(platform: "nagazap" | "washima", platform_id: string, plataform_chat_identifier: string): Chat | undefined;
+    getChatByPhone(phone: string): Chat | undefined;
+    getChatById(chat_id: string): Chat | undefined;
     removeChat(chat_id: string): void;
     transferChat(data: TransferChatForm): Promise<void>;
     getRoom(room_id: string): Room;

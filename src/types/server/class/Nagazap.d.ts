@@ -40,9 +40,14 @@ export declare const nagazap_include: {
 export type NagazapPrisma = Prisma.NagazapGetPayload<{
     include: typeof nagazap_include;
 }>;
+export interface NagazapMediaForm {
+    url: string;
+    type: "image" | "video" | "audio" | "document";
+}
 export interface NagazapResponseForm {
     number: string;
     text: string;
+    media?: NagazapMediaForm;
 }
 interface BuildHeadersOptions {
     upload?: boolean;

@@ -237,7 +237,9 @@ export const FlowLayout: React.FC<FlowLayoutProps> = ({ bot_id, botInstances, se
             setBotInstances((instances) => [...instances, flow])
         }
 
-        const updatedNodes = nodes.map((n) => (n.id === node_id ? { ...n, data: { ...n.data, value: data.value, media: data.media } } : n))
+        const updatedNodes = nodes.map((n) =>
+            n.id === node_id ? { ...n, data: { ...n.data, value: data.value, media: data.media, actions: data.actions } } : n
+        )
         console.log({ updatedNodes })
         setNodes(updatedNodes)
         onSave()

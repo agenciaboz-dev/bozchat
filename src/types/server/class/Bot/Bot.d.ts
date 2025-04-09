@@ -2,6 +2,8 @@ import { Prisma } from "@prisma/client";
 import { WithoutFunctions } from "../helpers";
 import { WashimaMediaForm } from "../Washima/Washima";
 import { Edge, Node, ReactFlowJsonObject } from "@xyflow/react";
+import { NagazapMediaForm } from "../Nagazap";
+import { NodeAction } from "./NodeAction";
 export declare const bot_include: {
     washimas: {
         select: {
@@ -18,6 +20,7 @@ type BotPrisma = Prisma.BotGetPayload<{
     include: typeof bot_include;
 }>;
 export interface FlowNodeData {
+    [key: string]: any;
     onAddChild: (type: "message" | "response") => void;
     value: string;
     editNode: (node: FlowNode | null) => void;
@@ -30,22 +33,10 @@ export interface FlowNodeData {
         name: string;
         base64?: string;
     };
+    actions?: NodeAction[];
 }
 export interface FlowNode extends Node {
-    data: {
-        onAddChild: (type: "message" | "response") => void;
-        value: string;
-        editNode: (node: FlowNode | null) => void;
-        deleteNode?: (node: FlowNode) => void;
-        getChildren: (parentId: string, type?: "direct" | "recursive") => FlowNode[];
-        media?: {
-            url: string;
-            mimetype: string;
-            type: "audio" | "image" | "video" | "document";
-            name: string;
-            base64?: string;
-        };
-    };
+    data: FlowNodeData;
 }
 export interface FlowEdge extends Edge {
     type?: string;
@@ -64,6 +55,14 @@ export interface PendingResponse {
     timestamp: number;
     chat_id: string;
     bot: Bot;
+}
+export interface BotMessageForm {
+    message: string;
+    chat_id: string;
+    response: (text: string, media?: WashimaMediaForm | NagazapMediaForm) => Promise<void>;
+    other_bots: Bot[];
+    platform: "nagazap" | "washima";
+    platform_id: string;
 }
 export declare class Bot {
     id: string;
@@ -90,13 +89,7 @@ export declare class Bot {
     update(data: Partial<Bot>): Promise<void>;
     getChannels(): Promise<void>;
     delete(): Promise<void>;
-    handleIncomingMessage(data: {
-        message: string;
-        chat_id: string;
-        response: (text: string, media?: WashimaMediaForm | string) => Promise<void>;
-        other_bots: Bot[];
-        platform: "nagazap" | "washima";
-    }): Promise<void>;
+    handleIncomingMessage(data: BotMessageForm): Promise<void>;
     getActiveChat(chat_id: string, incoming_message?: string): ActiveBot | undefined;
     newChat(chat_id: string): ActiveBot | undefined;
     getNodeChildren(nodeId: string, type?: "direct" | "recursive"): FlowNode[];
@@ -104,6 +97,7 @@ export declare class Bot {
     advanceChat(chat: ActiveBot, incoming_message: string): FlowNodeData[] | {
         value: string;
         media: undefined;
+        actions: undefined;
     }[];
     getNextNode(node_id: string): FlowNode | undefined;
     save(): Promise<void>;

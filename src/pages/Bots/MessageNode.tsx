@@ -1,5 +1,5 @@
 import React, { useMemo, useState } from "react"
-import { Avatar, Box, Button, IconButton, Menu, MenuItem, Paper, TextField, Typography } from "@mui/material"
+import { Avatar, Box, Button, Chip, IconButton, Menu, MenuItem, Paper, TextField, Typography } from "@mui/material"
 import { AddCircle, Delete, Edit } from "@mui/icons-material"
 import { nodeHeight, nodeWidth } from "./CustomNode"
 import { Handle, Position } from "@xyflow/react"
@@ -146,6 +146,15 @@ export const MessageNode: React.FC<MessageNodeProps> = (node) => {
                     <MenuItem onClick={() => addNode("response")}>Interação do usuário</MenuItem>
                 </Menu>
             </Paper>
+            {node.data.actions && node.data.actions.length > 0 && (
+                <Chip
+                    color="warning"
+                    size="small"
+                    label={`${node.data.actions.length} ${node.data.actions.length === 1 ? "ação" : "ações"}`}
+                    sx={{ position: "absolute", bottom: -30, padding: "0 0.5vw" }}
+                    onClick={() => node.data.editNode(node)}
+                />
+            )}
             <Typography sx={{ position: "absolute", top: -10, right: -35, color: "text.disabled" }}>Bot</Typography>
         </>
     )
