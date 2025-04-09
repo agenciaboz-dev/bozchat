@@ -371,6 +371,7 @@ export const FlowLayout: React.FC<FlowLayoutProps> = ({ bot_id, botInstances, se
     }, [setNodes, setEdges, edges])
 
     useEffect(() => {
+        setEditingNode(null)
         if (bot) {
             const restoreFlow = async () => {
                 const flow = bot.instance
