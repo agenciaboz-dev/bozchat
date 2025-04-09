@@ -7,6 +7,7 @@ import { PhotoView } from "react-photo-view"
 import { AudioPlayer } from "../Washima/AudioComponents/AudioPlayer"
 import { TrianguloFudido } from "../Zap/TrianguloFudido"
 import { ChatInput } from "../../components/ChatInput"
+import { useSnackbar } from "burgos-snackbar"
 
 interface NodeDrawerProps {
     node: FlowNode | null
@@ -24,6 +25,7 @@ export const NodeDrawer: React.FC<NodeDrawerProps> = ({ node, onClose, saveNode 
     const inputRef = useRef<HTMLInputElement>(null)
     const isMobile = useMediaQuery("(orientation: portrait)")
     const darkMode = useDarkMode()
+    const { snackbar } = useSnackbar()
 
     const lightModePrimary = "#99dff9"
     const lightModeSecondary = "#D9D9D9"
@@ -38,8 +40,7 @@ export const NodeDrawer: React.FC<NodeDrawerProps> = ({ node, onClose, saveNode 
         if (!node || (node.type !== "response" && !nodeData) || nodeData === undefined) return
 
         saveNode(node.id, nodeData)
-
-        onClose()
+        snackbar({ severity: "success", text: "Salvo" })
     }
 
     const removeMedia = () => {
@@ -69,7 +70,7 @@ export const NodeDrawer: React.FC<NodeDrawerProps> = ({ node, onClose, saveNode 
                         </IconButton>
                     </Box>
 
-                    <Box sx={{ flexDirection: "column", gap: "1vw",  }}>
+                    <Box sx={{ flexDirection: "column", gap: "1vw" }}>
                         <Box
                             sx={{
                                 flexDirection: "column",
@@ -77,8 +78,8 @@ export const NodeDrawer: React.FC<NodeDrawerProps> = ({ node, onClose, saveNode 
                                 padding: "1vw",
                                 borderRadius: "0.5vw",
                                 gap: "1vw",
-                                overflow: 'auto',
-                                height: '80vh'
+                                overflow: "auto",
+                                height: "80vh",
                             }}
                         >
                             <TextInfo>Escreva abaixo, no campo de mensagem, a resposta do bot ao usuário.</TextInfo>
