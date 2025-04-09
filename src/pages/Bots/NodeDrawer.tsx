@@ -82,9 +82,18 @@ export const NodeDrawer: React.FC<NodeDrawerProps> = ({ node, onClose, saveNode 
                                 height: "80vh",
                             }}
                         >
-                            <TextInfo>Escreva abaixo, no campo de mensagem, a resposta do bot ao usuário.</TextInfo>
-                            <TextInfo>Utilize o botão à esquerda inferior para enviar mídias (imagens, documentos, etc).</TextInfo>
-                            <TextInfo>Para ajustar configurações avançadas acesse as abas superiores.</TextInfo>
+                            {node.type === "message" ? (
+                                <>
+                                    <TextInfo>Escreva abaixo, no campo de mensagem, a resposta do bot ao usuário.</TextInfo>
+                                    <TextInfo>Utilize o botão à esquerda inferior para enviar mídias (imagens, documentos, etc).</TextInfo>
+                                    {/* <TextInfo>Para ajustar configurações avançadas acesse as abas superiores.</TextInfo> */}
+                                </>
+                            ) : (
+                                <>
+                                    <TextInfo>Escreva abaixo, no campo de mensagem, as opções de resposta.</TextInfo>
+                                    <TextInfo>Essas respostas são os gatilhos que ativarão a próxima resposta do bot.</TextInfo>
+                                </>
+                            )}
                             <Paper
                                 elevation={0}
                                 sx={{
