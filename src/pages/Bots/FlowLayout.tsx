@@ -29,6 +29,7 @@ import { MessageNode } from "./MessageNode"
 import { NodeModal } from "./NodeModal"
 import { useTheme } from "../../hooks/useTheme"
 import { uid } from "uid"
+import { NodeDrawer } from "./NodeDrawer"
 
 const position = { x: 0, y: 0 }
 const edgeType = "smoothstep"
@@ -463,7 +464,7 @@ export const FlowLayout: React.FC<FlowLayoutProps> = ({ bot_id, botInstances, se
             minZoom={0}
         >
             <Background size={1} />
-            <NodeModal node={editingNode} onClose={() => setEditingNode(null)} saveNode={onEditNode} />
+            <NodeDrawer node={editingNode} onClose={() => setEditingNode(null)} saveNode={onEditNode} />
         </ReactFlow>
     )
 }

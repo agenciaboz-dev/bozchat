@@ -47,7 +47,7 @@ export const ChatInput: React.FC<ChatInputProps> = (props) => {
                 onChange={(ev) => props.setData((data) => ({ ...data, value: ev.target.value }))}
                 sx={textFieldStyle({ darkMode })}
                 multiline
-                maxRows={3}
+                maxRows={1}
                 autoComplete="off"
                 InputProps={{
                     sx: { color: "primary.main", bgcolor: "background.default", padding: 1, paddingLeft: props.isBot ? 0 : 2, paddingRight: 0 },
