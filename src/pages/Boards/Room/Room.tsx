@@ -1,5 +1,5 @@
 import React, { useMemo, useState } from "react"
-import { Box, Chip, IconButton, Menu, MenuItem, Paper, TextField, Tooltip, Typography } from "@mui/material"
+import { Box, Chip, IconButton, Menu, MenuItem, Paper, TextField, Tooltip, Typography, useMediaQuery } from "@mui/material"
 import { Room } from "../../../types/server/class/Board/Room"
 import { BoardChat } from "../Chat/Chat"
 import { Droppable } from "@hello-pangea/dnd"
@@ -33,6 +33,7 @@ interface KanbanColumnProps {
 }
 
 export const BoardRoom: React.FC<KanbanColumnProps> = (props) => {
+    const isMobile = useMediaQuery("(orientation: portrait)")
     const { user, company } = useUser()
     const { snackbar } = useSnackbar()
     const { confirm } = useConfirmDialog()
@@ -111,7 +112,7 @@ export const BoardRoom: React.FC<KanbanColumnProps> = (props) => {
             arrow
             placement="top"
             title={
-                <Box sx={{ padding: "0.5vw" }}>
+                <Box sx={{ padding: isMobile ? "5vw" : "0.5vw" }}>
                     <TextField
                         label="Filtrar"
                         placeholder="nome ou telefone"
@@ -123,11 +124,19 @@ export const BoardRoom: React.FC<KanbanColumnProps> = (props) => {
             }
             open={showSearchBar}
         >
-            <Paper sx={{ flexDirection: "column", width: "25vw", padding: "1vw", gap: "1vw", height: "max-content" }}>
+            <Paper
+                sx={{
+                    flexDirection: "column",
+                    width: isMobile ? "90vw" : "25vw",
+                    padding: isMobile ? "5vw" : "1vw",
+                    gap: isMobile ? "5vw" : "1vw",
+                    height: "max-content",
+                }}
+            >
                 {props.editMode ? (
-                    <Box sx={{ flexDirection: "column", marginBottom: "0.2vw" }}>
+                    <Box sx={{ flexDirection: "column", marginBottom: isMobile ? "2vw" : "0.2vw" }}>
                         <Box sx={{ justifyContent: "space-between" }}>
-                            <Box sx={{ alignItems: "center", gap: "1vw", flexWrap: "wrap" }}>
+                            <Box sx={{ alignItems: "center", gap: isMobile ? "2vw" : "1vw", flexWrap: "wrap" }}>
                                 <Chip label={props.index + 1} color="primary" />
                                 {props.room.entry_point && <EntryRoomIcon />}
                                 {syncedIntegrations}
@@ -139,13 +148,15 @@ export const BoardRoom: React.FC<KanbanColumnProps> = (props) => {
                         <RoomNameInput onSubmit={(name) => editRoomName(props.index, name)} currentName={props.room.name} />
                     </Box>
                 ) : (
-                    <Box sx={{ alignItems: "center", gap: "0.5vw" }}>
+                    <Box sx={{ alignItems: "center", gap: isMobile ? "2vw" : "0.5vw" }}>
                         <Typography sx={{ color: "text.secondary", fontWeight: "bold" }}>{props.room.name}</Typography>
                         <Tooltip title={`existem ${props.room.chats.length} conversas nesta sala`} arrow>
                             <Chip label={`${props.room.chats.length}`} size="small" color="primary" />
                         </Tooltip>
                         {props.room.entry_point && <EntryRoomIcon />}
-                        <Box sx={{ flexWrap: "wrap", alignItems: "center", gap: "0.5vw" }}>{!!props.washimas.length && syncedIntegrations}</Box>
+                        <Box sx={{ flexWrap: "wrap", alignItems: "center", gap: isMobile ? "2vw" : "0.5vw" }}>
+                            {!!props.washimas.length && syncedIntegrations}
+                        </Box>
                         <SearchIcon setShowSearchBar={setShowSearchBar} showSearchBar={showSearchBar} />
                     </Box>
                 )}
@@ -157,7 +168,7 @@ export const BoardRoom: React.FC<KanbanColumnProps> = (props) => {
                             {...provided.droppableProps}
                             sx={{
                                 flexDirection: "column",
-                                gap: "1vw",
+                                gap: isMobile ? "5vw" : "1vw",
                                 flex: 1,
                                 opacity: props.editMode ? 0.45 : 1,
                                 pointerEvents: props.editMode ? "none" : undefined,

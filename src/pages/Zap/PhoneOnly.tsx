@@ -1,13 +1,14 @@
 import React from "react"
-import { Box } from "@mui/material"
+import { Box, useMediaQuery } from "@mui/material"
 import { Warning } from "@mui/icons-material"
 
 interface PhoneOnlyProps {}
 
 export const PhoneOnly: React.FC<PhoneOnlyProps> = (props) => {
+    const isMobile = useMediaQuery("(orientation: portrait)")
     return (
-        <Box sx={{ alignItems: "center", gap: "0.25vw", fontSize: "0.8rem", color: "text.secondary" }}>
-            <Warning fontSize="small" />
+        <Box sx={{ alignItems: "center", gap: isMobile ? "3vw" : "0.25vw", fontSize: isMobile ? "1rem" : "0.8rem", color: "text.secondary" }}>
+            <Warning fontSize={isMobile ? "medium" : "small"} />
             Mensagem disponível apenas no telefone
         </Box>
     )

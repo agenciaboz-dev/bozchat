@@ -1,5 +1,5 @@
 import React, { useEffect, useMemo, useState } from "react"
-import { Avatar, Box, Chip, IconButton, LinearProgress, Paper, Typography } from "@mui/material"
+import { Avatar, Box, Chip, IconButton, LinearProgress, Paper, Typography, useMediaQuery } from "@mui/material"
 import { Chat } from "../../../types/server/class/Board/Chat"
 import { Draggable } from "@hello-pangea/dnd"
 import { Cancel, MoreHoriz } from "@mui/icons-material"
@@ -33,6 +33,7 @@ interface BoardChatProps {
 }
 
 export const BoardChat: React.FC<BoardChatProps> = (props) => {
+    const isMobile = useMediaQuery("(orientation: portrait)")
     const { fetchNagaMessages } = useApi()
 
     const [mediaMetaData, setMediaMetaData] = useState<{
@@ -106,18 +107,24 @@ export const BoardChat: React.FC<BoardChatProps> = (props) => {
                     ref={provided.innerRef}
                     {...provided.draggableProps}
                     {...provided.dragHandleProps}
-                    sx={{ padding: "1vw", flexDirection: "column", overflow: "hidden", gap: "1vw" }}
+                    sx={{ padding: isMobile ? "5vw" : "1vw", flexDirection: "column", overflow: "hidden", gap: isMobile ? "5vw" : "1vw" }}
                 >
                     <Box sx={{ justifyContent: "space-between", alignItems: "flex-start" }}>
-                        <Box sx={{ gap: "1vw" }} color={"text.secondary"}>
-                            <Avatar src={props.chat.profile_pic} sx={{ width: "3vw", height: "3vw" }} />
-                            <Box sx={{ flexDirection: "column", alignSelf: "center" }}>
+                        <Box sx={{ gap: isMobile ? "2vw" : "1vw", alignItems: "center" }} color={"text.secondary"}>
+                            <Avatar src={props.chat.profile_pic} sx={{ width: isMobile ? "9vw" : "3vw", height: isMobile ? "9vw" : "3vw" }} />
+                            <Box sx={{ flexDirection: "column", alignSelf: "center", gap: isMobile ? "2vw" : "0.2vw" }}>
                                 <Typography
-                                    sx={{ fontWeight: "bold", width: "13vw", overflow: "hidden", whiteSpace: "nowrap", textOverflow: "ellipsis" }}
+                                    sx={{
+                                        fontWeight: "bold",
+                                        width: isMobile ? "50vw" : "13vw",
+                                        overflow: "hidden",
+                                        whiteSpace: "nowrap",
+                                        textOverflow: "ellipsis",
+                                    }}
                                 >
                                     {props.chat.name}
                                 </Typography>
-                                <Box sx={{ gap: "0.5vw", alignItems: "center" }}>
+                                <Box sx={{ gap: isMobile ? "2vw" : "0.5vw", alignItems: "center" }}>
                                     <Chip
                                         size="small"
                                         label={<Typography sx={{ fontSize: "0.7rem" }}>{datetime.toLocaleDateString("pt-br")}</Typography>}
@@ -149,7 +156,7 @@ export const BoardChat: React.FC<BoardChatProps> = (props) => {
                                     sx={{
                                         bgcolor: "background.default",
                                         flexDirection: "column",
-                                        padding: "1vw",
+                                        padding: isMobile ? "5vw" : "1vw",
                                         position: "relative",
                                         color: "text.secondary",
                                         flex: 1,

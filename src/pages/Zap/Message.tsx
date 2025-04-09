@@ -183,7 +183,17 @@ export const Message: React.ForwardRefRenderFunction<HTMLDivElement, MessageProp
                     ref={visibleCallbackRef}
                     sx={{
                         flexDirection: "column",
-                        maxWidth: inBoards ? "15vw" : message.hasMedia && is_document ? "25vw" : message.hasMedia ? "20vw" : isMobile ? "90%" : "75%",
+                        maxWidth: inBoards
+                            ? isMobile
+                                ? "100%"
+                                : "15vw"
+                            : message.hasMedia && is_document
+                            ? "25vw"
+                            : message.hasMedia
+                            ? "20vw"
+                            : isMobile
+                            ? "90%"
+                            : "75%",
                     }}
                 >
                     {/*//* MESSAGE AUTHOR  */}
