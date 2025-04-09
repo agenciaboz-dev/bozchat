@@ -78,8 +78,9 @@ export const MessageNode: React.FC<MessageNodeProps> = (node) => {
                         value={node.data.value}
                         multiline
                         InputProps={{ sx: { fontSize: "0.8rem", padding: 1, color: "secondary.main" }, readOnly: true }}
-                        inputProps={{ style: { cursor: "grab" } }}
+                        inputProps={{ style: { cursor: "pointer" } }}
                         rows={5}
+                        onClick={() => node.data.editNode(node)}
                     />
                 ) : (
                     // <Typography
@@ -125,11 +126,6 @@ export const MessageNode: React.FC<MessageNodeProps> = (node) => {
                             right: 0,
                         }}
                     >
-                        {node.data.value && (
-                            <IconButton onClick={() => node.data.editNode(node)}>
-                                <Edit sx={{}} />
-                            </IconButton>
-                        )}
                         {node.data.deleteNode && (
                             <IconButton onClick={() => node.data.deleteNode!(node)}>
                                 <Delete sx={{}} />
