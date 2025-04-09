@@ -24,7 +24,7 @@ const TextInfo: React.FC<{ children: React.ReactNode }> = ({ children }) => (
 export const NodeDrawer: React.FC<NodeDrawerProps> = ({ node, onClose, saveNode }) => {
     const inputRef = useRef<HTMLInputElement>(null)
     const isMobile = useMediaQuery("(orientation: portrait)")
-    const darkMode = useDarkMode()
+    const { darkMode } = useDarkMode()
     const { snackbar } = useSnackbar()
 
     const lightModePrimary = "#99dff9"

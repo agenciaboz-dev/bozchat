@@ -45,7 +45,7 @@ export const ResponseNode: React.FC<ResponseNodeProps> = (node) => {
                     <TextField
                         value={node.data.value}
                         multiline
-                        InputProps={{ sx: { fontSize: "0.8rem", padding: 1, color: "secondary.main" }, readOnly: true }}
+                        InputProps={{ sx: { fontSize: "0.8rem", padding: 1, color: "text.secondary" }, readOnly: true }}
                         inputProps={{ style: { cursor: "grab" } }}
                         rows={5}
                         onClick={() => node.data.editNode(node)}
@@ -108,7 +108,7 @@ export const ResponseNode: React.FC<ResponseNodeProps> = (node) => {
                     </Box>
                 )}
             </Paper>
-            <Typography sx={{ position: "absolute", top: -10, left: -42, color: "text.disabled" }}>User</Typography>
+            <Typography sx={{ position: "absolute", top: -10, left: -45, color: "text.disabled" }}>User</Typography>
         </>
     )
 }
