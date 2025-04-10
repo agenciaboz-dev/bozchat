@@ -1,9 +1,9 @@
 import React, { useEffect, useState } from "react"
-import { Box, Paper, TextField, useMediaQuery } from "@mui/material"
+import { Box, Chip, Paper, TextField, useMediaQuery } from "@mui/material"
 import { backgroundStyle } from "../../style/background"
 import { Header } from "../../components/Header/Header"
 import { Title } from "../../components/Title"
-import { AddBoxTwoTone, Engineering } from "@mui/icons-material"
+import { AddBoxTwoTone, Engineering, Report, Warning } from "@mui/icons-material"
 import { textFieldStyle } from "../../style/textfield"
 import { WagaLoading } from "../../components/WagaLoading"
 import { Route, Routes, useNavigate } from "react-router-dom"
@@ -85,9 +85,42 @@ export const Bots: React.FC<BotsProps> = ({}) => {
                                 <hr style={{ margin: "1vw 0" }} />
                                 {bots
                                     .sort((a, b) => Number(a.created_at) - Number(b.created_at))
-                                    .map((bot) => (
-                                        <ToolButton key={bot.id} label={bot.name} route={`/${bot.name}`} father_route="bots" payload={bot} />
-                                    ))}
+                                    .map((bot) => {
+                                        const misconfigured_actions_count = bot.instance.nodes.reduce(
+                                            (count, node) =>
+                                                (count +=
+                                                    node.data.actions?.reduce(
+                                                        (count, action) => (count += action.settings.misconfigured ? 1 : 0),
+                                                        0
+                                                    ) || 0),
+                                            0
+                                        )
+                                        return (
+                                            <ToolButton
+                                                key={bot.id}
+                                                label={
+                                                    <Box sx={{ gap: "0.5vw" }}>
+                                                        {misconfigured_actions_count > 0 && (
+                                                            <Report
+                                                                color="secondary"
+                                                                sx={{
+                                                                    padding: "0.2vw",
+                                                                    bgcolor: "error.main",
+                                                                    borderRadius: "100%",
+                                                                    justifyContent: "center",
+                                                                    alignItems: "center",
+                                                                }}
+                                                            />
+                                                        )}
+                                                        {bot.name}
+                                                    </Box>
+                                                }
+                                                route={`/${bot.name}`}
+                                                father_route="bots"
+                                                payload={bot}
+                                            />
+                                        )
+                                    })}
                             </Box>
                         </Box>
                     </Title>

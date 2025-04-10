@@ -104,5 +104,6 @@ export declare class Bot {
     closeChat(chat_id: string): void;
     normalize(text: string): string;
     compareIncomingMessage(message: string, trigger?: string): string | undefined;
+    handleBoardDelete(board_id: string): void;
 }
 export {};

@@ -1,6 +1,6 @@
 import React, { useMemo, useState } from "react"
 import { Avatar, Box, Button, Chip, IconButton, Menu, MenuItem, Paper, TextField, Typography } from "@mui/material"
-import { AddCircle, Delete, Edit } from "@mui/icons-material"
+import { AddCircle, Delete, Edit, Report, Warning } from "@mui/icons-material"
 import { nodeHeight, nodeWidth } from "./CustomNode"
 import { Handle, Position } from "@xyflow/react"
 import { TrianguloFudido } from "../Zap/TrianguloFudido"
@@ -17,6 +17,7 @@ export const MessageNode: React.FC<MessageNodeProps> = (node) => {
     const [mouseOver, setMouseOver] = useState(false)
 
     const children = useMemo(() => (node.data.getChildren ? node.data.getChildren(node.id) : []), [node])
+    const misconfigured_action = useMemo(() => node.data.actions?.find((action) => action.settings.misconfigured), [node.data.actions])
 
     const response_children = !!children.length && children.every((node) => node.type === "response")
     const can_add_children = children.length === 0 || response_children
@@ -148,8 +149,9 @@ export const MessageNode: React.FC<MessageNodeProps> = (node) => {
             </Paper>
             {node.data.actions && node.data.actions.length > 0 && (
                 <Chip
-                    color="warning"
+                    color={misconfigured_action ? "error" : "success"}
                     size="small"
+                    icon={misconfigured_action ? <Report /> : undefined}
                     label={`${node.data.actions.length} ${node.data.actions.length === 1 ? "ação" : "ações"}`}
                     sx={{ position: "absolute", bottom: -30, padding: "0 0.5vw" }}
                     onClick={() => node.data.editNode(node)}

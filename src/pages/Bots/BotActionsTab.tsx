@@ -6,7 +6,7 @@ import { FlowNode, FlowNodeData } from "../../types/server/class/Bot/Bot"
 import { useFetchedData } from "../../hooks/useFetchedData"
 import { Board } from "../../types/server/class/Board/Board"
 import { Room } from "../../types/server/class/Board/Room"
-import { InfoOutlined, Save, Warning } from "@mui/icons-material"
+import { InfoOutlined, Report, Save, Warning } from "@mui/icons-material"
 import { useSnackbar } from "burgos-snackbar"
 import { TextInfo } from "./TextInfo"
 
@@ -24,6 +24,7 @@ interface ActionContainerProps {
     checked: boolean
     onCheck: (target: ValidAction) => void
     target: ValidAction
+    misconfigured?: boolean
 }
 
 const ActionContainer: React.FC<ActionContainerProps> = (props) => {
@@ -32,16 +33,35 @@ const ActionContainer: React.FC<ActionContainerProps> = (props) => {
             expanded={props.checked}
             titleElement={
                 <Paper
-                    sx={{ alignItems: "center", flex: 1, color: props.checked ? "primary.main" : "secondary.main", padding: "0.5vw", justifyContent: 'space-between' }}
+                    sx={{
+                        alignItems: "center",
+                        flex: 1,
+                        color: props.checked ? "primary.main" : "secondary.main",
+                        padding: "0.5vw",
+                        justifyContent: "space-between",
+                    }}
                     onClick={() => props.onCheck(props.target)}
                 >
-                    <Box sx={{alignItems: 'center'}}>
-                    <Checkbox checked={props.checked} />
-                    <Typography>{props.title}</Typography>
+                    <Box sx={{ alignItems: "center" }}>
+                        <Checkbox checked={props.checked} />
+                        <Typography>{props.title}</Typography>
                     </Box>
-                    <Tooltip title={props.description}>
+                    <Tooltip arrow title={props.misconfigured ? "Essa ação precisa ser reconfigurada" : props.description}>
                         <IconButton>
-                            <InfoOutlined />
+                            {props.misconfigured ? (
+                                <Report
+                                    color="secondary"
+                                    sx={{
+                                        padding: "0.2vw",
+                                        bgcolor: "error.main",
+                                        borderRadius: "100%",
+                                        justifyContent: "center",
+                                        alignItems: "center",
+                                    }}
+                                />
+                            ) : (
+                                <InfoOutlined />
+                            )}
                         </IconButton>
                     </Tooltip>
                 </Paper>
@@ -88,11 +108,13 @@ export const BotActionsTab: React.FC<BotActionsTabProps> = (props) => {
         snackbar({ severity: "success", text: "Salvo" })
     }
 
-    const updateBoardSettings = (options: { room_id?: string; board_id?: string }) => {
+    const updateBoardSettings = (options: { room_id?: string | null; board_id?: string | null }) => {
         if (!props.data || !props.data.actions || !boardChat) return
 
-        if (options.board_id) boardChat.settings.board_id = options.board_id
-        if (options.room_id) boardChat.settings.room_id = options.room_id
+        if (options.board_id !== null) boardChat.settings.board_id = options.board_id
+        if (options.room_id !== null) boardChat.settings.room_id = options.room_id
+
+        boardChat.settings.misconfigured = !boardChat.settings.board_id
         props.updateData({ ...props.data, actions: [...props.data.actions.filter((item) => item.target !== boardChat.target), boardChat] })
     }
 
@@ -118,7 +140,8 @@ export const BotActionsTab: React.FC<BotActionsTabProps> = (props) => {
                     checked={!!boardChat}
                     target={"board:room:chat:new"}
                     title="Enviar para um quadro"
-                    description="Copie esta conversa para um quadro e sala configurados abaixo"
+                    description="Copie esta conversa para um quadro"
+                    misconfigured={boardChat?.settings.misconfigured}
                     settingsComponent={
                         <Box sx={{ gap: "1vw", flexDirection: "column" }}>
                             <Autocomplete
@@ -126,7 +149,7 @@ export const BotActionsTab: React.FC<BotActionsTabProps> = (props) => {
                                 value={destinationBoard}
                                 onChange={(_, value) => {
                                     setDestinationBoard(value)
-                                    value && updateBoardSettings({ board_id: value.id })
+                                    updateBoardSettings({ board_id: value?.id, room_id: null })
                                 }}
                                 renderInput={(params) => <TextField {...params} label="Quadro" />}
                                 fullWidth
@@ -139,7 +162,7 @@ export const BotActionsTab: React.FC<BotActionsTabProps> = (props) => {
                                 value={destinationRoom}
                                 onChange={(_, value) => {
                                     setDestinationRoom(value)
-                                    value && updateBoardSettings({ room_id: value.id })
+                                    updateBoardSettings({ room_id: value?.id, board_id: null })
                                 }}
                                 renderInput={(params) => <TextField {...params} label="Sala" />}
                                 fullWidth

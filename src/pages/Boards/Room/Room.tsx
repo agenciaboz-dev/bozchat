@@ -43,6 +43,8 @@ export const BoardRoom: React.FC<KanbanColumnProps> = (props) => {
     const [showSearchBar, setShowSearchBar] = useState(false)
     const [filterText, setFilterText] = useState("")
 
+    console.log(props.room.chats)
+
     const filteredChats = useMemo(
         () => (filterText ? fuzzy<Chat>({ keys: ["name", "phone"], list: props.room.chats, text: filterText }) : props.room.chats),
         [props.room.chats, filterText]
