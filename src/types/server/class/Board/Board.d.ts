@@ -69,10 +69,10 @@ export declare class Board {
         users?: User[];
     }>>): Promise<void>;
     delete(): Promise<{
-        id: string;
         name: string;
-        created_at: string;
+        id: string;
         company_id: string;
+        created_at: string;
         rooms: Prisma.JsonValue;
         washima_settings: Prisma.JsonValue;
         nagazap_settings: Prisma.JsonValue;

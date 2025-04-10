@@ -8,6 +8,7 @@ import { BotForm } from "./BotForm"
 import { FlowLayout } from "./FlowLayout"
 import { Edge, Node, ReactFlowInstance, ReactFlowJsonObject } from "@xyflow/react"
 import { useDarkMode } from "../../hooks/useDarkMode"
+import { BotProvider } from "../../contexts/bot.context"
 
 interface BotPageProps {
     onSave: (bot: Bot) => void

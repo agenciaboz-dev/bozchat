@@ -275,7 +275,7 @@ export const Login: React.FC<LoginProps> = ({}) => {
                         Acesse seu perfil!
                     </Typography>
                     <Typography component="p" fontSize={"1.4rem"} fontFamily={"Futura Medium BT"}>
-                        Faça login para acessar sua conta e aproveitar todos os recursos do chat BOZ. Gerencie seus aplicativos, personalize suas
+                        Faça login para acessar sua conta e aproveitar todos os recursos do ChatBoz. Gerencie seus números, personalize suas
                         configurações e acompanhe o desenvolvimento dos seus projetos com facilidade.
                     </Typography>
                 </Box>

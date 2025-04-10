@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useRef, useState } from "react"
+import React, { useCallback, useContext, useEffect, useRef, useState } from "react"
 import {
     Background,
     ReactFlow,
@@ -30,6 +30,8 @@ import { NodeModal } from "./NodeModal"
 import { useTheme } from "../../hooks/useTheme"
 import { uid } from "uid"
 import { NodeDrawer } from "./NodeDrawer"
+import { LoopingOverlay } from "./LoopingOverlay"
+import BotContext, { BotProvider } from "../../contexts/bot.context"
 
 const position = { x: 0, y: 0 }
 const edgeType = "smoothstep"
@@ -48,6 +50,7 @@ export const FlowLayout: React.FC<FlowLayoutProps> = ({ bot_id, botInstances, se
     const { company, user } = useUser()
     const { setViewport } = useReactFlow()
     const theme = useTheme()
+    const { setLoopingNodeId, loopingNodeId } = useContext(BotContext)
 
     const instance = useRef<ReactFlowInstance<Node, FlowEdge> | null>(null)
 
@@ -58,40 +61,6 @@ export const FlowLayout: React.FC<FlowLayoutProps> = ({ bot_id, botInstances, se
     const initialNodes: FlowNode[] = []
 
     const initialEdges: Edge[] = []
-
-    // const updateLayout = (nodes: FlowNode[], edges: FlowEdge[], direction = "TB") => {
-    //     const isHorizontal = direction === "LR"
-    //     dagreGraph.setGraph({ rankdir: direction, ranksep: 100, nodesep: 100 })
-
-    //     nodes.forEach((node) => {
-    //         dagreGraph.setNode(node.id, { width: nodeWidth, height: nodeHeight })
-    //     })
-
-    //     edges.forEach((edge) => {
-    //         dagreGraph.setEdge(edge.source, edge.target)
-    //     })
-
-    //     dagre.layout(dagreGraph)
-
-    //     const newNodes = nodes.map((node) => {
-    //         const nodeWithPosition = dagreGraph.node(node.id)
-    //         const newNode = {
-    //             ...node,
-    //             targetPosition: isHorizontal ? "left" : "top",
-    //             sourcePosition: isHorizontal ? "right" : "bottom",
-    //             // We are shifting the dagre node position (anchor=center center) to the top left
-    //             // so it matches the React Flow node anchor point (top left).
-    //             position: {
-    //                 x: nodeWithPosition.x - nodeWidth / 2,
-    //                 y: nodeWithPosition.y - nodeHeight / 2,
-    //             },
-    //         }
-
-    //         return newNode
-    //     })
-
-    //     return { nodes: newNodes as FlowNode[], edges }
-    // }
 
     const updateLayout = (nodes: FlowNode[], edges: FlowEdge[]): { nodes: FlowNode[]; edges: FlowEdge[] } => {
         const dagreGraph = new dagre.graphlib.Graph().setDefaultEdgeLabel(() => ({}))
@@ -155,6 +124,7 @@ export const FlowLayout: React.FC<FlowLayoutProps> = ({ bot_id, botInstances, se
                     position: { x: sourceNode.position.x, y: sourceNode.position.y + nodeHeight + 50 }, // Default offset for direct child
                     data: {
                         onAddChild: () => {},
+                        addLoop: () => {},
                         editNode: () => setEditingNode(null),
                         deleteNode: () => {},
                         getChildren: () => [],
@@ -238,7 +208,9 @@ export const FlowLayout: React.FC<FlowLayoutProps> = ({ bot_id, botInstances, se
         }
 
         const updatedNodes = nodes.map((n) =>
-            n.id === node_id ? { ...n, data: { ...n.data, value: data.value, media: data.media, actions: data.actions } } : n
+            n.id === node_id
+                ? { ...n, data: { ...n.data, value: data.value, media: data.media, actions: data.actions, next_node_id: data.next_node_id } }
+                : n
         )
         console.log({ updatedNodes })
         setNodes(updatedNodes)
@@ -343,6 +315,22 @@ export const FlowLayout: React.FC<FlowLayoutProps> = ({ bot_id, botInstances, se
         [deleteNodeAndDescendants, nodes, edges, setNodes, setEdges, onSave]
     )
 
+    const addLoop = (data: { from: string; to: string }) => {
+        console.log("1")
+        console.log({ data })
+        if (!data.from || !data.to) return
+        console.log("2")
+
+        const node = nodes.find((item) => item.id === data.from)
+        if (!node) return
+        console.log("3")
+
+        node.data.next_node_id = data.to
+        onEditNode(data.from, node.data)
+        setLoopingNodeId(null)
+        console.log("4")
+    }
+
     // Example usage in your React component
     useEffect(() => {
         // Initial layout adjustment
@@ -364,6 +352,7 @@ export const FlowLayout: React.FC<FlowLayoutProps> = ({ bot_id, botInstances, se
                 data: {
                     ...node.data,
                     onAddChild: (type: "message" | "response") => addNodeAndEdge(node.id, type),
+                    addLoop: (options: { from: string; to: string }) => addLoop(options),
                     deleteNode: node.id === "node_0" ? undefined : (node) => onDeleteNode(node),
                     editNode: (node) => setEditingNode(node),
                     getChildren,
@@ -374,6 +363,7 @@ export const FlowLayout: React.FC<FlowLayoutProps> = ({ bot_id, botInstances, se
 
     useEffect(() => {
         setEditingNode(null)
+        setLoopingNodeId(null)
         if (bot) {
             const restoreFlow = async () => {
                 const flow = bot.instance
@@ -385,6 +375,7 @@ export const FlowLayout: React.FC<FlowLayoutProps> = ({ bot_id, botInstances, se
                         data: {
                             value: bot.trigger,
                             onAddChild: (type: "message" | "response") => addNodeAndEdge("node_0", type),
+                            addLoop: () => setLoopingNodeId("node_0"),
                             getChildren,
                         },
                         position,
@@ -468,6 +459,7 @@ export const FlowLayout: React.FC<FlowLayoutProps> = ({ bot_id, botInstances, se
         >
             <Background size={1} />
             <NodeDrawer node={editingNode} onClose={() => setEditingNode(null)} saveNode={onEditNode} />
+            {loopingNodeId !== null && <LoopingOverlay cancelLoopingSelecting={() => setLoopingNodeId(null)} />}
         </ReactFlow>
     )
 }

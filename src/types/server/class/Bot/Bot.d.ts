@@ -22,6 +22,10 @@ type BotPrisma = Prisma.BotGetPayload<{
 export interface FlowNodeData {
     [key: string]: any;
     onAddChild: (type: "message" | "response") => void;
+    addLoop: (options: {
+        from: string;
+        to: string;
+    }) => void;
     value: string;
     editNode: (node: FlowNode | null) => void;
     deleteNode?: (node: FlowNode) => void;
@@ -34,6 +38,7 @@ export interface FlowNodeData {
         base64?: string;
     };
     actions?: NodeAction[];
+    next_node_id?: string;
 }
 export interface FlowNode extends Node {
     data: FlowNodeData;
@@ -52,7 +57,8 @@ export declare class ActiveBot {
 export type BotForm = Omit<WithoutFunctions<Bot>, "id" | "created_at" | "triggered" | "instance" | "active_on">;
 export interface PendingResponse {
     response: (text: string) => Promise<void>;
-    timestamp: number;
+    expiry?: number;
+    idleness?: number;
     chat_id: string;
     bot: Bot;
 }
@@ -75,8 +81,11 @@ export declare class Bot {
     company_id: string;
     nagazap_ids: string[];
     washima_ids: string[];
-    expiry_minutes: number;
     fuzzy_threshold: number;
+    expiry_minutes: number;
+    expiry_message: string;
+    idleness_minutes: number;
+    idleness_message: string;
     static pending_response: Map<string, PendingResponse>;
     static expiry_interval: NodeJS.Timeout;
     static new(data: BotForm): Promise<Bot>;
@@ -92,6 +101,7 @@ export declare class Bot {
     handleIncomingMessage(data: BotMessageForm): Promise<void>;
     getActiveChat(chat_id: string, incoming_message?: string): ActiveBot | undefined;
     newChat(chat_id: string): ActiveBot | undefined;
+    getNode(node_id: string): FlowNode | undefined;
     getNodeChildren(nodeId: string, type?: "direct" | "recursive"): FlowNode[];
     getAnsweredNode(node_id: string, incoming_message: string): FlowNode | undefined;
     advanceChat(chat: ActiveBot, incoming_message: string): FlowNodeData[] | {
@@ -104,6 +114,6 @@ export declare class Bot {
     closeChat(chat_id: string): void;
     normalize(text: string): string;
     compareIncomingMessage(message: string, trigger?: string): string | undefined;
-    handleBoardDelete(board_id: string): void;
+    handleBoardDelete(board_id: string): Promise<void>;
 }
 export {};

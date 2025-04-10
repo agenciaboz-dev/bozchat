@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react"
-import { Box, Button, Checkbox, Chip, CircularProgress, IconButton, MenuItem, Slider, TextField, Tooltip, Typography } from "@mui/material"
+import { Box, Button, Checkbox, Chip, CircularProgress, IconButton, MenuItem, Slider, Switch, TextField, Tooltip, Typography } from "@mui/material"
 import { Bot, BotForm as BotFormType } from "../../types/server/class/Bot/Bot"
 import { Subroute } from "../Nagazap/Subroute"
 import { useFormik } from "formik"
@@ -14,6 +14,7 @@ import { useConfirmDialog } from "burgos-confirm"
 import { meta_normalize } from "../../tools/normalize"
 import { Info, InfoOutlined } from "@mui/icons-material"
 import { useTheme } from "../../hooks/useTheme"
+import { Title2 } from "../../components/Title"
 
 interface BotFormProps {
     onSubmit: (bot: Bot) => void
@@ -31,6 +32,8 @@ export const BotForm: React.FC<BotFormProps> = ({ onSubmit, bot, onDelete }) => 
     const [nagazaps, setNagazaps] = useState<Nagazap[]>([])
     const [loading, setLoading] = useState(false)
     const [deleting, setDeleting] = useState(false)
+    const [idleness, setIdleness] = useState(!!bot?.idleness_minutes)
+    const [expiry, setExpiry] = useState(!!bot?.expiry_minutes)
 
     const formik = useFormik<BotFormType>({
         initialValues: {
@@ -39,8 +42,11 @@ export const BotForm: React.FC<BotFormProps> = ({ onSubmit, bot, onDelete }) => 
             washima_ids: bot?.washima_ids || [],
             name: bot?.name || "",
             trigger: bot?.trigger || "",
-            expiry_minutes: bot?.expiry_minutes || 30,
             fuzzy_threshold: bot ? bot.fuzzy_threshold : 0.1,
+            expiry_minutes: bot?.expiry_minutes || 0,
+            expiry_message: bot?.expiry_message || "",
+            idleness_message: bot?.idleness_message || "",
+            idleness_minutes: bot?.idleness_minutes || 0,
         },
         async onSubmit(values, formikHelpers) {
             if (loading || !company || deleting) return
@@ -121,33 +127,66 @@ export const BotForm: React.FC<BotFormProps> = ({ onSubmit, bot, onDelete }) => 
                 </Box>
             }
         >
-            <Box sx={{ gap: "1vw" }}>
-                <TextField
-                    label="Nome"
-                    value={formik.values.name}
-                    onChange={(ev) => {
-                        const event = ev
-                        event.target.value = meta_normalize(ev.target.value)
-                        formik.handleChange(event)
-                    }}
-                    name="name"
-                    required
-                />
-                <TextField
-                    label="Gatilho"
-                    value={formik.values.trigger}
-                    onChange={formik.handleChange}
-                    name="trigger"
-                    placeholder="Qualquer mensagem"
-                    InputProps={{
-                        endAdornment: (
+            <Box sx={{ flexDirection: "column", gap: "1vw" }}>
+                <Box sx={{ gap: "1vw" }}>
+                    <TextField
+                        label="Nome"
+                        value={formik.values.name}
+                        onChange={(ev) => {
+                            const event = ev
+                            event.target.value = meta_normalize(ev.target.value)
+                            formik.handleChange(event)
+                        }}
+                        name="name"
+                        required
+                    />
+                    <TextField
+                        label="Gatilho"
+                        value={formik.values.trigger}
+                        onChange={formik.handleChange}
+                        name="trigger"
+                        placeholder="Qualquer mensagem"
+                        InputProps={{
+                            endAdornment: (
+                                <Tooltip
+                                    title={
+                                        <Box sx={{ flexDirection: "column", gap: "1vw" }}>
+                                            <Typography sx={{ fontSize: "0.8rem" }}>
+                                                Você pode especificar múltiplos gatilhos separados por ";"
+                                            </Typography>
+                                            <Typography sx={{ fontSize: "0.8rem" }}>
+                                                Deixe em branco para ativar o bot com qualquer mensagem
+                                            </Typography>
+                                        </Box>
+                                    }
+                                >
+                                    <IconButton sx={{ padding: 0 }}>
+                                        <InfoOutlined />
+                                    </IconButton>
+                                </Tooltip>
+                            ),
+                        }}
+                    />
+                </Box>
+
+                <Box sx={{ gap: "1vw", alignItems: "center" }}>
+                    <Box sx={{ flexDirection: "column", flex: 1 }}>
+                        <Box sx={{ alignItems: "center", gap: "0.5vw" }}>
+                            <Typography sx={{ color: "text.secondary" }}>Limiar de diferença entre resposta e gatilhos</Typography>
                             <Tooltip
                                 title={
                                     <Box sx={{ flexDirection: "column", gap: "1vw" }}>
                                         <Typography sx={{ fontSize: "0.8rem" }}>
-                                            Você pode especificar múltiplos gatilhos seperados por ";"
+                                            Esse valor determina o quão precisas as respostas devem ser para ativar o bot ou a próxima etapa dele.
                                         </Typography>
-                                        <Typography sx={{ fontSize: "0.8rem" }}>Deixe em branco para ativar o bot com qualquer mensagem</Typography>
+                                        <Typography sx={{ fontSize: "0.8rem" }}>
+                                            Quanto mais próximo de <span style={{ color: theme.colors.primary, fontWeight: "bold" }}>0</span>, mais
+                                            parecida a resposta deve ser do gatilho.
+                                        </Typography>
+                                        <Typography sx={{ fontSize: "0.8rem" }}>
+                                            Quanto mais próximo de <span style={{ color: theme.colors.primary, fontWeight: "bold" }}>1</span>, mais
+                                            respostas diferentes serão aceitas.
+                                        </Typography>
                                     </Box>
                                 }
                             >
@@ -155,71 +194,130 @@ export const BotForm: React.FC<BotFormProps> = ({ onSubmit, bot, onDelete }) => 
                                     <InfoOutlined />
                                 </IconButton>
                             </Tooltip>
-                        ),
-                    }}
-                />
-            </Box>
+                        </Box>
+                        <Slider
+                            min={0}
+                            max={1}
+                            step={0.05}
+                            value={formik.values.fuzzy_threshold}
+                            onChange={(_, value) => {
+                                console.log(value)
+                                formik.setFieldValue("fuzzy_threshold", value)
+                            }}
+                            marks
+                            valueLabelDisplay="auto"
+                        />
+                    </Box>
+                </Box>
 
-            <Box sx={{ gap: "1vw", alignItems: "center" }}>
-                <TextField
-                    label="Minutos para conversa expirar"
-                    value={formik.values.expiry_minutes}
-                    onChange={(ev) => {
-                        const value = Number(ev.target.value.replace(/\D/g, ""))
-                        formik.setFieldValue("expiry_minutes", value)
-                    }}
-                    name="expiry_minutes"
-                    required
-                    sx={{ flex: 1 }}
-                />
-                <Box sx={{ flexDirection: "column", flex: 1 }}>
-                    <Box sx={{ alignItems: "center", gap: "0.5vw" }}>
-                        <Typography sx={{ color: "text.secondary" }}>Limiar de diferença entre resposta e gatilhos</Typography>
-                        <Tooltip
-                            title={
-                                <Box sx={{ flexDirection: "column", gap: "1vw" }}>
-                                    <Typography sx={{ fontSize: "0.8rem" }}>
-                                        Esse valor determina o quão precisas as respostas devem ser para ativar o bot ou a próxima etapa dele.
-                                    </Typography>
-                                    <Typography sx={{ fontSize: "0.8rem" }}>
-                                        Quanto mais próximo de <span style={{ color: theme.colors.primary, fontWeight: "bold" }}>0</span>, mais
-                                        parecida a resposta deve ser do gatilho.
-                                    </Typography>
-                                    <Typography sx={{ fontSize: "0.8rem" }}>
-                                        Quanto mais próximo de <span style={{ color: theme.colors.primary, fontWeight: "bold" }}>1</span>, mais
-                                        respostas diferentes serão aceitas.
-                                    </Typography>
-                                </Box>
-                            }
-                        >
-                            <IconButton sx={{ padding: 0 }}>
+                <Title2
+                    name="Integrações"
+                    right={
+                        <Tooltip title="Selecione as contas Business e Broadcast as quais o bot será integrado">
+                            <IconButton>
                                 <InfoOutlined />
                             </IconButton>
                         </Tooltip>
-                    </Box>
-                    <Slider
-                        min={0}
-                        max={1}
-                        step={0.05}
-                        value={formik.values.fuzzy_threshold}
-                        onChange={(_, value) => {
-                            console.log(value)
-                            formik.setFieldValue("fuzzy_threshold", value)
-                        }}
-                        marks
-                        valueLabelDisplay="auto"
+                    }
+                />
+                <Box sx={{ gap: "1vw" }}>
+                    <IntegrationField title="Business" name="washima_ids" formik={formik} list={washimas} />
+                    <IntegrationField
+                        title="Broadcast"
+                        name="nagazap_ids"
+                        formik={formik}
+                        list={nagazaps.map((item) => ({ ...item, name: item.displayName || item.appId }))}
                     />
                 </Box>
-            </Box>
 
-            <Box sx={{ gap: "1vw" }}>
-                <IntegrationField title="Business" name="washima_ids" formik={formik} list={washimas} />
-                <IntegrationField
-                    title="Broadcast"
-                    name="nagazap_ids"
-                    formik={formik}
-                    list={nagazaps.map((item) => ({ ...item, name: item.displayName || item.appId }))}
-                />
+                <Box sx={{ gap: "1vw" }}>
+                    <Box sx={{ flexDirection: "column", flex: 1 }}>
+                        <Title2
+                            name="Inatividade"
+                            right={
+                                <Switch
+                                    checked={idleness}
+                                    onChange={(_, checked) => {
+                                        setIdleness(checked)
+                                        if (!checked) {
+                                            formik.setFieldValue("idleness_minutes", 0)
+                                            formik.setFieldValue("idleness_message", "")
+                                        }
+                                    }}
+                                />
+                            }
+                        />
+                        <Typography color="secondary.main" sx={{ fontSize: "0.9rem" }}>
+                            Enviar uma mensagem ao usuário quando passar um tempo especificado sem interação por parte dele.
+                        </Typography>
+                        {idleness && (
+                            <Box sx={{ gap: "1vw", marginTop: "1vw" }}>
+                                <TextField
+                                    label="Minutos de inatividade"
+                                    value={formik.values.idleness_minutes}
+                                    onChange={(ev) => {
+                                        const value = Number(ev.target.value.replace(/\D/g, ""))
+                                        formik.setFieldValue("idleness_minutes", value)
+                                    }}
+                                    name="idleness_minutes"
+                                    required
+                                    sx={{ flex: 1 }}
+                                />
+                                <TextField
+                                    label="Mensagem de inatividade"
+                                    value={formik.values.idleness_message}
+                                    onChange={formik.handleChange}
+                                    name="idleness_message"
+                                    required
+                                    sx={{ flex: 1 }}
+                                />
+                            </Box>
+                        )}
+                    </Box>
+                    <Box sx={{ flexDirection: "column", flex: 1 }}>
+                        <Title2
+                            name="Expirar conversa"
+                            right={
+                                <Switch
+                                    checked={expiry}
+                                    onChange={(_, checked) => {
+                                        setExpiry(checked)
+                                        if (!checked) {
+                                            formik.setFieldValue("expiry_minutes", 0)
+                                            formik.setFieldValue("expiry_message", "")
+                                        }
+                                    }}
+                                />
+                            }
+                        />
+                        <Typography color="secondary.main" sx={{ fontSize: "0.9rem" }}>
+                            Encerrar a conversa enviando uma mensagem para o usuário caso passe um tempo especificado sem interação
+                        </Typography>
+                        {expiry && (
+                            <Box sx={{ gap: "1vw", marginTop: "1vw" }}>
+                                <TextField
+                                    label="Minutos para expirar"
+                                    value={formik.values.expiry_minutes}
+                                    onChange={(ev) => {
+                                        const value = Number(ev.target.value.replace(/\D/g, ""))
+                                        formik.setFieldValue("expiry_minutes", value)
+                                    }}
+                                    name="expiry_minutes"
+                                    required
+                                    sx={{ flex: 1 }}
+                                />
+                                <TextField
+                                    label="Mensagem ao expirar"
+                                    value={formik.values.expiry_message}
+                                    onChange={formik.handleChange}
+                                    name="expiry_message"
+                                    required
+                                    sx={{ flex: 1 }}
+                                />
+                            </Box>
+                        )}
+                    </Box>
+                </Box>
             </Box>
         </Subroute>
     )

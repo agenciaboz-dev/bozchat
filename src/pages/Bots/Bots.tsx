@@ -86,7 +86,7 @@ export const Bots: React.FC<BotsProps> = ({}) => {
                                 {bots
                                     .sort((a, b) => Number(a.created_at) - Number(b.created_at))
                                     .map((bot) => {
-                                        const misconfigured_actions_count = bot.instance.nodes.reduce(
+                                        const misconfigured_actions_count = bot.instance?.nodes.reduce(
                                             (count, node) =>
                                                 (count +=
                                                     node.data.actions?.reduce(
