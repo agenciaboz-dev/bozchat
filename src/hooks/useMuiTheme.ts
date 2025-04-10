@@ -50,6 +50,10 @@ export const useMuiTheme = () => {
                         MuiList: { defaultProps: { sx: { backgroundColor: colors.background.primary } } },
                         MuiDataGrid: {
                             styleOverrides: {
+                                columnHeader: {
+                                    backgroundColor: darkMode ? undefined : "#e9e9e9",
+                                    color: colors.text.secondary,
+                                },
                                 cell: {
                                     color: colors.text.secondary,
                                 },

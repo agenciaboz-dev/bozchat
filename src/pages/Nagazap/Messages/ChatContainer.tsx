@@ -8,6 +8,7 @@ import { NagazapInput } from "./NagazapInput"
 import { DateChip } from "../../Washima/WashimaChat/DateChip"
 import { DeletedMessage } from "../../Zap/DeletedMessage"
 import { canRespondNagaChat } from "../../../tools/canRespondNagaChat"
+import { useDarkMode } from "../../../hooks/useDarkMode"
 
 interface ChatContainerProps {
     chat: NagaChat
@@ -19,6 +20,7 @@ interface ChatContainerProps {
 
 export const ChatContainer: React.FC<ChatContainerProps> = ({ chat, onClose, nagazap, inBoards, disabledResponse }) => {
     const isMobile = useMediaQuery("(orientation: portrait)")
+    const { darkMode } = useDarkMode()
     const can_respond = useMemo(() => canRespondNagaChat(chat, nagazap), [chat])
 
     console.log(chat)
@@ -29,7 +31,7 @@ export const ChatContainer: React.FC<ChatContainerProps> = ({ chat, onClose, nag
             sx={{
                 flex: 1,
                 // justifyContent: isMobile ? "flex-end" : "center",
-                bgcolor: inBoards ? "transparent" : "background.paper",
+                bgcolor: inBoards ? "transparent" : darkMode ? "background.paper" : "#e9e9e9",
                 // height: isMobile ? "77vh" : "90vh",
                 padding: inBoards ? 0 : isMobile ? "5vw" : "0.5vw 1vw",
                 // color: "secondary.main",

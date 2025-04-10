@@ -11,11 +11,11 @@ export const default_colors: Theme = {
     warning: "#ffb74d",
     background: {
         primary: "#ffffff",
-        secondary: "#aaaaaa25",
+        secondary: "#ffffff25",
     },
     text: {
         primary: "#00AFEF",
-        secondary: "#1F1F1F",
+        secondary: "#3F3F3F",
         terciary: "#70707090",
     },
 }

@@ -65,8 +65,7 @@ export const ResponseNode: React.FC<ResponseNodeProps> = (node) => {
                     //     {node.data.value}
                     // </Typography>
                     <Button
-                        color="secondary"
-                        sx={{ alignItems: "center", gap: 0.5, flexDirection: "column", margin: "0 -1vw", height: "100%" }}
+                        sx={{ alignItems: "center", gap: 0.5, flexDirection: "column", margin: "0 -1vw", height: "100%", color: "text.secondary" }}
                         onClick={() => node.data.editNode(node)}
                     >
                         <Typography sx={{ fontWeight: "bold", fontSize: "5rem", lineHeight: "0.1vw", marginTop: "1.6vw" }}>*</Typography>
