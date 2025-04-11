@@ -128,6 +128,7 @@ export const FlowLayout: React.FC<FlowLayoutProps> = ({ bot_id, botInstances, se
                         editNode: () => setEditingNode(null),
                         deleteNode: () => {},
                         getChildren: () => [],
+                        fitNodeView: () => {},
                         value: "",
                     },
                 }
@@ -155,11 +156,7 @@ export const FlowLayout: React.FC<FlowLayoutProps> = ({ bot_id, botInstances, se
 
                 const addedNode = layouted.nodes.find((n) => n.id === newNodeId)
                 if (addedNode && instance) {
-                    const { x, y } = addedNode.position
-                    instance.current?.setCenter(x + nodeWidth / 2, y + nodeHeight / 2, {
-                        zoom: 0.9,
-                        duration: viewport_duration, // optional smooth animation (in ms)
-                    })
+                    fitNodeView(addedNode)
                 }
 
                 onSave()
@@ -200,18 +197,14 @@ export const FlowLayout: React.FC<FlowLayoutProps> = ({ bot_id, botInstances, se
         }
     }
 
-    const onEditNode = (node_id: string, data: FlowNodeData) => {
+    const onEditNode = (node_id: string, data: Partial<FlowNodeData>) => {
         if (instance.current) {
             //this is just for the undo function
             const flow = instance.current.toObject()
             setBotInstances((instances) => [...instances, flow])
         }
 
-        const updatedNodes = nodes.map((n) =>
-            n.id === node_id
-                ? { ...n, data: { ...n.data, value: data.value, media: data.media, actions: data.actions, next_node_id: data.next_node_id } }
-                : n
-        )
+        const updatedNodes = nodes.map((n) => (n.id === node_id ? { ...n, data: { ...n.data, ...data } } : n))
         console.log({ updatedNodes })
         setNodes(updatedNodes)
         onSave()
@@ -315,20 +308,27 @@ export const FlowLayout: React.FC<FlowLayoutProps> = ({ bot_id, botInstances, se
         [deleteNodeAndDescendants, nodes, edges, setNodes, setEdges, onSave]
     )
 
+    const fitNodeView = (node: FlowNode | string) => {
+        const nodeItem = typeof node === "string" ? nodes.find((item) => item.id === node) : node
+        if (!nodeItem) return
+
+        const { x, y } = nodeItem.position
+        instance.current?.setCenter(x + nodeWidth / 2, y + nodeHeight / 2, {
+            zoom: 0.9,
+            duration: viewport_duration,
+        })
+    }
+
     const addLoop = (data: { from: string; to: string }) => {
-        console.log("1")
         console.log({ data })
         if (!data.from || !data.to) return
-        console.log("2")
 
         const node = nodes.find((item) => item.id === data.from)
         if (!node) return
-        console.log("3")
 
-        node.data.next_node_id = data.to
-        onEditNode(data.from, node.data)
+        onEditNode(data.from, { next_node_id: data.to })
         setLoopingNodeId(null)
-        console.log("4")
+        fitNodeView(node)
     }
 
     // Example usage in your React component
@@ -355,6 +355,7 @@ export const FlowLayout: React.FC<FlowLayoutProps> = ({ bot_id, botInstances, se
                     addLoop: (options: { from: string; to: string }) => addLoop(options),
                     deleteNode: node.id === "node_0" ? undefined : (node) => onDeleteNode(node),
                     editNode: (node) => setEditingNode(node),
+                    fitNodeView: (node: FlowNode | string) => fitNodeView(node),
                     getChildren,
                 },
             }))
@@ -376,6 +377,8 @@ export const FlowLayout: React.FC<FlowLayoutProps> = ({ bot_id, botInstances, se
                             value: bot.trigger,
                             onAddChild: (type: "message" | "response") => addNodeAndEdge("node_0", type),
                             addLoop: () => setLoopingNodeId("node_0"),
+                            updateNode: (node_id: string, data: FlowNodeData) => onEditNode(node_id, data),
+                            fitNodeView: (node: FlowNode | string) => fitNodeView(node),
                             getChildren,
                         },
                         position,
@@ -435,6 +438,12 @@ export const FlowLayout: React.FC<FlowLayoutProps> = ({ bot_id, botInstances, se
         }
     }, [undoToInstance])
 
+    useEffect(() => {
+        if (loopingNodeId) {
+            instance.current?.fitView({ padding: 0.1, duration: viewport_duration })
+        }
+    }, [loopingNodeId])
+
     return initializing ? (
         <Box sx={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
             <WagaLoading />
@@ -458,7 +467,7 @@ export const FlowLayout: React.FC<FlowLayoutProps> = ({ bot_id, botInstances, se
             minZoom={0}
         >
             <Background size={1} />
-            <NodeDrawer node={editingNode} onClose={() => setEditingNode(null)} saveNode={onEditNode} />
+            <NodeDrawer node={editingNode} onClose={() => setEditingNode(null)} saveNode={onEditNode} nodes={nodes} />
             {loopingNodeId !== null && <LoopingOverlay cancelLoopingSelecting={() => setLoopingNodeId(null)} />}
         </ReactFlow>
     )

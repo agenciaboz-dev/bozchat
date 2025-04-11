@@ -28,6 +28,7 @@ export interface FlowNodeData {
     }) => void;
     value: string;
     editNode: (node: FlowNode | null) => void;
+    fitNodeView: (node: FlowNode | string) => void;
     deleteNode?: (node: FlowNode) => void;
     getChildren: (parentId: string, type?: "direct" | "recursive") => FlowNode[];
     media?: {

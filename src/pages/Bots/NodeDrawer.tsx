@@ -5,20 +5,22 @@ import { Close } from "@mui/icons-material"
 import { useSnackbar } from "burgos-snackbar"
 import { BotMessageTab } from "./BotMessageTab"
 import { BotActionsTab } from "./BotActionsTab"
+import { BotLoopTab } from "./BotLoopTab"
 
 interface NodeDrawerProps {
     node: FlowNode | null
     onClose: () => void
     saveNode: (node_id: string, value: FlowNodeData) => void
+    nodes: FlowNode[]
 }
 
-export const NodeDrawer: React.FC<NodeDrawerProps> = ({ node, onClose, saveNode }) => {
+export const NodeDrawer: React.FC<NodeDrawerProps> = ({ node, onClose, saveNode, nodes }) => {
     const inputRef = useRef<HTMLInputElement>(null)
     const isMobile = useMediaQuery("(orientation: portrait)")
     const { snackbar } = useSnackbar()
 
     const [nodeData, setNodeData] = useState(node?.data)
-    const [currentTab, setCurrentTab] = useState<"message" | "actions">("message")
+    const [currentTab, setCurrentTab] = useState<"message" | "actions" | "loop">("message")
 
     const onUpdateData = (data: FlowNodeData) => {
         if (!node?.id) return
@@ -53,11 +55,13 @@ export const NodeDrawer: React.FC<NodeDrawerProps> = ({ node, onClose, saveNode 
                     <Tabs value={currentTab} onChange={(_, value) => setCurrentTab(value)} variant="fullWidth">
                         <Tab value={"message"} label="Mensagem" />
                         <Tab value={"actions"} label="Ações" />
+                        <Tab value={"loop"} label="Loop" />
                     </Tabs>
                 )}
 
                 {currentTab === "message" && <BotMessageTab node={node} saveNode={saveNode} setNodeData={setNodeData} nodeData={nodeData} />}
                 {currentTab === "actions" && <BotActionsTab node={node} data={nodeData} updateData={onUpdateData} saveNode={saveNode} />}
+                {currentTab === "loop" && <BotLoopTab nodes={nodes} node={node} data={nodeData} updateData={onUpdateData} saveNode={saveNode} />}
             </Paper>
         </Drawer>
     )

@@ -45,6 +45,7 @@ export const MessageNode: React.FC<MessageNodeProps> = (node) => {
         closeMenu()
     }
 
+
     return (
         <>
             <Paper
@@ -98,20 +99,6 @@ export const MessageNode: React.FC<MessageNodeProps> = (node) => {
                         onClick={() => (loopingNodeId ? addLoop() : node.data.editNode(node))}
                     />
                 ) : (
-                    // <Typography
-                    //     sx={{
-                    //         color: "secondary.main",
-                    //         fontWeight: "bold",
-                    //         whiteSpace: "pre-wrap",
-                    //         maxHeight: nodeHeight,
-                    //         overflow: "scroll",
-                    //         // fontSize: "0.8rem",
-                    //         margin: -2,
-                    //         padding: 2,
-                    //     }}
-                    // >
-                    //     {node.data.value}
-                    // </Typography>
                     <Button
                         color="secondary"
                         sx={{ alignItems: "center", gap: 0.5, flexDirection: "column" }}
@@ -159,7 +146,7 @@ export const MessageNode: React.FC<MessageNodeProps> = (node) => {
                 >
                     <MenuItem onClick={() => addNode("message")}>Resposta do bot</MenuItem>
                     <MenuItem onClick={() => addNode("response")}>Interação do usuário</MenuItem>
-                    <MenuItem onClick={() => startAddingLoop()}>Recomeçar a partir de:</MenuItem>
+                    <MenuItem onClick={() => startAddingLoop()}>Iniciar loop</MenuItem>
                 </Menu>
             </Paper>
             {node.data.actions && node.data.actions.length > 0 && (
@@ -176,7 +163,13 @@ export const MessageNode: React.FC<MessageNodeProps> = (node) => {
             {!!node.data.next_node_id && (
                 <Box sx={{ position: "absolute", bottom: -65, left: 0, width: 1, alignItems: "center", flexDirection: "column" }}>
                     <hr style={{ height: 40, color: theme.palette.warning.main }} />
-                    <Chip icon={<Refresh />} label={node.data.next_node_id} size="small" color="warning" />
+                    <Chip
+                        icon={<Refresh />}
+                        label={"loop"}
+                        size="small"
+                        color="warning"
+                        onClick={() => node.data.fitNodeView(node.data.next_node_id!)}
+                    />
                 </Box>
             )}
         </>

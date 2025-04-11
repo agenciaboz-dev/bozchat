@@ -121,7 +121,7 @@ export const BotForm: React.FC<BotFormProps> = ({ onSubmit, bot, onDelete }) => 
             right={
                 <Box sx={{ gap: "1vw" }}>
                     {bot && <Button onClick={onDeleteClick}>{deleting ? <CircularProgress size="1.5rem" /> : "Deletar"}</Button>}
-                    <Button variant="contained" onClick={() => formik.handleSubmit()} disabled={!formik.values.name || !formik.values.expiry_minutes}>
+                    <Button variant="contained" onClick={() => formik.handleSubmit()} disabled={!formik.values.name}>
                         {loading ? <CircularProgress size={"1.5rem"} color="secondary" /> : "Salvar"}
                     </Button>
                 </Box>
