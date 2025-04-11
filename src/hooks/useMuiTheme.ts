@@ -52,6 +52,9 @@ export const useMuiTheme = () => {
                             styleOverrides: {
                                 columnHeader: {
                                     backgroundColor: darkMode ? undefined : "#e9e9e9",
+                                    color: darkMode ? colors.secondary : colors.text.secondary,
+                                },
+                                columnSeparator: {
                                     color: colors.text.secondary,
                                 },
                                 cell: {
