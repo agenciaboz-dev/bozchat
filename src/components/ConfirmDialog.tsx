@@ -11,7 +11,7 @@ export const ConfirmDialog: React.FC<ConfirmDialogProps> = ({}) => {
     const styles = {
         dialog: {
             display: "flex",
-            gap: isMobile ? "5vw" : "",
+            gap: isMobile ? "5vw" : "0.5vw",
             justifyContent: "center",
             padding: isMobile ? "5vw" : "1vw",
             width: isMobile ? "90vw" : "40vw",
