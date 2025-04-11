@@ -185,7 +185,7 @@ export const Templates: React.FC<TemplatesProps> = ({ nagazap, setShowInformatio
     const deleteTemplate = () => {
         confirm({
             title: "Deletar template",
-            content: "Essa ação é permanente e irreversível. Deseja continuar?",
+            content: "Esta ação é permanente e irreversível. Deseja continuar?",
             onConfirm: async () => {
                 if (loading || !selectedTemplate) return
                 setLoading(true)

@@ -48,7 +48,7 @@ export const TemplatePreview: React.FC<TemplatePreviewProps> = ({ components, im
                 }}
                 elevation={realMessage ? 0 : undefined}
             >
-                {!realMessage && <TrianguloFudido alignment="left" color={darkMode ? "#2a323c" : "#eaeaea"} />}
+                {!realMessage && <TrianguloFudido alignment="left" color={darkMode ? "#2a323c" : "#ffffff"} />}
                 {components.map((component, index) => {
                     if (!component) return null
                     if (component.format == "IMAGE") {
