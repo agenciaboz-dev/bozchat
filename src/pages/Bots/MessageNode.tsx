@@ -161,13 +161,24 @@ export const MessageNode: React.FC<MessageNodeProps> = (node) => {
             )}
             <Typography sx={{ position: "absolute", top: -10, right: -35, color: "text.disabled" }}>Bot</Typography>
             {!!node.data.next_node_id && (
-                <Box sx={{ position: "absolute", bottom: -65, left: 0, width: 1, alignItems: "center", flexDirection: "column" }}>
-                    <hr style={{ height: 40, color: theme.palette.warning.main }} />
+                <Box
+                    sx={{
+                        position: "absolute",
+                        bottom: -65,
+                        left: 0,
+                        width: 1,
+                        alignItems: "center",
+                        flexDirection: "column",
+                        pointerEvents: "none",
+                    }}
+                >
+                    <hr style={{ height: 40, color: theme.palette.warning.main, pointerEvents: "none" }} />
                     <Chip
                         icon={<Refresh />}
                         label={"loop"}
                         size="small"
                         color="warning"
+                        sx={{ pointerEvents: "auto" }}
                         onClick={() => node.data.fitNodeView(node.data.next_node_id!)}
                     />
                 </Box>

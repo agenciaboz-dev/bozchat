@@ -323,12 +323,17 @@ export const FlowLayout: React.FC<FlowLayoutProps> = ({ bot_id, botInstances, se
         console.log({ data })
         if (!data.from || !data.to) return
 
-        const node = nodes.find((item) => item.id === data.from)
-        if (!node) return
+        setNodes((nodes) => {
+            const node = nodes.find((item) => item.id === data.from)
+            if (!node) return nodes
 
-        onEditNode(data.from, { next_node_id: data.to })
-        setLoopingNodeId(null)
-        fitNodeView(node)
+            node.data.next_node_id = data.to
+
+            onEditNode(data.from, node.data)
+            setLoopingNodeId(null)
+            fitNodeView(node)
+            return nodes
+        })
     }
 
     // Example usage in your React component
