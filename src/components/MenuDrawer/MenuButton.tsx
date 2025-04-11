@@ -25,17 +25,17 @@ export const MenuButton: React.FC<MenuButtonProps> = ({ menu, sx }) => {
 
     const buildStyle = (active: boolean, menu: Menu) => {
         const menuItemStyle: SxProps = {
-            backgroundColor: active ? (menu.submenus ? "" : "background.default") : "",
+            backgroundColor: active ? (menu.submenus ? "" : "primary.main") : "",
             color: darkMode
                 ? active
                     ? menu.submenus
-                        ? "secondary.main"
-                        : "primary.main"
-                    : "secondary.main"
+                        ? "text.secondary"
+                        : "secondary.main"
+                    : "text.secondary"
                 : active
                 ? menu.submenus
                     ? "text.secondary"
-                    : "primary.main"
+                    : "background.default"
                 : "text.secondary",
             pointerEvents: active ? (menu.submenus ? "auto" : "none") : "auto",
             fontWeight: darkMode ? "bold" : active ? "bold" : "normal",

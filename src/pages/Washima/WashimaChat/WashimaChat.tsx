@@ -17,6 +17,7 @@ import { CopyAllButton } from "./WashimaTools/CopyAll"
 import { useWashimaInput } from "../../../hooks/useWashimaInput"
 import Message from "../../Zap/Message"
 import { SelectContactsModal } from "../SelectContactsModal/SelectContactsModal"
+import { useDarkMode } from "../../../hooks/useDarkMode"
 
 interface WashimaChatProps {
     washima: Washima
@@ -26,8 +27,9 @@ interface WashimaChatProps {
 }
 
 export const WashimaChat: React.FC<WashimaChatProps> = ({ washima, chat, onClose, inBoards }) => {
-    const io = useIo()
     const isMobile = useMediaQuery("(orientation: portrait)")
+    const { darkMode } = useDarkMode()
+    const io = useIo()
     const messagesBoxRef = useRef<HTMLDivElement>(null)
     const washimaInput = useWashimaInput()
 
@@ -235,7 +237,7 @@ export const WashimaChat: React.FC<WashimaChatProps> = ({ washima, chat, onClose
             sx={{
                 flex: 1,
                 justifyContent: isMobile ? "flex-end" : "center",
-                bgcolor: inBoards ? "transparent" : "background.paper",
+                bgcolor: inBoards ? "transparent" : darkMode ? "background.paper" : "#e9e9e9",
                 // height: isMobile ? "77vh" : "90vh",
                 padding: inBoards ? 0 : isMobile ? "5vw" : "1vw",
                 color: "text.secondary",
