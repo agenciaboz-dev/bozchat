@@ -13,6 +13,7 @@ interface BotLoopTabProps {
     saveNode: (node_id: string, value: FlowNodeData) => void
     node: FlowNode | null
     nodes: FlowNode[]
+    onClose: () => void
 }
 
 export const BotLoopTab: React.FC<BotLoopTabProps> = (props) => {
@@ -23,6 +24,11 @@ export const BotLoopTab: React.FC<BotLoopTabProps> = (props) => {
         if (!props.data) return
 
         props.updateData({ ...props.data, next_node_id: undefined })
+    }
+
+    const startLoop = () => {
+        setLoopingNodeId(props.node?.id || null)
+        props.onClose()
     }
 
     return (
@@ -40,7 +46,7 @@ export const BotLoopTab: React.FC<BotLoopTabProps> = (props) => {
                             padding: "0.5vw",
                             justifyContent: "space-between",
                         }}
-                        onClick={() => (loopingNode ? removeLoop() : setLoopingNodeId(props.node?.id || null))}
+                        onClick={() => (loopingNode ? removeLoop() : startLoop())}
                     >
                         <Box sx={{ alignItems: "center" }}>
                             <Checkbox checked={!!loopingNode} />

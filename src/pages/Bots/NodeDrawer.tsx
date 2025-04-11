@@ -35,7 +35,9 @@ export const NodeDrawer: React.FC<NodeDrawerProps> = ({ node, onClose, saveNode,
 
     useEffect(() => {
         setNodeData(node?.data)
-    }, [node])
+        console.log("aaaa")
+        console.log(node?.data)
+    }, [node?.data])
 
     useEffect(() => {
         if (inputRef.current) {
@@ -65,7 +67,9 @@ export const NodeDrawer: React.FC<NodeDrawerProps> = ({ node, onClose, saveNode,
 
                 {currentTab === "message" && <BotMessageTab node={node} saveNode={saveNode} setNodeData={setNodeData} nodeData={nodeData} />}
                 {currentTab === "actions" && <BotActionsTab node={node} data={nodeData} updateData={onUpdateData} saveNode={saveNode} />}
-                {currentTab === "loop" && <BotLoopTab nodes={nodes} node={node} data={nodeData} updateData={onUpdateData} saveNode={saveNode} />}
+                {currentTab === "loop" && (
+                    <BotLoopTab nodes={nodes} node={node} data={nodeData} updateData={onUpdateData} saveNode={saveNode} onClose={onClose} />
+                )}
 
                 {(currentTab === "actions" || currentTab === "loop") && (
                     <Button variant="contained" startIcon={<Save />} sx={{ alignSelf: "flex-end", marginTop: "1vw" }} onClick={save}>
