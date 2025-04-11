@@ -1,11 +1,11 @@
 import React, { useEffect, useRef, useState } from "react"
-import { Box, Drawer, IconButton, Paper, Tab, Tabs, Typography, useMediaQuery } from "@mui/material"
+import { Box, Button, Drawer, IconButton, Paper, Tab, Tabs, Typography } from "@mui/material"
 import { FlowNode, FlowNodeData } from "../../types/server/class/Bot/Bot"
-import { Close } from "@mui/icons-material"
-import { useSnackbar } from "burgos-snackbar"
+import { Close, Save } from "@mui/icons-material"
 import { BotMessageTab } from "./BotMessageTab"
 import { BotActionsTab } from "./BotActionsTab"
 import { BotLoopTab } from "./BotLoopTab"
+import { useSnackbar } from "burgos-snackbar"
 
 interface NodeDrawerProps {
     node: FlowNode | null
@@ -16,7 +16,6 @@ interface NodeDrawerProps {
 
 export const NodeDrawer: React.FC<NodeDrawerProps> = ({ node, onClose, saveNode, nodes }) => {
     const inputRef = useRef<HTMLInputElement>(null)
-    const isMobile = useMediaQuery("(orientation: portrait)")
     const { snackbar } = useSnackbar()
 
     const [nodeData, setNodeData] = useState(node?.data)
@@ -28,9 +27,14 @@ export const NodeDrawer: React.FC<NodeDrawerProps> = ({ node, onClose, saveNode,
         setNodeData(data)
     }
 
+    const save = () => {
+        if (!node || !nodeData) return
+        saveNode(node.id, nodeData)
+        snackbar({ severity: "success", text: "Salvo" })
+    }
+
     useEffect(() => {
         setNodeData(node?.data)
-        setCurrentTab("message")
     }, [node])
 
     useEffect(() => {
@@ -62,6 +66,12 @@ export const NodeDrawer: React.FC<NodeDrawerProps> = ({ node, onClose, saveNode,
                 {currentTab === "message" && <BotMessageTab node={node} saveNode={saveNode} setNodeData={setNodeData} nodeData={nodeData} />}
                 {currentTab === "actions" && <BotActionsTab node={node} data={nodeData} updateData={onUpdateData} saveNode={saveNode} />}
                 {currentTab === "loop" && <BotLoopTab nodes={nodes} node={node} data={nodeData} updateData={onUpdateData} saveNode={saveNode} />}
+
+                {(currentTab === "actions" || currentTab === "loop") && (
+                    <Button variant="contained" startIcon={<Save />} sx={{ alignSelf: "flex-end", marginTop: "1vw" }} onClick={save}>
+                        salvar
+                    </Button>
+                )}
             </Paper>
         </Drawer>
     )

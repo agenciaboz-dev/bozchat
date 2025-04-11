@@ -1,14 +1,16 @@
 import React from "react"
-import { Avatar, Box, MenuItem, Paper, Typography, useMediaQuery } from "@mui/material"
+import { Avatar, Box, IconButton, MenuItem, Paper, Typography, useMediaQuery } from "@mui/material"
 import { FlowNode, FlowNodeData } from "../../types/server/class/Bot/Bot"
 import { useDarkMode } from "../../hooks/useDarkMode"
 import { PhotoView } from "react-photo-view"
 import { AudioPlayer } from "../Washima/AudioComponents/AudioPlayer"
 import { TrianguloFudido } from "../Zap/TrianguloFudido"
+import { Delete } from "@mui/icons-material"
 
 interface BotMessageContainerProps {
     node: FlowNode | null
     nodeData?: FlowNodeData
+    removeMedia?: () => void
 }
 
 export const BotMessageContainer: React.FC<BotMessageContainerProps> = (props) => {
@@ -69,6 +71,13 @@ export const BotMessageContainer: React.FC<BotMessageContainerProps> = (props) =
                             }}
                             controls
                         />
+                    )}
+                    {props.removeMedia && (
+                        <Box sx={{ position: "absolute", top: 0, right: 0 }}>
+                            <IconButton onClick={props.removeMedia}>
+                                <Delete color="error" />
+                            </IconButton>
+                        </Box>
                     )}
                 </>
             )}

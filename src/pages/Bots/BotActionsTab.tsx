@@ -102,11 +102,7 @@ export const BotActionsTab: React.FC<BotActionsTabProps> = (props) => {
         props.updateData(newData)
     }
 
-    const save = () => {
-        if (!props.node || !props.data) return
-        props.saveNode(props.node.id, props.data)
-        snackbar({ severity: "success", text: "Salvo" })
-    }
+    
 
     const updateBoardSettings = (options: { room_id?: string | null; board_id?: string | null }) => {
         if (!props.data || !props.data.actions || !boardChat) return
@@ -133,51 +129,46 @@ export const BotActionsTab: React.FC<BotActionsTabProps> = (props) => {
     }, [boards, boardChat])
 
     return (
-        <Box sx={{ flexDirection: "column", flex: 1, gap: "1vw" }}>
-            <Box sx={{ flexDirection: "column", gap: "1vw", padding: "1vw", bgcolor: "background.default", flex: 1, borderRadius: "0.5vw" }}>
-                <TextInfo>As ações marcadas serão executadas quando esta mensagem for enviada</TextInfo>
-                <ActionContainer
-                    checked={!!boardChat}
-                    target={"board:room:chat:new"}
-                    title="Enviar para um quadro"
-                    description="Copie esta conversa para um quadro"
-                    misconfigured={boardChat?.settings.misconfigured}
-                    settingsComponent={
-                        <Box sx={{ gap: "1vw", flexDirection: "column" }}>
-                            <Autocomplete
-                                options={boards}
-                                value={destinationBoard}
-                                onChange={(_, value) => {
-                                    setDestinationBoard(value)
-                                    updateBoardSettings({ board_id: value?.id, room_id: null })
-                                }}
-                                renderInput={(params) => <TextField {...params} label="Quadro" />}
-                                fullWidth
-                                getOptionLabel={(option) => option.name}
-                                getOptionKey={(option) => option.id}
-                                isOptionEqualToValue={(option, value) => option.id === value.id}
-                            />
-                            <Autocomplete
-                                options={rooms}
-                                value={destinationRoom}
-                                onChange={(_, value) => {
-                                    setDestinationRoom(value)
-                                    updateBoardSettings({ room_id: value?.id, board_id: null })
-                                }}
-                                renderInput={(params) => <TextField {...params} label="Sala" />}
-                                fullWidth
-                                getOptionLabel={(option) => option.name}
-                                getOptionKey={(option) => option.id}
-                                isOptionEqualToValue={(option, value) => option.id === value.id}
-                            />
-                        </Box>
-                    }
-                    onCheck={handleCheckPress}
-                />
-            </Box>
-            <Button variant="contained" startIcon={<Save />} sx={{ alignSelf: "flex-end" }} onClick={save}>
-                salvar
-            </Button>
+        <Box sx={{ flexDirection: "column", gap: "1vw", padding: "1vw", bgcolor: "background.default", flex: 1, borderRadius: "0.5vw" }}>
+            <TextInfo>As ações marcadas serão executadas quando esta mensagem for enviada</TextInfo>
+            <ActionContainer
+                checked={!!boardChat}
+                target={"board:room:chat:new"}
+                title="Enviar para um quadro"
+                description="Copie esta conversa para um quadro"
+                misconfigured={boardChat?.settings.misconfigured}
+                settingsComponent={
+                    <Box sx={{ gap: "1vw", flexDirection: "column" }}>
+                        <Autocomplete
+                            options={boards}
+                            value={destinationBoard}
+                            onChange={(_, value) => {
+                                setDestinationBoard(value)
+                                updateBoardSettings({ board_id: value?.id, room_id: null })
+                            }}
+                            renderInput={(params) => <TextField {...params} label="Quadro" />}
+                            fullWidth
+                            getOptionLabel={(option) => option.name}
+                            getOptionKey={(option) => option.id}
+                            isOptionEqualToValue={(option, value) => option.id === value.id}
+                        />
+                        <Autocomplete
+                            options={rooms}
+                            value={destinationRoom}
+                            onChange={(_, value) => {
+                                setDestinationRoom(value)
+                                updateBoardSettings({ room_id: value?.id, board_id: null })
+                            }}
+                            renderInput={(params) => <TextField {...params} label="Sala" />}
+                            fullWidth
+                            getOptionLabel={(option) => option.name}
+                            getOptionKey={(option) => option.id}
+                            isOptionEqualToValue={(option, value) => option.id === value.id}
+                        />
+                    </Box>
+                }
+                onCheck={handleCheckPress}
+            />
         </Box>
     )
 }

@@ -1,12 +1,7 @@
 import React from "react"
-import { Avatar, Box, IconButton, MenuItem, Paper, Typography, useMediaQuery } from "@mui/material"
+import { Box } from "@mui/material"
 import { FlowNode, FlowNodeData } from "../../types/server/class/Bot/Bot"
 import { useSnackbar } from "burgos-snackbar"
-import { useDarkMode } from "../../hooks/useDarkMode"
-import { PhotoView } from "react-photo-view"
-import { Delete } from "@mui/icons-material"
-import { AudioPlayer } from "../Washima/AudioComponents/AudioPlayer"
-import { TrianguloFudido } from "../Zap/TrianguloFudido"
 import { ChatInput } from "../../components/ChatInput"
 import { TextInfo } from "./TextInfo"
 import { BotMessageContainer } from "./BotMessageContainer"
@@ -20,15 +15,6 @@ interface SettingsTabProps {
 
 export const BotMessageTab: React.FC<SettingsTabProps> = (props) => {
     const { snackbar } = useSnackbar()
-    const isMobile = useMediaQuery("(orientation: portrait)")
-    const { darkMode } = useDarkMode()
-
-    const lightModePrimary = "#99dff9"
-    const lightModeSecondary = "#D9D9D9"
-    const primary = "#0F6787"
-    const secondary = "#2a323c"
-
-    const limited_size = true
 
     const onSaveClick = () => {
         if (!props.node || (props.node.type !== "response" && !props.nodeData) || props.nodeData === undefined) return
@@ -66,7 +52,7 @@ export const BotMessageTab: React.FC<SettingsTabProps> = (props) => {
                         <TextInfo>Essas respostas são os gatilhos que ativarão a próxima resposta do bot.</TextInfo>
                     </>
                 )}
-                <BotMessageContainer node={props.node} nodeData={props.nodeData} />
+                <BotMessageContainer node={props.node} nodeData={props.nodeData} removeMedia={removeMedia} />
             </Box>
 
             <ChatInput
