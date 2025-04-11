@@ -22,7 +22,7 @@ interface BoardsProps {}
 export const Boards: React.FC<BoardsProps> = ({}) => {
     const isMobile = useMediaQuery("(orientation: portrait)")
 
-    const { company, user } = useUser()
+    const { company, user, boz } = useUser()
     const { confirm } = useConfirmDialog()
     const navigate = useNavigate()
     const { fetchBoards, loading, setLoading } = useApi()
@@ -38,7 +38,7 @@ export const Boards: React.FC<BoardsProps> = ({}) => {
     const removeBoard = (board: Board) => setBoards((list) => list.filter((item) => item.id !== board.id))
 
     const fetchData = async () => {
-        setBoards(await fetchBoards())
+        setBoards(await fetchBoards({ params: { all: boz && user?.admin ? true : undefined } }))
     }
 
     const updateBoards = async (data: Partial<Board> & { id: string }) => {

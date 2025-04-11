@@ -32,11 +32,17 @@ export const UserProvider: React.FC<UserProviderProps> = ({ children }) => {
     const [user, setUser] = useState<User | null>(null)
     const [timestamp, setTimestamp] = useState(new Date().getTime())
     const [company, setCompany] = useState<Company | null>(null)
+    const [boz, setBoz] = useState(false)
 
-    const boz = useMemo(
-        () => company?.id === "1ce602ff-7ebe-4e43-ab9a-7758fe7020f8" || company?.id === "6e668524-7f7c-4ee8-97c1-87a9ab7a43ca",
-        [company]
-    )
+    useEffect(() => {
+        if (user && (company?.id === "1ce602ff-7ebe-4e43-ab9a-7758fe7020f8" || company?.id === "6e668524-7f7c-4ee8-97c1-87a9ab7a43ca")) {
+            setBoz(true)
+        }
+
+        if (!user) {
+            setBoz(false)
+        }
+    }, [company, user])
 
     useEffect(() => {
         if (user) {

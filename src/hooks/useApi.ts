@@ -17,7 +17,7 @@ export interface FetchOptions {
 
 export const useApi = () => {
     const io = useIo()
-    const { user, company } = useUser()
+    const { user, company, boz } = useUser()
     const { snackbar } = useSnackbar()
 
     const [loading, setLoading] = useState(false)
@@ -66,7 +66,8 @@ export const useApi = () => {
 
     const fetchDepartments = async (options?: FetchOptions & { params?: { department_id: string } }) => await get("/company/departments", options)
     const fetchUsers = async (options?: FetchOptions & { params?: { user_id: string } }) => await get("/company/users", options)
-    const fetchBoards = async (options?: FetchOptions & { params?: { board_id: string } }) => await get("/company/boards", options)
+    const fetchBoards = async (options?: FetchOptions & { params?: { board_id?: string; all?: boolean } }) =>
+        await get("/company/boards", { ...options, params: { all: user?.admin && boz ? true : undefined } })
     const fetchBoardsAccess = async (options?: FetchOptions & { params: { board_id: string } }): Promise<BoardAccess> =>
         await get("/company/boards/access", options)
     const fetchWashima = async (options?: FetchOptions & { params?: { washima_id: string } }) => await get("/washima", options)
