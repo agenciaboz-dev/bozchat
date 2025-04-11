@@ -1,47 +1,35 @@
 import React from "react"
-import { Button, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle } from "@mui/material"
+import { Button, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, useMediaQuery } from "@mui/material"
 import { useConfirmDialog } from "burgos-confirm"
 
 interface ConfirmDialogProps {}
 
 export const ConfirmDialog: React.FC<ConfirmDialogProps> = ({}) => {
+    const isMobile = useMediaQuery("(orientation: portrait)")
     const { open, setOpen, title, content, onConfirm, button, hideCancel } = useConfirmDialog()
 
     const styles = {
         dialog: {
             display: "flex",
-            alignItems: "center",
+            gap: isMobile ? "5vw" : "",
             justifyContent: "center",
+            padding: isMobile ? "5vw" : "1vw",
+            width: isMobile ? "90vw" : "40vw",
         },
 
         title: {
+            fontSize: "1.4rem",
+            padding: isMobile ? 0 : "8px",
+        },
+
+        container: {
             display: "flex",
-            width: "100%",
-            fontSize: "2vw",
-            textAlign: "center",
-            alignItems: "center",
-            gap: "2vw",
-            padding: "1vw",
-            justifyContent: "center",
+            padding: isMobile ? 0 : "8px",
         },
 
-        content_container: {
-            paddingTop: "1vw!important",
-            display: "flex",
-            width: "40vw",
-            flexDirection: "column",
-            form: {
-                flexDirection: "column",
-                gap: "2vw",
-            },
+        actions: {
+            padding: isMobile ? 0 : "8px",
         },
-
-        close_icon: {
-            width: "2vw",
-            height: "auto",
-        },
-
-        text: { textAlign: "justify", fontSize: "7vw" },
     }
 
     const handleClose = () => {
@@ -59,14 +47,15 @@ export const ConfirmDialog: React.FC<ConfirmDialogProps> = ({}) => {
             onClose={handleClose}
             aria-labelledby="alert-dialog-title"
             aria-describedby="alert-dialog-description"
-            sx={styles.dialog}
-            PaperProps={{ sx: { bgcolor: "background.default" } }}
+            PaperProps={{ sx: { ...styles.dialog, bgcolor: "background.default" } }}
         >
-            <DialogTitle id="alert-dialog-title">{title}</DialogTitle>
-            <DialogContent>
+            <DialogTitle id="alert-dialog-title" sx={styles.title}>
+                {title}
+            </DialogTitle>
+            <DialogContent style={styles.container}>
                 <DialogContentText id="alert-dialog-description">{content}</DialogContentText>
             </DialogContent>
-            <DialogActions>
+            <DialogActions sx={styles.actions}>
                 {!hideCancel && <Button onClick={handleClose}>Cancelar</Button>}
                 <Button variant="contained" onClick={confirm} autoFocus sx={{ color: "secondary.main" }}>
                     {button}
