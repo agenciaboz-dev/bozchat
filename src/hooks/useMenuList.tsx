@@ -10,7 +10,7 @@ import { useMemo } from "react"
 export const useMenuList = () => {
     const navigate = useNavigate()
 
-    const { boz } = useUser()
+    const { boz, user } = useUser()
 
     const StyledBadge = styled(Badge)<BadgeProps>(({ theme }) => ({
         "& .MuiBadge-badge": {
@@ -78,7 +78,7 @@ export const useMenuList = () => {
             },
         ]
 
-        if (boz)
+        if (boz && user?.admin)
             list.push({
                 icon: <Security />,
                 name: "Administração",
