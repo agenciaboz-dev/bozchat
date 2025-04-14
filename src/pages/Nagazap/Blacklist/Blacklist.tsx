@@ -16,7 +16,7 @@ interface BlacklistProps {
     setShowInformations: React.Dispatch<React.SetStateAction<boolean>>
 }
 
-const mask = new Inputmask({ mask: "(99) 9999-9999", placeholder: "", greedy: false }) as anys
+const mask = new Inputmask({ mask: "(99) 9999-9999", placeholder: "", greedy: false }) as any
 
 export const Blacklist: React.FC<BlacklistProps> = ({ nagazap, setNagazap, setShowInformations }) => {
     const { company, user } = useUser()
