@@ -22,8 +22,16 @@ export const NoChat: React.FC<NoChatProps> = ({ nagazap }) => {
         >
             <WhatsappWebSvg />
             <Box sx={{ fontSize: "2rem" }}>WhatsApp {nagazap ? "Broadcast" : "Business"}</Box>
-            <Box>Envie mensagens em massa a partir de uma planilha de contatos.</Box>
-            <Box>Você pode enviar templates pré-aprovados ou responder conversas.</Box>
+            <Box>
+                {nagazap
+                    ? "Envie mensagens em massa a partir de uma planilha de contatos."
+                    : "Envie e receba mensagens sem precisar do celular conectado à conta."}
+            </Box>
+            <Box>
+                {nagazap
+                    ? "Você pode enviar templates pré-aprovados ou responder conversas."
+                    : "Use o Whatsapp em quantos dispositivos quiser, ao mesmo tempo."}
+            </Box>
 
             <Box
                 sx={{
