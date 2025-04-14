@@ -51,7 +51,7 @@ export const Message: React.ForwardRefRenderFunction<HTMLDivElement, MessageProp
     const theme = useMuiTheme()
     const { darkMode } = useDarkMode()
     const lightModePrimary = "#99dff9"
-    const lightModeSecondary = "#D9D9D9"
+    const lightModeSecondary = "#e9e9e9"
     const primary = "#0f6787"
     const secondary = "#2a323c"
 

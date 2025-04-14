@@ -92,13 +92,13 @@ export const NagazapForm: React.FC<NagazapFormProps> = ({ onSuccess, setShowInfo
                 ) : undefined
             }
         >
-            <Box sx={{ flex: 1, flexDirection: "column", gap: 3, color: "secondary.main" }}>
+            <Box sx={{ flex: 1, flexDirection: "column", gap: 3, color: "text.secondary" }}>
                 <p>
-                    Para cadastrar uma conta no Nagazap, é preciso ter uma <PrimaryText>MBA (Meta Business Account)</PrimaryText> ativa com um App
+                    Para cadastrar uma conta no Broadcast, é preciso ter uma <PrimaryText>MBA (Meta Business Account)</PrimaryText> ativa com um App
                     adicionado e configurado para usar o Whatsapp. Todos os IDs abaixo podem ser coletados do painel do App no Meta.
                 </p>
-                <p>App ID: localizado no canto superior esquerdo, no painel do App</p>
-                <p style={{ color: theme.palette.secondary.main }}>
+                <p>App ID: localizado no canto superior esquerdo, no painel do App.</p>
+                <p>
                     Token, Phone ID, Business ID: No painel do App, no menu a esquerda. Expanda <PrimaryText>Whatsapp</PrimaryText> e selecione{" "}
                     <PrimaryText>configuração da API</PrimaryText>. O Token é gerado na primeira seção dessa página, e logo abaixo estão os IDs que
                     faltam.
@@ -146,7 +146,7 @@ export const NagazapForm: React.FC<NagazapFormProps> = ({ onSuccess, setShowInfo
                 <Typography>
                     3. Acesse as configurações do WhatsApp. No menu lateral esquerdo: Clique em{" "}
                     <InlineTypography highlight>WhatsApp</InlineTypography>. Em seguida, selecione{" "}
-                    <InlineTypography highlight>Configurações</InlineTypography> (ou <InlineTypography highlight>Configuration</InlineTypography>)
+                    <InlineTypography highlight>Configurações</InlineTypography> (ou <InlineTypography highlight>Configuration</InlineTypography>).
                 </Typography>
 
                 <Box sx={{ alignItems: "center", gap: "1vw", margin: "-0.5vw 0" }}>

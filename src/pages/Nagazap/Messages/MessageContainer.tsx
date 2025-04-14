@@ -23,7 +23,7 @@ export const MessageContainer: React.FC<MessageContainerProps> = ({ message, nag
     const { darkMode } = useDarkMode()
     const formatTime = useFormatMessageTime()
     const lightModePrimary = "#99dff9"
-    const lightModeSecondary = "#D9D9D9"
+    const lightModeSecondary = "#e9e9e9"
     const primary = "#0F6787"
     const secondary = "#2a323c"
 

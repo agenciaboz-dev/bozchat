@@ -5,6 +5,8 @@ import { Close, Search, Send } from "@mui/icons-material"
 import { Washima } from "../../../types/server/class/Washima/Washima"
 import { ContactItem } from "./ContactItem"
 import normalize from "../../../tools/normalize"
+import { textFieldStyle } from "../../../style/textfield"
+import { useDarkMode } from "../../../hooks/useDarkMode"
 
 interface SelectContactsModalProps {
     open: boolean
@@ -15,6 +17,7 @@ interface SelectContactsModalProps {
 }
 
 export const SelectContactsModal: React.FC<SelectContactsModalProps> = (props) => {
+    const { darkMode } = useDarkMode()
     const [selectedContactsIds, setSelectedContactsIds] = useState<string[]>([])
     const [searchedValue, setSearchedValue] = useState("")
 
@@ -50,7 +53,7 @@ export const SelectContactsModal: React.FC<SelectContactsModalProps> = (props) =
         <Dialog open={props.open} onClose={handleClose} PaperProps={{ sx: { maxWidth: "30vw", width: "30vw" } }}>
             <Box sx={{ flexDirection: "column", bgcolor: "background.default", gap: "0.5vw", padding: "1vw" }}>
                 <Box sx={{ alignItems: "center", justifyContent: "space-between" }}>
-                    <Typography sx={{ fontWeight: "bold", color: "secondary.main", fontSize: "1.2rem" }}>{props.title}</Typography>
+                    <Typography sx={{ fontWeight: "bold", color: "text.secondary", fontSize: "1.2rem" }}>{props.title}</Typography>
                     <IconButton onClick={handleClose}>
                         <Close />
                     </IconButton>
@@ -64,6 +67,18 @@ export const SelectContactsModal: React.FC<SelectContactsModalProps> = (props) =
                     InputProps={{
                         startAdornment: <Search />,
                         sx: { gap: "0.5vw" },
+                    }}
+                    sx={{
+                        ...textFieldStyle({ darkMode }),
+                        "& .MuiInput-underline:before": {
+                            borderBottomColor: "text.disabled",
+                        },
+                        "& .MuiInput-underline:hover:not(.Mui-disabled):before": {
+                            borderBottomColor: "text.secondary",
+                        },
+                        "& .MuiInput-underline:after": {
+                            borderBottomColor: "primary.main",
+                        },
                     }}
                 />
 
@@ -82,7 +97,7 @@ export const SelectContactsModal: React.FC<SelectContactsModalProps> = (props) =
                 </Box>
 
                 <Paper sx={{ padding: "1vw", margin: "-1vw", marginTop: "0.5vw", alignItems: "center", justifyContent: "space-between" }}>
-                    <Typography sx={{ fontWeight: "bold", color: "secondary.main" }}>
+                    <Typography sx={{ fontWeight: "bold", color: "text.secondary" }}>
                         {selectedContactsIds.length > 0
                             ? selectedContactsIds.length > 1
                                 ? `${selectedContactsIds.length} contatos selecionados`

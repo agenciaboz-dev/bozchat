@@ -15,9 +15,9 @@ interface BotMessageContainerProps {
 
 export const BotMessageContainer: React.FC<BotMessageContainerProps> = (props) => {
     const isMobile = useMediaQuery("(orientation: portrait)")
-    const darkMode = useDarkMode()
+    const { darkMode } = useDarkMode()
     const lightModePrimary = "#99dff9"
-    const lightModeSecondary = "#D9D9D9"
+    const lightModeSecondary = "#e9e9e9"
     const primary = "#0F6787"
     const secondary = "#2a323c"
 

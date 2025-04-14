@@ -47,7 +47,7 @@ const ActionContainer: React.FC<ActionContainerProps> = (props) => {
                         <Typography>{props.title}</Typography>
                     </Box>
                     <Tooltip arrow title={props.misconfigured ? "Essa ação precisa ser reconfigurada" : props.description}>
-                        <IconButton>
+                        <IconButton onClick={(e) => e.stopPropagation()}>
                             {props.misconfigured ? (
                                 <Report
                                     color="secondary"

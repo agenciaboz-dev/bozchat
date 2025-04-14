@@ -18,6 +18,7 @@ interface LogsProps {
 }
 
 const mask = new Inputmask({ mask: "(99) 9999-9999", placeholder: "", greedy: false }) as any
+const extra9Mask = new Inputmask({ mask: "(99) 99999-9999", placeholder: "", greedy: false }) as any
 
 export const Logs: React.FC<LogsProps> = ({ nagazap, setNagazap, setShowInformations }) => {
     const { company } = useUser()
@@ -73,7 +74,7 @@ export const Logs: React.FC<LogsProps> = ({ nagazap, setNagazap, setShowInformat
             field: "number",
             headerName: "Telefone",
             flex: 0.25,
-            valueFormatter: (value) => mask.format(value),
+            valueFormatter: (value) => extra9Mask.format(value),
         },
         {
             field: "data",
@@ -115,7 +116,7 @@ export const Logs: React.FC<LogsProps> = ({ nagazap, setNagazap, setShowInformat
             <Box sx={{ marginTop: "-1vw", gap: "1vw" }}>
                 <Box sx={{ flex: 1, flexDirection: "column" }}>
                     <Title2 name="Sucesso" />
-                    <Paper>
+                    <Paper sx={{ marginTop: isMobile ? "2vw" : "1vw" }}>
                         <DataGrid
                             loading={loading}
                             rows={nagazap.sentMessages}
@@ -138,7 +139,7 @@ export const Logs: React.FC<LogsProps> = ({ nagazap, setNagazap, setShowInformat
                 </Box>
                 <Box sx={{ flexDirection: "column", flex: 1 }}>
                     <Title2 name="Falhas" />
-                    <Paper>
+                    <Paper sx={{ marginTop: isMobile ? "2vw" : "1vw" }}>
                         <DataGrid
                             loading={loading}
                             rows={nagazap.failedMessages}

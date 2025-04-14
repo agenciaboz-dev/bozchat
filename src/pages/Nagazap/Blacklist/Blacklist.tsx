@@ -115,7 +115,7 @@ export const Blacklist: React.FC<BlacklistProps> = ({ nagazap, setNagazap, setSh
                 ) : undefined
             }
         >
-            <Paper sx={{ flex: 1, marginTop: "-2.5vw" }}>
+            <Paper sx={{ flex: 1 }}>
                 <DataGrid
                     loading={loading}
                     rows={blacklist}

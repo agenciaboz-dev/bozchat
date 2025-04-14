@@ -53,7 +53,7 @@ export const BotLoopTab: React.FC<BotLoopTabProps> = (props) => {
                             <Typography>Ativar loop</Typography>
                         </Box>
                         <Tooltip arrow title="Ao marcar esta opção, você deve selecionar qual etapa do fluxo será a próxima.">
-                            <IconButton>
+                            <IconButton onClick={(e) => e.stopPropagation()}>
                                 <InfoOutlined />
                             </IconButton>
                         </Tooltip>
