@@ -1,11 +1,11 @@
 import React, { useCallback, useEffect, useMemo, useRef, useState } from "react"
-import { Avatar, Box, IconButton, LinearProgress, Paper, Skeleton, useMediaQuery } from "@mui/material"
+import { Avatar, Box, debounce, IconButton, LinearProgress, Paper, Skeleton, TextField, Tooltip, Typography, useMediaQuery } from "@mui/material"
 import { Washima, WashimaMediaForm, WashimaProfilePic } from "../../../types/server/class/Washima/Washima"
 import CancelIcon from "@mui/icons-material/Cancel"
 import { api } from "../../../api"
 import { useIo } from "../../../hooks/useIo"
 import { WashimaInput } from "../WashimaInput"
-import { KeyboardDoubleArrowDown, Lock } from "@mui/icons-material"
+import { KeyboardDoubleArrowDown, Lock, Search } from "@mui/icons-material"
 import { WhatsappWebSvg } from "../WhatsappWebSvg"
 import { WashimaMessage } from "../../../types/server/class/Washima/WashimaMessage"
 import { WashimaGroupUpdate } from "../../../types/server/class/Washima/WashimaGroupUpdate"
@@ -18,6 +18,7 @@ import { useWashimaInput } from "../../../hooks/useWashimaInput"
 import Message from "../../Zap/Message"
 import { SelectContactsModal } from "../SelectContactsModal/SelectContactsModal"
 import { useDarkMode } from "../../../hooks/useDarkMode"
+import { ChatSearch } from "./ChatSearch"
 
 interface WashimaChatProps {
     washima: Washima
@@ -257,7 +258,7 @@ export const WashimaChat: React.FC<WashimaChatProps> = ({ washima, chat, onClose
                         padding: isMobile ? "2vw" : "",
                     }}
                 >
-                    {loading ? (
+                    {!profilePic && loading ? (
                         <Skeleton variant="circular" animation="wave" sx={{ width: isMobile ? "12vw" : "3vw", height: isMobile ? "12vw" : "3vw" }} />
                     ) : (
                         <PhotoProvider>
@@ -279,6 +280,7 @@ export const WashimaChat: React.FC<WashimaChatProps> = ({ washima, chat, onClose
                     <p style={{ fontWeight: "bold" }}>{chat?.name}</p>
                     {!!chat && (
                         <Box sx={{ marginLeft: "auto" }}>
+                            <ChatSearch washima_id={washima.id} chat_id={chat?.id._serialized} onMessageClick={setLoadingMessageId} />
                             <CopyAllButton chat={chat} washima_id={washima.id} />
                             <IconButton sx={{ color: "text.secondary", padding: isMobile ? "0" : "" }} onClick={onClose}>
                                 <CancelIcon />

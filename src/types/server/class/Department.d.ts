@@ -31,17 +31,17 @@ export declare class Department {
     load(data: DepartmentPrisma): void;
     update(data: Partial<DepartmentForm>): Promise<{
         users: {
-            id: string;
             name: string;
+            id: string;
         }[];
     } & {
-        id: string;
         name: string;
+        id: string;
         company_id: string;
     }>;
     delete(): Promise<{
-        id: string;
         name: string;
+        id: string;
         company_id: string;
     }>;
 }

@@ -1,15 +1,14 @@
 import React, { useCallback, useEffect, useRef, useState } from "react"
-import { Box, debounce, IconButton, TextField, useMediaQuery } from "@mui/material"
+import { Box, debounce, IconButton, useMediaQuery } from "@mui/material"
 import { Washima } from "../../types/server/class/Washima/Washima"
 import { ChatList } from "./ChatList"
 import { WashimaChat } from "./WashimaChat/WashimaChat"
-import { Edit, Search, Settings } from "@mui/icons-material"
+import { Settings } from "@mui/icons-material"
 import { Chat } from "../../types/Chat"
-import { textFieldStyle } from "../../style/textfield"
-import { useFormik } from "formik"
 import { api } from "../../api"
 import { WashimaSearch } from "./WashimaSearch"
 import { useUser } from "../../hooks/useUser"
+import { WashimaMessage } from "../../types/server/class/Washima/WashimaMessage"
 
 interface WashimaZapProps {
     washima: Washima
@@ -43,7 +42,17 @@ export const WashimaZap: React.FC<WashimaZapProps> = ({ washima, onEdit }) => {
         try {
             const response = await api.get("/washima/search", { params: { washima_id: washima.id, search: value } })
             const chats = response.data as Chat[]
-            onSearch(chats)
+            await onSearch(chats)
+
+            api.get("/washima/search", { params: { washima_id: washima.id, search: value, target: "messages" } }).then((response) => {
+                const messages = response.data as WashimaMessage[]
+                for (const message of messages) {
+                    const chat = washima.chats.find((chat) => chat.id._serialized === message.chat_id)
+                    if (chat) {
+                        chats.push({ ...chat, lastMessage: message })
+                    }
+                }
+            })
         } catch (error) {
             console.log(error)
         }
