@@ -1,7 +1,7 @@
 import { Prisma } from "@prisma/client";
 import { OvenForm, WhatsappForm, WhatsappTemplateComponent } from "../types/shared/Meta/WhatsappBusiness/WhatsappForm";
 import { UploadedFile } from "express-fileupload";
-import { BlacklistLog, FailedMessageLog, SentMessageLog } from "../types/shared/Meta/WhatsappBusiness/Logs";
+import { FailedMessageLog, SentMessageLog } from "../types/shared/Meta/WhatsappBusiness/Logs";
 import { WithoutFunctions } from "./helpers";
 import { BusinessInfo } from "../types/shared/Meta/WhatsappBusiness/BusinessInfo";
 import { TemplateCategory, TemplateComponent, TemplateForm, TemplateInfo } from "../types/shared/Meta/WhatsappBusiness/TemplatesInfo";
@@ -98,6 +98,11 @@ export interface NagaChat {
     from: string;
     lastMessage: NagaMessage;
 }
+export interface BlacklistLog {
+    timestamp: string;
+    number: string;
+    name?: string;
+}
 export declare class Nagazap {
     id: string;
     token: string;
@@ -160,7 +165,7 @@ export declare class Nagazap {
     getInfo(): Promise<BusinessInfo | undefined>;
     isMessageFromMe(message: NagaMessage): boolean;
     saveMessage(data: NagaMessageForm): Promise<NagaMessage>;
-    addToBlacklist(number: string): Promise<void>;
+    addToBlacklist(number: string, name: string): Promise<void>;
     removeFromBlacklist(number: string): Promise<void>;
     getMetaTemplates(): Promise<TemplateInfo[]>;
     getMetaTemplate(template_id: string): Promise<TemplateInfo>;
