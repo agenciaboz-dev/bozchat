@@ -19,7 +19,7 @@ export const Subroute: React.FC<SubrouteProps> = ({ children, title, right, left
             elevation={elevation}
             sx={{
                 flexDirection: "column",
-                gap: "2vw",
+                gap: isMobile ? "2vw" : "1vw",
                 padding: isMobile ? "5vw" : "2vw",
                 width: "99%",
                 bgcolor: "background.paper",

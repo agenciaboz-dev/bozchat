@@ -260,11 +260,13 @@ export const BoardPage: React.FC<BoardPageProps> = (props) => {
                             ref={provided.innerRef}
                             {...provided.droppableProps}
                             sx={{
+                                flex: 1,
                                 gap: isMobile ? "5vw" : "2vw",
                                 margin: isMobile ? "0 -5vw" : "0 -2vw",
                                 padding: isMobile ? "0 5vw" : "0 2vw",
                                 marginBottom: isMobile ? "-5vw" : "-2vw",
                                 paddingBottom: isMobile ? "5vw" : "2vw",
+                                overflow: "auto",
                             }}
                         >
                             {board.rooms.map((room, index) => (

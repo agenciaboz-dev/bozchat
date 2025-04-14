@@ -54,7 +54,7 @@ export const ContactItem: React.FC<ContactItemProps> = ({ chat, selected, select
                     sx={{ width: profile_pic_size, height: profile_pic_size, bgcolor: "primary.main", color: "secondary.main" }}
                 />
             )}
-            <Typography sx={{ color: "secondary.main" }}>{chat.name}</Typography>
+            <Typography sx={{ color: "text.secondary" }}>{chat.name}</Typography>
         </MenuItem>
     )
 }

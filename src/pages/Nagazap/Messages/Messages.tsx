@@ -129,7 +129,7 @@ export const MessagesScreen: React.FC<MessagesScreenProps> = ({ nagazap, setShow
 
     return (
         <Subroute
-            title="Mensagens"
+            title="Conversas"
             space={isMobile ? true : undefined}
             right={
                 <IconButton onClick={fetchMessages} disabled={loading}>
@@ -177,7 +177,7 @@ export const MessagesScreen: React.FC<MessagesScreenProps> = ({ nagazap, setShow
                     </Box>
                 )
             ) : (
-                <Box sx={{ gap: "1vw", marginTop: "-1vw", flex: 1 }}>
+                <Box sx={{ gap: "1vw", flex: 1 }}>
                     <Box sx={{ flexDirection: "column", gap: "1vw" }}>
                         <TextField
                             placeholder="Nome, número ou texto da mensagem"
