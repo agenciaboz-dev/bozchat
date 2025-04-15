@@ -22,7 +22,7 @@ export const SelectContactsModal: React.FC<SelectContactsModalProps> = (props) =
     const [searchedValue, setSearchedValue] = useState("")
 
     const contacts = useMemo(
-        () => (props.washima.chats as Chat[]).filter((chat) => normalize(chat.name).includes(normalize(searchedValue))),
+        () => (props.washima.chats as Chat[]).filter((chat) => normalize(chat?.name || "").includes(normalize(searchedValue))),
         [props.washima, searchedValue]
     )
 
