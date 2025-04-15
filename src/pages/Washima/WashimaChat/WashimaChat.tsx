@@ -279,7 +279,7 @@ export const WashimaChat: React.FC<WashimaChatProps> = ({ washima, chat, onClose
                     )}
                     <p style={{ fontWeight: "bold" }}>{chat?.name}</p>
                     {!!chat && (
-                        <Box sx={{ marginLeft: "auto" }}>
+                        <Box sx={{ marginLeft: "auto", alignItems: "center" }}>
                             <ChatSearch washima_id={washima.id} chat_id={chat?.id._serialized} onMessageClick={setLoadingMessageId} />
                             <CopyAllButton chat={chat} washima_id={washima.id} />
                             <IconButton sx={{ color: "text.secondary", padding: isMobile ? "0" : "" }} onClick={onClose}>

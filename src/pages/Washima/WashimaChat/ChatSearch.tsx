@@ -77,9 +77,10 @@ export const ChatSearch: React.FC<ChatSearchProps> = (props) => {
     }
 
     const reset = () => {
+        searchInput.current?.blur()
         setShowSearchField(false)
         setSearchResult([])
-        setSearchValue('')
+        setSearchValue("")
     }
 
     return (
@@ -87,33 +88,37 @@ export const ChatSearch: React.FC<ChatSearchProps> = (props) => {
             open={showSearchMenu}
             arrow
             title={
-                <Box sx={{ flexDirection: "column", gap: "0.25vw", maxHeight: '70vh', overflow: 'auto' }}>
+                <Box sx={{ flexDirection: "column", gap: "0.25vw", maxHeight: "70vh", overflow: "auto" }}>
                     <Typography>Busca:</Typography>
                     {searching ? <LinearProgress variant="indeterminate" sx={{ width: "10vw" }} /> : null}
-                    {searchResult.sort((a, b) => b.timestamp - a.timestamp).map((message) => (
-                        <MessageContainer key={message.sid} message={message} onMessageClick={onMessageClick}/>
-                    ))}
+                    {searchResult
+                        .sort((a, b) => b.timestamp - a.timestamp)
+                        .map((message) => (
+                            <MessageContainer key={message.sid} message={message} onMessageClick={onMessageClick} />
+                        ))}
                 </Box>
             }
         >
             <TextField
                 inputRef={searchInput}
-                placeholder="Digite para buscar"
+                placeholder={showSearchField ? "Digite para buscar" : undefined}
                 value={searchValue}
                 onChange={(ev) => handleSearch(ev.target.value)}
                 sx={{
                     transition: "0.5s",
                     width: showSearchField ? "15vw" : "2.5vw",
+                    minWidth: 0,
                     "& .MuiInput-underline::before": { display: showSearchField ? undefined : "none" },
                 }}
                 variant="standard"
                 InputProps={{
                     startAdornment: (
-                        <IconButton onClick={openSearch}>
+                        <IconButton onClick={openSearch} sx={{ pointerEvents: showSearchField ? "none" : undefined }}>
                             <Search />
                         </IconButton>
                     ),
                 }}
+                onClick={openSearch}
                 onBlur={() => setTimeout(() => reset(), 500)}
             />
         </Tooltip>
