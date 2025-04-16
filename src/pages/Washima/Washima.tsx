@@ -1,9 +1,9 @@
-import React, { useEffect, useState } from "react"
+import React, { useEffect, useMemo, useState } from "react"
 import { Box, Button, CircularProgress, IconButton, MenuItem, Paper, Tab, Tabs, Typography, useMediaQuery } from "@mui/material"
 import { backgroundStyle } from "../../style/background"
 import { Header } from "../../components/Header/Header"
 import { api } from "../../api"
-import { QrCodeScanner, ReplayOutlined } from "@mui/icons-material"
+import { Add, ArrowBack, List, QrCodeScanner, Refresh, ReplayOutlined, Settings } from "@mui/icons-material"
 import { Washima } from "../../types/server/class/Washima/Washima"
 import { useDarkMode } from "../../hooks/useDarkMode"
 import { WashimaFormPage } from "./WashimaFormPage"
@@ -11,6 +11,13 @@ import { useIo } from "../../hooks/useIo"
 import { WashimaZap } from "./WashimaZap"
 import { useUser } from "../../hooks/useUser"
 import { useNotification } from "../../hooks/useNotification"
+import { NoChat } from "./WashimaChat/NoChat"
+import { Route, Routes, useLocation, useNavigate } from "react-router-dom"
+import { WashimaSidebar, WashimaSidebarProps } from "./WashimaSidebar"
+import { slugify } from "../../tools/normalize"
+import { Title2 } from "../../components/Title"
+import { WashimasTable } from "./WashimasTable"
+import { WashimaFormModal } from "./WashimaFormModal"
 
 interface WashimaProps {}
 
@@ -20,15 +27,23 @@ export const WashimaPage: React.FC<WashimaProps> = ({}) => {
     const io = useIo()
     const notify = useNotification()
     const isMobile = useMediaQuery("(orientation: portrait)")
+    const navigate = useNavigate()
+    const location = useLocation()
+    const pathname = location.pathname
 
     const [washimas, setWashimas] = useState<Washima[]>([])
     const [loading, setLoading] = useState(false)
     const [showForm, setShowForm] = useState(false)
     const [currentWashima, setCurrentWashima] = useState<Washima | null>(null)
 
-    const [isChat, setIsChat] = useState(false)
+    const isTable = useMemo(() => pathname === "/business/contas" || pathname === "/business/contas/", [pathname])
 
     const addWashima = (washima: Washima) => setWashimas((values) => [...values.filter((item) => item.id !== washima.id), washima])
+
+    const onWashimaSelect = (washima: Washima) => {
+        setCurrentWashima(washima)
+        navigate(`/business/${slugify(washima.name)}`)
+    }
 
     const fetchWashimas = async () => {
         setLoading(true)
@@ -36,9 +51,6 @@ export const WashimaPage: React.FC<WashimaProps> = ({}) => {
             const response = await api.get("/washima", { params: { company_id: company?.id } })
             console.log(response.data)
             setWashimas(response.data)
-            if (response.data.length > 0 && currentWashima === null) {
-                setCurrentWashima(response.data[0])
-            }
         } catch (error) {
             console.log(error)
         } finally {
@@ -67,8 +79,10 @@ export const WashimaPage: React.FC<WashimaProps> = ({}) => {
         io.off("washima:list")
     }
 
-    const handleChange = (event: React.SyntheticEvent, newValue: number) => {
-        setIsChat(newValue === 1)
+    const navigateBack = () => {
+        navigate("/business/contas")
+        setCurrentWashima(null)
+        fetchWashimas()
     }
 
     useEffect(() => {
@@ -99,161 +113,98 @@ export const WashimaPage: React.FC<WashimaProps> = ({}) => {
         }
     }, [])
 
+    const SidebarWrapper: React.FC<{ children: React.ReactNode }> = ({ children }) => (
+        <Box sx={{ flex: 1 }}>
+            <WashimaSidebar washimas={washimas} currentWashima={currentWashima} onClick={onWashimaSelect} />
+            {children}
+        </Box>
+    )
+
     return (
         <Box sx={{ ...backgroundStyle, overflow: isMobile ? "auto" : "hidden" }}>
             <Header />
-            {isMobile ? (
-                <Box sx={{ flexDirection: "row" }}>
-                    {/* <Button
-                        variant="outlined"
-                        color="primary"
-                        fullWidth
-                        sx={{
-                            margin: "1vw",
-                            fontSize: "1rem",
-                        }}
-                        onClick={() => setIsChat(false)}
-                    >
-                        Washima
-                    </Button>
-                    <Button
-                        variant="outlined"
-                        color="primary"
-                        fullWidth
-                        sx={{
-                            margin: "1vw",
-                            fontSize: "1rem",
-                        }}
-                        onClick={() => setIsChat(true)}
-                    >
-                        Conversas
-                    </Button> */}
-
-                    <Tabs value={isChat ? 1 : 0} onChange={handleChange} sx={{ flex: 1 }}>
-                        <Tab
-                            label="Business"
-                            sx={{ flex: 1 }}
-                            onClick={() => {
-                                setIsChat(false)
-                            }}
-                        />
-                        <Tab
-                            label="Conversas"
-                            sx={{ flex: 1 }}
-                            onClick={() => {
-                                setIsChat(true)
-                            }}
-                        />
-                    </Tabs>
-                </Box>
-            ) : null}
-            <Box sx={{ flexDirection: "row", flex: 1, height: "90vh" }}>
-                {!isChat ? (
-                    <Paper
-                        sx={{
-                            flex: isMobile ? 1 : 0.1,
-                            flexDirection: "column",
-                            alignItems: "center",
-                            padding: isMobile ? "5vw" : "2vw",
-                        }}
-                    >
-                        <Box sx={{ alignItems: "center", gap: "1vw", color: "text.secondary", marginBottom: "1vw" }}>
-                            <Box sx={{ fontWeight: "bold", fontSize: "1.5rem" }}>Business</Box>
-                            <IconButton onClick={() => fetchWashimas()}>
-                                {loading ? <CircularProgress size={"1.5rem"} /> : <ReplayOutlined />}
+            <Box sx={{ flexDirection: "column", flex: 1, height: "90vh", padding: "2vw" }}>
+                <Title2
+                    name={`Business`}
+                    left={
+                        currentWashima && !isTable ? (
+                            <IconButton onClick={navigateBack}>
+                                <ArrowBack />
                             </IconButton>
-                        </Box>
+                        ) : null
+                    }
+                    right={
+                        currentWashima && !isTable ? (
+                            <Box>
+                                <IconButton>
+                                    <Settings />
+                                </IconButton>
+                            </Box>
+                        ) : (
+                            <Box>
+                                <IconButton
+                                    onClick={() => {
+                                        setCurrentWashima(null)
+                                        setShowForm(true)
+                                    }}
+                                >
+                                    <Add />
+                                </IconButton>
+                                <IconButton onClick={() => fetchWashimas()}>{loading ? <CircularProgress /> : <Refresh />}</IconButton>
+                                {(pathname === "/business" || pathname === "/business/") && (
+                                    <IconButton onClick={() => navigate("/business/contas")}>
+                                        <List />
+                                    </IconButton>
+                                )}
+                            </Box>
+                        )
+                    }
+                />
+                <Routes>
+                    <Route
+                        index
+                        path="/"
+                        element={
+                            <SidebarWrapper>
+                                <NoChat homepage />
+                            </SidebarWrapper>
+                        }
+                    />
 
-                        {user?.admin && (
-                            <Button
-                                variant="outlined"
-                                color="primary"
-                                fullWidth
-                                sx={{ borderStyle: "dashed", fontSize: "1rem", marginBottom: isMobile ? "5vw" : "1vw", fontWeight: "bold" }}
-                                onClick={() => {
-                                    setCurrentWashima(null)
-                                    if (isMobile) {
-                                        setIsChat(true)
-                                    }
-                                }}
-                            >
-                                +
-                            </Button>
-                        )}
-                        {washimas
-                            .sort((a, b) => Number(b.created_at) - Number(a.created_at))
-                            .map((item) => {
-                                const active = currentWashima?.id === item.id
-                                return (
-                                    <MenuItem
-                                        key={item.id}
-                                        sx={{
-                                            width: 1,
-                                            margin: "0 -2vw",
-                                            flexShrink: 0,
-                                            outline: active ? "1px solid" : "",
-                                            borderRadius: "0.3vw",
-                                            justifyContent: "space-between",
-                                        }}
-                                        onClick={() => {
-                                            setCurrentWashima(item)
-                                            if (isMobile) {
-                                                setIsChat(true)
-                                            }
-                                        }}
-                                    >
-                                        <Typography
-                                            style={{
-                                                maxWidth: "calc(100% - 1.5vw)",
-                                                whiteSpace: "nowrap",
-                                                overflow: "hidden",
-                                                textOverflow: "ellipsis",
-                                            }}
-                                        >
-                                            {item.name}
-                                        </Typography>
-                                        {!item.ready &&
-                                            (!item.qrcode ? (
-                                                <CircularProgress size="1rem" color="warning" />
-                                            ) : (
-                                                <QrCodeScanner
-                                                    color="warning"
-                                                    sx={{ width: isMobile ? "7vw" : "1.3vw", height: isMobile ? "7vw" : "1.3vw" }}
-                                                />
-                                            ))}
-                                    </MenuItem>
-                                )
-                            })}
-                    </Paper>
-                ) : (
-                    <Box sx={{ flex: 1 }}>
-                        {!currentWashima || !currentWashima.ready || showForm ? (
-                            <WashimaFormPage
-                                showForm={showForm}
-                                setShowForm={setShowForm}
-                                currentWashima={currentWashima}
-                                setCurrentWashima={setCurrentWashima}
+                    {currentWashima && (
+                        <Route
+                            path="*"
+                            element={
+                                <SidebarWrapper>
+                                    <WashimaZap washima={currentWashima} />
+                                </SidebarWrapper>
+                            }
+                        />
+                    )}
+
+                    <Route
+                        path="/contas"
+                        element={
+                            <WashimasTable
+                                setSelectedWashima={setCurrentWashima}
+                                washimas={washimas}
+                                loading={loading}
+                                setLoading={setLoading}
+                                selectedWashima={currentWashima}
+                                setWashimas={setWashimas}
+                                openSettings={() => setShowForm(true)}
                             />
-                        ) : (
-                            <WashimaZap washima={currentWashima} onEdit={() => setShowForm(true)} />
-                        )}
-                    </Box>
-                )}
-                {!isMobile ? (
-                    <Box sx={{ flex: 1 }}>
-                        {!currentWashima || !currentWashima.ready || showForm ? (
-                            <WashimaFormPage
-                                showForm={showForm}
-                                setShowForm={setShowForm}
-                                currentWashima={currentWashima}
-                                setCurrentWashima={setCurrentWashima}
-                            />
-                        ) : (
-                            <WashimaZap washima={currentWashima} onEdit={() => setShowForm(true)} />
-                        )}
-                    </Box>
-                ) : null}
+                        }
+                    />
+                </Routes>
             </Box>
+            <WashimaFormModal
+                open={showForm}
+                onClose={() => setShowForm(false)}
+                onSuccess={addWashima}
+                setCurrentWashima={setCurrentWashima}
+                currentWashima={currentWashima}
+            />
         </Box>
     )
 }

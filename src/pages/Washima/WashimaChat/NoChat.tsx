@@ -5,9 +5,10 @@ import { Lock } from "@mui/icons-material"
 
 interface NoChatProps {
     nagazap?: boolean
+    homepage?: boolean
 }
 
-export const NoChat: React.FC<NoChatProps> = ({ nagazap }) => {
+export const NoChat: React.FC<NoChatProps> = ({ nagazap, homepage }) => {
     return (
         <Paper
             sx={{
@@ -19,6 +20,7 @@ export const NoChat: React.FC<NoChatProps> = ({ nagazap }) => {
                 color: "text.secondary",
                 padding: "1vw",
             }}
+            elevation={homepage ? 0 : 1}
         >
             <WhatsappWebSvg />
             <Box sx={{ fontSize: "2rem" }}>WhatsApp {nagazap ? "Broadcast" : "Business"}</Box>

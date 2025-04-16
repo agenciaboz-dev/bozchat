@@ -1,0 +1,1 @@
+export const phoneMask = new Inputmask({ mask: "(99) 9999-9999", placeholder: "", greedy: false }) as any

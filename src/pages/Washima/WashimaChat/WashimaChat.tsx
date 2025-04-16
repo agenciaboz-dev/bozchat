@@ -237,7 +237,7 @@ export const WashimaChat: React.FC<WashimaChatProps> = ({ washima, chat, onClose
             elevation={inBoards ? 0 : undefined}
             sx={{
                 flex: 1,
-                justifyContent: isMobile ? "flex-end" : "center",
+                justifyContent: isMobile ? "flex-end" : undefined,
                 bgcolor: inBoards ? "transparent" : darkMode ? "background.paper" : "#e9e9e9",
                 // height: isMobile ? "77vh" : "90vh",
                 padding: inBoards ? 0 : isMobile ? "5vw" : "1vw",
@@ -295,7 +295,7 @@ export const WashimaChat: React.FC<WashimaChatProps> = ({ washima, chat, onClose
                 onScroll={handleScroll}
                 sx={{
                     width: "100%",
-                    height: inBoards ? "20vw" : isMobile ? "60vh" : washimaInput.replyMessage ? "60vh" : "70vh",
+                    height: inBoards ? "20vw" : isMobile ? "60vh" : washimaInput.replyMessage ? "60vh" : "60vh",
                     bgcolor: "background.default",
                     overflowY: "auto",
                     borderRadius: isMobile ? "2vw" : "4px",
