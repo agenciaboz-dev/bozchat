@@ -136,7 +136,7 @@ export const WashimaPage: React.FC<WashimaProps> = ({}) => {
                     right={
                         currentWashima && !isTable ? (
                             <Box>
-                                <IconButton>
+                                <IconButton onClick={() => setShowForm(true)}>
                                     <Settings />
                                 </IconButton>
                             </Box>

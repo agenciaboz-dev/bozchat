@@ -12,10 +12,9 @@ import { WashimaMessage } from "../../types/server/class/Washima/WashimaMessage"
 
 interface WashimaZapProps {
     washima: Washima
-    onEdit: () => void
 }
 
-export const WashimaZap: React.FC<WashimaZapProps> = ({ washima, onEdit }) => {
+export const WashimaZap: React.FC<WashimaZapProps> = ({ washima }) => {
     const isMobile = useMediaQuery("(orientation: portrait)")
     const chatListRef = useRef<HTMLDivElement>(null)
     const { user } = useUser()
