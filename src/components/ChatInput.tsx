@@ -47,10 +47,16 @@ export const ChatInput: React.FC<ChatInputProps> = (props) => {
                 onChange={(ev) => props.setData((data) => ({ ...data, value: ev.target.value }))}
                 sx={textFieldStyle({ darkMode })}
                 multiline
-                maxRows={1}
+                maxRows={4}
                 autoComplete="off"
                 InputProps={{
-                    sx: { color: "primary.main", bgcolor: "background.default", padding: 1, paddingLeft: props.isBot ? 0 : 2, paddingRight: 0 },
+                    sx: {
+                        color: "primary.main",
+                        bgcolor: "background.default",
+                        padding: 1,
+                        paddingLeft: props.isBot ? 0 : 2,
+                        paddingRight: 0,
+                    },
                     startAdornment: props.isBot ? <ChatMediaButton nodeData={props.data} setNodeData={props.setData} /> : null,
                     endAdornment: (
                         <IconButton sx={{ marginRight: 1 }} onClick={props.onSubmit} disabled={props.disabled}>

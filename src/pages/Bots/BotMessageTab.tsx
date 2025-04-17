@@ -37,7 +37,7 @@ export const BotMessageTab: React.FC<SettingsTabProps> = (props) => {
                     borderRadius: "0.5vw",
                     gap: "1vw",
                     overflow: "auto",
-                    height: props.node?.type === "message" ? "76vh" : "82vh",
+                    height: props.node?.type === "message" ? "70vh" : "82vh",
                 }}
             >
                 {props.node?.type === "message" ? (
