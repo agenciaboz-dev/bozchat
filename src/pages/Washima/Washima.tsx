@@ -85,6 +85,18 @@ export const WashimaPage: React.FC<WashimaProps> = ({}) => {
         fetchWashimas()
     }
 
+    const createWashima = async () => {
+        try {
+            setCurrentWashima(null)
+            setShowForm(true)
+            const response = await api.post("/washima", { company_id: company?.id }, { params: { user_id: user?.id } })
+            addWashima(response.data)
+            setCurrentWashima(response.data)
+        } catch (error) {
+            console.log(error)
+        }
+    }
+
     useEffect(() => {
         const washima = washimas.find((item) => item.id === currentWashima?.id)
         if (washima) {
@@ -134,20 +146,9 @@ export const WashimaPage: React.FC<WashimaProps> = ({}) => {
                         ) : null
                     }
                     right={
-                        currentWashima && !isTable ? (
+                        currentWashima && !isTable ? null : (
                             <Box>
-                                <IconButton onClick={() => setShowForm(true)}>
-                                    <Settings />
-                                </IconButton>
-                            </Box>
-                        ) : (
-                            <Box>
-                                <IconButton
-                                    onClick={() => {
-                                        setCurrentWashima(null)
-                                        setShowForm(true)
-                                    }}
-                                >
+                                <IconButton onClick={createWashima}>
                                     <Add />
                                 </IconButton>
                                 <IconButton onClick={() => fetchWashimas()}>{loading ? <CircularProgress /> : <Refresh />}</IconButton>
@@ -193,6 +194,7 @@ export const WashimaPage: React.FC<WashimaProps> = ({}) => {
                                 selectedWashima={currentWashima}
                                 setWashimas={setWashimas}
                                 openSettings={() => setShowForm(true)}
+                                fetchWashimas={fetchWashimas}
                             />
                         }
                     />

@@ -1,52 +1,45 @@
 import React, { useEffect, useState } from "react"
-import { Box, Button, LinearProgress } from "@mui/material"
+import { Box, Button, LinearProgress, Typography } from "@mui/material"
 import { Washima } from "../../types/server/class/Washima/Washima"
 import { useIo } from "../../hooks/useIo"
 
 interface SyncMessagesContainerProps {
     washima: Washima
-    syncing: boolean
-    onSyncPress: () => void
+    type: "messages" | "chat"
 }
 
-export const SyncMessagesContainer: React.FC<SyncMessagesContainerProps> = ({ washima, syncing, onSyncPress }) => {
+interface ProgressDto {
+    message?: number
+    total_messages?: number
+    chat: number
+    total_chats: number
+}
+
+export const SyncMessagesContainer: React.FC<SyncMessagesContainerProps> = ({ washima, type }) => {
     const io = useIo()
 
-    const [currentChatSyncProgress, setCurrentChatSyncProgress] = useState(0)
-    const [totalChatSyncProgress, setTotalChatSyncProgress] = useState(0)
-    const [currentMessagesSyncProgress, setCurrentMessagesSyncProgress] = useState(0)
-    const [totalMessagesSyncProgress, setTotalMessagesSyncProgress] = useState(0)
+    const [syncedProgress, setSyncedProgress] = useState(0)
+    const [totalProgress, setTotalProgress] = useState(0)
 
-    const chat_progress_value = (currentChatSyncProgress * 100) / (totalChatSyncProgress || 1)
-    const messages_progress_value = (currentMessagesSyncProgress * 100) / (totalMessagesSyncProgress || 1)
+    const messages_progress_value = (syncedProgress * 100) / (totalProgress || 1)
 
     useEffect(() => {
-        io.on(`washima:${washima.id}:sync:chat`, (current: number, total: number) => {
-            setCurrentChatSyncProgress(current)
-            setTotalChatSyncProgress(total)
-        })
-
-        io.on(`washima:${washima.id}:sync:messages`, (current: number, total: number) => {
-            setCurrentMessagesSyncProgress(current)
-            setTotalMessagesSyncProgress(total)
+        io.on(`washima:${washima.id}:sync:progress`, (data: ProgressDto) => {
+            setSyncedProgress(type === "chat" ? data.chat : data.message || 0)
+            setTotalProgress(type === "chat" ? data.total_chats : data.total_messages || 0)
         })
 
         return () => {
-            io.off(`washima:${washima.id}:sync:chat`)
-            io.off(`washima:${washima.id}:sync:messages`)
+            io.off(`washima:${washima.id}:sync:progress`)
         }
     }, [washima])
 
-    return syncing ? (
-        <Box sx={{ flexDirection: "column", gap: "1vw", color: "primary.main" }}>
-            Mensagens: {currentMessagesSyncProgress}/{totalMessagesSyncProgress} ({messages_progress_value.toFixed(2)}%)
-            <LinearProgress variant="determinate" value={messages_progress_value} />
-            Chats: {currentChatSyncProgress}/{totalChatSyncProgress} ({chat_progress_value.toFixed(2)}%)
-            <LinearProgress variant="determinate" value={chat_progress_value} />
+    return (
+        <Box sx={{ gap: "0.5vw", color: "primary.main", alignItems: "center" }}>
+            <Typography sx={{ fontSize: "0.8rem" }}>
+                {syncedProgress}/{totalProgress} ({messages_progress_value.toFixed(2)}%)
+            </Typography>
+            <LinearProgress variant="determinate" value={messages_progress_value} sx={{ width: "5vw" }} />
         </Box>
-    ) : (
-        <Button variant="outlined" onClick={onSyncPress} sx={{ fontWeight: "bold" }}>
-            Sincronizar
-        </Button>
     )
 }

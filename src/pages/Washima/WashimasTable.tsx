@@ -1,5 +1,5 @@
 import React, { useEffect, useMemo, useRef, useState } from "react"
-import { Box, CircularProgress, IconButton, Menu, MenuItem, Paper, Tooltip, useMediaQuery } from "@mui/material"
+import { Box, CircularProgress, IconButton, LinearProgress, Menu, MenuItem, Paper, Tooltip, Typography, useMediaQuery } from "@mui/material"
 import { Washima, WashimaDiskMetrics, WashimaStatus } from "../../types/server/class/Washima/Washima"
 import { DataGrid, GridCallbackDetails, GridColDef, GridRowParams, GridRowSelectionModel } from "@mui/x-data-grid"
 import { WithoutFunctions } from "../../types/server/class/helpers"
@@ -14,6 +14,7 @@ import { useConfirmDialog } from "burgos-confirm"
 import { phoneMask } from "../../tools/masks"
 import { Chat } from "../../types/Chat"
 import { QRCode } from "react-qrcode-logo"
+import { SyncMessagesContainer } from "./SyncMessagesContainer"
 
 interface WashimasTableProps {
     washimas: Washima[]
@@ -23,6 +24,7 @@ interface WashimasTableProps {
     setLoading: React.Dispatch<React.SetStateAction<boolean>>
     setWashimas: React.Dispatch<React.SetStateAction<Washima[]>>
     openSettings: () => void
+    fetchWashimas: () => void
 }
 
 interface CustomRow extends WithoutFunctions<Washima> {
@@ -68,10 +70,37 @@ export const WashimasTable: React.FC<WashimasTableProps> = (props) => {
             align: "center",
         },
         { field: "name", headerName: "Nome", flex: 0.4 },
-        { field: "info", headerName: "Nome de exibição", flex: 0.5, valueFormatter: (_, row: Washima) => row.info?.pushname },
-        { field: "number", headerName: "Número", flex: 0.3, valueFormatter: (value) => phoneMask.format(value) },
-        { field: "chats", headerName: "Conversas", flex: 0.2, valueFormatter: (value: Chat[]) => value.length },
-        { field: "storage_messages", headerName: "Armazenamento: mensagens", flex: 0.35 },
+        { field: "number", headerName: "Número", flex: 0.25, valueFormatter: (value) => phoneMask.format(value) },
+        {
+            field: "chats",
+            headerName: "Conversas",
+            flex: 0.3,
+            display: "flex",
+            renderCell: (params) => {
+                const washima = params.row as Washima
+                return (
+                    <Box sx={{ flexDirection: "column", height: "100%", justifyContent: "center" }}>
+                        <Typography>{washima.chats.length}</Typography>
+                        {washima.syncing && <SyncMessagesContainer washima={washima} type="chat" />}
+                    </Box>
+                )
+            },
+        },
+        {
+            field: "storage_messages",
+            headerName: "Armazenamento: mensagens",
+            flex: 0.35,
+            display: "flex",
+            renderCell: (params) => {
+                const washima = params.row as Washima
+                return (
+                    <Box sx={{ flexDirection: "column", height: "100%", justifyContent: "center" }}>
+                        <Typography>{params.value}</Typography>
+                        {washima.syncing && <SyncMessagesContainer washima={washima} type="messages" />}
+                    </Box>
+                )
+            },
+        },
         { field: "storage_media", headerName: "Armazenamento: mídia", flex: 0.3 },
         {
             field: "id",
@@ -89,7 +118,6 @@ export const WashimasTable: React.FC<WashimasTableProps> = (props) => {
             minWidth: isMobile ? 150 : undefined,
         },
     ]
-
 
     const fetchWashimaMetrics = async (washima: Washima) => {
         const response = await api.get("/washima/tools/disk-usage", { params: { washima_id: washima.id } })
@@ -122,14 +150,12 @@ export const WashimasTable: React.FC<WashimasTableProps> = (props) => {
 
     const onRowClick = (params: GridRowParams<Washima>) => {
         const washima = params.row
-        if ((washima.id === props.selectedWashima?.id || isMenu.current === false) && washima.status === 'ready') {
+        if ((washima.id === props.selectedWashima?.id || isMenu.current === false) && washima.status === "ready") {
             navigateToWashima(washima)
         } else {
             props.setSelectedWashima(washima)
         }
     }
-
-    
 
     const onRowSelectionModelChange = (rowSelectionModel: GridRowSelectionModel, details: GridCallbackDetails) => {
         if (rowSelectionModel.length === 0) return
@@ -138,13 +164,6 @@ export const WashimasTable: React.FC<WashimasTableProps> = (props) => {
         if (washima) {
             props.setSelectedWashima(washima)
         }
-    }
-
-    const onSettingsPress = () => {
-        props.openSettings()
-        setMenuAnchor(null)
-        isMenu.current = false
-        
     }
 
     const onRestartPress = async () => {
@@ -162,15 +181,15 @@ export const WashimasTable: React.FC<WashimasTableProps> = (props) => {
 
     const onDeletePress = async () => {
         if (!props.selectedWashima) return
-        const washima = {...props.selectedWashima} as Washima
+        const washima = { ...props.selectedWashima } as Washima
         closeMenu()
 
         confirm({
             title: "Deletar Business",
             content: "Tem certeza que deseja deletar essa instância do Business? Essa ação é irreversível.",
             onConfirm: async () => {
-                washima.status = 'loading'
-                
+                washima.status = "loading"
+
                 onWashimaUpdate(washima)
                 try {
                     const response = await api.delete("/washima", { data: { washima_id: washima.id }, params: { user_id: user?.id } })
@@ -202,15 +221,52 @@ export const WashimasTable: React.FC<WashimasTableProps> = (props) => {
     const onWashimaUpdate = (washima: Washima) => {
         if (!props.washimas.find((item) => item.id === washima.id)) return
         props.setWashimas((washimas) => [...washimas.filter((item) => item.id !== washima.id), washima])
-        // setRows((rows) => {
-        //     const row = rows.find((item) => item.id === washima.id)
-        //     if (!row) {
-        //         return rows
-        //     }
+    }
 
-        //     const filteredRows = rows.filter((item) => item.id !== washima.id)
-        //     return [...filteredRows, { ...washima, storage_media: row.storage_media, storage_messages: row.storage_messages }]
-        // })
+    const deleteMedia = async () => {
+        if (props.loading || !props.selectedWashima) return
+        const washima_id = props.selectedWashima.id
+        closeMenu()
+
+        confirm({
+            title: "Deletar mensagens",
+            content: "Essa ação é irreversível. Deseja continuar?",
+            onConfirm: async () => {
+                try {
+                    const response = await api.delete("/washima/tools/media", {
+                        data: { washima_id: washima_id },
+                        params: { user_id: user?.id, company_id: company?.id },
+                    })
+                    console.log(response.data)
+                    props.fetchWashimas()
+                } catch (error) {
+                    console.log(error)
+                }
+            },
+        })
+    }
+
+    const deleteMessages = async () => {
+        if (props.loading || !props.selectedWashima) return
+        const washima_id = props.selectedWashima.id
+        closeMenu()
+
+        confirm({
+            title: "Deletar mensagens",
+            content: "Essa ação é irreversível. Deseja continuar?",
+            onConfirm: async () => {
+                try {
+                    const response = await api.delete("/washima/tools/messages", {
+                        data: { washima_id: washima_id },
+                        params: { user_id: user?.id, company_id: company?.id },
+                    })
+                    console.log(response.data)
+                    props.fetchWashimas()
+                } catch (error) {
+                    console.log(error)
+                }
+            },
+        })
     }
 
     useEffect(() => {
@@ -246,23 +302,20 @@ export const WashimasTable: React.FC<WashimasTableProps> = (props) => {
                 }
             })
 
-            io.on(`washima:${props.selectedWashima.id}:sync:messages`, () => {
-                // setFetchingMessages(true)
-            })
-
             return () => {
                 io.off("washima:ready")
                 io.off(`washima:${props.selectedWashima!.id}:init`)
-                io.off(`washima:${props.selectedWashima!.id}:sync:messages`)
             }
         }
     }, [props.selectedWashima])
 
     useEffect(() => {
-        setRows(rows => props.washimas.map((washima) => {
-            const row = rows.find(item => item.id === washima.id)
-            return ({ ...washima, storage_media: row?.storage_media || '', storage_messages: row?.storage_messages || '' })
-        }))
+        setRows((rows) =>
+            props.washimas.map((washima) => {
+                const row = rows.find((item) => item.id === washima.id)
+                return { ...washima, storage_media: row?.storage_media || "", storage_messages: row?.storage_messages || "" }
+            })
+        )
         props.washimas.forEach((washima) => fetchWashimaMetrics(washima))
     }, [props.washimas])
 
@@ -289,11 +342,14 @@ export const WashimasTable: React.FC<WashimasTableProps> = (props) => {
             />
 
             <Menu open={!!menuAnchor} anchorEl={menuAnchor} onClose={closeMenu}>
-                <MenuItem onClick={onSettingsPress} disabled={!user?.admin}>
-                    Configurações
-                </MenuItem>
                 <MenuItem onClick={onSyncMessages} disabled={!user?.admin || props.selectedWashima?.status !== "ready"}>
                     Sincronizar mensagens
+                </MenuItem>
+                <MenuItem onClick={deleteMessages} disabled={!user?.admin || props.selectedWashima?.syncing}>
+                    Limpar mensagens
+                </MenuItem>
+                <MenuItem onClick={deleteMedia} disabled={!user?.admin || props.selectedWashima?.syncing}>
+                    Limpar mídia
                 </MenuItem>
                 <MenuItem onClick={onRestartPress} disabled={!user?.admin || props.selectedWashima?.status === "loading"}>
                     Reiniciar

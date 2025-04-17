@@ -15,7 +15,6 @@ export interface WashimaDiskMetrics {
 }
 export interface WashimaForm {
     company_id: string;
-    name: string;
 }
 export interface WashimaMessageId {
     fromMe: boolean;
