@@ -86,6 +86,7 @@ export const WashimaZap: React.FC<WashimaZapProps> = ({ washima }) => {
                         backgroundColor: "primary.main",
                     },
                     width: isMobile ? "100vw" : undefined,
+                    margin: "0 -1vw",
                 }}
             >
                 <Box sx={{ alignItems: "center", justifyContent: "space-between", width: "100%" }}>

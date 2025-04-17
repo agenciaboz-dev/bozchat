@@ -15,13 +15,13 @@ export const WashimaSidebar: React.FC<WashimaSidebarProps> = (props) => {
     return (
         <Paper
             sx={{
-                flex: isMobile ? 1 : 0.16,
+                flex: isMobile ? 1 : undefined,
                 flexDirection: "column",
                 alignItems: "center",
                 padding: isMobile ? "5vw" : "0vw",
                 height: "75vh",
+                width: "15vw",
                 overflowY: "auto",
-                overflowX: "hidden",
             }}
         >
             {props.washimas
