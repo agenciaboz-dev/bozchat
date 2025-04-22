@@ -32,7 +32,7 @@ export const WashimaSidebar: React.FC<WashimaSidebarProps> = (props) => {
                         <MenuItem
                             key={item.id}
                             sx={{
-                                width: 1,
+                                width: "15vw",
                                 flexShrink: 0,
                                 borderRadius: "0.3vw",
                                 justifyContent: "space-between",
@@ -47,7 +47,7 @@ export const WashimaSidebar: React.FC<WashimaSidebarProps> = (props) => {
                             <Paper elevation={active ? 2 : 0} sx={{ padding: "1vw", flex: 1, flexDirection: "column" }}>
                                 <Typography
                                     sx={{
-                                        maxWidth: "calc(100% - 0vw)",
+                                        maxWidth: "13vw",
                                         whiteSpace: "nowrap",
                                         overflow: "hidden",
                                         textOverflow: "ellipsis",
