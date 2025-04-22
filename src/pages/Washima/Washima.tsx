@@ -60,7 +60,7 @@ export const WashimaPage: React.FC<WashimaProps> = ({}) => {
 
     const listen = () => {
         io.on("washima:update", (data: Washima) => {
-            if (data.companies.find((item) => item.id === company?.id)) addWashima(data)
+            // if (data.companies.find((item) => item.id === company?.id)) addWashima(data)
         })
 
         io.on("washima:delete", (data: Washima) => {
