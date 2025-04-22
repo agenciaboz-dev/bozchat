@@ -94,10 +94,6 @@ export const ChatContainer: React.FC<ChatProps> = ({ chat, onChatClick, washima,
                 height: isMobile ? "20vw" : "5vw",
                 cursor: "pointer",
                 borderRadius: isMobile ? "3vw" : "0.5vw",
-                borderBottom: "2px solid",
-                borderColor: chat.isReadOnly ? "warning.main" : undefined,
-                // borderRight: "1px solid",
-                // boxShadow: "0px 5px 7px rgba(0, 0, 0, 0.2)",
 
                 "&:hover": {
                     // outline: "2px solid",

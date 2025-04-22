@@ -1,5 +1,5 @@
 import React, { useCallback, useEffect, useRef, useState } from "react"
-import { Box, debounce, IconButton, useMediaQuery } from "@mui/material"
+import { Box, debounce, IconButton, Typography, useMediaQuery } from "@mui/material"
 import { Washima } from "../../types/server/class/Washima/Washima"
 import { ChatList } from "./ChatList"
 import { WashimaChat } from "./WashimaChat/WashimaChat"
@@ -76,7 +76,7 @@ export const WashimaZap: React.FC<WashimaZapProps> = ({ washima }) => {
                     flex: isMobile ? 1 : 0.5,
                     flexDirection: "column",
                     alignItems: isMobile ? "center" : "",
-                    padding: isMobile ? "5vw" : "2vw",
+                    padding: isMobile ? "5vw" : "1vw",
                     height: !isMobile ? "80vh" : "80vh",
                     overflowX: isMobile ? "hidden" : "auto",
                     overflowY: loading ? "hidden" : "auto",
@@ -86,21 +86,8 @@ export const WashimaZap: React.FC<WashimaZapProps> = ({ washima }) => {
                         backgroundColor: "primary.main",
                     },
                     width: isMobile ? "100vw" : undefined,
-                    margin: "0 -1vw",
                 }}
             >
-                <Box sx={{ alignItems: "center", justifyContent: "space-between", width: "100%" }}>
-                    <p
-                        style={{
-                            fontSize: isMobile ? "6vw" : "",
-                            fontWeight: "bold",
-                            textAlign: isMobile ? "center" : "initial",
-                        }}
-                    >
-                        {washima.info.pushname}
-                    </p>
-                </Box>
-
                 <WashimaSearch handleSearch={debouncedSearch} />
 
                 <ChatList

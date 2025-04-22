@@ -51,6 +51,7 @@ export const WashimaSidebar: React.FC<WashimaSidebarProps> = (props) => {
                                         whiteSpace: "nowrap",
                                         overflow: "hidden",
                                         textOverflow: "ellipsis",
+                                        fontSize: "0.9rem",
                                     }}
                                 >
                                     {item.name}

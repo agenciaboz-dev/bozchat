@@ -109,7 +109,7 @@ export const ChatList: React.FC<ChatsProps> = ({
     }, [chats])
 
     return (
-        <Box sx={{ flexDirection: "column", gap: isMobile ? "5vw" : "0.1vw", alignItems: "center" }}>
+        <Box sx={{ flexDirection: "column", gap: isMobile ? "5vw" : "0vw", alignItems: "center" }}>
             {!loading ? (
                 !!chats.length ? (
                     chats
