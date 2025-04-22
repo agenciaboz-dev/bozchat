@@ -38,6 +38,7 @@ export const WashimaSidebar: React.FC<WashimaSidebarProps> = (props) => {
                                 justifyContent: "space-between",
                                 whiteSpace: "normal",
                                 padding: 0,
+                                backgroundColor: active ? "action.hover" : undefined,
                             }}
                             onClick={() => {
                                 props.onClick(item)
@@ -57,14 +58,14 @@ export const WashimaSidebar: React.FC<WashimaSidebarProps> = (props) => {
                                     {item.name}
                                 </Typography>
                                 <Box sx={{ justifyContent: "space-between", alignItems: "center" }}>
-                                    <Typography sx={{ color: "secondary.main", fontSize: "0.8rem" }}>{phoneMask.format(item.number)}</Typography>
+                                    <Typography sx={{ color: "text.secondary", fontSize: "0.8rem" }}>{phoneMask.format(item.number)}</Typography>
                                     {item.status === "ready" && (
                                         <Paper sx={{ borderRadius: "100%" }}>
                                             <Circle fontSize="small" color="success" />
                                         </Paper>
                                     )}
                                     {item.status === "loading" && <CircularProgress size="1.2rem" color="warning" />}
-                                    {item.status === "qrcode" && <QrCodeScanner color="secondary" fontSize="small" />}
+                                    {item.status === "qrcode" && <QrCodeScanner color="action" fontSize="small" />}
                                 </Box>
                             </Paper>
                         </MenuItem>
