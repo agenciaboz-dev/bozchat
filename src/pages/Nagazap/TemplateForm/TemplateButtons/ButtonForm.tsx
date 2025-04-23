@@ -72,7 +72,7 @@ export const ButtonForm: React.FC<ButtonFormProps> = ({ component, button, index
 
             {button.type === "PHONE_NUMBER" && (
                 <TextField
-                    label="PHONE_NUMBER"
+                    label="Telefone"
                     value={button.phone_number}
                     onChange={(ev) => {
                         const buttons = component.buttons!
