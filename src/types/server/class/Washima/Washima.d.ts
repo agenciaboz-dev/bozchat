@@ -97,6 +97,7 @@ export declare class Washima {
     cacheProfilePic(target_id: string, target?: "chat" | "message"): Promise<WashimaProfilePic | undefined>;
     getCachedMedia(message: Message): Promise<WashimaMedia | undefined>;
     getCachedProfilePicture(target_id: string, target?: "chat" | "message"): Promise<WashimaProfilePic | undefined>;
+    emit(): void;
     fetchAndSaveAllMessages(options?: {
         groupOnly?: boolean;
     }): Promise<void>;

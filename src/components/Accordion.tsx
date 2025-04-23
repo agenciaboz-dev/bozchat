@@ -7,6 +7,7 @@ interface AccordionProps {
     titleElement: React.ReactNode
     expandedElement: React.ReactNode
     hideTitle?: boolean
+    height?: string
 }
 
 export const Accordion: React.FC<AccordionProps> = (props) => {
@@ -17,7 +18,7 @@ export const Accordion: React.FC<AccordionProps> = (props) => {
 
     const contentVariants = {
         opened: {
-            height: "24vw", // Fixed height when expanded
+            height: props.height || "24vw", // Fixed height when expanded
             // opacity: 1,
             transition: { duration: 0.5 },
         },

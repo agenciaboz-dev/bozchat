@@ -21,34 +21,35 @@ interface ActionContainerProps {
     title: string
     description: string
     settingsComponent: React.ReactNode
-    checked: boolean
     onCheck: (target: ValidAction) => void
     target: ValidAction
-    misconfigured?: boolean
+    action?: NodeAction
+    settingsHeight: string
 }
 
 const ActionContainer: React.FC<ActionContainerProps> = (props) => {
     return (
         <Accordion
-            expanded={props.checked}
+            expanded={!!props.action}
+            height={props.settingsHeight}
             titleElement={
                 <Paper
                     sx={{
                         alignItems: "center",
                         flex: 1,
-                        color: props.checked ? "primary.main" : "secondary.main",
+                        color: !!props.action ? "primary.main" : "secondary.main",
                         padding: "0.5vw",
                         justifyContent: "space-between",
                     }}
                     onClick={() => props.onCheck(props.target)}
                 >
                     <Box sx={{ alignItems: "center" }}>
-                        <Checkbox checked={props.checked} />
+                        <Checkbox checked={!!props.action} />
                         <Typography>{props.title}</Typography>
                     </Box>
-                    <Tooltip arrow title={props.misconfigured ? "Essa ação precisa ser reconfigurada" : props.description}>
+                    <Tooltip arrow title={props.action?.settings.misconfigured ? "Essa ação precisa ser reconfigurada" : props.description}>
                         <IconButton onClick={(e) => e.stopPropagation()}>
-                            {props.misconfigured ? (
+                            {props.action?.settings.misconfigured ? (
                                 <Report
                                     color="secondary"
                                     sx={{
@@ -83,12 +84,14 @@ export const BotActionsTab: React.FC<BotActionsTabProps> = (props) => {
     const [destinationRoom, setDestinationRoom] = useState<Room | null>(null)
 
     const rooms = useMemo(() => destinationBoard?.rooms || [], [destinationBoard])
-    const boardChat = useMemo(() => {
+    const sendToBoardAction = useMemo(() => {
         const action = props.data?.actions?.find((item) => item.target === "board:room:chat:new")
         console.log({ action })
 
         return action
     }, [props.data])
+
+    const pauseAction = useMemo(() => props.data?.actions?.find((item) => item.target === "bot:end"), [props.data])
 
     const handleCheckPress = (target: ValidAction) => {
         if (!props.data) return
@@ -96,47 +99,60 @@ export const BotActionsTab: React.FC<BotActionsTabProps> = (props) => {
 
         const newData: FlowNodeData = exists
             ? { ...props.data, actions: props.data.actions?.filter((item) => item.target !== target) }
-            : { ...props.data, actions: [...(props.data.actions || []), { target, settings: {}, run: async () => {} }] }
+            : { ...props.data, actions: [...(props.data.actions || []), { target, settings: { misconfigured: true }, run: async () => {} }] }
 
         console.log({ newData })
         props.updateData(newData)
     }
 
-    
-
     const updateBoardSettings = (options: { room_id?: string | null; board_id?: string | null }) => {
-        if (!props.data || !props.data.actions || !boardChat) return
+        if (!props.data || !props.data.actions || !sendToBoardAction) return
 
-        if (options.board_id !== null) boardChat.settings.board_id = options.board_id
-        if (options.room_id !== null) boardChat.settings.room_id = options.room_id
+        if (options.board_id !== null) sendToBoardAction.settings.board_id = options.board_id
+        if (options.room_id !== null) sendToBoardAction.settings.room_id = options.room_id
 
-        boardChat.settings.misconfigured = !boardChat.settings.board_id
-        props.updateData({ ...props.data, actions: [...props.data.actions.filter((item) => item.target !== boardChat.target), boardChat] })
+        sendToBoardAction.settings.misconfigured = !sendToBoardAction.settings.board_id
+        props.updateData({
+            ...props.data,
+            actions: [...props.data.actions.filter((item) => item.target !== sendToBoardAction.target), sendToBoardAction],
+        })
+    }
+
+    const updatePauseSettings = (expiry: number) => {
+        if (!props.data || !props.data.actions || !pauseAction) return
+
+        pauseAction.settings.expiry = expiry
+
+        pauseAction.settings.misconfigured = !pauseAction.settings.expiry
+        props.updateData({
+            ...props.data,
+            actions: [...props.data.actions.filter((item) => item.target !== pauseAction.target), pauseAction],
+        })
     }
 
     useEffect(() => {
         setDestinationRoom(
-            destinationBoard?.rooms.find((item) => item.id === boardChat?.settings.room_id) ||
+            destinationBoard?.rooms.find((item) => item.id === sendToBoardAction?.settings.room_id) ||
                 destinationBoard?.rooms[destinationBoard.entry_room_index] ||
                 null
         )
-    }, [destinationBoard, boardChat])
+    }, [destinationBoard, sendToBoardAction])
 
     useEffect(() => {
-        if (boards && boardChat) {
-            setDestinationBoard(boards.find((item) => item.id === boardChat.settings.board_id) || null)
+        if (boards && sendToBoardAction) {
+            setDestinationBoard(boards.find((item) => item.id === sendToBoardAction.settings.board_id) || null)
         }
-    }, [boards, boardChat])
+    }, [boards, sendToBoardAction])
 
     return (
         <Box sx={{ flexDirection: "column", gap: "1vw", padding: "1vw", bgcolor: "background.default", flex: 1, borderRadius: "0.5vw" }}>
             <TextInfo>As ações marcadas serão executadas quando esta mensagem for enviada</TextInfo>
             <ActionContainer
-                checked={!!boardChat}
+                action={sendToBoardAction}
                 target={"board:room:chat:new"}
                 title="Enviar para um quadro"
                 description="Copie esta conversa para um quadro"
-                misconfigured={boardChat?.settings.misconfigured}
+                settingsHeight="11vw"
                 settingsComponent={
                     <Box sx={{ gap: "1vw", flexDirection: "column" }}>
                         <Autocomplete
@@ -166,6 +182,28 @@ export const BotActionsTab: React.FC<BotActionsTabProps> = (props) => {
                             isOptionEqualToValue={(option, value) => option.id === value.id}
                         />
                     </Box>
+                }
+                onCheck={handleCheckPress}
+            />
+            <ActionContainer
+                action={pauseAction}
+                target="bot:end"
+                title="Finalizar conversa"
+                description="Pausar qualquer interação do bot com o contato pela duração configurada"
+                settingsHeight="8vw"
+                settingsComponent={
+                    <TextField
+                        label="Duração"
+                        placeholder="Impedir que o bot interaja por 30 minutos"
+                        fullWidth
+                        value={pauseAction?.settings.expiry || 0}
+                        onChange={(ev) => {
+                            const number = Number(ev.target.value.replace(/\D/g, ""))
+                            if (number) updatePauseSettings(number)
+                            if (ev.target.value === "") updatePauseSettings(0)
+                        }}
+                        InputProps={{ endAdornment: <Typography>Minutos</Typography> }}
+                    />
                 }
                 onCheck={handleCheckPress}
             />

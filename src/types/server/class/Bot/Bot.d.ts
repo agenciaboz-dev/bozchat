@@ -63,6 +63,10 @@ export interface PendingResponse {
     chat_id: string;
     bot: Bot;
 }
+export interface PausedInteraction {
+    expiry: number;
+    chat_id: string;
+}
 export interface BotMessageForm {
     message: string;
     chat_id: string;
@@ -87,6 +91,7 @@ export declare class Bot {
     expiry_message: string;
     idleness_minutes: number;
     idleness_message: string;
+    paused_chats: Map<string, PausedInteraction>;
     static pending_response: Map<string, PendingResponse>;
     static expiry_interval: NodeJS.Timeout;
     static new(data: BotForm): Promise<Bot>;
@@ -99,6 +104,7 @@ export declare class Bot {
     update(data: Partial<Bot>): Promise<void>;
     getChannels(): Promise<void>;
     delete(): Promise<void>;
+    isPaused(chat_id: string): boolean;
     handleIncomingMessage(data: BotMessageForm): Promise<void>;
     getActiveChat(chat_id: string, incoming_message?: string): ActiveBot | undefined;
     newChat(chat_id: string): ActiveBot | undefined;

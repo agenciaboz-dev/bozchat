@@ -195,7 +195,10 @@ export const WashimaChat: React.FC<WashimaChatProps> = ({ washima, chat, onClose
         }
     }, [chat, messages])
 
+
+
     useEffect(() => {
+        console.log({ chat })
         reset()
         if (chat) {
             setLoading(true)

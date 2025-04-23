@@ -1,6 +1,6 @@
 import { WithoutFunctions } from "../helpers";
-import { BotMessageForm } from "./Bot";
-export type ValidAction = "board:room:chat:new";
+import { Bot, BotMessageForm } from "./Bot";
+export type ValidAction = "board:room:chat:new" | "bot:end";
 export type NodeActionDto = WithoutFunctions<NodeAction>;
 export interface ActionSettings {
     misconfigured?: boolean;
@@ -11,5 +11,5 @@ export declare class NodeAction {
     settings: ActionSettings;
     static init(dto: NodeActionDto): NodeAction;
     constructor(data: NodeActionDto);
-    run(data: BotMessageForm): Promise<void>;
+    run(data: BotMessageForm, bot: Bot): Promise<void>;
 }
