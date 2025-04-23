@@ -136,16 +136,18 @@ export const ChatContainer: React.FC<ChatProps> = ({ chat, onChatClick, washima,
                     >
                         {chat.name}
                     </p>
-                    <Box
-                        sx={{
-                            fontSize: isMobile ? "3.5vw" : "0.65vw",
-                            wordWrap: "break-word",
-                            color: !!chat.unreadCount ? "warning.main" : undefined,
-                            fontWeight: !!chat.unreadCount ? "bold" : undefined,
-                        }}
-                    >
-                        {formatTime(new Date((chat.lastMessage?.timestamp || 0) * 1000))}
-                    </Box>
+                    {chat.lastMessage && (
+                        <Box
+                            sx={{
+                                fontSize: isMobile ? "3.5vw" : "0.65vw",
+                                wordWrap: "break-word",
+                                color: !!chat.unreadCount ? "warning.main" : undefined,
+                                fontWeight: !!chat.unreadCount ? "bold" : undefined,
+                            }}
+                        >
+                            {formatTime(new Date(chat.lastMessage.timestamp * 1000))}
+                        </Box>
+                    )}
                 </Box>
 
                 {/*//* message and unread count */}
