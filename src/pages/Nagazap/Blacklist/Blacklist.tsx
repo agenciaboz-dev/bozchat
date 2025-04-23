@@ -9,6 +9,7 @@ import { useDarkMode } from "../../../hooks/useDarkMode"
 import { DataGrid, GridColDef } from "@mui/x-data-grid"
 import { WithoutFunctions } from "../../../types/server/class/helpers"
 import Inputmask from "inputmask"
+import { useConfirmDialog } from "burgos-confirm"
 
 interface BlacklistProps {
     nagazap: Nagazap
@@ -22,6 +23,7 @@ export const Blacklist: React.FC<BlacklistProps> = ({ nagazap, setNagazap, setSh
     const { company, user } = useUser()
     const isMobile = useMediaQuery("(orientation: portrait)")
     const { darkMode } = useDarkMode()
+    const { confirm } = useConfirmDialog()
 
     const [loading, setLoading] = useState(false)
     const [blacklist, setBlacklist] = useState<BlacklistLog[]>([])
@@ -30,15 +32,23 @@ export const Blacklist: React.FC<BlacklistProps> = ({ nagazap, setNagazap, setSh
 
     const handleDelete = async () => {
         if (!selectedLog) return
-        try {
-            const response = await api.delete("/nagazap/blacklist", {
-                data: { number: selectedLog.number },
-                params: { nagazap_id: nagazap.id, user_id: user?.id },
-            })
-            setNagazap(response.data)
-        } catch (error) {
-            console.log(error)
-        }
+        setMenuAnchor(null)
+
+        confirm({
+            title: "Remover da lista negra",
+            content: "Tem certeza que deseja remover esse número da lista negra? Ele voltará a receber mensagens do Broadcast.",
+            onConfirm: async () => {
+                try {
+                    const response = await api.delete("/nagazap/blacklist", {
+                        data: { number: selectedLog.number },
+                        params: { nagazap_id: nagazap.id, user_id: user?.id },
+                    })
+                    setNagazap(response.data)
+                } catch (error) {
+                    console.log(error)
+                }
+            },
+        })
     }
 
     const refresh = async () => {
@@ -134,7 +144,7 @@ export const Blacklist: React.FC<BlacklistProps> = ({ nagazap, setNagazap, setSh
                     }}
                     getRowId={(row) => row.number}
                     onRowSelectionModelChange={(model) => {
-                        if (model.length > 0) return
+                        if (model.length === 0) return
                         setSelectedLog(blacklist.find((item) => item.number === model[0]) || null)
                     }}
                 />
