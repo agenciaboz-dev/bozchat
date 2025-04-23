@@ -1,5 +1,5 @@
 import React from "react"
-import { Box, CircularProgress, IconButton } from "@mui/material"
+import { Box, CircularProgress, IconButton, useMediaQuery } from "@mui/material"
 import { backgroundStyle } from "../../style/background"
 import { Header } from "../../components/Header/Header"
 import { useApi } from "../../hooks/useApi"
@@ -13,6 +13,7 @@ import { AdminTable } from "./AdminTable"
 interface AdminProps {}
 
 export const Admin: React.FC<AdminProps> = (props) => {
+    const isMobile = useMediaQuery("(orientation: portrait)")
     const api = useApi()
     const { user } = useUser()
 
@@ -29,7 +30,7 @@ export const Admin: React.FC<AdminProps> = (props) => {
     }
 
     return (
-        <Box sx={backgroundStyle}>
+        <Box sx={{ ...backgroundStyle, overflow: isMobile ? "auto" : "hidden" }}>
             <Header />
             <Box sx={{ flexDirection: "column", gap: "1vw", padding: "2vw" }}>
                 <Title2 name="Administração" right={<IconButton onClick={refresh}>{loading ? <CircularProgress /> : <Refresh />}</IconButton>} />
