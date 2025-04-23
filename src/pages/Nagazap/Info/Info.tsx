@@ -111,7 +111,7 @@ export const Info: React.FC<InfoProps> = ({ nagazap, setShowInformations }) => {
                 ) : null
             }
         >
-            <Grid container columns={isMobile ? 1 : 4} sx={{ height: "64vh", gap: isMobile ? "5vw" : undefined }}>
+            <Grid container columns={isMobile ? 1 : 4} sx={{ flex: 1, gap: isMobile ? "5vw" : undefined }}>
                 <Grid item xs={1}>
                     <Box
                         sx={{

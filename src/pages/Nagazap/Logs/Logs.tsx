@@ -113,7 +113,7 @@ export const Logs: React.FC<LogsProps> = ({ nagazap, setNagazap, setShowInformat
                 ) : undefined
             }
         >
-            <Box sx={{ marginTop: "-1vw", gap: "1vw" }}>
+            <Box sx={{ marginTop: "-1vw", gap: "1vw", flex: 1 }}>
                 <Box sx={{ flex: 1, flexDirection: "column" }}>
                     <Title2 name="Sucesso" />
                     <Paper sx={{ marginTop: isMobile ? "2vw" : "1vw" }}>
@@ -128,7 +128,7 @@ export const Logs: React.FC<LogsProps> = ({ nagazap, setNagazap, setShowInformat
                             pageSizeOptions={[20, 50, 100, 200]}
                             sx={{
                                 border: 0,
-                                height: "61vh",
+                                height: "60vh",
                                 "& .MuiDataGrid-row": {
                                     cursor: "pointer",
                                 },
@@ -151,7 +151,7 @@ export const Logs: React.FC<LogsProps> = ({ nagazap, setNagazap, setShowInformat
                             pageSizeOptions={[20, 50, 100, 200]}
                             sx={{
                                 border: 0,
-                                height: "61vh",
+                                height: "60vh",
                                 "& .MuiDataGrid-row": {
                                     cursor: "pointer",
                                 },

@@ -18,10 +18,10 @@ export const OvenStatus: React.FC<OvenStatusProps> = ({ nagazap, small_icon }) =
                 animationData={animation}
                 loop={true}
                 style={{
-                    width: small_icon ? (isMobile ? "10vw" : "2vw") : isMobile ? "8vw" : "3vw",
+                    width: small_icon ? (isMobile ? "8vw" : "2vw") : isMobile ? "8vw" : "3vw",
                     position: small_icon ? "absolute" : undefined,
-                    top: isMobile ? "0vw" : "-0.25vw",
-                    left: isMobile ? "15vw" : "-0.25vw",
+                    top: small_icon ? (isMobile ? "-1vw" : "-0.5vw") : 0,
+                    left: small_icon ? (isMobile ? 0 : "-0.25vw") : undefined,
                 }}
             />
         )

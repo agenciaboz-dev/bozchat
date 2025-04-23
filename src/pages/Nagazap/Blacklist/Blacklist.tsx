@@ -137,7 +137,7 @@ export const Blacklist: React.FC<BlacklistProps> = ({ nagazap, setNagazap, setSh
                     pageSizeOptions={[20, 50, 100, 200]}
                     sx={{
                         border: 0,
-                        height: "68vh",
+                        height: "65vh",
                         "& .MuiDataGrid-row": {
                             cursor: "pointer",
                         },

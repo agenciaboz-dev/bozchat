@@ -269,7 +269,7 @@ export const MessageFormScreen: React.FC<MessageFormProps> = ({ nagazap, setShow
             }
         >
             <form onSubmit={formik.handleSubmit}>
-                <Grid container columns={isMobile ? 1 : 3} spacing={isMobile ? "5vw" : "1vw"} height={"100%"}>
+                <Grid container columns={isMobile ? 1 : 3} spacing={isMobile ? "5vw" : "1vw"} flex={1}>
                     <Grid item xs={1}>
                         <Box
                             sx={{

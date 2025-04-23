@@ -71,7 +71,7 @@ export const NagazapSettings: React.FC<NagazapSettingsProps> = ({ nagazap, setNa
             }
         >
             <form onSubmit={formik.handleSubmit}>
-                <Box sx={{ flexDirection: "column", gap: isMobile ? "5vw" : "1vw" }}>
+                <Box sx={{ flexDirection: "column", gap: isMobile ? "5vw" : "1vw", flex: 1 }}>
                     {isMobile ? (
                         <Box sx={{ gap: "5vw" }}>
                             <Box sx={{ flex: 1 }}>
