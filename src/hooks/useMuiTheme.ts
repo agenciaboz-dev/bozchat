@@ -14,7 +14,7 @@ export const useMuiTheme = () => {
             createTheme(
                 {
                     typography: {
-                        fontFamily: ["Futura Medium BT"].join(","),
+                        fontFamily: ["Helvetica"].join(","),
                     },
                     palette: {
                         mode: darkMode ? "dark" : "light",

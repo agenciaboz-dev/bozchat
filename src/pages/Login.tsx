@@ -57,15 +57,7 @@ export const Login: React.FC<LoginProps> = ({}) => {
     return isMobile ? (
         <Box sx={{ ...backgroundStyle, justifyContent: "center", alignItems: "center", flexDirection: "column", gap: "10vw" }}>
             <img src={"/logos/1.png"} alt="logo" style={{ aspectRatio: "2/1", width: "70vw" }} draggable={false} />
-            <Typography
-                variant="h2"
-                component="h2"
-                fontWeight={"bold"}
-                fontSize={"2rem"}
-                color={"text.secondary"}
-                sx={{ alignSelf: "center" }}
-                fontFamily={"Futura Medium BT"}
-            >
+            <Typography variant="h2" component="h2" fontWeight={"bold"} fontSize={"2rem"} color={"text.secondary"} sx={{ alignSelf: "center" }}>
                 Login
             </Typography>
             <form onSubmit={formik.handleSubmit}>
@@ -84,7 +76,7 @@ export const Login: React.FC<LoginProps> = ({}) => {
                             gap: "3px",
                         }}
                     >
-                        <Typography component="label" fontWeight={"bold"} fontSize={"1rem"} color={"text.secondary"} fontFamily={"Futura Medium BT"}>
+                        <Typography component="label" fontWeight={"bold"} fontSize={"1rem"} color={"text.secondary"}>
                             Nome de usuário, e-mail ou CPF
                         </Typography>
                         <TextField
@@ -104,7 +96,7 @@ export const Login: React.FC<LoginProps> = ({}) => {
                             gap: "3px",
                         }}
                     >
-                        <Typography component="label" fontWeight={"bold"} fontSize={"1rem"} color={"text.secondary"} fontFamily={"Futura Medium BT"}>
+                        <Typography component="label" fontWeight={"bold"} fontSize={"1rem"} color={"text.secondary"}>
                             Senha
                         </Typography>
                         <TextField
@@ -164,14 +156,7 @@ export const Login: React.FC<LoginProps> = ({}) => {
                             gap: "2vw",
                         }}
                     >
-                        <Typography
-                            variant="h2"
-                            component="h2"
-                            fontWeight={"bold"}
-                            fontSize={"3.4rem"}
-                            color={"secondary.main"}
-                            fontFamily={"Futura Medium BT"}
-                        >
+                        <Typography variant="h2" component="h2" fontWeight={"bold"} fontSize={"3.4rem"} color={"secondary.main"}>
                             Login
                         </Typography>
                         <Box
@@ -180,13 +165,7 @@ export const Login: React.FC<LoginProps> = ({}) => {
                                 gap: "5px",
                             }}
                         >
-                            <Typography
-                                component="label"
-                                fontWeight={"bold"}
-                                fontSize={"1.4rem"}
-                                color={"secondary.main"}
-                                fontFamily={"Futura Medium BT"}
-                            >
+                            <Typography component="label" fontWeight={"bold"} fontSize={"1.4rem"} color={"secondary.main"}>
                                 Nome de usuário, e-mail ou CPF
                             </Typography>
                             <TextField
@@ -214,13 +193,7 @@ export const Login: React.FC<LoginProps> = ({}) => {
                                 gap: "5px",
                             }}
                         >
-                            <Typography
-                                component="label"
-                                fontWeight={"bold"}
-                                fontSize={"1.4rem"}
-                                color={"secondary.main"}
-                                fontFamily={"Futura Medium BT"}
-                            >
+                            <Typography component="label" fontWeight={"bold"} fontSize={"1.4rem"} color={"secondary.main"}>
                                 Senha
                             </Typography>
                             <TextField
@@ -271,10 +244,10 @@ export const Login: React.FC<LoginProps> = ({}) => {
             <Box sx={{ ...backgroundStyle, justifyContent: "center", alignItems: "center", flexDirection: "column" }}>
                 <Box sx={{ flexDirection: "column", gap: "2vw", color: "text.secondary", maxWidth: "85%" }}>
                     <img src={"/logos/1.png"} alt="logo" style={{ width: "8vw" }} draggable={false} />
-                    <Typography variant="h2" component="h2" fontWeight={"bold"} fontSize={"3.4rem"} fontFamily={"Futura Medium BT"}>
+                    <Typography variant="h2" component="h2" fontWeight={"bold"} fontSize={"3.4rem"}>
                         Acesse seu perfil!
                     </Typography>
-                    <Typography component="p" fontSize={"1.4rem"} fontFamily={"Futura Medium BT"}>
+                    <Typography component="p" fontSize={"1.4rem"}>
                         Faça login para acessar sua conta e aproveitar todos os recursos do ChatBoz. Gerencie seus números, personalize suas
                         configurações e acompanhe o desenvolvimento dos seus projetos com facilidade.
                     </Typography>

@@ -1,23 +1,23 @@
 @font-face {
-    font-family: Montserrat;
-    src: url("/fonts/Montserrat-Regular.ttf") ;
+    font-family: "Helvetica";
+    src: url("/fonts/Helvetica.ttf") format("truetype");
 }
 
-/* @font-face {
-    font-family: Montserrat;
-    src: url("../public/fonts/Montserrat-SemiBold.ttf") ;
-    font-weight: 200 400;
-} */
+@font-face {
+    font-family: "Helvetica";
+    src: url("/fonts/Helvetica-Light.ttf") format("truetype");
+    font-weight: lighter;
+}
 
 @font-face {
-    font-family: Montserrat;
-    src: url("/fonts/Montserrat-Bold.ttf") ;
+    font-family: "Helvetica";
+    src: url("/fonts/Helvetica-Bold.ttf") format("truetype");
     font-weight: bold;
 }
 
 @font-face {
-    font-family: 'Futura Medium BT';
-    src: url('/fonts/Futura-Medium-BT.ttf') format('truetype');
+    font-family: "Futura Medium BT";
+    src: url("/fonts/Futura-Medium-BT.ttf") format("truetype");
     font-weight: normal;
     font-style: normal;
 }
@@ -30,7 +30,7 @@
     margin: 0;
     padding: 0;
     box-sizing: border-box;
-    font-family: Futura Medium BT;
+    font-family: Helvetica;
     /* user-select: none; */
 }
 
