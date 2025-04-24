@@ -150,13 +150,11 @@ export const Oven: React.FC<OvenProps> = ({ nagazap: initialNagazap, setNagazap:
                                 {nagazap.paused ? <PlayCircle color="success" /> : <PauseCircle color="warning" />}
                             </IconButton>
                             <TextField
-                                variant="standard"
                                 label="Intervalo entre fornadas"
                                 value={frequency}
                                 onChange={(event) => setFrequency(event.target.value)}
                                 InputProps={{
-                                    disableUnderline: true,
-                                    sx: { width: textfield_size, marginBottom: "0.5vw" },
+                                    sx: { width: textfield_size },
                                     endAdornment: (
                                         <>
                                             Minutos
@@ -172,14 +170,12 @@ export const Oven: React.FC<OvenProps> = ({ nagazap: initialNagazap, setNagazap:
                                 }}
                             />
                             <TextField
-                                variant="standard"
                                 label="Mensagens por fornada"
                                 value={batchSize}
                                 type="number"
                                 onChange={(event) => setBatchSize(Number(event.target.value))}
                                 InputProps={{
-                                    disableUnderline: true,
-                                    sx: { width: textfield_size, marginBottom: "0.5vw" },
+                                    sx: { width: textfield_size },
                                     endAdornment: (
                                         <IconButton
                                             disabled={batchSize == nagazap?.batchSize}
@@ -283,15 +279,13 @@ export const Oven: React.FC<OvenProps> = ({ nagazap: initialNagazap, setNagazap:
                     </Box>
                 </Box>
             ) : null}
-            {!!batches.length && (
-                <Grid container columns={isMobile ? 1 : 4} spacing={2} sx={{ flex: 1, overflowY: "auto" }}>
-                    {batches.map((batch, index) => (
-                        <Grid item xs={1} key={index}>
-                            <Batch batch={batch} nagazap={nagazap} index={index} />
-                        </Grid>
-                    ))}
-                </Grid>
-            )}
+            <Grid container columns={isMobile ? 1 : 4} spacing={2}>
+                {batches.map((batch, index) => (
+                    <Grid item xs={1} key={index}>
+                        <Batch batch={batch} nagazap={nagazap} index={index} />
+                    </Grid>
+                ))}
+            </Grid>
             {!batches.length && (
                 <Box
                     sx={{
