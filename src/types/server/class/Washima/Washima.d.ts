@@ -89,7 +89,7 @@ export declare class Washima {
         group_updates?: undefined;
     } | undefined>;
     getMessage(message_id: string): Promise<WAWebJS.Message>;
-    sendMessage(chat_id: string, message?: string, media?: WashimaMediaForm, replyMessage?: WashimaMessage): Promise<void>;
+    sendMessage(chat_id: string, message?: string, media?: WashimaMediaForm, replyMessage?: WashimaMessage, from_bot?: boolean): Promise<void>;
     getContact(contact_id: string): Promise<string>;
     getMedia(message: Message): Promise<WashimaMedia | undefined>;
     restart(): Promise<void>;

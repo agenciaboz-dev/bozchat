@@ -62,6 +62,8 @@ export interface PendingResponse {
     idleness?: number;
     chat_id: string;
     bot: Bot;
+    platform: "washima" | "nagazap";
+    platform_id: string;
 }
 export interface PausedInteraction {
     expiry: number;

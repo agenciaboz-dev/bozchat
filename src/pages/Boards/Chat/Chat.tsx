@@ -108,6 +108,9 @@ export const BoardChat: React.FC<BoardChatProps> = (props) => {
                     {...provided.draggableProps}
                     {...provided.dragHandleProps}
                     sx={{ padding: isMobile ? "5vw" : "1vw", flexDirection: "column", overflow: "hidden", gap: isMobile ? "5vw" : "1vw" }}
+                    onClick={() =>
+                        console.log(props.nagazap, nagazapMessages.length, props.chat, { from: normalizePhonenumber(props.chat.last_message.from) })
+                    }
                 >
                     <Box sx={{ justifyContent: "space-between", alignItems: "flex-start" }}>
                         <Box sx={{ gap: isMobile ? "2vw" : "1vw", alignItems: "center" }} color={"text.secondary"}>

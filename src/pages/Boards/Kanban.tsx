@@ -244,7 +244,6 @@ export const BoardPage: React.FC<BoardPageProps> = (props) => {
                 />
             </Box>
             <Box
-                ref={columnsBoxRef}
                 sx={{
                     flexDirection: "column",
                     flex: 1,
@@ -257,7 +256,10 @@ export const BoardPage: React.FC<BoardPageProps> = (props) => {
                 <Droppable droppableId={props.board.id} type="room" direction="horizontal">
                     {(provided) => (
                         <Box
-                            ref={provided.innerRef}
+                            ref={(node: HTMLDivElement) => {
+                                provided.innerRef(node)
+                                columnsBoxRef.current = node
+                            }}
                             {...provided.droppableProps}
                             sx={{
                                 flex: 1,
