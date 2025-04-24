@@ -1,11 +1,10 @@
 import React, { useEffect, useState } from "react"
-import { Box, useMediaQuery } from "@mui/material"
+import { Box, Typography, useMediaQuery } from "@mui/material"
 import Inputmask from "inputmask"
 import { washima_colors } from "../../style/colors"
 
 interface MessageAuthorProps {
     author?: string | null
-    small?: boolean
 }
 
 const authors_colors: { author: string; color: string }[] = []
@@ -24,7 +23,7 @@ export const getAuthorName = (author?: string | null) => {
     return { author_name, author_phone }
 }
 
-export const MessageAuthor: React.FC<MessageAuthorProps> = ({ author, small }) => {
+export const MessageAuthor: React.FC<MessageAuthorProps> = ({ author }) => {
     const isMobile = useMediaQuery("(orientation: portrait)")
 
     const { author_name, author_phone } = getAuthorName(author)
@@ -50,12 +49,13 @@ export const MessageAuthor: React.FC<MessageAuthorProps> = ({ author, small }) =
                 gap: isMobile ? "2vw" : "0.5vw",
                 fontWeight: "bold",
                 alignItems: "center",
+                width: "100%",
             }}
         >
-            <Box
+            <Typography
                 sx={{
                     color: authorColor,
-                    maxWidth: isMobile ? "25vw" : small ? "15vw" : undefined,
+                    flex: "1 1 33%",
                     textOverflow: "ellipsis",
                     whiteSpace: "nowrap",
                     overflow: "hidden",
@@ -63,7 +63,7 @@ export const MessageAuthor: React.FC<MessageAuthorProps> = ({ author, small }) =
             >
                 {!!author_phone && "~ "}
                 {author_name}
-            </Box>
+            </Typography>
             <Box sx={{ color: "text.secondary", fontSize: "0.7rem" }}>{author_phone}</Box>
         </Box>
     )

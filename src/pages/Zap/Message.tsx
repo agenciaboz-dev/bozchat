@@ -186,7 +186,7 @@ export const Message: React.ForwardRefRenderFunction<HTMLDivElement, MessageProp
                         maxWidth: inBoards
                             ? isMobile
                                 ? "100%"
-                                : "15vw"
+                                : "90%"
                             : message.hasMedia && is_document
                             ? "25vw"
                             : message.hasMedia
@@ -206,7 +206,6 @@ export const Message: React.ForwardRefRenderFunction<HTMLDivElement, MessageProp
                             padding: isMobile ? "3vw" : `${is_image || is_video ? "0.25vw" : "0.5vw"}`,
                             marginLeft: !from_me && is_selecting ? "5vw" : undefined,
                             // marginRight: from_me && is_selecting ? "1vw" : undefined,
-
                             flexDirection: "column",
                             alignSelf: from_me ? "flex-end" : "flex-start",
                             textAlign: from_me ? "end" : "start",
@@ -226,6 +225,7 @@ export const Message: React.ForwardRefRenderFunction<HTMLDivElement, MessageProp
                             gap: is_sticker ? "0.2vw" : undefined,
                             opacity: is_deleted || message.phone_only ? 0.3 : undefined,
                             transition: "0.5s",
+                            width: "100%",
                         }}
                     >
                         {show_triangle && (
@@ -354,7 +354,7 @@ export const Message: React.ForwardRefRenderFunction<HTMLDivElement, MessageProp
                                             />
                                         ) : (
                                             <Box sx={{ flexDirection: "column", alignItems: "center", color: "error.main" }}>
-                                                erro ao baixar vídeo
+                                                Erro ao baixar vídeo
                                                 <ErrorChip />
                                             </Box>
                                         ))}
@@ -389,7 +389,7 @@ export const Message: React.ForwardRefRenderFunction<HTMLDivElement, MessageProp
                                                     borderRadius: 0,
                                                 }}
                                                 imgProps={{ draggable: false }}
-                                                alt="icone"
+                                                alt="ícone"
                                                 src={
                                                     documentIcon(attachmendMetaData?.filename?.split(".").pop()) ||
                                                     "/icones-documentos-washima/icon-generic.svg"
@@ -398,7 +398,7 @@ export const Message: React.ForwardRefRenderFunction<HTMLDivElement, MessageProp
                                         ))}
                                     {!valid_types.includes(message.type) && (
                                         <Box sx={{ flexDirection: "column", alignItems: "center", color: "warning.main", margin: "auto" }}>
-                                            mídia não suportada
+                                            Mídia não suportada
                                             <TodoChip />
                                         </Box>
                                     )}

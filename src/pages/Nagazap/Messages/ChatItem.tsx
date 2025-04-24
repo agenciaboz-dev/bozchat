@@ -5,7 +5,6 @@ import { AudioPlayer } from "../../Washima/AudioComponents/AudioPlayer"
 import { useFormatMessageTime } from "../../../hooks/useFormatMessageTime"
 import { TrianguloFudido } from "../../Zap/TrianguloFudido"
 import { useDarkMode } from "../../../hooks/useDarkMode"
-import colors, { default_colors } from "../../../style/colors"
 import { TemplatePreview } from "../TemplateForm/TemplatePreview"
 import { NagaChat } from "../../../types/server/class/Nagazap"
 
@@ -36,7 +35,7 @@ export const ChatItem: React.FC<ChatItemProps> = ({ chat, onChatClick, active })
                     backgroundColor: darkMode ? undefined : active ? "action.hover" : undefined,
                 }}
             >
-                <MessageAuthor author={chat.name + " - " + chat.from} small />
+                <MessageAuthor author={chat.name + " - " + chat.from} />
                 {(chat.lastMessage.type === "image" || chat.lastMessage.type === "sticker") && (
                     <Avatar
                         variant="rounded"
