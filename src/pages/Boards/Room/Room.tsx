@@ -150,16 +150,18 @@ export const BoardRoom: React.FC<KanbanColumnProps> = (props) => {
                         <RoomNameInput onSubmit={(name) => editRoomName(props.index, name)} currentName={props.room.name} />
                     </Box>
                 ) : (
-                    <Box sx={{ alignItems: "center", gap: isMobile ? "2vw" : "0.5vw" }}>
-                        <Typography sx={{ color: "text.secondary", fontWeight: "bold" }}>{props.room.name}</Typography>
-                        <Tooltip title={`existem ${props.room.chats.length} conversas nesta sala`} arrow>
-                            <Chip label={`${props.room.chats.length}`} size="small" color="primary" />
-                        </Tooltip>
-                        {props.room.entry_point && <EntryRoomIcon />}
+                    <Box sx={{ flexDirection: "column" }}>
+                        <Box sx={{ alignItems: "center", gap: isMobile ? "2vw" : "0.5vw" }}>
+                            <Typography sx={{ color: "text.secondary", fontWeight: "bold", whiteSpace: "nowrap" }}>{props.room.name}</Typography>
+                            <Tooltip title={`Existem ${props.room.chats.length} conversas nesta sala`} arrow>
+                                <Chip label={`${props.room.chats.length}`} size="small" color="primary" />
+                            </Tooltip>
+                            {props.room.entry_point && <EntryRoomIcon />}
+                            <SearchIcon setShowSearchBar={setShowSearchBar} showSearchBar={showSearchBar} />
+                        </Box>
                         <Box sx={{ flexWrap: "wrap", alignItems: "center", gap: isMobile ? "2vw" : "0.5vw" }}>
                             {!!props.washimas.length && syncedIntegrations}
                         </Box>
-                        <SearchIcon setShowSearchBar={setShowSearchBar} showSearchBar={showSearchBar} />
                     </Box>
                 )}
 

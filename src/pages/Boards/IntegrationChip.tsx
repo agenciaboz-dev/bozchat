@@ -31,17 +31,17 @@ export const IntegrationChip: React.FC<IntegrationChipProps> = (props) => {
                 <Box>
                     {props.chatVariant ? (
                         <Typography sx={{ fontSize: "0.8rem" }}>
-                            conversa de <IntegrationName />
+                            Conversa de <IntegrationName />
                         </Typography>
                     ) : (
                         <Typography sx={{ fontSize: "0.8rem" }}>
-                            recebendo novas mensagens de <IntegrationName /> nesta sala
+                            Recebendo novas mensagens de <IntegrationName /> nesta sala
                         </Typography>
                     )}
                 </Box>
             }
         >
-            <Chip icon={Icon} label={name} size="small" sx={{ color: "success.main" }} />
+            <Chip icon={Icon} label={name} size="small" sx={{ color: "success.main", overflow: "hidden" }} />
         </Tooltip>
     )
 }

@@ -112,11 +112,18 @@ export const BoardChat: React.FC<BoardChatProps> = (props) => {
                     <Box sx={{ justifyContent: "space-between", alignItems: "flex-start" }}>
                         <Box sx={{ gap: isMobile ? "2vw" : "1vw", alignItems: "center" }} color={"text.secondary"}>
                             <Avatar src={props.chat.profile_pic} sx={{ width: isMobile ? "9vw" : "3vw", height: isMobile ? "9vw" : "3vw" }} />
-                            <Box sx={{ flexDirection: "column", alignSelf: "center", gap: isMobile ? "2vw" : "0.2vw" }}>
+                            <Box
+                                sx={{
+                                    flexDirection: "column",
+                                    alignSelf: "center",
+                                    gap: isMobile ? "2vw" : "0.2vw",
+                                    maxWidth: isMobile ? "50vw" : "13vw",
+                                }}
+                            >
                                 <Typography
                                     sx={{
                                         fontWeight: "bold",
-                                        width: isMobile ? "50vw" : "13vw",
+                                        width: "100%",
                                         overflow: "hidden",
                                         whiteSpace: "nowrap",
                                         textOverflow: "ellipsis",
@@ -124,7 +131,7 @@ export const BoardChat: React.FC<BoardChatProps> = (props) => {
                                 >
                                     {props.chat.name}
                                 </Typography>
-                                <Box sx={{ gap: isMobile ? "2vw" : "0.5vw", alignItems: "center" }}>
+                                <Box sx={{ gap: isMobile ? "2vw" : "0.5vw", width: "100%" }}>
                                     <Chip
                                         size="small"
                                         label={<Typography sx={{ fontSize: "0.7rem" }}>{datetime.toLocaleDateString("pt-br")}</Typography>}
