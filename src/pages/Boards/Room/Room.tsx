@@ -2,7 +2,7 @@ import React, { useMemo, useState } from "react"
 import { Box, Chip, IconButton, Menu, MenuItem, Paper, TextField, Tooltip, Typography, useMediaQuery } from "@mui/material"
 import { Room } from "../../../types/server/class/Board/Room"
 import { BoardChat } from "../Chat/Chat"
-import { Droppable } from "@hello-pangea/dnd"
+import { Draggable, Droppable } from "@hello-pangea/dnd"
 import { RoomNameInput } from "./RoomNameInput"
 import { Board } from "../../../types/server/class/Board/Board"
 import { useSnackbar } from "burgos-snackbar"
@@ -19,6 +19,7 @@ import { RoomSettingsModal } from "./RoomSettingsModal"
 import { SearchIcon } from "./SearchIcon"
 import { fuzzy } from "../../../tools/fuzzy"
 import { Chat } from "../../../types/server/class/Board/Chat"
+import { Virtuoso } from "react-virtuoso"
 
 interface KanbanColumnProps {
     room: Room
@@ -163,17 +164,45 @@ export const BoardRoom: React.FC<KanbanColumnProps> = (props) => {
                     </Box>
                 )}
 
-                <Droppable droppableId={props.room.id} type="chat" direction="vertical">
-                    {(provided) => (
+                <Droppable
+                    droppableId={props.room.id}
+                    type="chat"
+                    direction="vertical"
+                    mode="virtual"
+                    renderClone={(provided, snapshot, rubric) => {
+                        const chat = filteredChats[rubric.source.index]
+                        return (
+                            <Paper
+                                {...provided.draggableProps}
+                                {...provided.dragHandleProps}
+                                ref={provided.innerRef}
+                                sx={{ padding: isMobile ? "5vw" : "1vw", flexDirection: "column", overflow: "hidden", gap: isMobile ? "5vw" : "1vw" }}
+                            >
+                                <BoardChat
+                                    key={chat.id}
+                                    chat={chat}
+                                    index={rubric.source.index}
+                                    washima={props.washimas.find((washima) => washima.id === chat.washima_id)}
+                                    nagazap={props.nagazaps.find((nagazap) => nagazap.id === chat.nagazap_id)}
+                                    board={props.board}
+                                    room_id={props.room.id}
+                                    updateBoard={(board) => props.updateBoard(board)}
+                                />
+                            </Paper>
+                        )
+                    }}
+                >
+                    {(provided, snapshot) => (
                         <Box
                             ref={provided.innerRef}
                             {...provided.droppableProps}
                             sx={{
                                 flexDirection: "column",
                                 gap: isMobile ? "5vw" : "1vw",
-                                flex: 1,
+                                // flex: 1,
                                 opacity: props.editMode ? 0.45 : 1,
                                 pointerEvents: props.editMode ? "none" : undefined,
+                                height: "40vw",
                             }}
                         >
                             {filteredChats.length === 0 ? (
@@ -181,18 +210,57 @@ export const BoardRoom: React.FC<KanbanColumnProps> = (props) => {
                                     <Typography sx={{ color: "text.secondary", alignSelf: "center" }}>Nenhuma conversa</Typography>
                                 </Box>
                             ) : (
-                                filteredChats.map((chat, index) => (
-                                    <BoardChat
-                                        key={chat.id}
-                                        chat={chat}
-                                        index={index}
-                                        washima={props.washimas.find((washima) => washima.id === chat.washima_id)}
-                                        nagazap={props.nagazaps.find((nagazap) => nagazap.id === chat.nagazap_id)}
-                                        board={props.board}
-                                        room_id={props.room.id}
-                                        updateBoard={(board) => props.updateBoard(board)}
-                                    />
-                                ))
+                                <Virtuoso
+                                    style={{ height: "100%" }}
+                                    data={snapshot.isUsingPlaceholder ? [null, ...filteredChats] : filteredChats}
+                                    itemContent={(index, chat) =>
+                                        chat ? (
+                                            <Draggable draggableId={chat.id} index={index}>
+                                                {(provided) => (
+                                                    <Paper
+                                                        data-index={index}
+                                                        ref={provided.innerRef}
+                                                        {...provided.draggableProps}
+                                                        {...provided.dragHandleProps}
+                                                        sx={{
+                                                            padding: isMobile ? "5vw" : "1vw",
+                                                            flexDirection: "column",
+                                                            overflow: "hidden",
+                                                            gap: isMobile ? "5vw" : "1vw",
+                                                        }}
+                                                    >
+                                                        <BoardChat
+                                                            key={chat.id}
+                                                            chat={chat}
+                                                            index={index}
+                                                            washima={props.washimas.find((washima) => washima.id === chat.washima_id)}
+                                                            nagazap={props.nagazaps.find((nagazap) => nagazap.id === chat.nagazap_id)}
+                                                            board={props.board}
+                                                            room_id={props.room.id}
+                                                            updateBoard={(board) => props.updateBoard(board)}
+                                                        />
+                                                    </Paper>
+                                                )}
+                                            </Draggable>
+                                        ) : (
+                                            <Box data-index={index} sx={{ height: "10vw" }} />
+                                        )
+                                    }
+                                    components={{
+                                        Item: ({ children, ...props }) => (
+                                            <div
+                                                {...props}
+                                                style={{
+                                                    ...props.style,
+                                                    // Maintain spacing even during drag
+                                                    marginBottom: "1vw", // Match your gap size
+                                                }}
+                                            >
+                                                {children}
+                                            </div>
+                                        ),
+                                    }}
+                                />
                             )}
                             {provided.placeholder}
                         </Box>

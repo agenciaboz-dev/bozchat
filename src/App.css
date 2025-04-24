@@ -123,3 +123,9 @@ img {
 .MuiDataGrid-panelWrapper {
     background-color: #131b26;
 }
+
+[data-rbd-placeholder-context-id] {
+    background-color: rgba(0,0,0,0.1) !important;
+    border-radius: 4px;
+    margin-bottom: 1vw; /* Match your gap */
+  }
