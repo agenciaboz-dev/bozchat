@@ -26,6 +26,7 @@ interface WashimasTableProps {
     setWashimas: React.Dispatch<React.SetStateAction<Washima[]>>
     openSettings: () => void
     fetchWashimas: () => void
+    onWashimaUpdate: (washima: Washima) => void
 }
 
 interface CustomRow extends WithoutFunctions<Washima> {
@@ -193,7 +194,7 @@ export const WashimasTable: React.FC<WashimasTableProps> = (props) => {
             onConfirm: async () => {
                 washima.status = "loading"
 
-                onWashimaUpdate(washima)
+                props.onWashimaUpdate(washima)
                 try {
                     const response = await api.delete("/washima", { data: { washima_id: washima.id }, params: { user_id: user?.id } })
                     props.setSelectedWashima(null)
@@ -221,10 +222,7 @@ export const WashimasTable: React.FC<WashimasTableProps> = (props) => {
         }
     }
 
-    const onWashimaUpdate = (washima: Washima) => {
-        if (!props.washimas.find((item) => item.id === washima.id)) return
-        props.setWashimas((washimas) => [...washimas.filter((item) => item.id !== washima.id), washima])
-    }
+    
 
     const deleteMedia = async () => {
         if (props.loading || !props.selectedWashima) return
@@ -271,46 +269,6 @@ export const WashimasTable: React.FC<WashimasTableProps> = (props) => {
             },
         })
     }
-
-    useEffect(() => {
-        io.on("washima:update", (washima: Washima) => {
-            onWashimaUpdate(washima)
-            if (props.selectedWashima?.id === washima.id) {
-                props.setSelectedWashima(washima)
-            }
-        })
-
-        return () => {
-            io.off("washima:update")
-        }
-    }, [props.washimas, props.selectedWashima])
-
-    useEffect(() => {
-        if (props.selectedWashima) {
-            io.on("washima:ready", (id) => {
-                if (id === props.selectedWashima?.id) {
-                }
-            })
-
-            io.on(`washima:${props.selectedWashima.id}:init`, (status: string, progress: number) => {
-                console.log(status)
-                console.log(progress)
-
-                if (progress === 4) {
-                    setTimeout(() => {
-                        props.selectedWashima!.ready = true
-                        // setSyncStatus("Iniciando")
-                        // setSyncProgress(0)
-                    }, 1000)
-                }
-            })
-
-            return () => {
-                io.off("washima:ready")
-                io.off(`washima:${props.selectedWashima!.id}:init`)
-            }
-        }
-    }, [props.selectedWashima])
 
     useEffect(() => {
         setRows((rows) =>

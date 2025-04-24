@@ -59,10 +59,6 @@ export const WashimaPage: React.FC<WashimaProps> = ({}) => {
     }
 
     const listen = () => {
-        io.on("washima:update", (data: Washima) => {
-            // if (data.companies.find((item) => item.id === company?.id)) addWashima(data)
-        })
-
         io.on("washima:delete", (data: Washima) => {
             setWashimas((values) => values.filter((item) => item.id !== data.id))
             if (currentWashima?.id === data.id) {
@@ -74,7 +70,6 @@ export const WashimaPage: React.FC<WashimaProps> = ({}) => {
     }
 
     const unlisten = () => {
-        io.off("washima:update")
         io.off("washima:delete")
         io.off("washima:list")
     }
@@ -95,6 +90,11 @@ export const WashimaPage: React.FC<WashimaProps> = ({}) => {
         } catch (error) {
             console.log(error)
         }
+    }
+
+    const onWashimaUpdate = (washima: Washima) => {
+        if (!washimas.find((item) => item.id === washima.id)) return
+        setWashimas((washimas) => [...washimas.filter((item) => item.id !== washima.id), washima])
     }
 
     useEffect(() => {
@@ -124,6 +124,46 @@ export const WashimaPage: React.FC<WashimaProps> = ({}) => {
             unlisten()
         }
     }, [])
+
+    useEffect(() => {
+        io.on("washima:update", (washima: Washima) => {
+            onWashimaUpdate(washima)
+            if (currentWashima?.id === washima.id) {
+                setCurrentWashima(washima)
+            }
+        })
+
+        return () => {
+            io.off("washima:update")
+        }
+    }, [washimas, currentWashima])
+
+    useEffect(() => {
+        if (currentWashima) {
+            io.on("washima:ready", (id) => {
+                if (id === currentWashima?.id) {
+                }
+            })
+
+            io.on(`washima:${currentWashima.id}:init`, (status: string, progress: number) => {
+                console.log(status)
+                console.log(progress)
+
+                if (progress === 4) {
+                    setTimeout(() => {
+                        currentWashima!.ready = true
+                        // setSyncStatus("Iniciando")
+                        // setSyncProgress(0)
+                    }, 1000)
+                }
+            })
+
+            return () => {
+                io.off("washima:ready")
+                io.off(`washima:${currentWashima!.id}:init`)
+            }
+        }
+    }, [currentWashima])
 
     const SidebarWrapper: React.FC<{ children: React.ReactNode }> = ({ children }) => (
         <Box sx={{ flex: 1 }}>
@@ -195,6 +235,7 @@ export const WashimaPage: React.FC<WashimaProps> = ({}) => {
                                 setWashimas={setWashimas}
                                 openSettings={() => setShowForm(true)}
                                 fetchWashimas={fetchWashimas}
+                                onWashimaUpdate={onWashimaUpdate}
                             />
                         }
                     />
