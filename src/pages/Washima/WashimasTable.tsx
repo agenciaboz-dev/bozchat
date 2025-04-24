@@ -15,6 +15,7 @@ import { phoneMask } from "../../tools/masks"
 import { Chat } from "../../types/Chat"
 import { QRCode } from "react-qrcode-logo"
 import { SyncMessagesContainer } from "./SyncMessagesContainer"
+import { useSnackbar } from "burgos-snackbar"
 
 interface WashimasTableProps {
     washimas: Washima[]
@@ -39,6 +40,7 @@ export const WashimasTable: React.FC<WashimasTableProps> = (props) => {
     const { user, company } = useUser()
     const io = useIo()
     const { confirm } = useConfirmDialog()
+    const { snackbar } = useSnackbar()
 
     const [rows, setRows] = useState<CustomRow[]>(props.washimas.map((washima) => ({ ...washima, storage_media: "", storage_messages: "" })))
     const [menuAnchor, setMenuAnchor] = useState<HTMLElement | null>(null)
@@ -169,6 +171,7 @@ export const WashimasTable: React.FC<WashimasTableProps> = (props) => {
     const onRestartPress = async () => {
         if (props.loading || !props.selectedWashima) return
         closeMenu()
+        snackbar({ severity: "warning", text: "Reiniciando" })
 
         try {
             const response = await api.post("/washima/restart", { washima_id: props.selectedWashima.id }, { params: { user_id: user?.id } })
@@ -351,7 +354,7 @@ export const WashimasTable: React.FC<WashimasTableProps> = (props) => {
                 <MenuItem onClick={deleteMedia} disabled={!user?.admin || props.selectedWashima?.syncing}>
                     Limpar mídia
                 </MenuItem>
-                <MenuItem onClick={onRestartPress} disabled={!user?.admin || props.selectedWashima?.status === "loading"}>
+                <MenuItem onClick={onRestartPress} disabled={!user?.admin}>
                     Reiniciar
                 </MenuItem>
                 <MenuItem onClick={onDeletePress} disabled={!user?.admin}>
