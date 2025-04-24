@@ -55,6 +55,7 @@ export const BroadcastTab: React.FC<BroadcastTabProps> = (props) => {
                             onChange={onNagazapClick}
                             board={props.board}
                             room={props.board.rooms.find((room) => room.id === setting?.room_id)}
+                            unread_only={setting?.unread_only === undefined ? true : setting.unread_only}
                         />
                     )
                 })}
@@ -74,6 +75,7 @@ export const BroadcastTab: React.FC<BroadcastTabProps> = (props) => {
                             onChange={onNagazapClick}
                             board={props.board}
                             room={props.board.rooms.find((room) => room.id === setting?.room_id)}
+                            unread_only={setting?.unread_only === undefined ? true : setting.unread_only}
                         />
                     )
                 })}

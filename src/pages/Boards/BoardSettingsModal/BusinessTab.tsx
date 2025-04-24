@@ -54,6 +54,7 @@ export const BusinessTab: React.FC<BusinessTabProps> = (props) => {
                             board={props.board}
                             room={props.board.rooms.find((room) => room.id === setting?.room_id)}
                             type="washima"
+                            unread_only={setting?.unread_only === undefined ? true : setting.unread_only}
                         />
                     )
                 })}
@@ -73,6 +74,7 @@ export const BusinessTab: React.FC<BusinessTabProps> = (props) => {
                             board={props.board}
                             room={props.board.rooms.find((room) => room.id === setting?.room_id)}
                             type="washima"
+                            unread_only={setting?.unread_only === undefined ? true : setting.unread_only}
                         />
                     )
                 })}

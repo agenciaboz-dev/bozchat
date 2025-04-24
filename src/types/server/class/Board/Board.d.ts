@@ -16,11 +16,13 @@ export interface BoardForm {
 export interface BoardWashimaSettings {
     washima_id: string;
     washima_name: string;
+    unread_only: boolean;
     room_id?: string;
 }
 export interface BoardNagazapSettings {
     nagazap_id: string;
     nagazap_name: string;
+    unread_only: boolean;
     room_id?: string;
 }
 export interface HandleWashimaMessageDto {
