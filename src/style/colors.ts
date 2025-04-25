@@ -10,8 +10,8 @@ export const default_colors: Theme = {
     success: "#34A853",
     warning: "#ffb74d",
     background: {
-        primary: "#ffffff",
-        secondary: "#ffffff25",
+        primary: "#efefef",
+        secondary: "#ffffff50",
     },
     text: {
         primary: "#00AFEF",

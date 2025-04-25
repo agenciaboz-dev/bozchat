@@ -32,7 +32,6 @@ export const ChatItem: React.FC<ChatItemProps> = ({ chat, onChatClick, active })
                     borderTopLeftRadius: 0,
                     color: "text.secondary",
                     flex: 1,
-                    backgroundColor: darkMode ? undefined : active ? "action.hover" : undefined,
                 }}
             >
                 <MessageAuthor author={chat.name + " - " + chat.from} />
@@ -50,7 +49,6 @@ export const ChatItem: React.FC<ChatItemProps> = ({ chat, onChatClick, active })
                 )}
                 {(chat.lastMessage.type === "text" || chat.lastMessage.type === "button" || chat.lastMessage.type === "reaction") && (
                     <Typography
-                        color="#fff"
                         sx={{
                             wordBreak: "break-word",
                             color: "text.secondary",
@@ -89,7 +87,7 @@ export const ChatItem: React.FC<ChatItemProps> = ({ chat, onChatClick, active })
                 >
                     {formatTime(new Date(Number(chat.lastMessage.timestamp)))}
                 </Box>
-                <TrianguloFudido alignment="left" color={active ? (darkMode ? "#3a3a49" : "#f5f5f5") : darkMode ? "#2a323c" : "#ffffff"} />
+                <TrianguloFudido alignment="left" color={darkMode ? (active ? "#3a3a49" : "#2a323c") : "#f7f7f7"} />
             </Paper>
         </MenuItem>
     )

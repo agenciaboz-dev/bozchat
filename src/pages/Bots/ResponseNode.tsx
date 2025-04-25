@@ -19,7 +19,7 @@ export const ResponseNode: React.FC<ResponseNodeProps> = (node) => {
 
     const topHandle = node.id !== "node_0"
 
-    const bgcolor = darkMode ? "#2a323c" : "white"
+    const bgcolor = darkMode ? "#2a323c" : "#efefef"
 
     return (
         <>

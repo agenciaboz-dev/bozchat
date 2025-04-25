@@ -241,7 +241,7 @@ export const WashimaChat: React.FC<WashimaChatProps> = ({ washima, chat, onClose
             sx={{
                 flex: 1,
                 justifyContent: isMobile ? "flex-end" : undefined,
-                bgcolor: inBoards ? "transparent" : darkMode ? "background.paper" : "#e9e9e9",
+                bgcolor: inBoards ? "transparent" : "background.paper",
                 // height: isMobile ? "77vh" : "90vh",
                 padding: inBoards ? 0 : isMobile ? "5vw" : "1vw",
                 color: "text.secondary",

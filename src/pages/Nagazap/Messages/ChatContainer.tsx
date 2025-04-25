@@ -31,7 +31,7 @@ export const ChatContainer: React.FC<ChatContainerProps> = ({ chat, onClose, nag
             sx={{
                 flex: 1,
                 // justifyContent: isMobile ? "flex-end" : "center",
-                bgcolor: inBoards ? "transparent" : darkMode ? "background.paper" : "#e9e9e9",
+                bgcolor: inBoards ? "transparent" : "background.paper",
                 // height: isMobile ? "77vh" : "90vh",
                 padding: inBoards ? 0 : isMobile ? "5vw" : "0.5vw 1vw",
                 // color: "secondary.main",

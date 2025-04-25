@@ -6,6 +6,7 @@ import { BotMessageTab } from "./BotMessageTab"
 import { BotActionsTab } from "./BotActionsTab"
 import { BotLoopTab } from "./BotLoopTab"
 import { useSnackbar } from "burgos-snackbar"
+import { useDarkMode } from "../../hooks/useDarkMode"
 
 interface NodeDrawerProps {
     node: FlowNode | null
@@ -15,6 +16,7 @@ interface NodeDrawerProps {
 }
 
 export const NodeDrawer: React.FC<NodeDrawerProps> = ({ node, onClose, saveNode, nodes }) => {
+    const { darkMode } = useDarkMode()
     const inputRef = useRef<HTMLInputElement>(null)
     const { snackbar } = useSnackbar()
 
@@ -47,7 +49,16 @@ export const NodeDrawer: React.FC<NodeDrawerProps> = ({ node, onClose, saveNode,
 
     return (
         <Drawer open={!!node} onClose={onClose} anchor="right" variant="persistent">
-            <Paper sx={{ flexDirection: "column", bgcolor: "background.default", flex: 1, padding: "1vw", maxWidth: "25vw", width: "25vw" }}>
+            <Paper
+                sx={{
+                    flexDirection: "column",
+                    bgcolor: darkMode ? "background.default" : "#e3e3e3",
+                    flex: 1,
+                    padding: "1vw",
+                    maxWidth: "25vw",
+                    width: "25vw",
+                }}
+            >
                 <Box sx={{ alignItems: "center", justifyContent: "space-between" }}>
                     <Typography sx={{ color: "text.secondary", fontWeight: "bold" }}>
                         {node?.type === "message" ? "Resposta do bot" : "Resposta do usuário"}

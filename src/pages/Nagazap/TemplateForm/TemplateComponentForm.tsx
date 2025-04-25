@@ -131,7 +131,7 @@ export const TemplateComponentForm: React.FC<TemplateComponentFormProps> = ({
                         Escolher imagem
                     </Button>
 
-                    <Box sx={{ color: imageError ? "error.main" : "secondary.main" }}>
+                    <Box sx={{ color: imageError ? "error.main" : "text.secondary" }}>
                         {imageError || (component.file ? component.file.name : "Envie um arquivo de no máximo 5 MB, extensão .png ou .jpeg")}
                     </Box>
                     {component.file && (

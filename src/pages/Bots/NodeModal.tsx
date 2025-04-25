@@ -19,8 +19,8 @@ export const NodeModal: React.FC<NodeModalProps> = ({ node, onClose, saveNode })
     const isMobile = useMediaQuery("(orientation: portrait)")
     const darkMode = useDarkMode()
 
-    const lightModePrimary = "#99dff9"
-    const lightModeSecondary = "#e9e9e9"
+    const lightModePrimary = "#bbdeff"
+    const lightModeSecondary = "#e0e0e0"
     const primary = "#0F6787"
     const secondary = "#2a323c"
 
