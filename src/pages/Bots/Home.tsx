@@ -5,6 +5,7 @@ import { Subroute } from "../Nagazap/Subroute"
 import { Bar, BarChart, CartesianGrid, Legend, Rectangle, ResponsiveContainer, Tooltip, XAxis, YAxis } from "recharts"
 import { useColors } from "../../hooks/useColors"
 import { ArrowBack, OnlinePrediction, Refresh, SmartToy, ThreeP } from "@mui/icons-material"
+import { useDarkMode } from "../../hooks/useDarkMode"
 
 interface HomeProps {
     bots: Bot[]
@@ -17,6 +18,7 @@ const active_now_label = "Ativo agora em"
 
 export const Home: React.FC<HomeProps> = ({ bots, fetchBots, setShowInformations }) => {
     const isMobile = useMediaQuery("(orientation: portrait)")
+    const { darkMode } = useDarkMode()
     const colors = useColors()
     const CustomTooltip: React.FC<{
         active?: boolean
@@ -90,10 +92,17 @@ export const Home: React.FC<HomeProps> = ({ bots, fetchBots, setShowInformations
                     </ResponsiveContainer>
                 ) : (
                     <Box
-                        sx={{ flexDirection: "column", gap: "1vw", color: "secondary.main", justifyContent: "center", alignItems: "center", flex: 1 }}
+                        sx={{
+                            flexDirection: "column",
+                            gap: "1vw",
+                            color: darkMode ? "text.secondary" : "text.disabled",
+                            justifyContent: "center",
+                            alignItems: "center",
+                            flex: 1,
+                        }}
                     >
-                        <Typography sx={{ fontSize: "3rem" }}>você não criou nenhum bot ainda</Typography>
-                        <SmartToy sx={{ width: "10vw", height: "auto" }} />
+                        <Typography sx={{ fontSize: isMobile ? "1.5rem" : "3rem", textAlign: "center" }}>Você ainda não criou nenhum bot</Typography>
+                        <SmartToy sx={{ width: isMobile ? "20vw" : "10vw", height: "auto" }} />
                     </Box>
                 )}
             </Box>
