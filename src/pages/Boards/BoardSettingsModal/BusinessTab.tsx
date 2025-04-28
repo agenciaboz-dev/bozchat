@@ -1,4 +1,4 @@
-import React, { useMemo, useState } from "react"
+import React, { useMemo } from "react"
 import { Box, Chip, Typography, useMediaQuery } from "@mui/material"
 import { Washima } from "../../../types/server/class/Washima/Washima"
 import { WithoutFunctions } from "../../../types/server/class/helpers"

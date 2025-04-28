@@ -93,7 +93,7 @@ export const IntegrationContainer: React.FC<BusinessContainerProps> = (props) =>
                 <FormControlLabel
                     sx={{ flex: 0.4 }}
                     labelPlacement="top"
-                    componentsProps={{ typography: { sx: { fontSize: "0.7rem", color: "secondary.main" } } }}
+                    componentsProps={{ typography: { sx: { fontSize: "0.7rem", color: "text.secondary" } } }}
                     control={<Switch checked={unreadOnly} onChange={(_, value) => setUnreadOnly(value)} disabled={props.checked} />}
                     label={unreadOnly ? "Não lidas" : "Todas conversas"}
                 />

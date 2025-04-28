@@ -105,7 +105,7 @@ export const Boards: React.FC<BoardsProps> = ({}) => {
                                             <Add />
                                         </IconButton>
                                         <IconButton onClick={fetchData}>
-                                            {loading ? <CircularProgress size="1.5rem" color="secondary" /> : <Refresh />}
+                                            {loading ? <CircularProgress size="1.5rem" color="inherit" /> : <Refresh />}
                                         </IconButton>
                                     </Box>
                                 }

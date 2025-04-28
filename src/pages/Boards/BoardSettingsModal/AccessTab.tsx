@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react"
+import React, { useEffect } from "react"
 import { Autocomplete, Box, TextField, useMediaQuery } from "@mui/material"
 import { WithoutFunctions } from "../../../types/server/class/helpers"
 import { Board, BoardAccess } from "../../../types/server/class/Board/Board"

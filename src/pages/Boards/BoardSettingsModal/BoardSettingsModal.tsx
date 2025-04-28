@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react"
+import React, { useState } from "react"
 import { Box, Button, CircularProgress, Dialog, IconButton, Tab, Tabs, useMediaQuery } from "@mui/material"
 import { Board, BoardAccess } from "../../../types/server/class/Board/Board"
 import { Title2 } from "../../../components/Title"
@@ -10,8 +10,6 @@ import { useUser } from "../../../hooks/useUser"
 import { useFetchedData } from "../../../hooks/useFetchedData"
 import { Washima } from "../../../types/server/class/Washima/Washima"
 import { WithoutFunctions } from "../../../types/server/class/helpers"
-import { useIo } from "../../../hooks/useIo"
-import { useSnackbar } from "burgos-snackbar"
 import { BroadcastTab } from "./BroadcastTab"
 import { Nagazap } from "../../../types/server/class/Nagazap"
 
@@ -25,8 +23,6 @@ interface BoardSettingsModalProps {
 export const BoardSettingsModal: React.FC<BoardSettingsModalProps> = (props) => {
     const isMobile = useMediaQuery("(orientation: portrait)")
     const { company, user } = useUser()
-    const io = useIo()
-    const { snackbar } = useSnackbar()
 
     const [washimas] = useFetchedData<Washima>("washimas")
     const [nagazaps] = useFetchedData<Nagazap>("nagazaps")

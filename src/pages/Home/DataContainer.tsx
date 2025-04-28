@@ -26,7 +26,7 @@ export const DataContainer: React.FC<DataContainerProps> = ({ stat }) => {
             <Box sx={{ flexDirection: "column", justifyContent: "space-between", height: "100%" }}>
                 <Box sx={[{ fontSize: "0.9rem", fontWeight: "bold", color: "text.secondary" }]}>{stat.title}</Box>
                 {stat.loading ? (
-                    <CircularProgress size={"1.5rem"} sx={[{ alignSelf: "flex-start" }]} />
+                    <CircularProgress size={"1.5rem"} sx={[{ alignSelf: "flex-start" }]} color="inherit" />
                 ) : (
                     <Box sx={[{ fontSize: "1.5rem", fontWeight: "bold", color: "primary.main" }]}>{stat.value}</Box>
                 )}
