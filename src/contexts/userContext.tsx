@@ -85,7 +85,7 @@ export const UserProvider: React.FC<UserProviderProps> = ({ children }) => {
     }, [user, timestamp])
 
     useEffect(() => {
-        if (firstRender && user && company) {
+        if (firstRender.current && user && company) {
             firstRender.current = false
             refreshCachedUser(user)
         }

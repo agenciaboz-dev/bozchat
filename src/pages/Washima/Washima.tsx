@@ -21,6 +21,18 @@ import { WashimaFormModal } from "./WashimaFormModal"
 
 interface WashimaProps {}
 
+const SidebarWrapper: React.FC<{
+    children: React.ReactNode
+    washimas: Washima[]
+    currentWashima: Washima | null
+    onWashimaSelect: (washima: Washima) => void
+}> = ({ children, currentWashima, onWashimaSelect, washimas }) => (
+    <Box sx={{ flex: 1 }}>
+        <WashimaSidebar washimas={washimas} currentWashima={currentWashima} onClick={onWashimaSelect} />
+        {children}
+    </Box>
+)
+
 export const WashimaPage: React.FC<WashimaProps> = ({}) => {
     const { darkMode } = useDarkMode()
     const { company, user } = useUser()
@@ -98,10 +110,10 @@ export const WashimaPage: React.FC<WashimaProps> = ({}) => {
     }
 
     useEffect(() => {
-        const washima = washimas.find((item) => item.id === currentWashima?.id)
-        if (washima) {
-            setCurrentWashima(washima)
-        }
+        // const washima = washimas.find((item) => item.id === currentWashima?.id)
+        // if (washima) {
+        //     setCurrentWashima(washima)
+        // }
 
         io.on("washima:qrcode", (qrcode: string, washima_id: string) => {
             const washima = washimas.find((item) => item.id === washima_id)
@@ -132,7 +144,6 @@ export const WashimaPage: React.FC<WashimaProps> = ({}) => {
                 setCurrentWashima(washima)
             }
         })
-
         return () => {
             io.off("washima:update")
         }
@@ -164,13 +175,6 @@ export const WashimaPage: React.FC<WashimaProps> = ({}) => {
             }
         }
     }, [currentWashima])
-
-    const SidebarWrapper: React.FC<{ children: React.ReactNode }> = ({ children }) => (
-        <Box sx={{ flex: 1 }}>
-            <WashimaSidebar washimas={washimas} currentWashima={currentWashima} onClick={onWashimaSelect} />
-            {children}
-        </Box>
-    )
 
     return (
         <Box sx={{ ...backgroundStyle, overflow: isMobile ? "auto" : "hidden" }}>
@@ -206,7 +210,7 @@ export const WashimaPage: React.FC<WashimaProps> = ({}) => {
                         index
                         path="/"
                         element={
-                            <SidebarWrapper>
+                            <SidebarWrapper currentWashima={currentWashima} onWashimaSelect={onWashimaSelect} washimas={washimas}>
                                 <NoChat homepage />
                             </SidebarWrapper>
                         }
@@ -216,7 +220,7 @@ export const WashimaPage: React.FC<WashimaProps> = ({}) => {
                         <Route
                             path="*"
                             element={
-                                <SidebarWrapper>
+                                <SidebarWrapper currentWashima={currentWashima} onWashimaSelect={onWashimaSelect} washimas={washimas}>
                                     <WashimaZap washima={currentWashima} />
                                 </SidebarWrapper>
                             }
