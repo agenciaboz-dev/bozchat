@@ -1,5 +1,5 @@
 import React, { useRef, useState } from "react"
-import { Box, Checkbox, Chip, IconButton, Menu, MenuItem, Paper, TextField } from "@mui/material"
+import { Box, Checkbox, Chip, IconButton, Menu, MenuItem, Paper, TextField, useMediaQuery } from "@mui/material"
 import { Title2 } from "../../components/Title"
 import { FormikBundle } from "../../types/FormikBundle"
 import { BotForm } from "../../types/server/class/Bot/Bot"
@@ -14,6 +14,7 @@ interface IntegrationWrapperProps {
 }
 
 export const IntegrationField: React.FC<IntegrationWrapperProps> = ({ title, formik, list, name }) => {
+    const isMobile = useMediaQuery("(orientation: portrait)")
     const { darkMode } = useDarkMode()
     const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null)
 
@@ -29,7 +30,17 @@ export const IntegrationField: React.FC<IntegrationWrapperProps> = ({ title, for
     }
 
     return (
-        <Paper sx={{ flex: 1, flexDirection: "column", padding: "2vw", borderRadius: "1vw", gap: "1vw", height: "max-content", paddingTop: "1.2vw" }}>
+        <Paper
+            sx={{
+                flex: 1,
+                flexDirection: "column",
+                padding: isMobile ? "5vw" : "2vw",
+                borderRadius: "1vw",
+                gap: "1vw",
+                height: "max-content",
+                paddingTop: isMobile ? "5vw" : "1.2vw",
+            }}
+        >
             <Title2
                 name={title}
                 right={
@@ -76,7 +87,7 @@ export const IntegrationField: React.FC<IntegrationWrapperProps> = ({ title, for
                     </MenuItem>
                 ))}
             </TextField> */}
-            <Box sx={{ gap: "1vw", flexWrap: "wrap" }}>
+            <Box sx={{ gap: isMobile ? "3vw" : "1vw", flexWrap: "wrap" }}>
                 {formik.values[name].length > 0 ? (
                     formik.values[name].map((id) => (
                         <Chip
@@ -91,8 +102,8 @@ export const IntegrationField: React.FC<IntegrationWrapperProps> = ({ title, for
                         />
                     ))
                 ) : (
-                    <Box sx={{ justifyContent: "center", alignItems: "center", color: "text.secondary", gap: "0.5vw", flex: 1 }}>
-                        <NotInterested color={darkMode ? "secondary" : "action"} sx={{ width: "2vw", height: "auto" }} />
+                    <Box sx={{ justifyContent: "center", alignItems: "center", color: "text.secondary", gap: isMobile ? "2vw" : "0.5vw", flex: 1 }}>
+                        <NotInterested color={darkMode ? "secondary" : "action"} sx={{ width: isMobile ? "5vw" : "2vw", height: "auto" }} />
                         Nenhuma conta selecionada
                     </Box>
                 )}

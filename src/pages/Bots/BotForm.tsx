@@ -131,16 +131,22 @@ export const BotForm: React.FC<BotFormProps> = ({ onSubmit, bot, onDelete, setSh
                 ) : null
             }
             right={
-                <Box sx={{ gap: "1vw" }}>
-                    {bot && <Button onClick={onDeleteClick}>{deleting ? <CircularProgress size="1.5rem" /> : "Deletar"}</Button>}
-                    <Button variant="contained" onClick={() => formik.handleSubmit()} disabled={!formik.values.name}>
-                        {loading ? <CircularProgress size={"1.5rem"} color="secondary" /> : "Salvar"}
-                    </Button>
-                </Box>
+                isMobile ? null : (
+                    <Box sx={{ gap: "1vw" }}>
+                        {bot && (
+                            <Button onClick={onDeleteClick}>
+                                {deleting ? <CircularProgress size="1.5rem" sx={{ color: "text.secondary" }} /> : "Deletar"}
+                            </Button>
+                        )}
+                        <Button variant="contained" onClick={() => formik.handleSubmit()} disabled={!formik.values.name}>
+                            {loading ? <CircularProgress size={"1.5rem"} sx={{ color: "text.secondary" }} /> : "Salvar"}
+                        </Button>
+                    </Box>
+                )
             }
         >
-            <Box sx={{ flexDirection: "column", gap: "1vw" }}>
-                <Box sx={{ gap: "1vw" }}>
+            <Box sx={{ flexDirection: "column", gap: isMobile ? "5vw" : "1vw" }}>
+                <Box sx={{ flexDirection: isMobile ? "column" : "row", gap: isMobile ? "5vw" : "1vw" }}>
                     <TextField
                         label="Nome"
                         value={formik.values.name}
@@ -161,12 +167,13 @@ export const BotForm: React.FC<BotFormProps> = ({ onSubmit, bot, onDelete, setSh
                         InputProps={{
                             endAdornment: (
                                 <Tooltip
+                                    enterTouchDelay={0}
                                     title={
-                                        <Box sx={{ flexDirection: "column", gap: "1vw" }}>
-                                            <Typography sx={{ fontSize: "0.8rem" }}>
+                                        <Box sx={{ flexDirection: "column", gap: isMobile ? "5vw" : "1vw" }}>
+                                            <Typography sx={{ fontSize: isMobile ? "1rem" : "0.8rem" }}>
                                                 Você pode especificar múltiplos gatilhos separados por ";"
                                             </Typography>
-                                            <Typography sx={{ fontSize: "0.8rem" }}>
+                                            <Typography sx={{ fontSize: isMobile ? "1rem" : "0.8rem" }}>
                                                 Deixe em branco para ativar o bot com qualquer mensagem
                                             </Typography>
                                         </Box>
@@ -181,21 +188,22 @@ export const BotForm: React.FC<BotFormProps> = ({ onSubmit, bot, onDelete, setSh
                     />
                 </Box>
 
-                <Box sx={{ gap: "1vw", alignItems: "center" }}>
+                <Box sx={{ alignItems: "center" }}>
                     <Box sx={{ flexDirection: "column", flex: 1 }}>
-                        <Box sx={{ alignItems: "center", gap: "0.5vw" }}>
+                        <Box sx={{ alignItems: "center", gap: isMobile ? "5vw" : "0.5vw" }}>
                             <Typography sx={{ color: "text.secondary" }}>Limiar de diferença entre resposta e gatilhos</Typography>
                             <Tooltip
+                                enterTouchDelay={0}
                                 title={
-                                    <Box sx={{ flexDirection: "column", gap: "1vw" }}>
-                                        <Typography sx={{ fontSize: "0.8rem" }}>
+                                    <Box sx={{ flexDirection: "column", gap: isMobile ? "5vw" : "1vw" }}>
+                                        <Typography sx={{ fontSize: isMobile ? "1rem" : "0.8rem" }}>
                                             Esse valor determina o quão precisas as respostas devem ser para ativar o bot ou a próxima etapa dele.
                                         </Typography>
-                                        <Typography sx={{ fontSize: "0.8rem" }}>
+                                        <Typography sx={{ fontSize: isMobile ? "1rem" : "0.8rem" }}>
                                             Quanto mais próximo de <span style={{ color: theme.colors.primary, fontWeight: "bold" }}>0</span>, mais
                                             parecida a resposta deve ser do gatilho.
                                         </Typography>
-                                        <Typography sx={{ fontSize: "0.8rem" }}>
+                                        <Typography sx={{ fontSize: isMobile ? "1rem" : "0.8rem" }}>
                                             Quanto mais próximo de <span style={{ color: theme.colors.primary, fontWeight: "bold" }}>1</span>, mais
                                             respostas diferentes serão aceitas.
                                         </Typography>
@@ -225,14 +233,21 @@ export const BotForm: React.FC<BotFormProps> = ({ onSubmit, bot, onDelete, setSh
                 <Title2
                     name="Integrações"
                     right={
-                        <Tooltip title="Selecione as contas Business e Broadcast as quais o bot será integrado">
+                        <Tooltip
+                            enterTouchDelay={0}
+                            title={
+                                <Typography sx={{ fontSize: isMobile ? "1rem" : "0.8rem" }}>
+                                    Selecione as contas Business e Broadcast as quais o bot será integrado
+                                </Typography>
+                            }
+                        >
                             <IconButton>
                                 <InfoOutlined />
                             </IconButton>
                         </Tooltip>
                     }
                 />
-                <Box sx={{ gap: "1vw" }}>
+                <Box sx={{ flexDirection: isMobile ? "column" : "row", gap: isMobile ? "5vw" : "1vw" }}>
                     <IntegrationField title="Business" name="washima_ids" formik={formik} list={washimas} />
                     <IntegrationField
                         title="Broadcast"
@@ -242,7 +257,7 @@ export const BotForm: React.FC<BotFormProps> = ({ onSubmit, bot, onDelete, setSh
                     />
                 </Box>
 
-                <Box sx={{ gap: "1vw" }}>
+                <Box sx={{ flexDirection: isMobile ? "column" : "row", gap: isMobile ? "5vw" : "1vw" }}>
                     <Box sx={{ flexDirection: "column", flex: 1 }}>
                         <Title2
                             name="Inatividade"
@@ -259,11 +274,17 @@ export const BotForm: React.FC<BotFormProps> = ({ onSubmit, bot, onDelete, setSh
                                 />
                             }
                         />
-                        <Typography color="secondary.main" sx={{ fontSize: "0.9rem" }}>
+                        <Typography color="text.secondary" sx={{ fontSize: "0.9rem" }}>
                             Enviar uma mensagem ao usuário quando passar um tempo especificado sem interação por parte dele.
                         </Typography>
                         {idleness && (
-                            <Box sx={{ gap: "1vw", marginTop: "1vw" }}>
+                            <Box
+                                sx={{
+                                    flexDirection: isMobile ? "column" : "row",
+                                    gap: isMobile ? "5vw" : "1vw",
+                                    marginTop: isMobile ? "5vw" : "1vw",
+                                }}
+                            >
                                 <TextField
                                     label="Minutos de inatividade"
                                     value={formik.values.idleness_minutes}
@@ -302,11 +323,17 @@ export const BotForm: React.FC<BotFormProps> = ({ onSubmit, bot, onDelete, setSh
                                 />
                             }
                         />
-                        <Typography color="secondary.main" sx={{ fontSize: "0.9rem" }}>
+                        <Typography color="text.secondary" sx={{ fontSize: "0.9rem" }}>
                             Encerrar a conversa enviando uma mensagem para o usuário caso passe um tempo especificado sem interação
                         </Typography>
                         {expiry && (
-                            <Box sx={{ gap: "1vw", marginTop: "1vw" }}>
+                            <Box
+                                sx={{
+                                    flexDirection: isMobile ? "column" : "row",
+                                    gap: isMobile ? "5vw" : "1vw",
+                                    marginTop: isMobile ? "5vw" : "1vw",
+                                }}
+                            >
                                 <TextField
                                     label="Minutos para expirar"
                                     value={formik.values.expiry_minutes}
@@ -330,6 +357,18 @@ export const BotForm: React.FC<BotFormProps> = ({ onSubmit, bot, onDelete, setSh
                         )}
                     </Box>
                 </Box>
+                {isMobile && (
+                    <Box sx={{ gap: "5vw", justifyContent: "flex-end" }}>
+                        {bot && (
+                            <Button onClick={onDeleteClick}>
+                                {deleting ? <CircularProgress size="1.5rem" sx={{ color: "text.secondary" }} /> : "Deletar"}
+                            </Button>
+                        )}
+                        <Button variant="contained" onClick={() => formik.handleSubmit()} disabled={!formik.values.name}>
+                            {loading ? <CircularProgress size={"1.5rem"} sx={{ color: "text.secondary" }} /> : "Salvar"}
+                        </Button>
+                    </Box>
+                )}
             </Box>
         </Subroute>
     )

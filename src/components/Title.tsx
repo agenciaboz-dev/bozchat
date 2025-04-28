@@ -48,7 +48,7 @@ export const Title2: React.FC<{ name: string; right?: React.ReactNode; left?: Re
                 marginBottom: isMobile ? "2vw" : "0.5vw",
             }}
         >
-            <Box sx={{ alignItems: "center", gap: "0.5vw", flex: 1, maxWidth: "80%" }}>
+            <Box sx={{ alignItems: "center", gap: "0.5vw", flex: 1, maxWidth: left && right ? "80%" : undefined }}>
                 {left ? <Box>{left}</Box> : isMobile && !space ? <Box sx={{ flex: 0.1 }}></Box> : null}
                 <p
                     style={{
