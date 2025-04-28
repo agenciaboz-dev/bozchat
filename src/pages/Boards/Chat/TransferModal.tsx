@@ -1,5 +1,5 @@
 import React, { useEffect, useMemo, useState } from "react"
-import { Autocomplete, Box, Button, CircularProgress, Dialog, IconButton, TextField, Typography } from "@mui/material"
+import { Autocomplete, Box, Button, CircularProgress, Dialog, IconButton, TextField, Typography, useMediaQuery } from "@mui/material"
 import { Chat } from "../../../types/server/class/Board/Chat"
 import { Title2 } from "../../../components/Title"
 import { Close } from "@mui/icons-material"
@@ -21,6 +21,7 @@ interface TransferModalProps {
 }
 
 export const TransferModal: React.FC<TransferModalProps> = (props) => {
+    const isMobile = useMediaQuery("(orientation: portrait)")
     const { user, company } = useUser()
     const { snackbar } = useSnackbar()
 
@@ -68,7 +69,15 @@ export const TransferModal: React.FC<TransferModalProps> = (props) => {
         <Dialog
             open={props.open}
             onClose={props.onClose}
-            PaperProps={{ sx: { padding: "2vw", bgcolor: "background.default", maxWidth: "60vw", flexDirection: "column", gap: "1vw" } }}
+            PaperProps={{
+                sx: {
+                    padding: isMobile ? "5vw" : "2vw",
+                    bgcolor: "background.default",
+                    maxWidth: isMobile ? "90vw" : "60vw",
+                    flexDirection: "column",
+                    gap: isMobile ? "5vw" : "1vw",
+                },
+            }}
         >
             <Box sx={{ flexDirection: "column" }}>
                 <Title2
@@ -79,12 +88,12 @@ export const TransferModal: React.FC<TransferModalProps> = (props) => {
                         </IconButton>
                     }
                 />
-                <Typography color={"secondary.main"}>
+                <Typography color={"text.secondary"}>
                     Escolha o quadro e a sala para onde vai {props.action === "copy" ? "copiar" : "transferir"} esta conversa
                 </Typography>
             </Box>
 
-            <Box sx={{ gap: "1vw" }}>
+            <Box sx={{ flexDirection: isMobile ? "column" : "row", gap: isMobile ? "5vw" : "1vw" }}>
                 <Autocomplete
                     options={boards}
                     value={destinationBoard}
@@ -108,7 +117,7 @@ export const TransferModal: React.FC<TransferModalProps> = (props) => {
             </Box>
 
             <Button sx={{ alignSelf: "flex-end" }} variant="contained" onClick={onSubmitPress} disabled={destinationRoom.id === props.room_id}>
-                {loading ? <CircularProgress /> : props.action === "copy" ? "Copiar" : "Transferir"}
+                {loading ? <CircularProgress sx={{ color: "text.secondary" }} /> : props.action === "copy" ? "Copiar" : "Transferir"}
             </Button>
         </Dialog>
     )

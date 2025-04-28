@@ -206,6 +206,9 @@ export const BoardsTable: React.FC<BoardsTableProps> = (props) => {
                     "& .MuiDataGrid-row": {
                         cursor: "pointer",
                     },
+                    "& .MuiDataGrid-overlay .MuiCircularProgress-root": {
+                        color: "text.secondary",
+                    },
                 }}
                 onCellEditStop={onCellEditStop}
                 onRowSelectionModelChange={onRowSelectionModelChange}

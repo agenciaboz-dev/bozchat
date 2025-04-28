@@ -65,7 +65,7 @@ export const IntegrationContainer: React.FC<BusinessContainerProps> = (props) =>
                     <Typography
                         sx={{
                             fontWeight: "bold",
-                            width: isMobile ? "100%" : "13vw",
+                            width: isMobile ? "50vw" : "13vw",
                             whiteSpace: "nowrap",
                             overflow: "hidden",
                             textOverflow: "ellipsis",
