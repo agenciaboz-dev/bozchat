@@ -89,16 +89,6 @@ export const Info: React.FC<InfoProps> = ({ nagazap, setShowInformations }) => {
     return (
         <Subroute
             title="Informações"
-            right={
-                <IconButton
-                    onClick={() => {
-                        fetchInfo()
-                    }}
-                    disabled={loading}
-                >
-                    {loading ? <CircularProgress size="1.5rem" color="secondary" /> : <Refresh />}
-                </IconButton>
-            }
             left={
                 isMobile ? (
                     <IconButton
@@ -109,6 +99,16 @@ export const Info: React.FC<InfoProps> = ({ nagazap, setShowInformations }) => {
                         <ArrowBack />
                     </IconButton>
                 ) : null
+            }
+            right={
+                <IconButton
+                    onClick={() => {
+                        fetchInfo()
+                    }}
+                    disabled={loading}
+                >
+                    {loading ? <CircularProgress size="1.5rem" color="secondary" /> : <Refresh />}
+                </IconButton>
             }
         >
             <Grid container columns={isMobile ? 1 : 4} sx={{ flex: 1, gap: isMobile ? "5vw" : undefined }}>

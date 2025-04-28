@@ -1,22 +1,23 @@
-import React, { useMemo, useState } from "react"
-import { Box, Paper, ToggleButton, ToggleButtonGroup, Typography, Tooltip as MuiTooltip, IconButton } from "@mui/material"
+import React, { Dispatch, SetStateAction } from "react"
+import { Box, Paper, ToggleButton, ToggleButtonGroup, Typography, Tooltip as MuiTooltip, IconButton, useMediaQuery } from "@mui/material"
 import { Bot } from "../../types/server/class/Bot/Bot"
 import { Subroute } from "../Nagazap/Subroute"
 import { Bar, BarChart, CartesianGrid, Legend, Rectangle, ResponsiveContainer, Tooltip, XAxis, YAxis } from "recharts"
 import { useColors } from "../../hooks/useColors"
-import { OnlinePrediction, Refresh, SmartToy, ThreeP } from "@mui/icons-material"
+import { ArrowBack, OnlinePrediction, Refresh, SmartToy, ThreeP } from "@mui/icons-material"
 
 interface HomeProps {
     bots: Bot[]
     fetchBots: () => Promise<void>
+    setShowInformations: Dispatch<SetStateAction<boolean>>
 }
 
 const total_label = "Total de conversas iniciadas"
 const active_now_label = "Ativo agora em"
 
-export const Home: React.FC<HomeProps> = ({ bots, fetchBots }) => {
+export const Home: React.FC<HomeProps> = ({ bots, fetchBots, setShowInformations }) => {
+    const isMobile = useMediaQuery("(orientation: portrait)")
     const colors = useColors()
-
     const CustomTooltip: React.FC<{
         active?: boolean
         payload: any
@@ -40,6 +41,17 @@ export const Home: React.FC<HomeProps> = ({ bots, fetchBots }) => {
     return (
         <Subroute
             title="Início"
+            left={
+                isMobile ? (
+                    <IconButton
+                        onClick={() => {
+                            setShowInformations(false)
+                        }}
+                    >
+                        <ArrowBack />
+                    </IconButton>
+                ) : null
+            }
             right={
                 <Box sx={{ gap: "0.5vw", alignItems: "center" }}>
                     <IconButton onClick={fetchBots} sx={{ flexShrink: 0 }}>

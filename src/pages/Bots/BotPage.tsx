@@ -1,21 +1,22 @@
-import React, { useEffect, useState } from "react"
-import { Box, IconButton } from "@mui/material"
+import React, { Dispatch, SetStateAction, useEffect, useState } from "react"
+import { Box, IconButton, useMediaQuery } from "@mui/material"
 import { Subroute } from "../Nagazap/Subroute"
 import { useLocation } from "react-router-dom"
 import { Bot } from "../../types/server/class/Bot/Bot"
-import { Redo, Settings, SettingsApplications, Undo } from "@mui/icons-material"
+import { ArrowBack, Redo, Settings, Undo } from "@mui/icons-material"
 import { BotForm } from "./BotForm"
 import { FlowLayout } from "./FlowLayout"
-import { Edge, Node, ReactFlowInstance, ReactFlowJsonObject } from "@xyflow/react"
+import { Edge, Node, ReactFlowJsonObject } from "@xyflow/react"
 import { useDarkMode } from "../../hooks/useDarkMode"
-import { BotProvider } from "../../contexts/bot.context"
 
 interface BotPageProps {
     onSave: (bot: Bot) => void
     onDelete: (bot: Bot) => void
+    setShowInformations: Dispatch<SetStateAction<boolean>>
 }
 
-export const BotPage: React.FC<BotPageProps> = ({ onSave, onDelete }) => {
+export const BotPage: React.FC<BotPageProps> = ({ onSave, onDelete, setShowInformations }) => {
+    const isMobile = useMediaQuery("(orientation: portrait)")
     const { darkMode } = useDarkMode()
     const bot = useLocation().state as Bot
 
@@ -43,6 +44,17 @@ export const BotPage: React.FC<BotPageProps> = ({ onSave, onDelete }) => {
     return (
         <Subroute
             title={bot.name}
+            left={
+                isMobile ? (
+                    <IconButton
+                        onClick={() => {
+                            setShowInformations(false)
+                        }}
+                    >
+                        <ArrowBack />
+                    </IconButton>
+                ) : null
+            }
             right={
                 <Box>
                     {!showForm && (
@@ -72,6 +84,7 @@ export const BotPage: React.FC<BotPageProps> = ({ onSave, onDelete }) => {
                         setShowForm(false)
                     }}
                     bot={bot}
+                    setShowInformations={setShowInformations}
                 />
             ) : (
                 <Box sx={{ flex: 1, margin: "-2vw" }}>

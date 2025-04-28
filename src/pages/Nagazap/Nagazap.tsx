@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react"
 import { Box, MenuItem, Paper, TextField, useMediaQuery } from "@mui/material"
 import { backgroundStyle } from "../../style/background"
 import { AddCircle, Hub } from "@mui/icons-material"
-import { ToolButton } from "./ToolButton"
+import { ToolButton } from "../../components/ToolButton"
 import { Route, Routes, useNavigate } from "react-router-dom"
 import { Nagazap } from "../../types/server/class/Nagazap"
 import { api } from "../../api"
@@ -106,7 +106,6 @@ export const NagazapScreen: React.FC<NagazapProps> = ({}) => {
                             padding: isMobile ? undefined : "1vw 0",
                             gap: "1.5vw",
                             borderRadius: isMobile ? "2vw" : "4px 0 0 4px",
-                            color: "secondary.main",
                             overflowX: "hidden",
                             // hiding scrollbar
                             "&::-webkit-scrollbar": {
@@ -160,10 +159,25 @@ export const NagazapScreen: React.FC<NagazapProps> = ({}) => {
                                 </Box>
                                 {nagazap && (
                                     <Box sx={{ flexDirection: "column" }}>
-                                        <ToolButton label="Informações" route="/" setShowInformations={setShowInformations} />
-                                        <ToolButton label="Conversas" route="/messages" setShowInformations={setShowInformations} />
-                                        <ToolButton label="Templates" route="/templates" setShowInformations={setShowInformations} />
-                                        <ToolButton label="Enviar mensagem" route="/message-form" setShowInformations={setShowInformations} />
+                                        <ToolButton label="Informações" parentRoute="broadcast" route="/" setShowInformations={setShowInformations} />
+                                        <ToolButton
+                                            label="Conversas"
+                                            parentRoute="broadcast"
+                                            route="/messages"
+                                            setShowInformations={setShowInformations}
+                                        />
+                                        <ToolButton
+                                            label="Templates"
+                                            parentRoute="broadcast"
+                                            route="/templates"
+                                            setShowInformations={setShowInformations}
+                                        />
+                                        <ToolButton
+                                            label="Enviar mensagem"
+                                            parentRoute="broadcast"
+                                            route="/message-form"
+                                            setShowInformations={setShowInformations}
+                                        />
                                         <ToolButton
                                             label={
                                                 <Box sx={{ gap: "0.5vw" }}>
@@ -173,13 +187,29 @@ export const NagazapScreen: React.FC<NagazapProps> = ({}) => {
                                                     </Box>
                                                 </Box>
                                             }
+                                            parentRoute="broadcast"
                                             route="/oven"
                                             setShowInformations={setShowInformations}
                                         />
-                                        <ToolButton label="Logs" route="/logs" setShowInformations={setShowInformations} />
-                                        <ToolButton label="Lista negra" route="/blacklist" setShowInformations={setShowInformations} />
-                                        <ToolButton label="Resultados" route="/results" setShowInformations={setShowInformations} />
-                                        <ToolButton label="Configurações" route="/settings" setShowInformations={setShowInformations} last />
+                                        <ToolButton label="Logs" parentRoute="broadcast" route="/logs" setShowInformations={setShowInformations} />
+                                        <ToolButton
+                                            label="Lista negra"
+                                            parentRoute="broadcast"
+                                            route="/blacklist"
+                                            setShowInformations={setShowInformations}
+                                        />
+                                        <ToolButton
+                                            label="Resultados"
+                                            parentRoute="broadcast"
+                                            route="/results"
+                                            setShowInformations={setShowInformations}
+                                        />
+                                        <ToolButton
+                                            label="Configurações"
+                                            parentRoute="broadcast"
+                                            route="/settings"
+                                            setShowInformations={setShowInformations}
+                                        />
                                     </Box>
                                 )}
                             </Box>

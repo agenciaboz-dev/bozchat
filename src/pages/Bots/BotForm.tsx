@@ -1,10 +1,9 @@
-import React, { useEffect, useState } from "react"
-import { Box, Button, Checkbox, Chip, CircularProgress, IconButton, MenuItem, Slider, Switch, TextField, Tooltip, Typography } from "@mui/material"
+import React, { Dispatch, SetStateAction, useEffect, useState } from "react"
+import { Box, Button, CircularProgress, IconButton, Slider, Switch, TextField, Tooltip, Typography, useMediaQuery } from "@mui/material"
 import { Bot, BotForm as BotFormType } from "../../types/server/class/Bot/Bot"
 import { Subroute } from "../Nagazap/Subroute"
 import { useFormik } from "formik"
 import { useUser } from "../../hooks/useUser"
-import { textFieldStyle } from "../../style/textfield"
 import { IntegrationField } from "./IntegrationField"
 import { Washima } from "../../types/server/class/Washima/Washima"
 import { Nagazap } from "../../types/server/class/Nagazap"
@@ -12,7 +11,7 @@ import { api } from "../../api"
 import { useNavigate } from "react-router-dom"
 import { useConfirmDialog } from "burgos-confirm"
 import { meta_normalize } from "../../tools/normalize"
-import { Info, InfoOutlined } from "@mui/icons-material"
+import { ArrowBack, InfoOutlined } from "@mui/icons-material"
 import { useTheme } from "../../hooks/useTheme"
 import { Title2 } from "../../components/Title"
 
@@ -20,9 +19,11 @@ interface BotFormProps {
     onSubmit: (bot: Bot) => void
     bot?: Bot
     onDelete?: (bot: Bot) => void
+    setShowInformations: Dispatch<SetStateAction<boolean>>
 }
 
-export const BotForm: React.FC<BotFormProps> = ({ onSubmit, bot, onDelete }) => {
+export const BotForm: React.FC<BotFormProps> = ({ onSubmit, bot, onDelete, setShowInformations }) => {
+    const isMobile = useMediaQuery("(orientation: portrait)")
     const { company, user } = useUser()
     const navigate = useNavigate()
     const theme = useTheme()
@@ -118,6 +119,17 @@ export const BotForm: React.FC<BotFormProps> = ({ onSubmit, bot, onDelete }) => 
         <Subroute
             title={bot ? "Configurações" : "Criar Bot"}
             elevation={bot ? 5 : undefined}
+            left={
+                isMobile ? (
+                    <IconButton
+                        onClick={() => {
+                            setShowInformations(false)
+                        }}
+                    >
+                        <ArrowBack />
+                    </IconButton>
+                ) : null
+            }
             right={
                 <Box sx={{ gap: "1vw" }}>
                     {bot && <Button onClick={onDeleteClick}>{deleting ? <CircularProgress size="1.5rem" /> : "Deletar"}</Button>}
