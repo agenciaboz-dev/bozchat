@@ -1,14 +1,15 @@
 import React, { useEffect, useMemo, useState } from "react"
-import { Autocomplete, Box, Button, Checkbox, IconButton, Paper, TextField, Tooltip, Typography } from "@mui/material"
+import { Autocomplete, Box, Checkbox, IconButton, Paper, TextField, Tooltip, Typography } from "@mui/material"
 import { Accordion } from "../../components/Accordion"
 import { NodeAction, ValidAction } from "../../types/server/class/Bot/NodeAction"
 import { FlowNode, FlowNodeData } from "../../types/server/class/Bot/Bot"
 import { useFetchedData } from "../../hooks/useFetchedData"
 import { Board } from "../../types/server/class/Board/Board"
 import { Room } from "../../types/server/class/Board/Room"
-import { InfoOutlined, Report, Save, Warning } from "@mui/icons-material"
-import { useSnackbar } from "burgos-snackbar"
+import { InfoOutlined, Report } from "@mui/icons-material"
 import { TextInfo } from "./TextInfo"
+import { useDarkMode } from "../../hooks/useDarkMode"
+import { custom_colors } from "../../style/colors"
 
 interface BotActionsTabProps {
     data?: FlowNodeData
@@ -28,6 +29,7 @@ interface ActionContainerProps {
 }
 
 const ActionContainer: React.FC<ActionContainerProps> = (props) => {
+    const { darkMode } = useDarkMode()
     return (
         <Accordion
             expanded={!!props.action}
@@ -35,11 +37,13 @@ const ActionContainer: React.FC<ActionContainerProps> = (props) => {
             titleElement={
                 <Paper
                     sx={{
+                        boxShadow: darkMode ? undefined : `inset 0 0 5px ${custom_colors.lightMode_border}`,
                         alignItems: "center",
                         flex: 1,
-                        color: !!props.action ? "primary.main" : "secondary.main",
+                        color: !!props.action ? "primary.main" : "text.secondary",
                         padding: "0.5vw",
                         justifyContent: "space-between",
+                        backgroundColor: darkMode ? undefined : "background.default",
                     }}
                     onClick={() => props.onCheck(props.target)}
                 >
@@ -68,7 +72,15 @@ const ActionContainer: React.FC<ActionContainerProps> = (props) => {
                 </Paper>
             }
             expandedElement={
-                <Paper sx={{ flexDirection: "column", padding: "1vw", flex: 1, color: "secondary.main", marginTop: "0.5vw" }}>
+                <Paper
+                    sx={{
+                        flexDirection: "column",
+                        padding: "1vw",
+                        flex: 1,
+                        marginTop: "0.5vw",
+                        boxShadow: darkMode ? undefined : `inset 0 0 5px ${custom_colors.lightMode_border}`,
+                    }}
+                >
                     {props.settingsComponent}
                 </Paper>
             }
@@ -77,7 +89,7 @@ const ActionContainer: React.FC<ActionContainerProps> = (props) => {
 }
 
 export const BotActionsTab: React.FC<BotActionsTabProps> = (props) => {
-    const { snackbar } = useSnackbar()
+    const { darkMode } = useDarkMode()
 
     const [boards] = useFetchedData<Board>("boards", { params: { all: true } })
     const [destinationBoard, setDestinationBoard] = useState<Board | null>(null)
@@ -145,7 +157,18 @@ export const BotActionsTab: React.FC<BotActionsTabProps> = (props) => {
     }, [boards, sendToBoardAction])
 
     return (
-        <Box sx={{ flexDirection: "column", gap: "1vw", padding: "1vw", bgcolor: "background.default", flex: 1, borderRadius: "0.5vw" }}>
+        <Box
+            sx={{
+                flexDirection: "column",
+                gap: "1vw",
+                padding: "1vw",
+                bgcolor: darkMode ? "background.default" : custom_colors.lightMode_botNodeDrawerBackground,
+                border: darkMode ? `1px solid ${custom_colors.darkMode_border}` : `1px solid ${custom_colors.lightMode_border}`,
+                boxShadow: darkMode ? undefined : `inset 0 0 5px ${custom_colors.lightMode_border}`,
+                flex: 1,
+                borderRadius: "0.5vw",
+            }}
+        >
             <TextInfo>As ações marcadas serão executadas quando esta mensagem for enviada</TextInfo>
             <ActionContainer
                 action={sendToBoardAction}

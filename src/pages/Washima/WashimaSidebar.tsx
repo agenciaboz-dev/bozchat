@@ -45,7 +45,7 @@ export const WashimaSidebar: React.FC<WashimaSidebarProps> = (props) => {
                             }}
                             disabled={item.status !== "ready"}
                         >
-                            <Paper elevation={active ? 2 : 0} sx={{ padding: "1vw", flex: 1, flexDirection: "column" }}>
+                            <Paper elevation={active ? 2 : 1} sx={{ padding: "1vw", flex: 1, flexDirection: "column" }}>
                                 <Typography
                                     sx={{
                                         maxWidth: "13vw",

@@ -1,7 +1,7 @@
 import React, { useMemo } from "react"
-import { Box, Chip, IconButton, Paper, Tooltip, useMediaQuery } from "@mui/material"
+import { Box, IconButton, Paper, useMediaQuery } from "@mui/material"
 import { MessageContainer } from "./MessageContainer"
-import { Cancel, Hub } from "@mui/icons-material"
+import { Cancel } from "@mui/icons-material"
 import { MessageAuthor } from "../../Zap/MessageAuthor"
 import { NagaChat, Nagazap } from "../../../types/server/class/Nagazap"
 import { NagazapInput } from "./NagazapInput"
@@ -9,6 +9,7 @@ import { DateChip } from "../../Washima/WashimaChat/DateChip"
 import { DeletedMessage } from "../../Zap/DeletedMessage"
 import { canRespondNagaChat } from "../../../tools/canRespondNagaChat"
 import { useDarkMode } from "../../../hooks/useDarkMode"
+import { custom_colors } from "../../../style/colors"
 
 interface ChatContainerProps {
     chat: NagaChat
@@ -31,7 +32,7 @@ export const ChatContainer: React.FC<ChatContainerProps> = ({ chat, onClose, nag
             sx={{
                 flex: 1,
                 // justifyContent: isMobile ? "flex-end" : "center",
-                bgcolor: inBoards ? "transparent" : "background.paper",
+                bgcolor: inBoards ? "transparent" : darkMode ? "background.paper" : custom_colors.lightMode_chatWrapper,
                 // height: isMobile ? "77vh" : "90vh",
                 padding: inBoards ? 0 : isMobile ? "5vw" : "0.5vw 1vw",
                 // color: "secondary.main",
@@ -67,7 +68,9 @@ export const ChatContainer: React.FC<ChatContainerProps> = ({ chat, onClose, nag
                     width: "100%",
                     height: inBoards ? (disabledResponse ? "21.5vw" : "20vw") : isMobile ? undefined : "27vw",
                     flex: isMobile ? 1 : undefined,
-                    bgcolor: "background.default",
+                    bgcolor: darkMode ? "background.default" : custom_colors.lightMode_chatBackground,
+                    border: darkMode ? `1px solid ${custom_colors.darkMode_border}` : `1px solid ${custom_colors.lightMode_border}`,
+                    boxShadow: darkMode ? undefined : `inset 0 0 5px ${custom_colors.lightMode_border}`,
                     overflowY: "scroll",
                     overflowX: "hidden",
                     borderRadius: isMobile ? "2vw" : "4px",

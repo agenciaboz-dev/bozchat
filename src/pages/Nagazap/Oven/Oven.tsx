@@ -1,12 +1,11 @@
 import React, { useEffect, useState } from "react"
-import { Box, Button, CircularProgress, Grid, Icon, IconButton, MenuItem, TextField, Tooltip, useMediaQuery } from "@mui/material"
+import { Box, Button, CircularProgress, Grid, IconButton, TextField, useMediaQuery } from "@mui/material"
 import { Subroute } from "../Subroute"
 import { Nagazap } from "../../../types/server/class/Nagazap"
-import { Cake, ArrowBack, DeleteForever, HourglassFull, Pause, PauseCircle, PlayArrow, PlayCircle, Refresh, Save, WifiTethering } from "@mui/icons-material"
+import { Cake, ArrowBack, DeleteForever, PauseCircle, PlayCircle, Refresh, Save } from "@mui/icons-material"
 import { api } from "../../../api"
 import { WhatsappForm } from "../../../types/server/Meta/WhatsappBusiness/WhatsappForm"
 import { Batch } from "./Batch"
-import { useIo } from "../../../hooks/useIo"
 import { useUser } from "../../../hooks/useUser"
 import { OvenStatus } from "./OvenStatus"
 import { useDarkMode } from "../../../hooks/useDarkMode"
@@ -194,7 +193,7 @@ export const Oven: React.FC<OvenProps> = ({ nagazap: initialNagazap, setNagazap:
                                 disabled={loading}
                                 sx={{ alignSelf: "center" }}
                             >
-                                {loading ? <CircularProgress size="1.5rem" color="secondary" /> : <Refresh />}
+                                {loading ? <CircularProgress size="1.5rem" sx={{ color: "text.secondary" }} /> : <Refresh />}
                             </IconButton>
                         </Box>
                     </Box>
@@ -210,7 +209,7 @@ export const Oven: React.FC<OvenProps> = ({ nagazap: initialNagazap, setNagazap:
                             disabled={loading}
                             sx={{ alignSelf: "center" }}
                         >
-                            {loading ? <CircularProgress size="1.5rem" color="secondary" /> : <Refresh />}
+                            {loading ? <CircularProgress size="1.5rem" sx={{ color: "text.secondary" }} /> : <Refresh />}
                         </IconButton>
                     </Box>
                 )

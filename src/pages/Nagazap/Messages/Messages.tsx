@@ -133,7 +133,7 @@ export const MessagesScreen: React.FC<MessagesScreenProps> = ({ nagazap, setShow
             space={isMobile ? true : undefined}
             right={
                 <IconButton onClick={fetchMessages} disabled={loading}>
-                    {loading ? <CircularProgress size="1.5rem" color="secondary" /> : <Refresh />}
+                    {loading ? <CircularProgress size="1.5rem" sx={{ color: "text.secondary" }} /> : <Refresh />}
                 </IconButton>
             }
             left={

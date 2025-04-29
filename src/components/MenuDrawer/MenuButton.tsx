@@ -1,8 +1,7 @@
 import React, { useState } from "react"
-import { Box, Collapse, MenuItem, SxProps, alpha, darken, useMediaQuery } from "@mui/material"
+import { Box, Collapse, MenuItem, SxProps, useMediaQuery } from "@mui/material"
 import { useMenu } from "../../hooks/useMenu"
 import { useLocation } from "react-router-dom"
-import { useColors } from "../../hooks/useColors"
 import { KeyboardArrowDown } from "@mui/icons-material"
 import { Menu } from "../../types/Menu"
 import { useDarkMode } from "../../hooks/useDarkMode"
@@ -26,17 +25,7 @@ export const MenuButton: React.FC<MenuButtonProps> = ({ menu, sx }) => {
     const buildStyle = (active: boolean, menu: Menu) => {
         const menuItemStyle: SxProps = {
             backgroundColor: active ? (menu.submenus ? "" : "primary.main") : "",
-            color: darkMode
-                ? active
-                    ? menu.submenus
-                        ? "text.secondary"
-                        : "secondary.main"
-                    : "text.secondary"
-                : active
-                ? menu.submenus
-                    ? "text.secondary"
-                    : "background.default"
-                : "text.secondary",
+            color: active ? (menu.submenus ? "text.secondary" : "secondary.main") : "text.secondary",
             pointerEvents: active ? (menu.submenus ? "auto" : "none") : "auto",
             fontWeight: darkMode ? "bold" : active ? "bold" : "normal",
             fontSize: "1vw",

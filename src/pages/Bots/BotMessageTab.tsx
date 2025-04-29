@@ -5,6 +5,8 @@ import { useSnackbar } from "burgos-snackbar"
 import { ChatInput } from "../../components/ChatInput"
 import { TextInfo } from "./TextInfo"
 import { BotMessageContainer } from "./BotMessageContainer"
+import { useDarkMode } from "../../hooks/useDarkMode"
+import { custom_colors } from "../../style/colors"
 
 interface SettingsTabProps {
     node: FlowNode | null
@@ -14,6 +16,7 @@ interface SettingsTabProps {
 }
 
 export const BotMessageTab: React.FC<SettingsTabProps> = (props) => {
+    const { darkMode } = useDarkMode()
     const { snackbar } = useSnackbar()
 
     const onSaveClick = () => {
@@ -32,7 +35,9 @@ export const BotMessageTab: React.FC<SettingsTabProps> = (props) => {
             <Box
                 sx={{
                     flexDirection: "column",
-                    bgcolor: "background.default",
+                    bgcolor: darkMode ? "background.default" : custom_colors.lightMode_botNodeDrawerBackground,
+                    border: darkMode ? `1px solid ${custom_colors.darkMode_border}` : `1px solid ${custom_colors.lightMode_border}`,
+                    boxShadow: darkMode ? undefined : `inset 0 0 5px ${custom_colors.lightMode_border}`,
                     padding: "1vw",
                     borderRadius: "0.5vw",
                     gap: "1vw",

@@ -1,10 +1,9 @@
 import React, { useEffect, useState } from "react"
-import { Box, CircularProgress, Grid, IconButton, Paper, useMediaQuery } from "@mui/material"
+import { Box, CircularProgress, IconButton, Paper, useMediaQuery } from "@mui/material"
 import { Nagazap } from "../../../types/server/class/Nagazap"
 import { Subroute } from "../Subroute"
 import { api } from "../../../api"
 import { ArrowBack, Refresh } from "@mui/icons-material"
-import { LogsList } from "./LogsList"
 import { useUser } from "../../../hooks/useUser"
 import { DataGrid, GridColDef } from "@mui/x-data-grid"
 import { FailedMessageLog, SentMessageLog } from "../../../types/server/Meta/WhatsappBusiness/Logs"
@@ -25,7 +24,6 @@ export const Logs: React.FC<LogsProps> = ({ nagazap, setNagazap, setShowInformat
     const isMobile = useMediaQuery("(orientation: portrait)")
 
     const [loading, setLoading] = useState(false)
-    const [filter, setFilter] = useState("")
 
     const refresh = async () => {
         if (!company) return
@@ -98,7 +96,7 @@ export const Logs: React.FC<LogsProps> = ({ nagazap, setNagazap, setShowInformat
                     }}
                     disabled={loading}
                 >
-                    {loading ? <CircularProgress size="1.5rem" color="secondary" /> : <Refresh />}
+                    {loading ? <CircularProgress size="1.5rem" sx={{ color: "text.secondary" }} /> : <Refresh />}
                 </IconButton>
             }
             left={

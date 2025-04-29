@@ -99,7 +99,7 @@ export const Users: React.FC<UsersProps> = ({}) => {
                                 <Add />
                             </IconButton>
                             <IconButton onClick={fetchUsers}>
-                                {loading ? <CircularProgress size="1.5rem" color="secondary" /> : <Replay />}
+                                {loading ? <CircularProgress size="1.5rem" sx={{ color: "text.secondary" }} /> : <Replay />}
                             </IconButton>
                         </Box>
                     }

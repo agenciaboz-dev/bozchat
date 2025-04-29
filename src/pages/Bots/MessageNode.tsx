@@ -9,6 +9,7 @@ import { FlowNode } from "../../types/server/class/Bot/Bot"
 import { useDarkMode } from "../../hooks/useDarkMode"
 import { PhotoView } from "react-photo-view"
 import BotContext from "../../contexts/bot.context"
+import { custom_colors } from "../../style/colors"
 
 interface MessageNodeProps extends FlowNode {}
 
@@ -38,13 +39,10 @@ export const MessageNode: React.FC<MessageNodeProps> = (node) => {
         node.data.addLoop({ from: loopingNodeId, to: node.id })
     }
 
-    const bgcolor = "#0f6787"
-
     const addNode = (type: "message" | "response") => {
         node.data.onAddChild(type)
         closeMenu()
     }
-
 
     return (
         <>
@@ -53,7 +51,7 @@ export const MessageNode: React.FC<MessageNodeProps> = (node) => {
                     flexDirection: "column",
                     height: nodeHeight,
                     width: nodeWidth,
-                    bgcolor: bgcolor,
+                    bgcolor: custom_colors.lightMode_botEmittedMsg,
                     padding: 1,
                     position: "relative",
                     borderTopRightRadius: 0,
@@ -62,7 +60,7 @@ export const MessageNode: React.FC<MessageNodeProps> = (node) => {
                 onMouseEnter={() => setMouseOver(true)}
                 onMouseLeave={() => setMouseOver(false)}
             >
-                <TrianguloFudido alignment="right" color={darkMode ? "#287793" : "#0f6787"} />
+                <TrianguloFudido alignment="right" color={darkMode ? custom_colors.darkMode_botEmittedMsg : custom_colors.lightMode_botEmittedMsg} />
                 {node.data.media && (
                     <Paper sx={{ position: "absolute", top: -(nodeWidth / 8), left: -(nodeWidth / 8), borderRadius: "100%", pointerEvents: "none" }}>
                         {node.data?.media?.type === "image" && (

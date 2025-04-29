@@ -1,12 +1,11 @@
-import React, { useCallback, useEffect, useMemo, useRef, useState } from "react"
-import { Avatar, Box, debounce, IconButton, LinearProgress, Paper, Skeleton, TextField, Tooltip, Typography, useMediaQuery } from "@mui/material"
+import React, { useEffect, useMemo, useRef, useState } from "react"
+import { Avatar, Box, IconButton, LinearProgress, Paper, Skeleton, useMediaQuery } from "@mui/material"
 import { Washima, WashimaMediaForm, WashimaProfilePic } from "../../../types/server/class/Washima/Washima"
 import CancelIcon from "@mui/icons-material/Cancel"
 import { api } from "../../../api"
 import { useIo } from "../../../hooks/useIo"
 import { WashimaInput } from "../WashimaInput"
-import { KeyboardDoubleArrowDown, Lock, Search } from "@mui/icons-material"
-import { WhatsappWebSvg } from "../WhatsappWebSvg"
+import { KeyboardDoubleArrowDown } from "@mui/icons-material"
 import { WashimaMessage } from "../../../types/server/class/Washima/WashimaMessage"
 import { WashimaGroupUpdate } from "../../../types/server/class/Washima/WashimaGroupUpdate"
 import { GroupUpdateItem } from "./GroupUpdateItem"
@@ -19,6 +18,7 @@ import Message from "../../Zap/Message"
 import { SelectContactsModal } from "../SelectContactsModal/SelectContactsModal"
 import { useDarkMode } from "../../../hooks/useDarkMode"
 import { ChatSearch } from "./ChatSearch"
+import { custom_colors } from "../../../style/colors"
 
 interface WashimaChatProps {
     washima: Washima
@@ -195,8 +195,6 @@ export const WashimaChat: React.FC<WashimaChatProps> = ({ washima, chat, onClose
         }
     }, [chat, messages])
 
-
-
     useEffect(() => {
         console.log({ chat })
         reset()
@@ -241,7 +239,7 @@ export const WashimaChat: React.FC<WashimaChatProps> = ({ washima, chat, onClose
             sx={{
                 flex: 1,
                 justifyContent: isMobile ? "flex-end" : undefined,
-                bgcolor: inBoards ? "transparent" : "background.paper",
+                bgcolor: inBoards ? "transparent" : darkMode ? "background.paper" : custom_colors.lightMode_chatWrapper,
                 // height: isMobile ? "77vh" : "90vh",
                 padding: inBoards ? 0 : isMobile ? "5vw" : "1vw",
                 color: "text.secondary",
@@ -299,7 +297,9 @@ export const WashimaChat: React.FC<WashimaChatProps> = ({ washima, chat, onClose
                 sx={{
                     width: "100%",
                     height: inBoards ? "20vw" : isMobile ? "60vh" : washimaInput.replyMessage ? "50vh" : "60vh",
-                    bgcolor: "background.default",
+                    bgcolor: darkMode ? "background.default" : custom_colors.lightMode_chatBackground,
+                    border: darkMode ? `1px solid ${custom_colors.darkMode_border}` : `1px solid ${custom_colors.lightMode_border}`,
+                    boxShadow: darkMode ? undefined : `inset 0 0 5px ${custom_colors.lightMode_border}`,
                     overflowY: "auto",
                     borderRadius: isMobile ? "2vw" : "4px",
                     padding: inBoards ? (isMobile ? "5vw" : "1vw") : isMobile ? "4vw" : "2vw",

@@ -1,8 +1,8 @@
 import React, { Dispatch, SetStateAction, useEffect, useState } from "react"
-import { Box, CircularProgress, Grid, IconButton, Paper, Tooltip, useMediaQuery } from "@mui/material"
+import { Box, CircularProgress, Grid, IconButton, useMediaQuery } from "@mui/material"
 import { Subroute } from "../Subroute"
 import { api } from "../../../api"
-import { AccountBox, ArrowBack, Business, Facebook, Fingerprint, HealthAndSafety, LocalPhone, Refresh, Security, WhatsApp } from "@mui/icons-material"
+import { AccountBox, ArrowBack, Business, Facebook, Fingerprint, LocalPhone, Refresh, Security, WhatsApp } from "@mui/icons-material"
 import { Nagazap } from "../../../types/server/class/Nagazap"
 import { BusinessInfo } from "../../../types/server/Meta/WhatsappBusiness/BusinessInfo"
 import { GeneralStat } from "../../../types/GeneralStat"
@@ -10,8 +10,6 @@ import { InfoDataContainer } from "./InfoDataContainer"
 import { GeneralStatistics } from "./GeneralStatistics"
 import { MessagesChart } from "./MessagesChart"
 import { BlacklistChart } from "./BlacklistChart"
-import { useUser } from "../../../hooks/useUser"
-import { useDarkMode } from "../../../hooks/useDarkMode"
 
 interface InfoProps {
     nagazap: Nagazap
@@ -19,9 +17,6 @@ interface InfoProps {
 }
 
 export const Info: React.FC<InfoProps> = ({ nagazap, setShowInformations }) => {
-    const { darkMode } = useDarkMode()
-    const { user } = useUser()
-
     const [loading, setLoading] = useState(true)
     const [info, setInfo] = useState<BusinessInfo | null>(null)
     const isMobile = useMediaQuery("(orientation: portrait)")
@@ -107,7 +102,7 @@ export const Info: React.FC<InfoProps> = ({ nagazap, setShowInformations }) => {
                     }}
                     disabled={loading}
                 >
-                    {loading ? <CircularProgress size="1.5rem" color="secondary" /> : <Refresh />}
+                    {loading ? <CircularProgress size="1.5rem" sx={{ color: "text.secondary" }} /> : <Refresh />}
                 </IconButton>
             }
         >

@@ -10,7 +10,7 @@ export const default_colors: Theme = {
     success: "#34A853",
     warning: "#ffb74d",
     background: {
-        primary: "#efefef",
+        primary: "#ededed",
         secondary: "#ffffff50",
     },
     text: {
@@ -41,6 +41,31 @@ export const default_dark_colors: Theme = {
 }
 
 const colors = default_dark_colors
+
+export const custom_colors = {
+    darkMode_border: "#3f3f47",
+    darkMode_botEmittedMsg: "#287793",
+    darkMode_botReceivedMsg: "#2a323c",
+    darkMode_chatItemTriangleActive: "#3a3a49",
+    darkMode_chatItemTriangleInactive: "#2a323c",
+    darkMode_emittedMsg: "#0f6787",
+    darkMode_messageMenuBg: "#4a4a4a",
+    darkMode_receivedMsg: "#2a323c",
+    darkMode_templatePreviewTriangle: "#2a323c",
+
+    lightMode_border: "#c9c9c9",
+    lightMode_botEmittedMsg: "#0f6787",
+    lightMode_botReceivedMsg: "#ededed",
+    lightMode_botNodeDrawerBackground: "#f5f5f5",
+    lightMode_chatBackground: "#f7f7f7",
+    lightMode_chatItemTriangle: "#f7f7f7",
+    lightMode_chatWrapper: "#f1f1f1",
+    lightMode_dataGridColumnHeader: "#e5e5e5",
+    lightMode_emittedMsg: "#bbdeff",
+    lightMode_messageMenuBg: "#f0f0f0",
+    lightMode_receivedMsg: "#e0e0e0",
+    lightMode_templatePreviewTriangle: "#f4f4f4",
+}
 
 export const washima_colors = [
     "#00BCD4", // Cyan 500

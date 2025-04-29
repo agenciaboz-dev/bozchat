@@ -1,9 +1,9 @@
 import { createTheme } from "@mui/material"
 import { useDarkMode } from "./useDarkMode"
-// import { useMemo } from "react"
 import { useColors } from "./useColors"
 import { useMemo } from "react"
 import { ptBR } from "@mui/x-data-grid/locales"
+import { custom_colors } from "../style/colors"
 
 export const useMuiTheme = () => {
     const { darkMode } = useDarkMode()
@@ -51,7 +51,7 @@ export const useMuiTheme = () => {
                         MuiDataGrid: {
                             styleOverrides: {
                                 columnHeader: {
-                                    backgroundColor: darkMode ? undefined : "#e9e9e9",
+                                    backgroundColor: darkMode ? undefined : custom_colors.lightMode_dataGridColumnHeader,
                                     color: darkMode ? colors.secondary : colors.text.secondary,
                                 },
                                 columnSeparator: {

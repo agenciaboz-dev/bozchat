@@ -103,7 +103,7 @@ export const Departments: React.FC<DepartmentsProps> = ({}) => {
                                 <Add />
                             </IconButton>
                             <IconButton onClick={fetchDepartments}>
-                                {loading ? <CircularProgress size="1.5rem" color="secondary" /> : <Replay />}
+                                {loading ? <CircularProgress size="1.5rem" sx={{ color: "text.secondary" }} /> : <Replay />}
                             </IconButton>
                         </Box>
                     }

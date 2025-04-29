@@ -8,7 +8,7 @@ import { textFieldStyle } from "../../style/textfield"
 import { api } from "../../api"
 import { AxiosError } from "axios"
 import { HandledError } from "../../types/server/class/HandledError"
-import { ArrowBack, CopyAll, Refresh } from "@mui/icons-material"
+import { ArrowBack, CopyAll } from "@mui/icons-material"
 import { useDarkMode } from "../../hooks/useDarkMode"
 import { InlineTypography } from "../../components/InlineTypography"
 import { useClipboard } from "@mantine/hooks"
@@ -234,7 +234,7 @@ export const NagazapForm: React.FC<NagazapFormProps> = ({ onSuccess, setShowInfo
                         minRows={2}
                     />
 
-                    <Button variant="contained" sx={{ alignSelf: "flex-end" }} type="submit">
+                    <Button variant="contained" sx={{ alignSelf: "flex-end", color: "secondary.main" }} type="submit">
                         {loading ? <CircularProgress size="1.5rem" color="secondary" /> : "Enviar"}
                     </Button>
                 </form>

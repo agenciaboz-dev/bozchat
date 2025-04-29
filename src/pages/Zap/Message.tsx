@@ -1,16 +1,14 @@
 import React, { forwardRef, useEffect, useMemo, useState } from "react"
-import { Avatar, Box, Checkbox, Chip, CircularProgress, Icon, IconButton, MenuItem, Skeleton, Typography, alpha } from "@mui/material"
+import { Avatar, Box, Checkbox, CircularProgress, MenuItem, Skeleton, Typography } from "@mui/material"
 import { useMuiTheme } from "../../hooks/useMuiTheme"
 import { useMediaQuery } from "@mui/material"
 import { Washima, WashimaMedia } from "../../types/server/class/Washima/Washima"
 import { api } from "../../api"
 import { useVisibleCallback } from "burgos-use-visible-callback"
 import { ErrorChip, TodoChip } from "../../components/TodoChip"
-import { CheckBox, Delete, Download, Reply } from "@mui/icons-material"
-import { saveAs } from "file-saver"
+import { Reply } from "@mui/icons-material"
 import { AudioPlayer } from "../Washima/AudioComponents/AudioPlayer"
 import { TrianguloFudido } from "./TrianguloFudido"
-import { washima_colors } from "../../style/colors"
 import { MessageDateContainer } from "./MessageDateContainer"
 import { WashimaMessage } from "../../types/server/class/Washima/WashimaMessage"
 import { formatSize } from "../../tools/formatSize"
@@ -24,6 +22,7 @@ import { MessageMenu } from "./MessageMenu"
 import { QuotedMessage } from "../Washima/QuotedMessage"
 import { useDarkMode } from "../../hooks/useDarkMode"
 import { PhoneOnly } from "./PhoneOnly"
+import { custom_colors } from "../../style/colors"
 
 interface MessageProps {
     washima: Washima
@@ -50,10 +49,6 @@ export const Message: React.ForwardRefRenderFunction<HTMLDivElement, MessageProp
     const isMobile = useMediaQuery("(orientation: portrait)")
     const theme = useMuiTheme()
     const { darkMode } = useDarkMode()
-    const lightModePrimary = "#bbdeff"
-    const lightModeSecondary = "#e0e0e0"
-    const primary = "#0f6787"
-    const secondary = "#2a323c"
 
     const same_as_previous =
         !!previousItem && (message.author ? previousItem?.author === message.author : (previousItem as WashimaMessage).from === message.from)
@@ -216,11 +211,11 @@ export const Message: React.ForwardRefRenderFunction<HTMLDivElement, MessageProp
                                 ? "transparent"
                                 : from_me
                                 ? darkMode
-                                    ? primary
-                                    : lightModePrimary
+                                    ? custom_colors.darkMode_emittedMsg
+                                    : custom_colors.lightMode_emittedMsg
                                 : darkMode
-                                ? secondary
-                                : lightModeSecondary,
+                                ? custom_colors.darkMode_receivedMsg
+                                : custom_colors.lightMode_receivedMsg,
                             marginTop: !same_as_previous && !day_changing ? (isMobile ? "2vw" : "0.5vw") : undefined,
                             gap: is_sticker ? "0.2vw" : undefined,
                             opacity: is_deleted || message.phone_only ? 0.3 : undefined,
@@ -235,11 +230,11 @@ export const Message: React.ForwardRefRenderFunction<HTMLDivElement, MessageProp
                                         ? "transparent"
                                         : from_me
                                         ? darkMode
-                                            ? primary
-                                            : lightModePrimary
+                                            ? custom_colors.darkMode_emittedMsg
+                                            : custom_colors.lightMode_emittedMsg
                                         : darkMode
-                                        ? secondary
-                                        : lightModeSecondary
+                                        ? custom_colors.darkMode_receivedMsg
+                                        : custom_colors.lightMode_receivedMsg
                                 }
                                 alignment={from_me ? "right" : "left"}
                             />

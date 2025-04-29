@@ -7,6 +7,7 @@ import { PhotoView } from "react-photo-view"
 import { AudioPlayer } from "../Washima/AudioComponents/AudioPlayer"
 import { TrianguloFudido } from "../Zap/TrianguloFudido"
 import { ChatInput } from "../../components/ChatInput"
+import { custom_colors } from "../../style/colors"
 
 interface NodeModalProps {
     node: FlowNode | null
@@ -18,11 +19,6 @@ export const NodeModal: React.FC<NodeModalProps> = ({ node, onClose, saveNode })
     const inputRef = useRef<HTMLInputElement>(null)
     const isMobile = useMediaQuery("(orientation: portrait)")
     const darkMode = useDarkMode()
-
-    const lightModePrimary = "#bbdeff"
-    const lightModeSecondary = "#e0e0e0"
-    const primary = "#0F6787"
-    const secondary = "#2a323c"
 
     const limited_size = true
 
@@ -87,7 +83,14 @@ export const NodeModal: React.FC<NodeModalProps> = ({ node, onClose, saveNode })
                             minWidth: isMobile ? "70%" : "5vw",
                             minHeight: "2vw",
                             alignSelf: node.type === "message" ? "flex-end" : undefined,
-                            bgcolor: node.type === "message" ? (darkMode ? primary : lightModePrimary) : darkMode ? secondary : lightModeSecondary,
+                            bgcolor:
+                                node.type === "message"
+                                    ? darkMode
+                                        ? custom_colors.darkMode_emittedMsg
+                                        : custom_colors.lightMode_emittedMsg
+                                    : darkMode
+                                    ? custom_colors.darkMode_receivedMsg
+                                    : custom_colors.lightMode_receivedMsg,
                             maxWidth: limited_size ? "17vw" : undefined,
                             margin: isMobile ? "1vw 0" : undefined,
                         }}
@@ -130,7 +133,6 @@ export const NodeModal: React.FC<NodeModalProps> = ({ node, onClose, saveNode })
                             </>
                         )}
                         <Typography
-                            color="#fff"
                             sx={{
                                 wordBreak: "break-word",
                                 whiteSpace: "pre-line",
@@ -157,7 +159,15 @@ export const NodeModal: React.FC<NodeModalProps> = ({ node, onClose, saveNode })
 
                         <TrianguloFudido
                             alignment={node.type === "message" ? "right" : "left"}
-                            color={node.type === "message" ? (darkMode ? primary : lightModePrimary) : darkMode ? secondary : lightModeSecondary}
+                            color={
+                                node.type === "message"
+                                    ? darkMode
+                                        ? custom_colors.darkMode_emittedMsg
+                                        : custom_colors.lightMode_emittedMsg
+                                    : darkMode
+                                    ? custom_colors.darkMode_receivedMsg
+                                    : custom_colors.lightMode_receivedMsg
+                            }
                         />
                     </Paper>
 

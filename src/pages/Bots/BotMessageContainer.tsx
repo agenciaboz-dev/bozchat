@@ -6,6 +6,7 @@ import { PhotoView } from "react-photo-view"
 import { AudioPlayer } from "../Washima/AudioComponents/AudioPlayer"
 import { TrianguloFudido } from "../Zap/TrianguloFudido"
 import { Delete } from "@mui/icons-material"
+import { custom_colors } from "../../style/colors"
 
 interface BotMessageContainerProps {
     node: FlowNode | null
@@ -16,10 +17,6 @@ interface BotMessageContainerProps {
 export const BotMessageContainer: React.FC<BotMessageContainerProps> = (props) => {
     const isMobile = useMediaQuery("(orientation: portrait)")
     const { darkMode } = useDarkMode()
-    const lightModePrimary = "#bbdeff"
-    const lightModeSecondary = "#e0e0e0"
-    const primary = "#0F6787"
-    const secondary = "#2a323c"
 
     return (
         <Paper
@@ -38,7 +35,14 @@ export const BotMessageContainer: React.FC<BotMessageContainerProps> = (props) =
                 minWidth: isMobile ? "70%" : "5vw",
                 minHeight: "2vw",
                 alignSelf: props.node?.type === "message" ? "flex-end" : undefined,
-                bgcolor: props.node?.type === "message" ? (darkMode ? primary : lightModePrimary) : darkMode ? secondary : lightModeSecondary,
+                bgcolor:
+                    props.node?.type === "message"
+                        ? darkMode
+                            ? custom_colors.darkMode_emittedMsg
+                            : custom_colors.lightMode_emittedMsg
+                        : darkMode
+                        ? custom_colors.darkMode_receivedMsg
+                        : custom_colors.lightMode_receivedMsg,
                 maxWidth: "17vw",
                 margin: isMobile ? "1vw 0" : undefined,
             }}
@@ -82,7 +86,6 @@ export const BotMessageContainer: React.FC<BotMessageContainerProps> = (props) =
                 </>
             )}
             <Typography
-                color="#fff"
                 sx={{
                     wordBreak: "break-word",
                     whiteSpace: "pre-line",
@@ -109,7 +112,15 @@ export const BotMessageContainer: React.FC<BotMessageContainerProps> = (props) =
 
             <TrianguloFudido
                 alignment={props.node?.type === "message" ? "right" : "left"}
-                color={props.node?.type === "message" ? (darkMode ? primary : lightModePrimary) : darkMode ? secondary : lightModeSecondary}
+                color={
+                    props.node?.type === "message"
+                        ? darkMode
+                            ? custom_colors.darkMode_emittedMsg
+                            : custom_colors.lightMode_emittedMsg
+                        : darkMode
+                        ? custom_colors.darkMode_receivedMsg
+                        : custom_colors.lightMode_receivedMsg
+                }
             />
         </Paper>
     )

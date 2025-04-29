@@ -1,5 +1,5 @@
 import React, { useEffect, useMemo, useRef, useState } from "react"
-import { Box, CircularProgress, IconButton, Paper, TextField, Typography } from "@mui/material"
+import { Box, CircularProgress, IconButton, TextField } from "@mui/material"
 import { textFieldStyle } from "../../style/textfield"
 import SendIcon from "@mui/icons-material/Send"
 import { RecordAudioContainer } from "./AudioComponents/RecordAudioContainer"
@@ -8,7 +8,7 @@ import { useIo } from "../../hooks/useIo"
 import { MediaInputMenu } from "./MediaInput/MediaInputMenu"
 import { useLocalStorage } from "@mantine/hooks"
 import { useWashimaInput } from "../../hooks/useWashimaInput"
-import { Close, Forward, Reply } from "@mui/icons-material"
+import { Reply } from "@mui/icons-material"
 import { QuotedMessage } from "./QuotedMessage"
 import { WashimaMessage } from "../../types/server/class/Washima/WashimaMessage"
 import { useDarkMode } from "../../hooks/useDarkMode"
@@ -102,7 +102,7 @@ export const WashimaInput: React.FC<WashimaInputProps> = ({ onSubmit, disabled, 
                 autoComplete="off"
                 InputProps={{
                     readOnly: is_forwarding,
-                    sx: { color: "primary.main", bgcolor: "background.default", paddingLeft: "0", paddingRight: "0" },
+                    sx: { color: "primary.main", bgcolor: darkMode ? "background.default" : "background.paper", paddingLeft: "0", paddingRight: "0" },
                     // startAdornment: (
                     //     <Checkbox title="assinar mensagem" checked={sign} onChange={(_, checked) => handleSignCheckbox(checked)} />
                     // ),

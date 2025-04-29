@@ -6,6 +6,8 @@ import { WithoutFunctions } from "../../../types/server/class/helpers"
 import { Board, BoardNagazapSettings, BoardWashimaSettings } from "../../../types/server/class/Board/Board"
 import { Room } from "../../../types/server/class/Board/Room"
 import { Nagazap } from "../../../types/server/class/Nagazap"
+import { useDarkMode } from "../../../hooks/useDarkMode"
+import { custom_colors } from "../../../style/colors"
 
 interface BusinessContainerProps {
     board: WithoutFunctions<Board>
@@ -19,6 +21,7 @@ interface BusinessContainerProps {
 
 export const IntegrationContainer: React.FC<BusinessContainerProps> = (props) => {
     const isMobile = useMediaQuery("(orientation: portrait)")
+    const { darkMode } = useDarkMode()
 
     const { fetchWashimaProfilePic } = useApi()
 
@@ -57,7 +60,15 @@ export const IntegrationContainer: React.FC<BusinessContainerProps> = (props) =>
     }, [props.integration])
 
     return (
-        <Paper sx={{ padding: isMobile ? "5vw" : "1vw", flexDirection: isMobile ? "column" : "row", gap: isMobile ? "5vw" : undefined }}>
+        <Paper
+            sx={{
+                border: darkMode ? undefined : `1px solid ${custom_colors.lightMode_border}`,
+                boxShadow: darkMode ? undefined : `inset 0 0 5px ${custom_colors.lightMode_border}`,
+                padding: isMobile ? "5vw" : "1vw",
+                flexDirection: isMobile ? "column" : "row",
+                gap: isMobile ? "5vw" : undefined,
+            }}
+        >
             <Box sx={{ flex: 1, alignItems: "center", gap: isMobile ? "2vw" : "1vw" }}>
                 <Checkbox checked={props.checked} onChange={(_, value) => onChangeCheckbox(value)} sx={{ padding: isMobile ? 0 : undefined }} />
                 <Avatar src={profilePic?.url} />

@@ -4,6 +4,7 @@ import { TemplateComponent } from "../../../types/server/Meta/WhatsappBusiness/T
 import { TrianguloFudido } from "../../Zap/TrianguloFudido"
 import { Image, LocalPhone, OpenInNew, Reply } from "@mui/icons-material"
 import { useDarkMode } from "../../../hooks/useDarkMode"
+import { custom_colors } from "../../../style/colors"
 
 interface TemplatePreviewProps {
     components: TemplateComponent[]
@@ -48,7 +49,12 @@ export const TemplatePreview: React.FC<TemplatePreviewProps> = ({ components, im
                 }}
                 elevation={realMessage ? 0 : undefined}
             >
-                {!realMessage && <TrianguloFudido alignment="left" color={darkMode ? "#2a323c" : "#f4f4f4"} />}
+                {!realMessage && (
+                    <TrianguloFudido
+                        alignment="left"
+                        color={darkMode ? custom_colors.darkMode_templatePreviewTriangle : custom_colors.lightMode_templatePreviewTriangle}
+                    />
+                )}
                 {components.map((component, index) => {
                     if (!component) return null
                     if (component.format == "IMAGE") {

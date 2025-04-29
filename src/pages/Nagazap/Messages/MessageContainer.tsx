@@ -1,15 +1,13 @@
 import React, { useMemo } from "react"
-import { Avatar, Box, Grid, MenuItem, Paper, Typography, useMediaQuery } from "@mui/material"
+import { Avatar, Box, MenuItem, Paper, Typography, useMediaQuery } from "@mui/material"
 import { NagaMessage, Nagazap } from "../../../types/server/class/Nagazap"
-import { useFormatMessageTime } from "../../../hooks/useFormatMessageTime"
-import { Title2 } from "../../../components/Title"
 import { TrianguloFudido } from "../../Zap/TrianguloFudido"
 import { PhotoView } from "react-photo-view"
 import { AudioPlayer } from "../../Washima/AudioComponents/AudioPlayer"
-import { MessageAuthor } from "../../Zap/MessageAuthor"
 import { useDarkMode } from "../../../hooks/useDarkMode"
 import { DeletedMessage } from "../../Zap/DeletedMessage"
 import { TemplatePreview } from "../TemplateForm/TemplatePreview"
+import { custom_colors } from "../../../style/colors"
 
 interface MessageContainerProps {
     message: NagaMessage
@@ -21,11 +19,6 @@ interface MessageContainerProps {
 export const MessageContainer: React.FC<MessageContainerProps> = ({ message, nagazap, inBoards, disabledIcon }) => {
     const isMobile = useMediaQuery("(orientation: portrait)")
     const { darkMode } = useDarkMode()
-    const formatTime = useFormatMessageTime()
-    const lightModePrimary = "#bbdeff"
-    const lightModeSecondary = "#e0e0e0"
-    const primary = "#0F6787"
-    const secondary = "#2a323c"
 
     const from_me = useMemo(() => message.name === nagazap.displayPhone, [message])
 
@@ -51,11 +44,11 @@ export const MessageContainer: React.FC<MessageContainerProps> = ({ message, nag
                         ? "transparent"
                         : from_me
                         ? darkMode
-                            ? primary
-                            : lightModePrimary
+                            ? custom_colors.darkMode_emittedMsg
+                            : custom_colors.lightMode_emittedMsg
                         : darkMode
-                        ? secondary
-                        : lightModeSecondary,
+                        ? custom_colors.darkMode_receivedMsg
+                        : custom_colors.lightMode_receivedMsg,
                 maxWidth: inBoards ? "17vw" : undefined,
                 marginBottom: message.type === "sticker" ? "0.5vw" : undefined,
                 margin: isMobile ? "1vw 0" : undefined,
@@ -136,7 +129,15 @@ export const MessageContainer: React.FC<MessageContainerProps> = ({ message, nag
             {message.type !== "sticker" && (
                 <TrianguloFudido
                     alignment={from_me ? "right" : "left"}
-                    color={from_me ? (darkMode ? primary : lightModePrimary) : darkMode ? secondary : lightModeSecondary}
+                    color={
+                        from_me
+                            ? darkMode
+                                ? custom_colors.darkMode_emittedMsg
+                                : custom_colors.lightMode_emittedMsg
+                            : darkMode
+                            ? custom_colors.darkMode_receivedMsg
+                            : custom_colors.lightMode_receivedMsg
+                    }
                 />
             )}
         </Paper>

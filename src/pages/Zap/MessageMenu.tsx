@@ -7,6 +7,8 @@ import { api } from "../../api"
 import { saveAs } from "file-saver"
 import { motion } from "framer-motion"
 import { animationVariants } from "../../tools/animationVariants"
+import { useDarkMode } from "../../hooks/useDarkMode"
+import { custom_colors } from "../../style/colors"
 
 const MessageMenuButton: React.FC<{ onClick: (event: React.MouseEvent<HTMLElement>) => void }> = ({ onClick }) => {
     return (
@@ -27,7 +29,7 @@ const MessageMenuItem: React.FC<MenuItemProps> = (props) => {
         <MenuItem onClick={props.onClick}>
             <Typography
                 sx={{
-                    color: "secondary.main",
+                    color: "text.secondary",
                 }}
             >
                 {props.children}
@@ -44,8 +46,9 @@ interface MessageMenuProps {
 }
 
 export const MessageMenu: React.FC<MessageMenuProps> = ({ from_me, onClose, message, onSelect }) => {
-    const washimaInput = useWashimaInput()
     const isMobile = useMediaQuery("(orientation: portrait)")
+    const { darkMode } = useDarkMode()
+    const washimaInput = useWashimaInput()
     const is_deleted = message.type === "revoked" || message.deleted
 
     const [menuIsOpen, setMenuIsOpen] = useState(false)
@@ -110,14 +113,14 @@ export const MessageMenu: React.FC<MessageMenuProps> = ({ from_me, onClose, mess
                     onClose={handleCloseMenu}
                     MenuListProps={{
                         sx: {
-                            bgcolor: "#5e5e5e",
+                            bgcolor: darkMode ? custom_colors.darkMode_messageMenuBg : custom_colors.lightMode_messageMenuBg,
                         },
                     }}
                 >
                     <MessageMenuItem onClick={onReplyPress}>Responder</MessageMenuItem>
                     {message.hasMedia && (
                         <MessageMenuItem onClick={downloadMedia}>
-                            {downloading ? <CircularProgress size={"1rem"} color="secondary" /> : "Baixar"}
+                            {downloading ? <CircularProgress size={"1rem"} sx={{ color: "text.secondary" }} /> : "Baixar"}
                         </MessageMenuItem>
                     )}
                     <MessageMenuItem onClick={onForwardPress}>Encaminhar</MessageMenuItem>

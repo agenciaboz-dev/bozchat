@@ -6,6 +6,8 @@ import { BotMessageContainer } from "./BotMessageContainer"
 import { Accordion } from "../../components/Accordion"
 import BotContext from "../../contexts/bot.context"
 import { InfoOutlined } from "@mui/icons-material"
+import { useDarkMode } from "../../hooks/useDarkMode"
+import { custom_colors } from "../../style/colors"
 
 interface BotLoopTabProps {
     data?: FlowNodeData
@@ -17,6 +19,7 @@ interface BotLoopTabProps {
 }
 
 export const BotLoopTab: React.FC<BotLoopTabProps> = (props) => {
+    const { darkMode } = useDarkMode()
     const { setLoopingNodeId } = useContext(BotContext)
     const loopingNode = useMemo(() => props.nodes.find((node) => node.id === props.data?.next_node_id), [props.data, props.nodes])
 
@@ -32,7 +35,18 @@ export const BotLoopTab: React.FC<BotLoopTabProps> = (props) => {
     }
 
     return (
-        <Box sx={{ flexDirection: "column", gap: "1vw", padding: "1vw", bgcolor: "background.default", flex: 1, borderRadius: "0.5vw" }}>
+        <Box
+            sx={{
+                flexDirection: "column",
+                gap: "1vw",
+                padding: "1vw",
+                bgcolor: darkMode ? "background.default" : custom_colors.lightMode_botNodeDrawerBackground,
+                border: darkMode ? `1px solid ${custom_colors.darkMode_border}` : `1px solid ${custom_colors.lightMode_border}`,
+                boxShadow: darkMode ? undefined : `inset 0 0 5px ${custom_colors.lightMode_border}`,
+                flex: 1,
+                borderRadius: "0.5vw",
+            }}
+        >
             <TextInfo>Após enviar esta mensagem, a próxima etapa do fluxo será a mensagem selecionada abaixo.</TextInfo>
 
             <Accordion
@@ -40,11 +54,13 @@ export const BotLoopTab: React.FC<BotLoopTabProps> = (props) => {
                 titleElement={
                     <Paper
                         sx={{
+                            boxShadow: darkMode ? undefined : `inset 0 0 5px ${custom_colors.lightMode_border}`,
                             alignItems: "center",
                             flex: 1,
-                            color: loopingNode ? "primary.main" : "secondary.main",
+                            color: loopingNode ? "primary.main" : "text.secondary",
                             padding: "0.5vw",
                             justifyContent: "space-between",
+                            backgroundColor: darkMode ? undefined : "background.default",
                         }}
                         onClick={() => (loopingNode ? removeLoop() : startLoop())}
                     >

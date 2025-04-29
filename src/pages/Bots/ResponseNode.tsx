@@ -6,6 +6,7 @@ import { AddCircle, Delete, Edit, EmergencyRecording } from "@mui/icons-material
 import { TrianguloFudido } from "../Zap/TrianguloFudido"
 import { FlowNode } from "../../types/server/class/Bot/Bot"
 import { useDarkMode } from "../../hooks/useDarkMode"
+import { custom_colors } from "../../style/colors"
 
 interface ResponseNodeProps extends FlowNode {}
 
@@ -18,8 +19,6 @@ export const ResponseNode: React.FC<ResponseNodeProps> = (node) => {
     const can_add_children = children.length === 0
 
     const topHandle = node.id !== "node_0"
-
-    const bgcolor = darkMode ? "#2a323c" : "#efefef"
 
     return (
         <>
@@ -37,7 +36,7 @@ export const ResponseNode: React.FC<ResponseNodeProps> = (node) => {
                 onMouseEnter={() => setMouseOver(true)}
                 onMouseLeave={() => setMouseOver(false)}
             >
-                <TrianguloFudido alignment="left" color={bgcolor} />
+                <TrianguloFudido alignment="left" color={darkMode ? custom_colors.darkMode_botReceivedMsg : custom_colors.lightMode_botReceivedMsg} />
 
                 {topHandle && <Handle type="target" position={Position.Top} />}
 

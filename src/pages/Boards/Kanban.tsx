@@ -1,8 +1,8 @@
 import React, { useEffect, useRef, useState } from "react"
-import { Box, Button, CircularProgress, IconButton, MenuItem, Paper, TextField, Tooltip, Typography, useMediaQuery } from "@mui/material"
+import { Box, CircularProgress, IconButton, Tooltip, useMediaQuery } from "@mui/material"
 import { Board } from "../../types/server/class/Board/Board"
 import { Title2 } from "../../components/Title"
-import { Add, ArrowBack, Edit, EditOff, EditRounded, Refresh, Save, Settings } from "@mui/icons-material"
+import { Add, ArrowBack, Edit, EditOff, Settings } from "@mui/icons-material"
 import { BoardRoom } from "./Room/Room"
 import { DragDropContext, Draggable, Droppable, DropResult } from "@hello-pangea/dnd"
 import { WithoutFunctions } from "../../types/server/class/helpers"
@@ -235,7 +235,13 @@ export const BoardPage: React.FC<BoardPageProps> = (props) => {
                                         <Settings />
                                     </IconButton>
                                     <IconButton onClick={handleEditPress}>
-                                        {saving ? <CircularProgress size="1.5rem" color="secondary" /> : editMode ? <EditOff /> : <Edit />}
+                                        {saving ? (
+                                            <CircularProgress size="1.5rem" sx={{ color: "text.secondary" }} />
+                                        ) : editMode ? (
+                                            <EditOff />
+                                        ) : (
+                                            <Edit />
+                                        )}
                                     </IconButton>
                                 </>
                             )}

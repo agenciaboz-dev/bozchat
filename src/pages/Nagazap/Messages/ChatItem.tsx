@@ -7,6 +7,7 @@ import { TrianguloFudido } from "../../Zap/TrianguloFudido"
 import { useDarkMode } from "../../../hooks/useDarkMode"
 import { TemplatePreview } from "../TemplateForm/TemplatePreview"
 import { NagaChat } from "../../../types/server/class/Nagazap"
+import { custom_colors } from "../../../style/colors"
 
 interface ChatItemProps {
     chat: NagaChat
@@ -87,7 +88,16 @@ export const ChatItem: React.FC<ChatItemProps> = ({ chat, onChatClick, active })
                 >
                     {formatTime(new Date(Number(chat.lastMessage.timestamp)))}
                 </Box>
-                <TrianguloFudido alignment="left" color={darkMode ? (active ? "#3a3a49" : "#2a323c") : "#f7f7f7"} />
+                <TrianguloFudido
+                    alignment="left"
+                    color={
+                        darkMode
+                            ? active
+                                ? custom_colors.darkMode_chatItemTriangleActive
+                                : custom_colors.darkMode_chatItemTriangleInactive
+                            : custom_colors.lightMode_chatItemTriangle
+                    }
+                />
             </Paper>
         </MenuItem>
     )

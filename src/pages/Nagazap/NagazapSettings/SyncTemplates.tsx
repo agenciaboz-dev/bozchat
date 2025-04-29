@@ -1,5 +1,5 @@
 import React, { useState } from "react"
-import { Box, Button, CircularProgress } from "@mui/material"
+import { Button, CircularProgress } from "@mui/material"
 import { Nagazap } from "../../../types/server/class/Nagazap"
 import { api } from "../../../api"
 import { useSnackbar } from "burgos-snackbar"
@@ -31,7 +31,7 @@ export const SyncTemplates: React.FC<SyncTemplatesProps> = ({ nagazap }) => {
 
     return (
         <Button variant="outlined" onClick={onClick}>
-            {loading ? <CircularProgress size="1.5rem" color="secondary" /> : "Sincronizar Templates"}
+            {loading ? <CircularProgress size="1.5rem" sx={{ color: "text.primary" }} /> : "Sincronizar Templates"}
         </Button>
     )
 }

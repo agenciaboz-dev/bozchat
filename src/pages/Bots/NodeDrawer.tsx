@@ -52,7 +52,7 @@ export const NodeDrawer: React.FC<NodeDrawerProps> = ({ node, onClose, saveNode,
             <Paper
                 sx={{
                     flexDirection: "column",
-                    bgcolor: darkMode ? "background.default" : "#e3e3e3",
+                    bgcolor: "background.default",
                     flex: 1,
                     padding: "1vw",
                     maxWidth: "25vw",
@@ -69,7 +69,7 @@ export const NodeDrawer: React.FC<NodeDrawerProps> = ({ node, onClose, saveNode,
                 </Box>
 
                 {node?.type === "message" && (
-                    <Tabs value={currentTab} onChange={(_, value) => setCurrentTab(value)} variant="fullWidth">
+                    <Tabs value={currentTab} onChange={(_, value) => setCurrentTab(value)} variant="fullWidth" sx={{ marginBottom: "1vw" }}>
                         <Tab value={"message"} label="Mensagem" />
                         <Tab value={"actions"} label="Ações" />
                         <Tab value={"loop"} label="Loop" />
