@@ -42,7 +42,7 @@ export const NagazapInput: React.FC<NagazapInputProps> = ({ chat, nagazap }) => 
                 InputProps={{
                     sx: {
                         color: "primary.main",
-                        bgcolor: "background.default",
+                        bgcolor: darkMode ? "background.default" : "background.paper",
                         paddingLeft: "0",
                         paddingRight: "0",
                     },

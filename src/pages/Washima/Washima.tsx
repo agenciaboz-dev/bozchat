@@ -11,7 +11,7 @@ import { useIo } from "../../hooks/useIo"
 import { WashimaZap } from "./WashimaZap"
 import { useUser } from "../../hooks/useUser"
 import { useNotification } from "../../hooks/useNotification"
-import { NoChat } from "./WashimaChat/NoChat"
+import { NoChat } from "../Zap/NoChat"
 import { Route, Routes, useLocation, useNavigate } from "react-router-dom"
 import { WashimaSidebar, WashimaSidebarProps } from "./WashimaSidebar"
 import { slugify } from "../../tools/normalize"
@@ -27,7 +27,7 @@ const SidebarWrapper: React.FC<{
     currentWashima: Washima | null
     onWashimaSelect: (washima: Washima) => void
 }> = ({ children, currentWashima, onWashimaSelect, washimas }) => (
-    <Box sx={{ flex: 1 }}>
+    <Box sx={{ flex: 1, height: "90%" }}>
         <WashimaSidebar washimas={washimas} currentWashima={currentWashima} onClick={onWashimaSelect} />
         {children}
     </Box>

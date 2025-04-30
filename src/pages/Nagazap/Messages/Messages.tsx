@@ -10,7 +10,7 @@ import { ChatContainer } from "./ChatContainer"
 import { useUser } from "../../../hooks/useUser"
 import { textFieldStyle } from "../../../style/textfield"
 import { useDarkMode } from "../../../hooks/useDarkMode"
-import { NoChat } from "../../Washima/WashimaChat/NoChat"
+import { NoChat } from "../../Zap/NoChat"
 import { normalizePhonenumber } from "../../../tools/normalize"
 
 interface MessagesScreenProps {

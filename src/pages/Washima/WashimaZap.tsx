@@ -77,7 +77,7 @@ export const WashimaZap: React.FC<WashimaZapProps> = ({ washima }) => {
                     flexDirection: "column",
                     alignItems: isMobile ? "center" : "",
                     padding: isMobile ? "5vw" : "1vw",
-                    height: !isMobile ? "80vh" : "80vh",
+                    height: "80vh",
                     overflowX: isMobile ? "hidden" : "auto",
                     overflowY: loading ? "hidden" : "auto",
                     gap: isMobile ? "5vw" : "1vw",

@@ -21,6 +21,8 @@ import { TransferModal } from "./TransferModal"
 import { WithoutFunctions } from "../../../types/server/class/helpers"
 import { Board } from "../../../types/server/class/Board/Board"
 import { normalizePhonenumber } from "../../../tools/normalize"
+import { custom_colors } from "../../../style/colors"
+import { useDarkMode } from "../../../hooks/useDarkMode"
 
 interface BoardChatProps {
     chat: Chat
@@ -34,6 +36,7 @@ interface BoardChatProps {
 
 export const BoardChat: React.FC<BoardChatProps> = (props) => {
     const isMobile = useMediaQuery("(orientation: portrait)")
+    const { darkMode } = useDarkMode()
     const { fetchNagaMessages } = useApi()
 
     const [mediaMetaData, setMediaMetaData] = useState<{
@@ -107,7 +110,13 @@ export const BoardChat: React.FC<BoardChatProps> = (props) => {
                     ref={provided.innerRef}
                     {...provided.draggableProps}
                     {...provided.dragHandleProps}
-                    sx={{ padding: isMobile ? "5vw" : "1vw", flexDirection: "column", overflow: "hidden", gap: isMobile ? "5vw" : "1vw" }}
+                    sx={{
+                        padding: isMobile ? "5vw" : "1vw",
+                        flexDirection: "column",
+                        overflow: "hidden",
+                        gap: isMobile ? "5vw" : "1vw",
+                        bgcolor: darkMode ? undefined : custom_colors.lightMode_chatWrapper,
+                    }}
                     onClick={() =>
                         console.log(props.nagazap, nagazapMessages.length, props.chat, { from: normalizePhonenumber(props.chat.last_message.from) })
                     }
@@ -164,7 +173,11 @@ export const BoardChat: React.FC<BoardChatProps> = (props) => {
                                     onClick={() => setExpandedChat((value) => !value)}
                                     elevation={0}
                                     sx={{
-                                        bgcolor: "background.default",
+                                        bgcolor: darkMode ? "background.default" : custom_colors.lightMode_chatBackground,
+                                        border: darkMode
+                                            ? `1px solid ${custom_colors.darkMode_border}`
+                                            : `1px solid ${custom_colors.lightMode_border}`,
+                                        borderRadius: 0,
                                         flexDirection: "column",
                                         padding: isMobile ? "5vw" : "1vw",
                                         position: "relative",

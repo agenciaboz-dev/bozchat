@@ -10,7 +10,7 @@ import { WashimaMessage } from "../../../types/server/class/Washima/WashimaMessa
 import { WashimaGroupUpdate } from "../../../types/server/class/Washima/WashimaGroupUpdate"
 import { GroupUpdateItem } from "./GroupUpdateItem"
 import { Chat } from "../../../types/Chat"
-import { NoChat } from "./NoChat"
+import { NoChat } from "../../Zap/NoChat"
 import { PhotoProvider, PhotoView } from "react-photo-view"
 import { CopyAllButton } from "./WashimaTools/CopyAll"
 import { useWashimaInput } from "../../../hooks/useWashimaInput"
@@ -247,7 +247,7 @@ export const WashimaChat: React.FC<WashimaChatProps> = ({ washima, chat, onClose
                 flexDirection: "column",
                 overflow: "hidden",
                 position: "relative",
-                width: "0vw",
+                width: 0,
             }}
         >
             {!inBoards && (
@@ -296,7 +296,7 @@ export const WashimaChat: React.FC<WashimaChatProps> = ({ washima, chat, onClose
                 onScroll={handleScroll}
                 sx={{
                     width: "100%",
-                    height: inBoards ? "20vw" : isMobile ? "60vh" : washimaInput.replyMessage ? "50vh" : "60vh",
+                    height: inBoards ? "20vw" : isMobile ? "60vh" : washimaInput.replyMessage ? "45vh" : "55vh",
                     bgcolor: darkMode ? "background.default" : custom_colors.lightMode_chatBackground,
                     border: darkMode ? `1px solid ${custom_colors.darkMode_border}` : `1px solid ${custom_colors.lightMode_border}`,
                     boxShadow: darkMode ? undefined : `inset 0 0 5px ${custom_colors.lightMode_border}`,

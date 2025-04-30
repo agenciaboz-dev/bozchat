@@ -1,6 +1,6 @@
 import React from "react"
 import { Box, Paper } from "@mui/material"
-import { WhatsappWebSvg } from "../WhatsappWebSvg"
+import { WhatsappWebSvg } from "../Washima/WhatsappWebSvg"
 import { Lock } from "@mui/icons-material"
 
 interface NoChatProps {
@@ -19,6 +19,7 @@ export const NoChat: React.FC<NoChatProps> = ({ nagazap, homepage }) => {
                 gap: "1vw",
                 color: "text.secondary",
                 padding: "1vw",
+                bgcolor: homepage ? "transparent" : undefined,
             }}
             elevation={homepage ? 0 : 1}
         >
@@ -38,7 +39,7 @@ export const NoChat: React.FC<NoChatProps> = ({ nagazap, homepage }) => {
             <Box
                 sx={{
                     position: nagazap ? undefined : "absolute",
-                    bottom: 0,
+                    bottom: "2vw",
                     gap: "0.5vw",
                     paddingBottom: "1vw",
                     alignItems: "center",

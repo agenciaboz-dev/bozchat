@@ -19,7 +19,6 @@ export const WashimaSidebar: React.FC<WashimaSidebarProps> = (props) => {
                 flexDirection: "column",
                 alignItems: "center",
                 padding: isMobile ? "5vw" : "0vw",
-                height: "75vh",
                 width: "15vw",
                 overflowY: "auto",
             }}
