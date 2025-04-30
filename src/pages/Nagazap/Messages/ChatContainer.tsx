@@ -35,7 +35,6 @@ export const ChatContainer: React.FC<ChatContainerProps> = ({ chat, onClose, nag
                 bgcolor: inBoards ? "transparent" : darkMode ? "background.paper" : custom_colors.lightMode_chatWrapper,
                 // height: isMobile ? "77vh" : "90vh",
                 padding: inBoards ? 0 : isMobile ? "5vw" : "0.5vw 1vw",
-                // color: "secondary.main",
                 gap: inBoards ? "1vw" : isMobile ? "5vw" : "0.5vw",
                 flexDirection: "column",
                 overflow: "hidden",

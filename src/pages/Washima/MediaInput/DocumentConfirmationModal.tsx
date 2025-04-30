@@ -99,7 +99,7 @@ export const DocumentConfirmationModal: React.FC<ConfirmationModalProps> = ({ fi
                 sx: { padding: "1vw", borderRadius: "1vw", bgcolor: "background.default", flexDirection: "column", gap: "1vw", maxWidth: "60vw" },
             }}
         >
-            <Box sx={{ fontSize: "1.2rem", fontWeight: "bold", color: "secondary.main" }}>Enviar documentos</Box>
+            <Box sx={{ fontSize: "1.2rem", fontWeight: "bold", color: "text.secondary" }}>Enviar documentos</Box>
             <IconButton sx={{ position: "absolute", top: "1vw", right: "1vw" }} onClick={onCancel} disabled={loading > 0}>
                 <Close />
             </IconButton>

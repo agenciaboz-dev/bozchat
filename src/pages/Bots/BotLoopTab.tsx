@@ -76,7 +76,7 @@ export const BotLoopTab: React.FC<BotLoopTabProps> = (props) => {
                     </Paper>
                 }
                 expandedElement={
-                    <Box sx={{ flexDirection: "column", paddingRight: "0.5vw", flex: 1, color: "secondary.main", marginTop: "0.5vw" }}>
+                    <Box sx={{ flexDirection: "column", paddingRight: "0.5vw", flex: 1, color: "text.secondary", marginTop: "0.5vw" }}>
                         {loopingNode && <BotMessageContainer node={loopingNode} nodeData={loopingNode.data} />}
                     </Box>
                 }

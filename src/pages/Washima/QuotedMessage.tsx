@@ -45,7 +45,7 @@ export const QuotedMessage: React.FC<QuotedMessageProps> = ({ message }) => {
                 borderColor: "primary.main",
                 padding: "0.5vw",
                 color: "secondary.main",
-                maxHeight: "7.9vh",
+                maxHeight: "8vh",
                 overflow: "auto",
                 overflowX: "hidden",
                 textAlign: "left",

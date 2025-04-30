@@ -27,7 +27,7 @@ export const GroupWelcomeBox: React.FC<GroupWelcomeBoxProps> = ({ chat, profileP
                     flexDirection: "column",
                     alignItems: "center",
                     alignSelf: "center",
-                    color: "secondary.main",
+                    color: "text.secondary",
                 }}
             >
                 <Avatar

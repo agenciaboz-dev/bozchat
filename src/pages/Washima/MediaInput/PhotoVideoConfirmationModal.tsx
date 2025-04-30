@@ -97,7 +97,7 @@ export const PhotoVideoConfirmationModal: React.FC<PhotoVideoConfirmationModalPr
                 sx: { padding: "1vw", borderRadius: "1vw", bgcolor: "background.default", flexDirection: "column", gap: "1vw", maxWidth: "60vw" },
             }}
         >
-            <Box sx={{ fontSize: "1.2rem", fontWeight: "bold", color: "secondary.main" }}>Enviar fotos e vídeos</Box>
+            <Box sx={{ fontSize: "1.2rem", fontWeight: "bold", color: "text.secondary" }}>Enviar fotos e vídeos</Box>
             <IconButton sx={{ position: "absolute", top: "1vw", right: "1vw" }} onClick={onCancel} disabled={loading > 0}>
                 <Close />
             </IconButton>

@@ -24,7 +24,7 @@ export const NewRoomForm: React.FC<NewRoomFormProps> = (props) => {
     return (
         <Box
             sx={{ flexDirection: "column", width: "25vw", height: "73vh", padding: "1vw", border: "1px solid", borderRadius: "0.3vw" }}
-            color="secondary.main"
+            color="text.secondary"
         >
             <RoomNameInput onSubmit={props.onAddRoom} />
         </Box>

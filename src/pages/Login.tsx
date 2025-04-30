@@ -225,23 +225,36 @@ export const Login: React.FC<LoginProps> = ({}) => {
                         <Button
                             type="submit"
                             variant="contained"
-                            color={darkMode ? "primary" : "secondary"}
+                            // color={darkMode ? "primary" : "secondary"}
                             sx={{
                                 fontWeight: "bold",
                                 alignSelf: "flex-end",
-                                color: darkMode ? "secondary.main" : "primary.main",
+                                bgcolor: darkMode ? "primary.dark" : "background.default",
+                                color: darkMode ? "secondary.main" : "text.secondary",
                                 "&:hover": {
-                                    bgcolor: darkMode ? "primary.dark" : "text.secondary",
-                                    color: darkMode ? "secondary.main" : "primary.main",
+                                    bgcolor: darkMode ? "primary.main" : "secondary.main",
                                 },
                             }}
                         >
-                            {loading ? <CircularProgress size="1.5rem" color={darkMode ? "secondary" : "primary"} /> : "entrar"}
+                            {loading ? <CircularProgress size="1.5rem" sx={{ color: "text.secondary" }} /> : "entrar"}
                         </Button>
                     </Box>
                 </form>
             </Paper>
-            <Box sx={{ ...backgroundStyle, justifyContent: "center", alignItems: "center", flexDirection: "column" }}>
+            <Box
+                sx={
+                    darkMode
+                        ? { ...backgroundStyle, justifyContent: "center", alignItems: "center" }
+                        : {
+                              display: "flex",
+                              flexDirection: "column",
+                              flex: 1,
+                              justifyContent: "center",
+                              alignItems: "center",
+                              backgroundColor: "white",
+                          }
+                }
+            >
                 <Box sx={{ flexDirection: "column", gap: "2vw", color: "text.secondary", maxWidth: "85%" }}>
                     <img src={"/logos/1.png"} alt="logo" style={{ width: "8vw" }} draggable={false} />
                     <Typography variant="h2" component="h2" fontWeight={"bold"} fontSize={"3.4rem"}>

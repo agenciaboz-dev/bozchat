@@ -80,7 +80,7 @@ export const RoomSettingsModal: React.FC<RoomSettingsModalProps> = (props) => {
                         </IconButton>
                     }
                 />
-                <Typography color={"secondary.main"}>Clonar conversa para outra sala quando a conversa chegar nesta sala</Typography>
+                <Typography color={"text.secondary"}>Clonar conversa para outra sala quando a conversa chegar nesta sala</Typography>
             </Box>
 
             <Box sx={{ gap: "1vw" }}>

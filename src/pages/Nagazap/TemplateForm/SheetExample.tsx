@@ -10,7 +10,7 @@ const SheetColumn: React.FC<{ children: React.ReactNode }> = ({ children }) => {
 const SheetLine: React.FC<{ children: React.ReactNode }> = ({ children }) => {
     return (
         <Box sx={{ padding: "5px", border: "solid ", borderWidth: "1px 0" }}>
-            <Typography color="secondary.main" fontSize={"0.85rem"}>
+            <Typography color="text.secondary" fontSize={"0.85rem"}>
                 {children}
             </Typography>
         </Box>

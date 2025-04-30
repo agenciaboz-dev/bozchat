@@ -75,7 +75,7 @@ export const ChatMediaButton: React.FC<ChatMediaButtonProps> = (props) => {
                     sx: { padding: "1vw", borderRadius: "1vw", bgcolor: "background.default", flexDirection: "column", gap: "1vw", maxWidth: "60vw" },
                 }}
             >
-                <Box sx={{ fontSize: "1.2rem", fontWeight: "bold", color: "secondary.main" }}>Enviar fotos e vídeos</Box>
+                <Box sx={{ fontSize: "1.2rem", fontWeight: "bold", color: "text.secondary" }}>Enviar fotos e vídeos</Box>
                 <IconButton sx={{ position: "absolute", top: "1vw", right: "1vw" }} onClick={closeMediaModal}>
                     <Close />
                 </IconButton>
