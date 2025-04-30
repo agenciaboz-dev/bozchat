@@ -209,17 +209,23 @@ export const WashimasTable: React.FC<WashimasTableProps> = (props) => {
         if (props.loading || !props.selectedWashima) return
         closeMenu()
 
-        try {
-            const response = await api.post(
-                "/washima/fetch-messages-whatsappweb",
-                { id: props.selectedWashima.id, options: { groupOnly: false } },
-                { timeout: 0 }
-            )
-            console.log(response.data)
-        } catch (error) {
-            console.log(error)
-        } finally {
-        }
+        confirm({
+            title: "Sincronizar mensagens",
+            content: "Este processo pode demorar vários minutos, caso a integração tenha muitas conversas. Prosseguir?",
+            onConfirm: async () => {
+                if (props.loading || !props.selectedWashima) return
+                try {
+                    const response = await api.post(
+                        "/washima/fetch-messages-whatsappweb",
+                        { id: props.selectedWashima.id, options: { groupOnly: false } },
+                        { timeout: 0 }
+                    )
+                    console.log(response.data)
+                } catch (error) {
+                    console.log(error)
+                }
+            },
+        })
     }
 
     
