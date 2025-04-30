@@ -8,15 +8,15 @@ export const PrivacyTerms: React.FC<PrivacyTermsProps> = ({}) => {
     const isMobile = useMediaQuery("(orientation: portrait)")
     return (
         <Box sx={backgroundStyle}>
-            <Box sx={{ color: "secondary.main", flexDirection: "column", padding: "3vw", gap: "0.5vw" }}>
+            <Box sx={{ color: "text.secondary", flexDirection: "column", padding: "3vw", gap: "0.5vw" }}>
                 <img src={"/logos/1.png"} style={{ width: isMobile ? "25vw" : "10vw", alignSelf: "center" }} draggable={false} />
-                <h1>Privacy Policy for Wagazap</h1>
+                <h1>Privacy Policy for Chat Boz</h1>
                 <p>
                     <strong>Effective Date:</strong> November 8. 2024
                 </p>
 
                 <p>
-                    Welcome to Wagazap. This privacy policy ("Policy") helps you understand how Boz ("we", "us", "our") collects, uses, and protects
+                    Welcome to Chat Boz. This privacy policy ("Policy") helps you understand how Boz ("we", "us", "our") collects, uses, and protects
                     the information you provide when you visit and use wagazap.boz.app.br ("the Site").
                 </p>
 
