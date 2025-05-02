@@ -64,8 +64,11 @@ export declare class Washima {
     companies: Company[];
     syncing: boolean;
     status: WashimaStatus;
+    static initializeBatch: number;
     static washimas: Washima[];
     static waitingList: Washima[];
+    static initializing: Map<string, Washima>;
+    static listInterval: NodeJS.Timeout;
     static find(id: string): Washima | undefined;
     static query(id: string): Promise<Washima>;
     static list(): Promise<Washima[]>;
@@ -77,7 +80,7 @@ export declare class Washima {
     static sendMessage(socket: Socket, washima_id: string, chat_id: string, message?: string, media?: WashimaMediaForm, replyMessage?: WashimaMessage): Promise<void>;
     static getContact(socket: Socket, washima_id: string, contact_id: string, message_id: string): Promise<void>;
     constructor(data: WashimaPrisma);
-    initialize(queue?: Washima[]): Promise<void>;
+    initialize(): Promise<void>;
     sendBulkGroupNotification(notification: WAWebJS.GroupNotification): Promise<void>;
     update(data: Partial<Washima>): Promise<void>;
     getContactPicture(target_id: string, target?: "chat" | "message"): Promise<WashimaProfilePic | undefined>;
