@@ -148,7 +148,7 @@ export const Message: React.ForwardRefRenderFunction<HTMLDivElement, MessageProp
             {day_changing && !noActions && <DateChip timestamp={message.timestamp * 1000} />}
             <Box
                 ref={ref}
-                id={`message:${message.id.id}`}
+                id={`message:${washima.id}_${message.id.id}`}
                 sx={{ flexDirection: from_me ? "row-reverse" : "row", alignItems: "center", gap: "1vw", position: "relative" }}
             >
                 {/* //* HOVERING OVERLAY */}

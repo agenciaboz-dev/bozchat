@@ -160,7 +160,7 @@ export const WashimaChat: React.FC<WashimaChatProps> = ({ washima, chat, onClose
 
     useEffect(() => {
         if (loadingMessageId) {
-            const element = document.getElementById(`message:${loadingMessageId}`)
+            const element = document.getElementById(`message:${washima.id}_${loadingMessageId}`)
             if (element) {
                 element.scrollIntoView({ behavior: "smooth", block: "nearest", inline: "nearest" })
                 setLoading(false)

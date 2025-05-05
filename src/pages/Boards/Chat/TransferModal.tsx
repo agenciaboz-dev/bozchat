@@ -9,6 +9,7 @@ import { WithoutFunctions } from "../../../types/server/class/helpers"
 import { api } from "../../../api"
 import { useUser } from "../../../hooks/useUser"
 import { useSnackbar } from "burgos-snackbar"
+import { Room } from "../../../types/server/class/Board/Room"
 
 interface TransferModalProps {
     open: boolean
@@ -25,15 +26,17 @@ export const TransferModal: React.FC<TransferModalProps> = (props) => {
     const { user, company } = useUser()
     const { snackbar } = useSnackbar()
 
-    const [boards] = useFetchedData<Board>("boards", { params: { all: true } })
-    const [destinationBoard, setDestinationBoard] = useState(props.board)
-    const [destinationRoom, setDestinationRoom] = useState(props.board.rooms[props.board.entry_room_index])
+    const [fetchedBoards] = useFetchedData<Board>("boards", { params: { all: true } })
+    const [destinationBoard, setDestinationBoard] = useState<Board | null>(null)
+    const [destinationRoom, setDestinationRoom] = useState<Room | null>(null)
     const [loading, setLoading] = useState(false)
 
-    const rooms = useMemo(() => destinationBoard.rooms, [destinationBoard])
+    const boards = useMemo(() => fetchedBoards.filter((item) => item.id !== props.board.id), [fetchedBoards])
+
+    const rooms = useMemo(() => destinationBoard?.rooms || [], [destinationBoard])
 
     const onSubmitPress = async () => {
-        if (loading) return
+        if (loading || !destinationBoard || !destinationRoom) return
 
         setLoading(true)
         try {
@@ -52,7 +55,7 @@ export const TransferModal: React.FC<TransferModalProps> = (props) => {
             })
 
             props.onSubmit(response.data)
-            props.onClose()
+            handleClose()
             snackbar({ severity: "success", text: "Conversa transferida" })
         } catch (error) {
             console.log(error)
@@ -61,14 +64,22 @@ export const TransferModal: React.FC<TransferModalProps> = (props) => {
         }
     }
 
+    const handleClose = () => {
+        props.onClose()
+        setDestinationBoard(null)
+        setDestinationRoom(null)
+    }
+
     useEffect(() => {
-        setDestinationRoom(destinationBoard.rooms[destinationBoard.entry_room_index])
+        if (destinationBoard) {
+            setDestinationRoom(destinationBoard.rooms[destinationBoard.entry_room_index])
+        }
     }, [destinationBoard])
 
     return (
         <Dialog
             open={props.open}
-            onClose={props.onClose}
+            onClose={handleClose}
             PaperProps={{
                 sx: {
                     padding: isMobile ? "5vw" : "2vw",
@@ -83,7 +94,7 @@ export const TransferModal: React.FC<TransferModalProps> = (props) => {
                 <Title2
                     name={props.action === "copy" ? "Copiar conversa" : "Transferir conversa"}
                     right={
-                        <IconButton onClick={props.onClose}>
+                        <IconButton onClick={handleClose}>
                             <Close />
                         </IconButton>
                     }
@@ -97,7 +108,7 @@ export const TransferModal: React.FC<TransferModalProps> = (props) => {
                 <Autocomplete
                     options={boards}
                     value={destinationBoard}
-                    onChange={(_, value) => setDestinationBoard(value || props.board)}
+                    onChange={(_, value) => setDestinationBoard(value)}
                     renderInput={(params) => <TextField {...params} label="Quadro" />}
                     fullWidth
                     getOptionLabel={(option) => option.name}
@@ -107,7 +118,7 @@ export const TransferModal: React.FC<TransferModalProps> = (props) => {
                 <Autocomplete
                     options={rooms}
                     value={destinationRoom}
-                    onChange={(_, value) => setDestinationRoom(value || destinationBoard.rooms[destinationBoard.entry_room_index])}
+                    onChange={(_, value) => setDestinationRoom(value)}
                     renderInput={(params) => <TextField {...params} label="Sala" />}
                     fullWidth
                     getOptionLabel={(option) => option.name}
@@ -116,7 +127,12 @@ export const TransferModal: React.FC<TransferModalProps> = (props) => {
                 />
             </Box>
 
-            <Button sx={{ alignSelf: "flex-end" }} variant="contained" onClick={onSubmitPress} disabled={destinationRoom.id === props.room_id}>
+            <Button
+                sx={{ alignSelf: "flex-end" }}
+                variant="contained"
+                onClick={onSubmitPress}
+                disabled={!destinationBoard || !destinationRoom || destinationRoom.id === props.room_id}
+            >
                 {loading ? <CircularProgress sx={{ color: "text.secondary" }} /> : props.action === "copy" ? "Copiar" : "Transferir"}
             </Button>
         </Dialog>
