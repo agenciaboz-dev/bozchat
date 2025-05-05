@@ -10,6 +10,7 @@ interface TemplatePreviewProps {
     components: TemplateComponent[]
     image?: File
     realMessage?: boolean
+    preparingForOven?: boolean
 }
 
 const maxSize = "23vw"
@@ -20,7 +21,7 @@ const icons = [
     { type: "PHONE_NUMBER", icon: <LocalPhone /> },
 ]
 
-export const TemplatePreview: React.FC<TemplatePreviewProps> = ({ components, image, realMessage }) => {
+export const TemplatePreview: React.FC<TemplatePreviewProps> = ({ components, image, realMessage, preparingForOven }) => {
     const isMobile = useMediaQuery("(orientation: portrait)")
     const { darkMode } = useDarkMode()
 
@@ -52,7 +53,13 @@ export const TemplatePreview: React.FC<TemplatePreviewProps> = ({ components, im
                 {!realMessage && (
                     <TrianguloFudido
                         alignment="left"
-                        color={darkMode ? custom_colors.darkMode_templatePreviewTriangle : custom_colors.lightMode_templatePreviewTriangle}
+                        color={
+                            darkMode
+                                ? custom_colors.darkMode_templatePreviewTriangle
+                                : preparingForOven
+                                ? custom_colors.lightMode_templatePreOvenTriangle
+                                : custom_colors.lightMode_templatePreviewTriangle
+                        }
                     />
                 )}
                 {components.map((component, index) => {

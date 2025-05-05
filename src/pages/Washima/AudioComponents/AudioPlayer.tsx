@@ -98,8 +98,7 @@ export const AudioPlayer: React.FC<AudioPlayerProps> = ({ media, washima, chat_i
                         max={player.duration}
                         min={0}
                         value={position}
-                        sx={{ width: "100%", marginLeft: "0.5vw" }}
-                        color="secondary"
+                        sx={{ width: "100%", marginLeft: "0.5vw", color: "text.secondary" }}
                         step={0.01}
                         onChange={(_, value) => player.seek(typeof value === "number" ? value : value[0])}
                         disabled={loading}

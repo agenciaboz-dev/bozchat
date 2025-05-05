@@ -65,6 +65,7 @@ export const custom_colors = {
     lightMode_messageMenuBg: "#f0f0f0",
     lightMode_receivedMsg: "#e0e0e0",
     lightMode_templatePreviewTriangle: "#f4f4f4",
+    lightMode_templatePreOvenTriangle: "#f7f7f7",
 }
 
 export const washima_colors = [

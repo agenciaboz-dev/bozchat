@@ -450,7 +450,7 @@ export const MessageFormScreen: React.FC<MessageFormProps> = ({ nagazap, setShow
                         {formik.values.template?.components.length && (
                             <Box sx={{ flexDirection: "column", gap: isMobile ? "2vw" : "1vw" }}>
                                 <Typography sx={{ color: "text.secondary", fontWeight: "bold" }}>Pré-visualização:</Typography>
-                                <TemplatePreview components={formik.values.template.components} image={image} />
+                                <TemplatePreview components={formik.values.template.components} image={image} preparingForOven />
                             </Box>
                         )}
                     </Grid>
