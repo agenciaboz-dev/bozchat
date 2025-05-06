@@ -58,10 +58,12 @@ export const WashimasTable: React.FC<WashimasTableProps> = (props) => {
 
                 return value === "loading" ? (
                     <CircularProgress color="primary" />
-                ) : value === "ready" ? (
-                    <Paper sx={{ borderRadius: "100%" }}>
-                        <Circle color={value === "ready" ? "success" : "warning"} fontSize="small" />
-                    </Paper>
+                ) : value === "ready" || value === "error" ? (
+                    <Tooltip title={value === "ready" ? "Conectado" : "Instância com erro"} arrow>
+                        <Paper sx={{ borderRadius: "100%" }}>
+                            <Circle color={value === "ready" ? "success" : "error"} fontSize="small" />
+                        </Paper>
+                    </Tooltip>
                 ) : (
                     <Tooltip title={<QRCode value={washima.qrcode} size={250} />} arrow>
                         <IconButton>
