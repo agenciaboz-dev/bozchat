@@ -49,6 +49,7 @@ export const WashimaPage: React.FC<WashimaProps> = ({}) => {
     const [currentWashima, setCurrentWashima] = useState<Washima | null>(null)
 
     const isTable = useMemo(() => pathname === "/business/contas" || pathname === "/business/contas/", [pathname])
+    const isHome = useMemo(() => pathname === "/business" || pathname === "/business/", [pathname])
 
     const addWashima = (washima: Washima) => setWashimas((values) => [...values.filter((item) => item.id !== washima.id), washima])
 
@@ -87,7 +88,7 @@ export const WashimaPage: React.FC<WashimaProps> = ({}) => {
     }
 
     const navigateBack = () => {
-        navigate("/business/contas")
+        navigate("/business")
         setCurrentWashima(null)
         fetchWashimas()
     }
@@ -183,26 +184,24 @@ export const WashimaPage: React.FC<WashimaProps> = ({}) => {
                 <Title2
                     name={`Business`}
                     left={
-                        currentWashima && !isTable ? (
+                        currentWashima || !isHome ? (
                             <IconButton onClick={navigateBack}>
                                 <ArrowBack />
                             </IconButton>
                         ) : null
                     }
                     right={
-                        currentWashima && !isTable ? null : (
-                            <Box>
-                                <IconButton onClick={createWashima}>
-                                    <Add />
+                        <Box>
+                            <IconButton onClick={createWashima}>
+                                <Add />
+                            </IconButton>
+                            <IconButton onClick={() => fetchWashimas()}>{loading ? <CircularProgress /> : <Refresh />}</IconButton>
+                            {!isTable && (
+                                <IconButton onClick={() => navigate("/business/contas")}>
+                                    <List />
                                 </IconButton>
-                                <IconButton onClick={() => fetchWashimas()}>{loading ? <CircularProgress /> : <Refresh />}</IconButton>
-                                {(pathname === "/business" || pathname === "/business/") && (
-                                    <IconButton onClick={() => navigate("/business/contas")}>
-                                        <List />
-                                    </IconButton>
-                                )}
-                            </Box>
-                        )
+                            )}
+                        </Box>
                     }
                 />
                 <Routes>
