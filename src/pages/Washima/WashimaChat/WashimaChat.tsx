@@ -19,6 +19,7 @@ import { SelectContactsModal } from "../SelectContactsModal/SelectContactsModal"
 import { useDarkMode } from "../../../hooks/useDarkMode"
 import { ChatSearch } from "./ChatSearch"
 import { custom_colors } from "../../../style/colors"
+import { BotActivity } from "./WashimaTools/BotActivity"
 
 interface WashimaChatProps {
     washima: Washima
@@ -281,7 +282,8 @@ export const WashimaChat: React.FC<WashimaChatProps> = ({ washima, chat, onClose
                     <p style={{ fontWeight: "bold" }}>{chat?.name}</p>
                     {!!chat && (
                         <Box sx={{ marginLeft: "auto", alignItems: "center" }}>
-                            <ChatSearch washima_id={washima.id} chat_id={chat?.id._serialized} onMessageClick={setLoadingMessageId} />
+                            <ChatSearch washima_id={washima.id} chat_id={chat.id._serialized} onMessageClick={setLoadingMessageId} />
+                            <BotActivity chat_id={chat.id._serialized} />
                             <CopyAllButton chat={chat} washima_id={washima.id} />
                             <IconButton sx={{ color: "text.secondary", padding: isMobile ? "0" : "" }} onClick={onClose}>
                                 <CancelIcon />
