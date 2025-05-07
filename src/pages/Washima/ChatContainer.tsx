@@ -5,7 +5,7 @@ import { useMediaQuery } from "@mui/material"
 import { api } from "../../api"
 import { Washima, WashimaProfilePic } from "../../types/server/class/Washima/Washima"
 import { useVisibleCallback } from "burgos-use-visible-callback"
-import { AttachFile, Headphones, PhotoCamera, Videocam } from "@mui/icons-material"
+import { AttachFile, Call, Headphones, PhotoCamera, Videocam } from "@mui/icons-material"
 import { MessageAck } from "../Zap/MessageAck"
 import { Chat } from "../../types/Chat"
 import { DeletedMessage } from "../Zap/DeletedMessage"
@@ -49,6 +49,7 @@ export const ChatContainer: React.FC<ChatProps> = ({ chat, onChatClick, washima,
         edited: false,
         forwarded: false,
         phone_only: false,
+        call: null,
     }
 
     const handleClick = () => {
@@ -79,7 +80,6 @@ export const ChatContainer: React.FC<ChatProps> = ({ chat, onChatClick, washima,
     useEffect(() => {
         fetchProfilePic()
     }, [chat])
-
 
     return (
         <MenuItem
@@ -166,6 +166,9 @@ export const ChatContainer: React.FC<ChatProps> = ({ chat, onChatClick, washima,
                 >
                     {chat.lastMessage && <MessageAck message={mocked_last_message} />}
                     {chat.lastMessage?.hasMedia && mediaMetaData?.mimetype && <MediaChip mimetype={mediaMetaData.mimetype} />}
+                    {chat.lastMessage?.type === "call_log" && (
+                        <Chip icon={<Call />} sx={{ color: "secondary.main" }} label="Ligação de voz" size="small" />
+                    )}
                     {chat.lastMessage?.type === "revoked" ? (
                         <DeletedMessage />
                     ) : (

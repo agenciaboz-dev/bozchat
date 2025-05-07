@@ -1,7 +1,7 @@
 import { Prisma } from "@prisma/client";
 import WAWebJS from "whatsapp-web.js";
 import { WashimaMessageId } from "./Washima";
-export type MessageType = "ptt" | "video" | "image" | "text" | "revoked" | "sticker" | "audio" | "chat" | "document" | "sticker";
+export type MessageType = "ptt" | "video" | "image" | "text" | "revoked" | "sticker" | "audio" | "chat" | "document" | "sticker" | "call_log";
 export declare enum MessageAck {
     error = -1,
     pending = 0,
@@ -17,6 +17,11 @@ export interface WashimaMessageForm {
     chat_id: string;
     isGroup?: boolean;
     createOnly?: boolean;
+}
+export interface WashimaCall {
+    isVideoCall: boolean;
+    callDuration: number | null;
+    callParticipants: any;
 }
 export declare class WashimaMessage {
     sid: string;
@@ -37,6 +42,7 @@ export declare class WashimaMessage {
     replied_to?: WashimaMessage | null;
     forwarded: boolean;
     phone_only: boolean | null;
+    call: WashimaCall | null;
     static getChatMessages(washima_id: string, chat_id: string, is_group: boolean, offset?: number, take?: number | null): Promise<WashimaMessage[]>;
     static getWashimaMessages(washima_id: string, body?: any): Promise<WashimaMessage[]>;
     static search(value: string, chat_id?: string): Promise<WashimaMessage[]>;

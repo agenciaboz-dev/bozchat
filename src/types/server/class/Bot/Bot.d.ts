@@ -106,6 +106,8 @@ export declare class Bot {
     update(data: Partial<Bot>): Promise<void>;
     getChannels(): Promise<void>;
     delete(): Promise<void>;
+    pauseChat(chat_id: string, minutes: number): void;
+    unpauseChat(chat_id: string): void;
     isPaused(chat_id: string): boolean;
     handleIncomingMessage(data: BotMessageForm): Promise<void>;
     getActiveChat(chat_id: string, incoming_message?: string): ActiveBot | undefined;
@@ -120,7 +122,7 @@ export declare class Bot {
     }[];
     getNextNode(node_id: string): FlowNode | undefined;
     save(): Promise<void>;
-    closeChat(chat_id: string): void;
+    closeChat(chat_id: string, skip_emition?: boolean): void;
     normalize(text: string): string;
     compareIncomingMessage(message: string, trigger?: string): string | undefined;
     handleBoardDelete(board_id: string): Promise<void>;

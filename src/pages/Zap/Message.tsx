@@ -23,6 +23,7 @@ import { QuotedMessage } from "../Washima/QuotedMessage"
 import { useDarkMode } from "../../hooks/useDarkMode"
 import { PhoneOnly } from "./PhoneOnly"
 import { custom_colors } from "../../style/colors"
+import { CallInfo } from "./CallInfo"
 
 interface MessageProps {
     washima: Washima
@@ -279,6 +280,7 @@ export const Message: React.ForwardRefRenderFunction<HTMLDivElement, MessageProp
                             }}
                         >
                             {is_deleted && <DeletedMessage />}
+                            {message.call && <CallInfo call={message.call} from_me={from_me} />}
                             {message.phone_only && <PhoneOnly />}
                             {message.hasMedia && (
                                 <Box sx={{}}>
