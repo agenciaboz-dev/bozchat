@@ -1,19 +1,21 @@
 import React from 'react'
-import { Avatar, Divider, IconButton, Menu, MenuItem, Paper, Typography, useMediaQuery } from "@mui/material"
-import { Menu as MenuIcon } from "@mui/icons-material"
+import { Avatar, Box, Divider, IconButton, Menu, MenuItem, Paper, Typography, useMediaQuery } from "@mui/material"
+import { Menu as MenuIcon, Security } from "@mui/icons-material"
 import { useMenu } from "../../hooks/useMenu"
 import { useUser } from "../../hooks/useUser"
 import { CompanyCard } from "./CompanyCard"
 import { ThemeSwitch } from "../../pages/Settings/ThemeSwitch"
 import { useDarkMode } from "../../hooks/useDarkMode"
 import { version } from "../../version"
+import { useNavigate } from "react-router-dom"
 
 interface HeaderProps {}
 
 export const Header: React.FC<HeaderProps> = ({}) => {
-    const menu = useMenu()
     const { darkMode } = useDarkMode()
-    const { user, logout } = useUser()
+    const menu = useMenu()
+    const navigate = useNavigate()
+    const { boz, user, logout } = useUser()
     const splitted_name = user?.name.split(" ").slice(0, 2) || []
 
     const isMobile = useMediaQuery("(orientation: portrait)")
@@ -41,11 +43,28 @@ export const Header: React.FC<HeaderProps> = ({}) => {
                 <MenuIcon />
             </IconButton>
             <img src="/logos/negativos/horizontal.svg" style={{ width: isMobile ? "32vw" : "8vw", height: "auto" }} draggable={false} />
-            <IconButton sx={{ position: "absolute", right: "2vw" }} onClick={handleClickMenu}>
-                <Avatar sx={{ bgcolor: "secondary.main", color: "primary.main", fontWeight: "bold" }} imgProps={{ draggable: false }}>
-                    {splitted_name.map((word) => word[0])}
-                </Avatar>
-            </IconButton>
+            <Box sx={{ position: "absolute", right: "2vw", gap: "0.5vw" }}>
+                {boz && user?.admin && (
+                    <IconButton onClick={() => navigate("/admin/")}>
+                        <Security
+                            sx={{
+                                bgcolor: "secondary.main",
+                                color: "primary.main",
+                                boxSizing: "border-box",
+                                height: "40px",
+                                width: "40px",
+                                padding: "8px",
+                                borderRadius: "50%",
+                            }}
+                        />
+                    </IconButton>
+                )}
+                <IconButton onClick={handleClickMenu}>
+                    <Avatar sx={{ bgcolor: "secondary.main", color: "primary.main", fontWeight: "bold" }} imgProps={{ draggable: false }}>
+                        {splitted_name.map((word) => word[0])}
+                    </Avatar>
+                </IconButton>
+            </Box>
             <Menu
                 anchorEl={menuAnchor}
                 open={!!menuAnchor}

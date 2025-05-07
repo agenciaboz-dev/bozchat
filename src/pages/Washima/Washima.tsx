@@ -195,7 +195,9 @@ export const WashimaPage: React.FC<WashimaProps> = ({}) => {
                             <IconButton onClick={createWashima}>
                                 <Add />
                             </IconButton>
-                            <IconButton onClick={() => fetchWashimas()}>{loading ? <CircularProgress /> : <Refresh />}</IconButton>
+                            <IconButton onClick={() => fetchWashimas()}>
+                                {loading ? <CircularProgress sx={{ color: "text.secondary" }} /> : <Refresh />}
+                            </IconButton>
                             {!isTable && (
                                 <IconButton onClick={() => navigate("/business/contas")}>
                                     <List />

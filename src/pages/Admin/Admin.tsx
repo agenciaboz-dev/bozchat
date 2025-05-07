@@ -96,7 +96,7 @@ export const Admin: React.FC<AdminProps> = (props) => {
                                     </Badge>
                                 </IconButton>
                             </Tooltip>
-                            <IconButton onClick={refresh}>{loading ? <CircularProgress /> : <Refresh />}</IconButton>
+                            <IconButton onClick={refresh}>{loading ? <CircularProgress sx={{ color: "text.secondary" }} /> : <Refresh />}</IconButton>
                         </Box>
                     }
                 />

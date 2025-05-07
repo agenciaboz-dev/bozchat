@@ -76,22 +76,13 @@ export const useMenuList = () => {
                 path: "/logs",
                 onClick: () => navigate("/logs/"),
             },
+            {
+                icon: <Settings />,
+                name: "Configurações",
+                path: "/settings",
+                onClick: () => navigate("/settings/"),
+            },
         ]
-
-        if (boz && user?.admin)
-            list.push({
-                icon: <Security />,
-                name: "Administração",
-                path: "/admin",
-                onClick: () => navigate("/admin/"),
-            })
-
-        list.push({
-            icon: <Settings />,
-            name: "Configurações",
-            path: "/settings",
-            onClick: () => navigate("/settings/"),
-        })
 
         return list
     }, [boz])
