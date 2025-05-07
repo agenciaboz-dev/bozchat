@@ -1,7 +1,7 @@
 import React from 'react'
 import { Box, Switch, SxProps, Theme } from "@mui/material"
 import { DarkMode, LightMode } from "@mui/icons-material"
-import { useDarkMode } from "../../hooks/useDarkMode"
+import { useDarkMode } from "../hooks/useDarkMode"
 
 interface ThemeSwitchProps {
     sx?: SxProps<Theme>

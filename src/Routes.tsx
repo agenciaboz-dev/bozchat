@@ -9,6 +9,7 @@ import { useUser } from "./hooks/useUser"
 import { DeleteAccount } from "./pages/DeleteAccount/DeleteAccount"
 import { PrivacyTerms } from "./pages/PrivacyTerms/PrivacyTerms"
 import { Settings } from "./pages/Settings/Settings"
+import { Options } from "./pages/Options/Options"
 import { Users } from "./pages/Users/Users"
 import { Bots } from "./pages/Bots/Bots"
 import { Logs } from "./pages/Logs/Logs"
@@ -26,12 +27,13 @@ export const Routes: React.FC<RoutesProps> = ({}) => {
             <Route index element={<Home />} />
             <Route index path="/business/*" element={<WashimaPage />} />
             <Route path="/broadcast/*" element={<NagazapScreen />} />
+            <Route path="/bots/*" element={<Bots />} />
+            <Route path="/boards/*" element={<Boards />} />
             <Route path="/settings/*" element={<Settings />} />
             <Route path="/users/*" element={<Users />} />
             <Route path="/departments/*" element={<Departments />} />
-            <Route path="/bots/*" element={<Bots />} />
             <Route path="/logs/*" element={<Logs />} />
-            <Route path="/boards/*" element={<Boards />} />
+            <Route path="/options/*" element={<Options />} />
             {boz && <Route path="/admin/*" element={<Admin />} />}
             <Route path="*" element={<WildCard />} />
         </ReactRoutes>
