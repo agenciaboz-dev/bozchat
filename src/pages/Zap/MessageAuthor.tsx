@@ -21,6 +21,7 @@ export const getAuthorName = (author?: string | null) => {
 
     const author_name = match ? match[1].trim() : ""
     const author_phone = match ? match[2] : ""
+    // @ts-ignore
     const formatted_phone = new Inputmask({ mask: "+99 (99) 9999-9999", placeholder: "", greedy: false }).format(
         author_phone.length === 10 ? "55" + author_phone : author_phone
     )
