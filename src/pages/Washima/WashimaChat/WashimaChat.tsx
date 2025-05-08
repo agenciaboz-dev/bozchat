@@ -181,6 +181,7 @@ export const WashimaChat: React.FC<WashimaChatProps> = ({ washima, chat, onClose
 
     useEffect(() => {
         io.on("washima:message:update", (updated_message: WashimaMessage, updated_chat_id: string) => {
+            if (!updated_message) return
             const index = messages.findIndex((item) => item.sid === updated_message.sid)
             if (chat?.id._serialized === updated_chat_id && index > -1) {
                 setMessages((messages) => {
