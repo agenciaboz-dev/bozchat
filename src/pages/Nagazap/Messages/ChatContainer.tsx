@@ -54,7 +54,7 @@ export const ChatContainer: React.FC<ChatContainerProps> = ({ chat, onClose, nag
                     }}
                 >
                     <Box sx={{ gap: "0.5vw", alignItems: "center" }}>
-                        <MessageAuthor contact_id={chat.name + " - " + chat.from} />
+                        <MessageAuthor author={chat.name} phone={chat.from} />
                     </Box>
                     <IconButton sx={{ color: "text.secondary", padding: isMobile ? "0" : "" }} onClick={onClose}>
                         <Cancel />

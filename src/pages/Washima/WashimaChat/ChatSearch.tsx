@@ -24,7 +24,7 @@ const MessageContainer: React.FC<MessageContainerProps> = ({ message, onMessageC
             sx={{ whiteSpace: "normal", flexDirection: "column", alignItems: "flex-start", padding: 0 }}
             onClick={() => onMessageClick(message.id.id)}
         >
-            <MessageAuthor contact_id={message.fromMe ? "Você" : message.author} />
+            <MessageAuthor washima_id={message.washima_id} contact_id={message.contact_id} />
             <Typography>{message.body}</Typography>
             <Typography sx={{ fontSize: "0.65rem", opacity: 0.7 }}>{formatTime(new Date(message.timestamp * 1000), "date-only")}</Typography>
         </MenuItem>
@@ -63,6 +63,7 @@ export const ChatSearch: React.FC<ChatSearchProps> = (props) => {
                 params: { washima_id: props.washima_id, search: value, chat_id: props.chat_id, target: "messages" },
             })
             const messages = response.data as WashimaMessage[]
+            console.log(messages)
             setSearchResult(messages)
         } catch (error) {
             console.log(error)
