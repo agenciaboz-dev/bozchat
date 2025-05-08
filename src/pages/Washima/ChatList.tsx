@@ -88,6 +88,16 @@ export const ChatList: React.FC<ChatsProps> = ({
 
         setOnSearch(() => onSearch)
         setOnStartSearch(() => onStartSearch)
+
+        io.emit("washima:channel:join", washima.id)
+        io.on(`washima:chat`, (chat: Chat) => {
+            if (!searchedValue) addChats([chat])
+        })
+
+        return () => {
+            io.emit("washima:channel:leave", washima.id)
+            io.off(`washima:chat`)
+        }
     }, [washima])
 
     useEffect(() => {
@@ -97,14 +107,6 @@ export const ChatList: React.FC<ChatsProps> = ({
             if (!fetching) {
                 fetchChats(0, true)
             }
-        }
-
-        io.on(`washima:${washima.id}:message`, ({ chat, message }: { chat: Chat; message: WashimaMessage }) => {
-            if (!searchedValue) addChats([chat])
-        })
-
-        return () => {
-            io.off(`washima:${washima.id}:message`)
         }
     }, [chats])
 

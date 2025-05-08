@@ -8,9 +8,10 @@ interface MessageDateContainerProps {
     is_audio?: boolean
     is_image?: boolean
     is_document: boolean
+    from_me?: boolean
 }
 
-export const MessageDateContainer: React.FC<MessageDateContainerProps> = ({ message, is_audio, is_image, is_document }) => {
+export const MessageDateContainer: React.FC<MessageDateContainerProps> = ({ message, is_audio, is_image, is_document, from_me }) => {
     const isMobile = useMediaQuery("(orientation: portrait)")
 
     return (
@@ -29,7 +30,7 @@ export const MessageDateContainer: React.FC<MessageDateContainerProps> = ({ mess
         >
             {message.edited && <Box>Editado</Box>}
             <p>{new Date(message.timestamp * 1000).toLocaleTimeString("pt-br", { hour: "2-digit", minute: "2-digit" })}</p>
-            <MessageAck message={message} />
+            {from_me && <MessageAck message={message} />}
         </Box>
     )
 }

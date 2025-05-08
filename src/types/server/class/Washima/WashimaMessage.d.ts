@@ -43,9 +43,11 @@ export declare class WashimaMessage {
     forwarded: boolean;
     phone_only: boolean | null;
     call: WashimaCall | null;
+    contact_id: string | null;
     static getChatMessages(washima_id: string, chat_id: string, is_group: boolean, offset?: number, take?: number | null): Promise<WashimaMessage[]>;
     static getWashimaMessages(washima_id: string, body?: any): Promise<WashimaMessage[]>;
     static search(value: string, chat_id?: string): Promise<WashimaMessage[]>;
+    static findBySid(sid: string): Promise<WashimaMessage | null>;
     static getBySid(sid: string): Promise<WashimaMessage>;
     static getByWrongId(id: string): Promise<WashimaMessage | null>;
     static new(data: WashimaMessageForm, author?: string): Promise<WashimaMessage>;

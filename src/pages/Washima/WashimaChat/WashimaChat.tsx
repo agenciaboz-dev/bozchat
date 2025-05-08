@@ -203,13 +203,10 @@ export const WashimaChat: React.FC<WashimaChatProps> = ({ washima, chat, onClose
             setLoading(true)
             fetchChat()
 
-            io.on("washima:message", (data: { chat: Chat; message: WashimaMessage }, washima_id: string) => {
-                if (washima_id === washima.id && data.message && data.chat.id._serialized === chat.id._serialized) {
-                    console.log(data.message)
-                    setMessages((values) => [...values, data.message])
-                    if (data.message.fromMe) {
-                        messagesBoxRef.current?.scrollTo({ top: 0, behavior: "smooth" })
-                    }
+            io.on("washima:message", (data: { chat: Chat; message: WashimaMessage }) => {
+                setMessages((values) => [...values, data.message])
+                if (data.message.fromMe) {
+                    messagesBoxRef.current?.scrollTo({ top: 0, behavior: "smooth" })
                 }
             })
 
@@ -223,7 +220,10 @@ export const WashimaChat: React.FC<WashimaChatProps> = ({ washima, chat, onClose
                 }
             })
 
+            io.emit("washima:channel:join", chat.id._serialized)
+
             return () => {
+                io.emit("washima:channel:leave", chat.id._serialized)
                 io.off("washima:message")
                 io.off("washima:group:update")
             }

@@ -51,13 +51,12 @@ export const Message: React.ForwardRefRenderFunction<HTMLDivElement, MessageProp
     const theme = useMuiTheme()
     const { darkMode } = useDarkMode()
 
-    const same_as_previous =
-        !!previousItem && (message.author ? previousItem?.author === message.author : (previousItem as WashimaMessage).from === message.from)
+    const same_as_previous = !!previousItem && (previousItem as WashimaMessage).contact_id === message.contact_id
     const day_changing =
         !previousItem || new Date(previousItem.timestamp * 1000).toLocaleDateString() !== new Date(message.timestamp * 1000).toLocaleDateString()
     const show_triangle = !same_as_previous || day_changing
 
-    const from_me = isGroup ? message.author === washima.info?.pushname : message.fromMe
+    const from_me = message.contact_id === washima.info?.wid?._serialized
     const show_author = (!same_as_previous || day_changing) && isGroup && !from_me
 
     const [mediaObj, setMediaObj] = useState<{ source: string; ext: string; size: string }>()
@@ -100,6 +99,7 @@ export const Message: React.ForwardRefRenderFunction<HTMLDivElement, MessageProp
             setAttachmendMetaData(response.data)
             return response.data
         }
+
         try {
             setLoading(true)
 
@@ -193,7 +193,7 @@ export const Message: React.ForwardRefRenderFunction<HTMLDivElement, MessageProp
                     }}
                 >
                     {/*//* MESSAGE AUTHOR  */}
-                    {show_author && is_deleted && <MessageAuthor author={message.author} />}
+                    {show_author && is_deleted && <MessageAuthor washima_id={washima.id} contact_id={message.contact_id} />}
 
                     {/* //* MESSAGE CONTAINER */}
                     <Box
@@ -252,7 +252,7 @@ export const Message: React.ForwardRefRenderFunction<HTMLDivElement, MessageProp
                         {/*//* MESSAGE AUTHOR  */}
                         {show_author && message.type !== "revoked" && (
                             <Box sx={{}}>
-                                <MessageAuthor author={message.author} />
+                                <MessageAuthor washima_id={washima.id} contact_id={message.contact_id} />
                             </Box>
                         )}
 
@@ -428,7 +428,7 @@ export const Message: React.ForwardRefRenderFunction<HTMLDivElement, MessageProp
                             }
                         </Box>
                         {/*//* TIME */}
-                        <MessageDateContainer message={message} is_audio={is_audio} is_image={is_image} is_document={is_document} />
+                        <MessageDateContainer message={message} is_audio={is_audio} is_image={is_image} is_document={is_document} from_me={from_me} />
 
                         {/* //* MENU BUTTON */}
                         {hovering && !is_deleted && !noActions && (

@@ -20,12 +20,13 @@ interface MessageContainerProps {
 const MessageContainer: React.FC<MessageContainerProps> = ({ message, onMessageClick }) => {
     const formatTime = useFormatMessageTime()
     return (
-        <MenuItem sx={{ whiteSpace: "normal", flexDirection: 'column', alignItems: 'flex-start', padding: 0 }} onClick={() => onMessageClick(message.id.id)}>
-            <MessageAuthor author={message.fromMe ? 'Você' : message.author} />
-                <Typography>
-                {message.body}
-                </Typography>
-            <Typography sx={{fontSize: '0.65rem', opacity: 0.7}}>{ formatTime(new Date(message.timestamp*1000), "date-only")}</Typography>
+        <MenuItem
+            sx={{ whiteSpace: "normal", flexDirection: "column", alignItems: "flex-start", padding: 0 }}
+            onClick={() => onMessageClick(message.id.id)}
+        >
+            <MessageAuthor contact_id={message.fromMe ? "Você" : message.author} />
+            <Typography>{message.body}</Typography>
+            <Typography sx={{ fontSize: "0.65rem", opacity: 0.7 }}>{formatTime(new Date(message.timestamp * 1000), "date-only")}</Typography>
         </MenuItem>
     )
 }
