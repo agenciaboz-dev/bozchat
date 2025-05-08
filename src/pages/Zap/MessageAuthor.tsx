@@ -16,15 +16,17 @@ const random_colors = washima_colors
 const storedAuthors = new Map<string, { author: string; phone: string }>()
 
 export const getAuthorName = (author?: string | null) => {
-    const contactRegex = /^(.*) - (\d+)$/
+    const contactRegex = /^(.*) - (\d+)$|^(.*)$/
     const match = author?.match(contactRegex)
 
-    const author_name = match ? match[1].trim() : ""
-    const author_phone = match ? match[2] : ""
+    const author_name = match ? (match[1] ? match[1].trim() : match[0]) : ""
+    const author_phone = match && match[2] ? match[2] : ""
     // @ts-ignore
-    const formatted_phone = new Inputmask({ mask: "+99 (99) 9999-9999", placeholder: "", greedy: false }).format(
-        author_phone.length === 10 ? "55" + author_phone : author_phone
-    )
+    const formatted_phone = author_phone
+        ? new Inputmask({ mask: "+99 (99) 9999-9999", placeholder: "", greedy: false }).format(
+              author_phone.length === 10 ? "55" + author_phone : author_phone
+          )
+        : ""
     console.log(match, formatted_phone)
     return { author_name, author_phone: formatted_phone }
 }
@@ -58,6 +60,7 @@ export const MessageAuthor: React.FC<MessageAuthorProps> = ({ contact_id, washim
                 setAuthorPhone(existingAuthor.phone)
             } else {
                 io.emit("washima:author", washima_id, contact_id, (author: string) => {
+                    console.log({ author })
                     const { author_name, author_phone } = getAuthorName(author)
                     storedAuthors.set(contact_id, { author: author_name, phone: author_phone })
                     setAuthorName(author_name)
