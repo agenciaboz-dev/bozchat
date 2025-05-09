@@ -133,7 +133,7 @@ export const TransferModal: React.FC<TransferModalProps> = (props) => {
                 onClick={onSubmitPress}
                 disabled={!destinationBoard || !destinationRoom || destinationRoom.id === props.room_id}
             >
-                {loading ? <CircularProgress sx={{ color: "text.secondary" }} /> : props.action === "copy" ? "Copiar" : "Transferir"}
+                {loading ? <CircularProgress sx={{ color: "secondary.main" }} /> : props.action === "copy" ? "Copiar" : "Transferir"}
             </Button>
         </Dialog>
     )

@@ -21,7 +21,15 @@ export const ChatItem: React.FC<ChatItemProps> = ({ chat, onChatClick, active })
     const formatTime = useFormatMessageTime()
 
     return (
-        <MenuItem sx={{ padding: 0, margin: 0, whiteSpace: "normal", borderRadius: "0.5vw" }} onClick={() => onChatClick(chat)}>
+        <MenuItem
+            sx={{
+                padding: 0,
+                margin: 0,
+                whiteSpace: "normal",
+                borderRadius: "0 4px 4px 4px",
+            }}
+            onClick={() => onChatClick(chat)}
+        >
             <Paper
                 elevation={active ? 5 : undefined}
                 sx={{
@@ -29,7 +37,7 @@ export const ChatItem: React.FC<ChatItemProps> = ({ chat, onChatClick, active })
                     gap: isMobile ? "2vw" : "0.5vw",
                     padding: isMobile ? "4vw" : "0.5vw",
                     position: "relative",
-                    borderRadius: "4px",
+                    borderRadius: "0 4px 4px 4px",
                     borderTopLeftRadius: 0,
                     color: "text.secondary",
                     flex: 1,
