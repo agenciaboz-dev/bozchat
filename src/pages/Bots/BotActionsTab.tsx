@@ -212,7 +212,7 @@ export const BotActionsTab: React.FC<BotActionsTabProps> = (props) => {
                 action={pauseAction}
                 target="bot:end"
                 title="Finalizar conversa"
-                description="Pausar qualquer interação do bot com o contato pela duração configurada"
+                description="Encerrar a conversa e impedir qualquer interação do bot com o contato, pela duração configurada"
                 settingsHeight="8vw"
                 settingsComponent={
                     <TextField
