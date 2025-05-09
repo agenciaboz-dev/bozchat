@@ -8,7 +8,6 @@ import { Signup } from "./pages/Signup/Signup"
 import { useUser } from "./hooks/useUser"
 import { DeleteAccount } from "./pages/DeleteAccount/DeleteAccount"
 import { PrivacyTerms } from "./pages/PrivacyTerms/PrivacyTerms"
-import { Settings } from "./pages/Settings/Settings"
 import { Options } from "./pages/Options/Options"
 import { Users } from "./pages/Users/Users"
 import { Bots } from "./pages/Bots/Bots"
@@ -29,7 +28,6 @@ export const Routes: React.FC<RoutesProps> = ({}) => {
             <Route path="/broadcast/*" element={<NagazapScreen />} />
             <Route path="/bots/*" element={<Bots />} />
             <Route path="/boards/*" element={<Boards />} />
-            <Route path="/settings/*" element={<Settings />} />
             <Route path="/users/*" element={<Users />} />
             <Route path="/departments/*" element={<Departments />} />
             <Route path="/logs/*" element={<Logs />} />

@@ -3,7 +3,7 @@ import WhatsAppIcon from "@mui/icons-material/WhatsApp"
 import { useNavigate } from "react-router-dom"
 import { useUser } from "./useUser"
 import { Badge, BadgeProps, styled } from "@mui/material"
-import { Engineering, Hub, List, People, SafetyDivider, Settings, ViewWeek, Tune } from "@mui/icons-material"
+import { Engineering, Hub, List, People, SafetyDivider, Settings, ViewWeek, Tune, Token, Extension } from "@mui/icons-material"
 import { Menu } from "../types/Menu"
 import { useMemo } from "react"
 
@@ -35,34 +35,50 @@ export const useMenuList = () => {
                 onClick: () => navigate("/"),
             },
             {
-                name: "Business",
-                path: "/business",
-                icon: <WhatsAppIcon />,
-                onClick: () => navigate("/business"),
+                icon: <Token />,
+                name: "Módulos",
+                path: "/",
+                onClick: () => {},
+                submenus: [
+                    {
+                        name: "Business",
+                        path: "/business",
+                        icon: <WhatsAppIcon />,
+                        onClick: () => navigate("/business"),
+                    },
+                    {
+                        icon: <Hub />,
+                        name: "Broadcast",
+                        path: "/broadcast",
+                        onClick: () => navigate("/broadcast/"),
+                    },
+                ],
             },
             {
-                icon: <Hub />,
-                name: "Broadcast",
-                path: "/broadcast",
-                onClick: () => navigate("/broadcast/"),
-            },
-            {
-                icon: <ViewWeek />,
-                name: "Quadros",
-                path: "/boards",
-                onClick: () => navigate("/boards/"),
-            },
-            {
-                icon: <Engineering />,
-                name: "Chatbots",
-                path: "/bots",
-                onClick: () => navigate("/bots/"),
+                icon: <Extension />,
+                name: "Complementos",
+                path: "/",
+                onClick: () => {},
+                submenus: [
+                    {
+                        icon: <Engineering />,
+                        name: "Chatbots",
+                        path: "/bots",
+                        onClick: () => navigate("/bots/"),
+                    },
+                    {
+                        icon: <ViewWeek />,
+                        name: "Quadros",
+                        path: "/boards",
+                        onClick: () => navigate("/boards/"),
+                    },
+                ],
             },
             {
                 icon: <Settings />,
                 name: "Configurações",
-                path: "/settings",
-                onClick: () => navigate("/settings/"),
+                path: "/",
+                onClick: () => {},
                 submenus: [
                     {
                         icon: <People />,
