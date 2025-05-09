@@ -50,6 +50,7 @@ export const ChatContainer: React.FC<ChatProps> = ({ chat, onChatClick, washima,
         forwarded: false,
         phone_only: false,
         call: null,
+        contact_id: "",
     }
 
     const handleClick = () => {
@@ -107,7 +108,7 @@ export const ChatContainer: React.FC<ChatProps> = ({ chat, onChatClick, washima,
                 <Avatar
                     src={profilePic}
                     sx={{ width: isMobile ? "15vw" : "3vw", height: isMobile ? "15vw" : "3vw" }}
-                    // onClick={() => picture.open(profilePic || "")}
+                    // onClick={() => console.log(profilePic)}
                     imgProps={{ draggable: false }}
                 />
             </Paper>
