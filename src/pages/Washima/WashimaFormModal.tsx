@@ -46,7 +46,7 @@ export const WashimaFormModal: React.FC<WashimaFormModalProps> = (props) => {
             setLoading(true)
         }
 
-        if (props.currentWashima?.status === "ready") {
+        if (props.currentWashima?.status === "ready" || props.currentWashima?.status === "stopped") {
             handleClose()
         }
 
