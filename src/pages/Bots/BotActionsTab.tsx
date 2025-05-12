@@ -104,6 +104,7 @@ export const BotActionsTab: React.FC<BotActionsTabProps> = (props) => {
     }, [props.data])
 
     const pauseAction = useMemo(() => props.data?.actions?.find((item) => item.target === "bot:end"), [props.data])
+    const addToBlacklistAction = useMemo(() => props.data?.actions?.find((item) => item.target === "nagazap:blacklist:add"), [props.data])
 
     const handleCheckPress = (target: ValidAction) => {
         if (!props.data) return
@@ -111,7 +112,13 @@ export const BotActionsTab: React.FC<BotActionsTabProps> = (props) => {
 
         const newData: FlowNodeData = exists
             ? { ...props.data, actions: props.data.actions?.filter((item) => item.target !== target) }
-            : { ...props.data, actions: [...(props.data.actions || []), { target, settings: { misconfigured: true }, run: async () => {} }] }
+            : {
+                  ...props.data,
+                  actions: [
+                      ...(props.data.actions || []),
+                      { target, settings: { misconfigured: target === "nagazap:blacklist:add" ? false : true }, run: async () => {} },
+                  ],
+              }
 
         console.log({ newData })
         props.updateData(newData)
@@ -228,6 +235,15 @@ export const BotActionsTab: React.FC<BotActionsTabProps> = (props) => {
                         InputProps={{ endAdornment: <Typography>Minutos</Typography> }}
                     />
                 }
+                onCheck={handleCheckPress}
+            />
+            <ActionContainer
+                action={addToBlacklistAction}
+                target="nagazap:blacklist:add"
+                title="Broadcast: adicionar à lista negra"
+                description="Ao adicionar à lista negra, o broadcast irá ignorar este contato ao enviar mensagens em massa"
+                settingsHeight="0vw"
+                settingsComponent={null}
                 onCheck={handleCheckPress}
             />
         </Box>

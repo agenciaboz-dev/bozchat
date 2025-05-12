@@ -1,5 +1,5 @@
 import { Prisma } from "@prisma/client";
-import WAWebJS from "whatsapp-web.js";
+import WAWebJS, { Contact } from "whatsapp-web.js";
 import { WashimaMessageId } from "./Washima";
 export type MessageType = "ptt" | "video" | "image" | "text" | "revoked" | "sticker" | "audio" | "chat" | "document" | "sticker" | "call_log";
 export declare enum MessageAck {
@@ -50,7 +50,7 @@ export declare class WashimaMessage {
     static findBySid(sid: string): Promise<WashimaMessage | null>;
     static getBySid(sid: string): Promise<WashimaMessage>;
     static getByWrongId(id: string): Promise<WashimaMessage | null>;
-    static new(data: WashimaMessageForm, author?: string): Promise<WashimaMessage>;
+    static new(data: WashimaMessageForm, author?: string, _contact?: Contact): Promise<WashimaMessage>;
     static update(message: WAWebJS.Message, options?: {
         edited?: boolean;
         deleted?: boolean;

@@ -1,6 +1,6 @@
 import { WithoutFunctions } from "../helpers";
 import { Bot, BotMessageForm } from "./Bot";
-export type ValidAction = "board:room:chat:new" | "bot:end";
+export type ValidAction = "board:room:chat:new" | "bot:end" | "nagazap:blacklist:add";
 export type NodeActionDto = WithoutFunctions<NodeAction>;
 export interface ActionSettings {
     misconfigured?: boolean;
