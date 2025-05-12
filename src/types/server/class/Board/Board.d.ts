@@ -73,8 +73,8 @@ export declare class Board {
     delete(): Promise<{
         name: string;
         id: string;
-        company_id: string;
         created_at: string;
+        company_id: string;
         rooms: Prisma.JsonValue;
         washima_settings: Prisma.JsonValue;
         nagazap_settings: Prisma.JsonValue;

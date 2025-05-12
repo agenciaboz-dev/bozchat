@@ -58,10 +58,19 @@ export const WashimasTable: React.FC<WashimasTableProps> = (props) => {
 
                 return value === "loading" ? (
                     <CircularProgress color="primary" />
-                ) : value === "ready" || value === "error" ? (
-                    <Tooltip title={value === "ready" ? "Conectado" : "Instância com erro"} arrow>
+                ) : value === "ready" || value === "error" || value === "stopped" ? (
+                    <Tooltip
+                        title={
+                            value === "ready"
+                                ? "Conectado"
+                                : value === "stopped"
+                                ? "Instância inativa. Você pode reiniciá-la nas ações ao lado."
+                                : "Instância com erro"
+                        }
+                        arrow
+                    >
                         <Paper sx={{ borderRadius: "100%" }}>
-                            <Circle color={value === "ready" ? "success" : "error"} fontSize="small" />
+                            <Circle color={value === "ready" ? "success" : value === "stopped" ? "disabled" : "error"} fontSize="small" />
                         </Paper>
                     </Tooltip>
                 ) : (
@@ -185,6 +194,19 @@ export const WashimasTable: React.FC<WashimasTableProps> = (props) => {
         }
     }
 
+    const onStopPress = async () => {
+        if (!props.selectedWashima) return
+        closeMenu()
+        snackbar({ severity: "warning", text: "Parando instância" })
+
+        try {
+            const response = await api.get("/washima/stop-start", { params: { user_id: user?.id, washima_id: props.selectedWashima.id } })
+            console.log(response.data)
+        } catch (error) {
+            console.log(error)
+        }
+    }
+
     const onDeletePress = async () => {
         if (!props.selectedWashima) return
         const washima = { ...props.selectedWashima } as Washima
@@ -229,8 +251,6 @@ export const WashimasTable: React.FC<WashimasTableProps> = (props) => {
             },
         })
     }
-
-    
 
     const deleteMedia = async () => {
         if (props.loading || !props.selectedWashima) return
@@ -319,6 +339,9 @@ export const WashimasTable: React.FC<WashimasTableProps> = (props) => {
                 </MenuItem>
                 <MenuItem onClick={deleteMedia} disabled={!user?.admin || props.selectedWashima?.syncing}>
                     Limpar mídia
+                </MenuItem>
+                <MenuItem onClick={onStopPress} disabled={!user?.admin || props.selectedWashima?.status === "stopped"}>
+                    Interromper
                 </MenuItem>
                 <MenuItem onClick={onRestartPress} disabled={!user?.admin}>
                     Reiniciar

@@ -8,7 +8,7 @@ import { Company } from "../Company";
 export type WashimaPrisma = Prisma.WashimaGetPayload<{}>;
 export type WashimaMediaPrisma = Prisma.WashimaMediaGetPayload<{}>;
 export type WashimaProfilePicPrisma = Prisma.WashimaProfilePicGetPayload<{}>;
-export type WashimaStatus = "loading" | "ready" | "qrcode" | "error";
+export type WashimaStatus = "loading" | "ready" | "qrcode" | "error" | "stopped";
 export interface WashimaDiskMetrics {
     messages: number;
     media: number;
@@ -95,6 +95,7 @@ export declare class Washima {
     sendMessage(chat_id: string, message?: string, media?: WashimaMediaForm, replyMessage?: WashimaMessage, from_bot?: boolean): Promise<void>;
     getContact(contact_id: string): Promise<string>;
     getMedia(message: Message): Promise<WashimaMedia | undefined>;
+    stop(): Promise<void>;
     restart(): Promise<void>;
     getMediaMeta(message_id: string): Promise<WashimaMedia | undefined>;
     cacheProfilePic(target_id: string, target?: "chat" | "message"): Promise<WashimaProfilePic | undefined>;
@@ -108,7 +109,7 @@ export declare class Washima {
     getDiskUsage(megabyte?: boolean): Promise<WashimaDiskMetrics>;
     clearMedia(): Promise<number>;
     clearMessages(): Promise<number>;
-    search(value: string, target?: "chats" | "messages", chat_id?: string): Promise<WashimaMessage[] | WAWebJS.Chat[]>;
+    search(value: string, target?: "chats" | "messages", chat_id?: string): Promise<WAWebJS.Chat[] | WashimaMessage[]>;
     toJSON(): never;
 }
 export {};
