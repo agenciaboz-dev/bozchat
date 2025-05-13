@@ -49,6 +49,7 @@ export const ChatInput: React.FC<ChatInputProps> = (props) => {
                 multiline
                 maxRows={4}
                 autoComplete="off"
+                onKeyDown={(ev) => (ev.ctrlKey && ev.key === "Enter" ? props.onSubmit() : {})}
                 InputProps={{
                     sx: {
                         color: "primary.main",
