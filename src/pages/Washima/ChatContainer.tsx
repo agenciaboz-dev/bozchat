@@ -108,7 +108,7 @@ export const ChatContainer: React.FC<ChatProps> = ({ chat, onChatClick, washima,
                 <Avatar
                     src={profilePic}
                     sx={{ width: isMobile ? "15vw" : "3vw", height: isMobile ? "15vw" : "3vw" }}
-                    // onClick={() => console.log(profilePic)}
+                    onClick={() => console.log(profilePic)}
                     imgProps={{ draggable: false }}
                 />
             </Paper>
