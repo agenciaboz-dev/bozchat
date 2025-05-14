@@ -86,9 +86,9 @@ export const WashimaFormModal: React.FC<WashimaFormModalProps> = (props) => {
                 }
             />
             <Typography sx={{ color: "text.secondary", fontSize: "0.8rem", marginTop: "-1vw" }}>
-                A instância será inicializada e um QR Code aparecerá logo abaixo, para realizar a autenticação do Whatsapp Web. A primeira
-                inicialização pode demorar alguns minutos. Você pode fechar esta janela e visualizar o QR Code na tabela, sob a coluna "status", ou
-                aguardar.
+                Seu WhatsApp será inicializado em breve. Esse processo pode levar alguns minutos, pois estamos acessando a API autenticada da Meta –
+                WhatsApp. Assim que a instância for carregada, um QR Code será exibido abaixo para que você realize a autenticação no módulo Business
+                do ChatBoz. Ao utilizar o ChatBoz, você conta com mais segurança, modularidade e organização no gerenciamento das suas conversas.
             </Typography>
             {props.currentWashima?.qrcode ? (
                 <Box sx={{ alignSelf: "center" }}>
