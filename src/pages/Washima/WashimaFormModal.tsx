@@ -86,8 +86,8 @@ export const WashimaFormModal: React.FC<WashimaFormModalProps> = (props) => {
                 }
             />
             <Typography sx={{ color: "text.secondary", fontSize: "0.8rem", marginTop: "-1vw" }}>
-                A instância será inicializada e um QR Code aparecerá logo abaixo para realizar a autenticação do Whatsapp Web. A primeira
-                inicialização pode demorar alguns minutos. Você fechar esta janela e visualizar o QR Code na tabela, sob a coluna "status", ou
+                A instância será inicializada e um QR Code aparecerá logo abaixo, para realizar a autenticação do Whatsapp Web. A primeira
+                inicialização pode demorar alguns minutos. Você pode fechar esta janela e visualizar o QR Code na tabela, sob a coluna "status", ou
                 aguardar.
             </Typography>
             {props.currentWashima?.qrcode ? (
