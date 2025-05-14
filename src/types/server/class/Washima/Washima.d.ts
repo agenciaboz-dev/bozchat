@@ -15,6 +15,7 @@ export interface WashimaDiskMetrics {
 }
 export interface WashimaForm {
     company_id: string;
+    number: string;
 }
 export interface WashimaMessageId {
     fromMe: boolean;
@@ -68,6 +69,13 @@ export declare class Washima {
     static washimas: Washima[];
     static waitingList: Washima[];
     static initializing: Map<string, Washima>;
+    static messagesQueue: Map<string, {
+        washima: Washima;
+        messages: {
+            message: Message;
+            ack?: boolean;
+        }[];
+    }>;
     static listInterval: NodeJS.Timeout;
     static find(id: string): Washima | undefined;
     static query(id: string): Promise<Washima>;
@@ -80,6 +88,8 @@ export declare class Washima {
     static sendMessage(socket: Socket, washima_id: string, chat_id: string, message?: string, media?: WashimaMediaForm, replyMessage?: WashimaMessage): Promise<void>;
     static getContact(socket: Socket, washima_id: string, contact_id: string, message_id: string): Promise<void>;
     constructor(data: WashimaPrisma);
+    handleAck(message: Message): Promise<void>;
+    handleNewMessage(message: Message): Promise<void>;
     initialize(): Promise<void>;
     sendBulkGroupNotification(notification: WAWebJS.GroupNotification): Promise<void>;
     update(data: Partial<Washima>): Promise<void>;
@@ -109,7 +119,7 @@ export declare class Washima {
     getDiskUsage(megabyte?: boolean): Promise<WashimaDiskMetrics>;
     clearMedia(): Promise<number>;
     clearMessages(): Promise<number>;
-    search(value: string, target?: "chats" | "messages", chat_id?: string): Promise<WAWebJS.Chat[] | WashimaMessage[]>;
+    search(value: string, target?: "chats" | "messages", chat_id?: string): Promise<WashimaMessage[] | WAWebJS.Chat[]>;
     toJSON(): never;
 }
 export {};
