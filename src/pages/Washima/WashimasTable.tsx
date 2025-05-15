@@ -3,7 +3,7 @@ import { Box, CircularProgress, IconButton, LinearProgress, Menu, MenuItem, Pape
 import { Washima, WashimaDiskMetrics, WashimaStatus } from "../../types/server/class/Washima/Washima"
 import { DataGrid, GridCallbackDetails, GridColDef, GridRowParams, GridRowSelectionModel } from "@mui/x-data-grid"
 import { WithoutFunctions } from "../../types/server/class/helpers"
-import { Circle, MoreHoriz, QrCode } from "@mui/icons-material"
+import { Abc, Circle, MoreHoriz, QrCode } from "@mui/icons-material"
 import { api } from "../../api"
 import numeral from "numeral"
 import { useNavigate } from "react-router-dom"
@@ -16,6 +16,7 @@ import { Chat } from "../../types/Chat"
 import { QRCode } from "react-qrcode-logo"
 import { SyncMessagesContainer } from "./SyncMessagesContainer"
 import { useSnackbar } from "burgos-snackbar"
+import { PairingCode } from "./PairingCode"
 
 interface WashimasTableProps {
     washimas: Washima[]
@@ -72,6 +73,12 @@ export const WashimasTable: React.FC<WashimasTableProps> = (props) => {
                         <Paper sx={{ borderRadius: "100%" }}>
                             <Circle color={value === "ready" ? "success" : value === "stopped" ? "disabled" : "error"} fontSize="small" />
                         </Paper>
+                    </Tooltip>
+                ) : value === "pairingcode" ? (
+                    <Tooltip title={<PairingCode code={washima.qrcode!} />} arrow>
+                        <IconButton>
+                            <Abc />
+                        </IconButton>
                     </Tooltip>
                 ) : (
                     <Tooltip title={<QRCode value={washima.qrcode} size={250} />} arrow>
