@@ -147,7 +147,7 @@ export const Boards: React.FC<BoardsProps> = ({}) => {
                 />
             </Dialog>
 
-            {selectedBoard && (
+            {showBoardSettings && selectedBoard && (
                 <BoardSettingsModal
                     board={selectedBoard}
                     open={showBoardSettings}
