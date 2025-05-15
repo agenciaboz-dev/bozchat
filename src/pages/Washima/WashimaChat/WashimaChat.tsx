@@ -192,10 +192,18 @@ export const WashimaChat: React.FC<WashimaChatProps> = ({ washima, chat, onClose
             }
         })
 
+        io.on("washima:message", (data: { chat: Chat; message: WashimaMessage }) => {
+            setMessages((values) => [...values.filter((item) => item.sid !== data.message.sid), data.message])
+            if (data.message.fromMe) {
+                messagesBoxRef.current?.scrollTo({ top: 0, behavior: "smooth" })
+            }
+        })
+
         return () => {
             io.off("washima:message:update")
+            io.off("washima:message")
         }
-    }, [chat, messages])
+    }, [chat, messages, setMessages])
 
     useEffect(() => {
         console.log({ chat })
@@ -203,13 +211,6 @@ export const WashimaChat: React.FC<WashimaChatProps> = ({ washima, chat, onClose
         if (chat) {
             setLoading(true)
             fetchChat()
-
-            io.on("washima:message", (data: { chat: Chat; message: WashimaMessage }) => {
-                setMessages((values) => [...values, data.message])
-                if (data.message.fromMe) {
-                    messagesBoxRef.current?.scrollTo({ top: 0, behavior: "smooth" })
-                }
-            })
 
             io.on("washima:group:update", (update: WashimaGroupUpdate) => {
                 if (update.chat_id === chat.id._serialized) {
@@ -225,7 +226,7 @@ export const WashimaChat: React.FC<WashimaChatProps> = ({ washima, chat, onClose
 
             return () => {
                 io.emit("washima:channel:leave", chat.id._serialized)
-                io.off("washima:message")
+
                 io.off("washima:group:update")
             }
         }
