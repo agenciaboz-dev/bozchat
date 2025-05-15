@@ -315,6 +315,10 @@ export const WashimasTable: React.FC<WashimasTableProps> = (props) => {
         props.washimas.forEach((washima) => fetchWashimaMetrics(washima))
     }, [props.washimas])
 
+    useEffect(() => {
+        closeMenu()
+    }, [])
+
     return (
         <Paper sx={{}}>
             <DataGrid
