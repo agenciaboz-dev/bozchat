@@ -6,6 +6,10 @@ import { Close } from "@mui/icons-material"
 import { QRCode } from "react-qrcode-logo"
 import { useIo } from "../../hooks/useIo"
 import { api } from "../../api"
+import MaskedInputComponent from "../../components/MaskedInput"
+import { useUser } from "../../hooks/useUser"
+import { PairingCode } from "./PairingCode"
+import { InlineTypography } from "../../components/InlineTypography"
 
 interface WashimaFormModalProps {
     onSuccess: (washima: Washima) => void
@@ -15,15 +19,30 @@ interface WashimaFormModalProps {
     onClose: () => void
 }
 
+const Loading = () => (
+    <Box sx={{ flexDirection: "column", gap: "1vw" }}>
+        <Typography>Gerando código</Typography>
+        <LinearProgress variant={"indeterminate"} />
+    </Box>
+)
+
 export const WashimaFormModal: React.FC<WashimaFormModalProps> = (props) => {
     const io = useIo()
+    const { company, user } = useUser()
 
-    const [loading, setLoading] = useState(true)
+    const [loading, setLoading] = useState(false)
     const [syncStatus, setSyncStatus] = useState("Iniciando")
     const [syncProgress, setSyncProgress] = useState(0)
+    const [phone, setPhone] = useState("")
+    const [code, setCode] = useState("")
+    const [error, setError] = useState("")
 
     const handleClose = () => {
         props.onClose()
+        setCode("")
+        setLoading(false)
+        setPhone("")
+        setError("")
     }
 
     const syncMessages = async () => {
@@ -39,19 +58,54 @@ export const WashimaFormModal: React.FC<WashimaFormModalProps> = (props) => {
         }
     }
 
-    useEffect(() => {
-        if (props.currentWashima?.qrcode) {
-            setLoading(false)
-        } else {
-            setLoading(true)
+    const requestPairingCode = async () => {
+        if (loading) return
+        setError("")
+
+        if (!phone) {
+            setError("Número de telefone é obrigatório para gerar o código numérico")
+            return
         }
 
+        if (phone?.length !== 14) {
+            setError("Número de telefone inválido.")
+            return
+        }
+
+        setLoading(true)
+
+        try {
+            console.log("requesting pairing code")
+            const response = await api.post("/washima", { company_id: company?.id, number: phone }, { params: { user_id: user?.id } })
+            props.onSuccess(response.data)
+            props.setCurrentWashima(response.data)
+        } catch (error) {
+            console.log(error)
+        }
+    }
+
+    const requestQrCode = async () => {
+        if (loading) return
+
+        setLoading(true)
+
+        try {
+            const response = await api.post("/washima", { company_id: company?.id }, { params: { user_id: user?.id } })
+            props.onSuccess(response.data)
+            props.setCurrentWashima(response.data)
+        } catch (error) {
+            console.log(error)
+        }
+    }
+
+    useEffect(() => {
         if (props.currentWashima?.status === "ready" || props.currentWashima?.status === "stopped") {
             handleClose()
         }
 
         if (props.currentWashima) {
             io.on(`washima:${props.currentWashima.id}:init`, (status: string, progress: number) => {
+                handleClose()
                 setSyncStatus(status)
                 setSyncProgress(progress)
                 if (progress === 4) {
@@ -65,8 +119,19 @@ export const WashimaFormModal: React.FC<WashimaFormModalProps> = (props) => {
                 }
             })
 
+            io.emit("washima:channel:join", props.currentWashima.id)
+
+            io.on("code", (code: string) => {
+                setCode(code)
+                setLoading(false)
+            })
+
+            io.on("initialized", () => {})
+
             return () => {
                 io.off(`washima:${props.currentWashima?.id}:init`)
+                io.off("code")
+                io.emit("washima:channel:leave", props.currentWashima?.id)
             }
         }
     }, [props.currentWashima])
@@ -85,21 +150,44 @@ export const WashimaFormModal: React.FC<WashimaFormModalProps> = (props) => {
                     </IconButton>
                 }
             />
-            <Typography sx={{ color: "text.secondary", fontSize: "0.8rem", marginTop: "-1vw" }}>
-                Seu WhatsApp será inicializado em breve. Esse processo pode levar alguns minutos, pois estamos acessando a API autenticada da Meta –
-                WhatsApp. Assim que a instância for carregada, um QR Code será exibido abaixo para que você realize a autenticação no módulo Business
-                do ChatBoz. Ao utilizar o ChatBoz, você conta com mais segurança, modularidade e organização no gerenciamento das suas conversas.
-            </Typography>
-            {props.currentWashima?.qrcode ? (
+            <Box sx={{ color: "secondary.main", flexDirection: "column", gap: "0.5vw" }}>
+                <Typography sx={{ marginTop: "-1vw" }}>
+                    Digite o número de telefone do whatsapp que deseja conectar e escolha o tipo de autenticação.
+                </Typography>
+                <Typography>
+                    Ao gerar um <InlineTypography highlight>código numérico</InlineTypography> você receberá uma notificação no whatsapp para inserir
+                    esse código e conectar.
+                </Typography>
+                <Typography sx={{ marginBottom: "1vw" }}>
+                    Caso prefira, você pode gerar um <InlineTypography highlight>QR Code</InlineTypography>, mas esse processo pode demorar alguns
+                    minutos.
+                </Typography>
+            </Box>
+
+            {loading ? (
+                <Loading />
+            ) : code ? (
                 <Box sx={{ alignSelf: "center" }}>
-                    <QRCode size={300} value={props.currentWashima.qrcode} />
+                    {props.currentWashima?.status === "qrcode" ? <QRCode size={300} value={code} /> : <PairingCode code={code} />}
                 </Box>
             ) : (
-                <Box sx={{ flexDirection: "column", gap: "1vw" }}>
-                    <Typography>{syncStatus}</Typography>
-                    <LinearProgress variant={syncProgress ? "determinate" : "indeterminate"} value={(syncProgress * 100) / 4} />
-                </Box>
+                <TextField
+                    label="Número de telefone (sem o 9)"
+                    InputProps={{ inputComponent: MaskedInputComponent, inputProps: { mask: "(00) 0000-0000" } }}
+                    value={phone}
+                    onChange={(ev) => setPhone(ev.target.value)}
+                    error={!!error}
+                    helperText={error}
+                />
             )}
+            <Box sx={{ justifyContent: "flex-end", gap: "1vw" }}>
+                <Button variant="outlined" onClick={requestQrCode} disabled={!!code || loading}>
+                    Gerar QR Code
+                </Button>
+                <Button variant="contained" onClick={requestPairingCode} disabled={!!code || loading}>
+                    Gerar código numérico
+                </Button>
+            </Box>
         </Dialog>
     )
 }

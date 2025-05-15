@@ -8,13 +8,14 @@ import { Company } from "../Company";
 export type WashimaPrisma = Prisma.WashimaGetPayload<{}>;
 export type WashimaMediaPrisma = Prisma.WashimaMediaGetPayload<{}>;
 export type WashimaProfilePicPrisma = Prisma.WashimaProfilePicGetPayload<{}>;
-export type WashimaStatus = "loading" | "ready" | "qrcode" | "error" | "stopped";
+export type WashimaStatus = "loading" | "ready" | "qrcode" | "error" | "stopped" | "pairingcode";
 export interface WashimaDiskMetrics {
     messages: number;
     media: number;
 }
 export interface WashimaForm {
     company_id: string;
+    number?: string;
 }
 export interface WashimaMessageId {
     fromMe: boolean;
@@ -68,6 +69,13 @@ export declare class Washima {
     static washimas: Washima[];
     static waitingList: Washima[];
     static initializing: Map<string, Washima>;
+    static messagesQueue: Map<string, {
+        washima: Washima;
+        messages: {
+            message: Message;
+            ack?: boolean;
+        }[];
+    }>;
     static listInterval: NodeJS.Timeout;
     static find(id: string): Washima | undefined;
     static query(id: string): Promise<Washima>;
@@ -80,6 +88,9 @@ export declare class Washima {
     static sendMessage(socket: Socket, washima_id: string, chat_id: string, message?: string, media?: WashimaMediaForm, replyMessage?: WashimaMessage): Promise<void>;
     static getContact(socket: Socket, washima_id: string, contact_id: string, message_id: string): Promise<void>;
     constructor(data: WashimaPrisma);
+    handleAck(message: Message): Promise<void>;
+    handleNewMessage(message: Message): Promise<void>;
+    requestPairingCode(phone: string): Promise<string>;
     initialize(): Promise<void>;
     sendBulkGroupNotification(notification: WAWebJS.GroupNotification): Promise<void>;
     update(data: Partial<Washima>): Promise<void>;

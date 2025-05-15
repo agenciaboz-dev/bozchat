@@ -97,9 +97,9 @@ export const WashimaPage: React.FC<WashimaProps> = ({}) => {
         try {
             setCurrentWashima(null)
             setShowForm(true)
-            const response = await api.post("/washima", { company_id: company?.id }, { params: { user_id: user?.id } })
-            addWashima(response.data)
-            setCurrentWashima(response.data)
+            // const response = await api.post("/washima", { company_id: company?.id }, { params: { user_id: user?.id } })
+            // addWashima(response.data)
+            // setCurrentWashima(response.data)
         } catch (error) {
             console.log(error)
         }
