@@ -89,8 +89,7 @@ export declare class Washima {
     static getContact(socket: Socket, washima_id: string, contact_id: string, message_id: string): Promise<void>;
     constructor(data: WashimaPrisma);
     handleAck(message: Message): Promise<void>;
-    handleNewMessage(message: Message): Promise<void>;
-    requestPairingCode(phone: string): Promise<string>;
+    handleNewMessage(message: Message, sendingNow?: boolean): Promise<void>;
     initialize(): Promise<void>;
     sendBulkGroupNotification(notification: WAWebJS.GroupNotification): Promise<void>;
     update(data: Partial<Washima>): Promise<void>;
@@ -103,7 +102,7 @@ export declare class Washima {
         group_updates?: undefined;
     } | undefined>;
     getMessage(message_id: string): Promise<WAWebJS.Message>;
-    sendMessage(chat_id: string, message?: string, media?: WashimaMediaForm, replyMessage?: WashimaMessage, from_bot?: boolean): Promise<void>;
+    sendMessage(chat_id: string, text?: string, media?: WashimaMediaForm, replyMessage?: WashimaMessage, from_bot?: boolean): Promise<void>;
     getContact(contact_id: string): Promise<string>;
     getMedia(message: Message): Promise<WashimaMedia | undefined>;
     stop(): Promise<void>;
@@ -120,7 +119,7 @@ export declare class Washima {
     getDiskUsage(megabyte?: boolean): Promise<WashimaDiskMetrics>;
     clearMedia(): Promise<number>;
     clearMessages(): Promise<number>;
-    search(value: string, target?: "chats" | "messages", chat_id?: string): Promise<WAWebJS.Chat[] | WashimaMessage[]>;
+    search(value: string, target?: "chats" | "messages", chat_id?: string): Promise<WashimaMessage[] | WAWebJS.Chat[]>;
     toJSON(): never;
 }
 export {};

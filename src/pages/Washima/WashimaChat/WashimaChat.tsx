@@ -174,7 +174,7 @@ export const WashimaChat: React.FC<WashimaChatProps> = ({ washima, chat, onClose
     }, [loadingMessageId, messages.length])
 
     useEffect(() => {
-        if (chat?.lastMessage) {
+        if (chat?.lastMessage && chat.lastMessage.type !== "e2e_notification" && chat.lastMessage.type !== "notification_template") {
             setLoadingMessageId(chat.lastMessage.id.id)
         }
     }, [chat?.lastMessage])
