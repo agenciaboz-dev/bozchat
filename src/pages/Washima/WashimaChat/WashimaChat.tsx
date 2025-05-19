@@ -1,5 +1,5 @@
 import React, { useEffect, useMemo, useRef, useState } from "react"
-import { Avatar, Box, IconButton, LinearProgress, Paper, Skeleton, useMediaQuery } from "@mui/material"
+import { Avatar, Box, IconButton, LinearProgress, Paper, Skeleton, Typography, useMediaQuery } from "@mui/material"
 import { Washima, WashimaMediaForm, WashimaProfilePic } from "../../../types/server/class/Washima/Washima"
 import CancelIcon from "@mui/icons-material/Cancel"
 import { api } from "../../../api"
@@ -20,6 +20,7 @@ import { useDarkMode } from "../../../hooks/useDarkMode"
 import { ChatSearch } from "./ChatSearch"
 import { custom_colors } from "../../../style/colors"
 import { BotActivity } from "./WashimaTools/BotActivity"
+import { getAuthorName } from "../../Zap/MessageAuthor"
 
 interface WashimaChatProps {
     washima: Washima
@@ -40,6 +41,8 @@ export const WashimaChat: React.FC<WashimaChatProps> = ({ washima, chat, onClose
     const [loadingMessageId, setLoadingMessageId] = useState<string | null>(null)
     const [selectedMessages, setSelectedMessages] = useState<WashimaMessage[]>([])
     const [chooseForwardingContacts, setChooseForwardingContacts] = useState(false)
+    const [contactName, setContactName] = useState(chat?.name || "")
+    const [contactPhone, setContactPhone] = useState("")
 
     const messages_and_group_updates = useMemo(
         () => [...messages, ...groupUpdates].sort((a, b) => Number(b.timestamp) - Number(a.timestamp)),
@@ -49,6 +52,15 @@ export const WashimaChat: React.FC<WashimaChatProps> = ({ washima, chat, onClose
     const [profilePic, setProfilePic] = useState("")
     const [loading, setLoading] = useState(false)
     const [isScrolled, setIsScrolled] = useState<boolean>(false)
+    const isInContacts = !useMemo(() => {
+        if (!chat) return false
+        // Check if the name contains only valid phone number characters
+        const hasValidChars = /^[+\d\s\-()]*$/.test(chat.name)
+        // Extract all digits from the name
+        const digits = chat.name.replace(/\D/g, "")
+        // Ensure the number of digits is within a valid range (adjust min/max as needed)
+        return hasValidChars && digits.length >= 5 && digits.length <= 15
+    }, [chat])
 
     const handleScroll = () => {
         if (messagesBoxRef.current) {
@@ -206,6 +218,23 @@ export const WashimaChat: React.FC<WashimaChatProps> = ({ washima, chat, onClose
     }, [chat, messages, setMessages])
 
     useEffect(() => {
+        setContactName("")
+
+        if (!isInContacts && !!chat) {
+            io.emit("washima:author", washima.id, chat.id._serialized, (contact: string) => {
+                console.log({ contact })
+                const { author_name, author_phone } = getAuthorName(contact)
+                setContactName(author_name)
+                setContactPhone(author_phone)
+            })
+        }
+
+        if (isInContacts && !!chat) {
+            setContactName(chat.name)
+        }
+    }, [chat, isInContacts])
+
+    useEffect(() => {
         console.log({ chat })
         reset()
         if (chat) {
@@ -281,7 +310,23 @@ export const WashimaChat: React.FC<WashimaChatProps> = ({ washima, chat, onClose
                             </PhotoView>
                         </PhotoProvider>
                     )}
-                    <p style={{ fontWeight: "bold" }}>{chat?.name}</p>
+                    <Box sx={{ flex: 1, alignItems: "center", gap: "0.5vw" }}>
+                        <Typography
+                            sx={{
+                                fontWeight: "bold",
+                                overflow: "hidden",
+                                whiteSpace: "nowrap",
+                                textOverflow: "ellipsis",
+                                maxWidth: isInContacts ? "70%" : "55%",
+                                fontSize: "1vw",
+                            }}
+                            title={contactName}
+                        >
+                            {!isInContacts && "~ "}
+                            {contactName}
+                        </Typography>
+                        {!isInContacts && <Typography sx={{ fontSize: "0.8vw" }}>{contactPhone}</Typography>}
+                    </Box>
                     {!!chat && (
                         <Box sx={{ marginLeft: "auto", alignItems: "center" }}>
                             <ChatSearch washima_id={washima.id} chat_id={chat.id._serialized} onMessageClick={setLoadingMessageId} />

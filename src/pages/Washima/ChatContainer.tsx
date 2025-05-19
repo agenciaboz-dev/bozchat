@@ -1,5 +1,5 @@
-import React, { useEffect, useState } from "react"
-import { Avatar, Badge, Box, Chip, MenuItem, Paper, useTheme } from "@mui/material"
+import React, { useEffect, useMemo, useState } from "react"
+import { Avatar, Badge, Box, Chip, MenuItem, Paper, Typography, useTheme } from "@mui/material"
 import { useFormatMessageTime } from "../../hooks/useFormatMessageTime"
 import { useMediaQuery } from "@mui/material"
 import { api } from "../../api"
@@ -11,6 +11,8 @@ import { Chat } from "../../types/Chat"
 import { DeletedMessage } from "../Zap/DeletedMessage"
 import { WashimaMessage } from "../../types/server/class/Washima/WashimaMessage"
 import { MediaChip } from "../../components/MediaChip"
+import { useIo } from "../../hooks/useIo"
+import { getAuthorName } from "../Zap/MessageAuthor"
 
 interface ChatProps {
     washima: Washima
@@ -23,6 +25,7 @@ interface ChatProps {
 export const ChatContainer: React.FC<ChatProps> = ({ chat, onChatClick, washima, active, onVisible }) => {
     const isMobile = useMediaQuery("(orientation: portrait)")
     const formatTime = useFormatMessageTime()
+    const io = useIo()
 
     const ref = useVisibleCallback(() => {
         if (onVisible) {
@@ -33,12 +36,23 @@ export const ChatContainer: React.FC<ChatProps> = ({ chat, onChatClick, washima,
         }
     }, {})
 
+    const [contactName, setContactName] = useState(chat.name)
+    const [contactPhone, setContactPhone] = useState("")
     const [profilePic, setProfilePic] = useState("")
     const [mediaMetaData, setMediaMetaData] = useState<{
         mimetype: string | undefined
         filename: string | undefined
         message_id: string
     }>()
+
+    const isInContacts = !useMemo(() => {
+        // Check if the name contains only valid phone number characters
+        const hasValidChars = /^[+\d\s\-()]*$/.test(chat.name)
+        // Extract all digits from the name
+        const digits = chat.name.replace(/\D/g, "")
+        // Ensure the number of digits is within a valid range (adjust min/max as needed)
+        return hasValidChars && digits.length >= 5 && digits.length <= 15
+    }, [chat])
 
     const mocked_last_message: WashimaMessage = {
         ...chat.lastMessage,
@@ -81,6 +95,17 @@ export const ChatContainer: React.FC<ChatProps> = ({ chat, onChatClick, washima,
     useEffect(() => {
         fetchProfilePic()
     }, [chat])
+
+    useEffect(() => {
+        if (!isInContacts) {
+            io.emit("washima:author", washima.id, chat.id._serialized, (contact: string) => {
+                console.log({ contact })
+                const { author_name, author_phone } = getAuthorName(contact)
+                setContactName(author_name)
+                setContactPhone(author_phone)
+            })
+        }
+    }, [chat, isInContacts])
 
     return (
         <MenuItem
@@ -125,18 +150,23 @@ export const ChatContainer: React.FC<ChatProps> = ({ chat, onChatClick, washima,
             >
                 {/*//*  title and date */}
                 <Box sx={{ justifyContent: "space-between", alignItems: "center", width: "100%", color: "text.secondary" }}>
-                    <p
-                        style={{
-                            fontWeight: "bold",
-                            overflow: "hidden",
-                            whiteSpace: "nowrap",
-                            textOverflow: "ellipsis",
-                            width: "70%",
-                        }}
-                        title={chat.name}
-                    >
-                        {chat.name}
-                    </p>
+                    <Box sx={{ flex: 1, alignItems: "center", gap: "0.5vw" }}>
+                        <Typography
+                            sx={{
+                                fontWeight: "bold",
+                                overflow: "hidden",
+                                whiteSpace: "nowrap",
+                                textOverflow: "ellipsis",
+                                maxWidth: isInContacts ? "70%" : "55%",
+                                fontSize: "0.8vw",
+                            }}
+                            title={contactName}
+                        >
+                            {!isInContacts && "~ "}
+                            {contactName}
+                        </Typography>
+                        {!isInContacts && <Typography sx={{ fontSize: "0.6vw" }}>{contactPhone}</Typography>}
+                    </Box>
                     {chat.lastMessage && (
                         <Box
                             sx={{
