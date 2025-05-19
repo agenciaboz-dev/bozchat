@@ -14,16 +14,24 @@ interface MenuButtonProps {
 export const MenuButton: React.FC<MenuButtonProps> = ({ menu, sx }) => {
     const isMobile = useMediaQuery("(orientation: portrait)")
     const { darkMode } = useDarkMode()
-    const Icon = () => menu.icon
     const location = useLocation()
-    const active = location.pathname.split("/")[1] == menu.path.split("/")[1]
-
     const { drawer } = useMenu()
 
+    const isActive = (menu: Menu): boolean => {
+        if (menu.submenus && menu.submenus.length > 0) {
+            return menu.submenus.some((submenu) => location.pathname.startsWith(submenu.path))
+        }
+        if (menu.path === "/") {
+            return location.pathname === "/"
+        }
+        return location.pathname.startsWith(menu.path)
+    }
+
+    const active = isActive(menu)
     const [collapse, setCollapse] = useState(active)
 
-    const buildStyle = (active: boolean, menu: Menu) => {
-        const menuItemStyle: SxProps = {
+    const buildStyle = (active: boolean, menu: Menu): SxProps => {
+        return {
             backgroundColor: active ? (menu.submenus ? "" : "primary.main") : "",
             color: active ? (menu.submenus ? "text.secondary" : "secondary.main") : "text.secondary",
             pointerEvents: active ? (menu.submenus ? "auto" : "none") : "auto",
@@ -32,8 +40,6 @@ export const MenuButton: React.FC<MenuButtonProps> = ({ menu, sx }) => {
             gap: "1vw",
             ...sx,
         }
-
-        return menuItemStyle
     }
 
     const handleMenuClick = (menu: Menu) => {
@@ -41,38 +47,45 @@ export const MenuButton: React.FC<MenuButtonProps> = ({ menu, sx }) => {
             drawer.handlers.close()
             menu.onClick()
         } else {
-            setCollapse((collapse) => !collapse)
+            setCollapse((prev) => !prev)
         }
     }
 
     return (
         <>
             <MenuItem key={menu.path} sx={buildStyle(active, menu)} onClick={() => handleMenuClick(menu)}>
-                <Icon />
+                {menu.icon}
                 {menu.name}
-                {menu.submenus && <KeyboardArrowDown sx={{ marginLeft: "auto", rotate: collapse ? "-180deg" : "", transition: "0.3s" }} />}
+                {menu.submenus && (
+                    <KeyboardArrowDown
+                        sx={{
+                            marginLeft: "auto",
+                            rotate: collapse ? "-180deg" : "",
+                            transition: "0.3s",
+                        }}
+                    />
+                )}
             </MenuItem>
 
             <Collapse in={collapse}>
                 <Box sx={{ flexDirection: "column", width: "100%" }}>
-                    {menu.submenus?.map((menu) => {
-                        const active = location.pathname.split("/")[2] == menu.path.split("/")[1]
-                        const Icon = () => menu.icon
+                    {menu.submenus?.map((submenu) => {
+                        const submenuActive = location.pathname.startsWith(submenu.path)
 
                         return (
                             <MenuItem
-                                key={menu.path}
+                                key={submenu.path}
                                 sx={{
-                                    ...buildStyle(active, menu),
+                                    ...buildStyle(submenuActive, submenu),
                                     paddingLeft: isMobile ? "14vw" : "3vw",
                                     fontSize: isMobile ? "3.5vw" : "0.85vw",
                                     whiteSpace: "normal",
                                     overflow: "hidden",
                                 }}
-                                onClick={() => handleMenuClick(menu)}
+                                onClick={() => handleMenuClick(submenu)}
                             >
-                                <Icon />
-                                {menu.name}
+                                {submenu.icon}
+                                {submenu.name}
                             </MenuItem>
                         )
                     })}
