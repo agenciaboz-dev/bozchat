@@ -27,9 +27,10 @@ interface WashimaChatProps {
     chat: Chat | null
     onClose: () => void
     inBoards?: boolean
+    setIsSwitchingChat: (value: boolean) => void
 }
 
-export const WashimaChat: React.FC<WashimaChatProps> = ({ washima, chat, onClose, inBoards }) => {
+export const WashimaChat: React.FC<WashimaChatProps> = ({ washima, chat, onClose, inBoards, setIsSwitchingChat }) => {
     const isMobile = useMediaQuery("(orientation: portrait)")
     const { darkMode } = useDarkMode()
     const io = useIo()
@@ -142,12 +143,14 @@ export const WashimaChat: React.FC<WashimaChatProps> = ({ washima, chat, onClose
 
         try {
             setLoading(true)
+            setIsSwitchingChat(true)
             fetchProfilePic()
             await fetchMessages()
         } catch (error) {
             console.log(error)
         } finally {
             setLoading(false)
+            setIsSwitchingChat(false)
         }
     }
 
