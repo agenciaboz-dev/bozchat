@@ -150,7 +150,7 @@ export const WashimaFormModal: React.FC<WashimaFormModalProps> = (props) => {
                     </IconButton>
                 }
             />
-            <Box sx={{ color: "secondary.main", flexDirection: "column", gap: "0.5vw" }}>
+            <Box sx={{ color: "text.secondary", flexDirection: "column", gap: "0.5vw" }}>
                 <Typography sx={{ marginTop: "-1vw" }}>
                     Digite o número de telefone do whatsapp que deseja conectar e escolha o tipo de autenticação.
                 </Typography>

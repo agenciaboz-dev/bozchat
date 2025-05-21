@@ -327,7 +327,10 @@ export const Message: React.ForwardRefRenderFunction<HTMLDivElement, MessageProp
                                             ))}
                                         {is_sticker &&
                                             (loading ? (
-                                                <CircularProgress size={inBoards ? "5vw" : isMobile ? "30vw" : "10vw"} sx={{}} />
+                                                <CircularProgress
+                                                    size={inBoards ? "5vw" : isMobile ? "30vw" : "10vw"}
+                                                    sx={{ color: "text.secondary" }}
+                                                />
                                             ) : (
                                                 <img
                                                     style={{
