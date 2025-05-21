@@ -1,5 +1,5 @@
 import React, { useEffect, useMemo, useState } from "react"
-import { Autocomplete, Box, Button, CircularProgress, Dialog, IconButton, TextField, Typography, useMediaQuery } from "@mui/material"
+import { Autocomplete, Box, Button, CircularProgress, Dialog, IconButton, LinearProgress, TextField, Typography, useMediaQuery } from "@mui/material"
 import { Chat } from "../../../types/server/class/Board/Chat"
 import { Title2 } from "../../../components/Title"
 import { Close } from "@mui/icons-material"
@@ -26,7 +26,7 @@ export const TransferModal: React.FC<TransferModalProps> = (props) => {
     const { user, company } = useUser()
     const { snackbar } = useSnackbar()
 
-    const [fetchedBoards] = useFetchedData<Board>("boards", { params: { all: true } })
+    const [fetchedBoards, _, { loading: fetchingBoards }] = useFetchedData<Board>("boards", { params: { all: true } })
     const [destinationBoard, setDestinationBoard] = useState<Board | null>(null)
     const [destinationRoom, setDestinationRoom] = useState<Room | null>(null)
     const [loading, setLoading] = useState(false)
@@ -104,28 +104,35 @@ export const TransferModal: React.FC<TransferModalProps> = (props) => {
                 </Typography>
             </Box>
 
-            <Box sx={{ flexDirection: isMobile ? "column" : "row", gap: isMobile ? "5vw" : "1vw" }}>
-                <Autocomplete
-                    options={boards}
-                    value={destinationBoard}
-                    onChange={(_, value) => setDestinationBoard(value)}
-                    renderInput={(params) => <TextField {...params} label="Quadro" />}
-                    fullWidth
-                    getOptionLabel={(option) => option.name}
-                    getOptionKey={(option) => option.id}
-                    isOptionEqualToValue={(option, value) => option.id === value.id}
-                />
-                <Autocomplete
-                    options={rooms}
-                    value={destinationRoom}
-                    onChange={(_, value) => setDestinationRoom(value)}
-                    renderInput={(params) => <TextField {...params} label="Sala" />}
-                    fullWidth
-                    getOptionLabel={(option) => option.name}
-                    getOptionKey={(option) => option.id}
-                    isOptionEqualToValue={(option, value) => option.id === value.id}
-                />
-            </Box>
+            {fetchingBoards ? (
+                <Box sx={{ flexDirection: "column" }}>
+                    <Typography sx={{ fontSize: "0.85vw" }}>Carregando quadros</Typography>
+                    <LinearProgress variant="indeterminate" />
+                </Box>
+            ) : (
+                <Box sx={{ flexDirection: isMobile ? "column" : "row", gap: isMobile ? "5vw" : "1vw" }}>
+                    <Autocomplete
+                        options={boards}
+                        value={destinationBoard}
+                        onChange={(_, value) => setDestinationBoard(value)}
+                        renderInput={(params) => <TextField {...params} label="Quadro" />}
+                        fullWidth
+                        getOptionLabel={(option) => option.name}
+                        getOptionKey={(option) => option.id}
+                        isOptionEqualToValue={(option, value) => option.id === value.id}
+                    />
+                    <Autocomplete
+                        options={rooms}
+                        value={destinationRoom}
+                        onChange={(_, value) => setDestinationRoom(value)}
+                        renderInput={(params) => <TextField {...params} label="Sala" />}
+                        fullWidth
+                        getOptionLabel={(option) => option.name}
+                        getOptionKey={(option) => option.id}
+                        isOptionEqualToValue={(option, value) => option.id === value.id}
+                    />
+                </Box>
+            )}
 
             <Button
                 sx={{ alignSelf: "flex-end" }}
