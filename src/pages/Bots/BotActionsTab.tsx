@@ -105,19 +105,19 @@ export const BotActionsTab: React.FC<BotActionsTabProps> = (props) => {
 
     const pauseAction = useMemo(() => props.data?.actions?.find((item) => item.target === "bot:end"), [props.data])
     const addToBlacklistAction = useMemo(() => props.data?.actions?.find((item) => item.target === "nagazap:blacklist:add"), [props.data])
+    const removeFromBlacklistAction = useMemo(() => props.data?.actions?.find((item) => item.target === "nagazap:blacklist:remove"), [props.data])
 
     const handleCheckPress = (target: ValidAction) => {
         if (!props.data) return
         const exists = props.data.actions?.find((item) => item.target === target)
 
+        const no_settings = (["nagazap:blacklist:add", "nagazap:blacklist:remove"] as ValidAction[]).includes(target)
+
         const newData: FlowNodeData = exists
             ? { ...props.data, actions: props.data.actions?.filter((item) => item.target !== target) }
             : {
                   ...props.data,
-                  actions: [
-                      ...(props.data.actions || []),
-                      { target, settings: { misconfigured: target === "nagazap:blacklist:add" ? false : true }, run: async () => {} },
-                  ],
+                  actions: [...(props.data.actions || []), { target, settings: { misconfigured: no_settings ? false : true }, run: async () => {} }],
               }
 
         console.log({ newData })
@@ -242,6 +242,15 @@ export const BotActionsTab: React.FC<BotActionsTabProps> = (props) => {
                 target="nagazap:blacklist:add"
                 title="Broadcast: adicionar à lista negra"
                 description="Ao adicionar à lista negra, o broadcast irá ignorar este contato ao enviar mensagens em massa"
+                settingsHeight="0vw"
+                settingsComponent={null}
+                onCheck={handleCheckPress}
+            />
+            <ActionContainer
+                action={removeFromBlacklistAction}
+                target="nagazap:blacklist:remove"
+                title="Broadcast: remover da lista negra"
+                description="Ao remover da lista negra, o broadcast voltará a enviar mensagens em massa para este contato"
                 settingsHeight="0vw"
                 settingsComponent={null}
                 onCheck={handleCheckPress}

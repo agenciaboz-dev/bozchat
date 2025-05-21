@@ -74,11 +74,11 @@ export declare class Board {
         id: string;
         name: string;
         created_at: string;
+        company_id: string;
         rooms: Prisma.JsonValue;
         washima_settings: Prisma.JsonValue;
         nagazap_settings: Prisma.JsonValue;
         entry_room_id: string;
-        company_id: string;
     }>;
     saveRooms(): Promise<void>;
     newRoom(data: RoomForm): void;

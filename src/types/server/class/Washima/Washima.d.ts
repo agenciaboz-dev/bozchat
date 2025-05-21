@@ -105,6 +105,7 @@ export declare class Washima {
     sendMessage(chat_id: string, text?: string, media?: WashimaMediaForm, replyMessage?: WashimaMessage, from_bot?: boolean): Promise<void>;
     getContact(contact_id: string): Promise<string>;
     getMedia(message: Message): Promise<WashimaMedia | undefined>;
+    clearSingleton(): Promise<void>;
     stop(): Promise<void>;
     restart(): Promise<void>;
     getMediaMeta(message_id: string): Promise<WashimaMedia | undefined>;
