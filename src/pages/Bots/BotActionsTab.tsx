@@ -182,7 +182,7 @@ export const BotActionsTab: React.FC<BotActionsTabProps> = (props) => {
                 target={"board:room:chat:new"}
                 title="Enviar para um quadro"
                 description="Copie esta conversa para um quadro"
-                settingsHeight="11vw"
+                settingsHeight="auto"
                 settingsComponent={
                     <Box sx={{ gap: "1vw", flexDirection: "column" }}>
                         <Autocomplete
@@ -220,7 +220,7 @@ export const BotActionsTab: React.FC<BotActionsTabProps> = (props) => {
                 target="bot:end"
                 title="Finalizar conversa"
                 description="Encerrar a conversa e impedir qualquer interação do bot com o contato, pela duração configurada"
-                settingsHeight="8vw"
+                settingsHeight="auto"
                 settingsComponent={
                     <TextField
                         label="Duração"

@@ -47,6 +47,12 @@ export const NodeDrawer: React.FC<NodeDrawerProps> = ({ node, onClose, saveNode,
         }
     }, [inputRef.current])
 
+    useEffect(() => {
+        return () => {
+            setCurrentTab("message")
+        }
+    }, [node])
+
     return (
         <Drawer open={!!node} onClose={onClose} anchor="right" variant="persistent">
             <Paper
