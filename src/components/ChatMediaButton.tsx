@@ -1,9 +1,11 @@
 import React, { useCallback, useMemo, useRef, useState } from "react"
-import { Box, Dialog, IconButton } from "@mui/material"
-import { Close, Photo } from "@mui/icons-material"
+import { Box, Dialog, IconButton, Menu, MenuItem } from "@mui/material"
+import { Add, Close, Photo } from "@mui/icons-material"
 import { useSnackbar } from "burgos-snackbar"
 import { FlowNodeData } from "../types/server/class/Bot/Bot"
 import { file2base64 } from "../tools/toBase64"
+import { WhastappButtonAction } from "../types/server/class/Nagazap"
+import { uid } from "uid"
 
 interface ChatMediaButtonProps {
     nodeData?: FlowNodeData
@@ -20,10 +22,16 @@ export const ChatMediaButton: React.FC<ChatMediaButtonProps> = (props) => {
     const { snackbar } = useSnackbar()
 
     const [currentFile, setCurrentFile] = useState<File | null>(null)
+    const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null)
+    const is_menu_open = Boolean(anchorEl)
 
     const [showingMediaChooser, setShowingMediaChooser] = useState(false)
     const type = useMemo(() => currentFile?.type.split("/")[0], [currentFile])
     const url = useMemo(() => (currentFile ? URL.createObjectURL(currentFile) : ""), [currentFile])
+
+    const handleCloseMenu = () => {
+        setAnchorEl(null)
+    }
 
     const resetMediaChooser = () => {
         setCurrentFile(null)
@@ -32,6 +40,23 @@ export const ChatMediaButton: React.FC<ChatMediaButtonProps> = (props) => {
     const closeMediaModal = () => {
         resetMediaChooser()
         setShowingMediaChooser(false)
+    }
+
+    const addButton = () => {
+        props.setNodeData((data) => {
+            const action = data.interactive?.action as WhastappButtonAction | undefined
+
+            return {
+                ...data,
+                interactive: {
+                    action: {
+                        buttons: [...(action?.buttons || []), { type: "reply", reply: { id: uid(), title: "Resposta rápida" } }],
+                    } as WhastappButtonAction,
+                    body: { text: "" },
+                    type: "button",
+                },
+            }
+        })
     }
 
     const handleFileChange = useCallback(async (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -63,8 +88,8 @@ export const ChatMediaButton: React.FC<ChatMediaButtonProps> = (props) => {
 
     return (
         <Box sx={{ marginLeft: "0.5vw" }}>
-            <IconButton onClick={() => inputRef.current?.click()}>
-                <Photo />
+            <IconButton onClick={(ev) => setAnchorEl(ev.currentTarget)}>
+                <Add />
             </IconButton>
             <input type="file" ref={inputRef} style={{ display: "none" }} accept={"image/*, video/*"} onChange={handleFileChange} />
 
@@ -83,6 +108,34 @@ export const ChatMediaButton: React.FC<ChatMediaButtonProps> = (props) => {
                 {type === "image" && <img src={url} style={{ width: "auto", height: "60vh", objectFit: "contain" }} draggable={false} />}
                 {type === "video" && <video src={url} style={{ width: "auto", height: "60vh", objectFit: "contain" }} controls />}
             </Dialog>
+
+            <Menu
+                open={is_menu_open}
+                anchorEl={anchorEl}
+                onClose={handleCloseMenu}
+                // anchorPosition={{ top: -10, left: 0 }}
+                // anchorOrigin={{}}
+                // slotProps={{ paper: { sx: { bgcolor: "background.default" } } }}
+            >
+                <MenuItem
+                    onClick={() => {
+                        inputRef.current?.click()
+                        handleCloseMenu()
+                    }}
+                >
+                    Imagem / vídeo
+                </MenuItem>
+                <MenuItem
+                    onClick={() => {
+                        addButton()
+                        handleCloseMenu()
+                    }}
+                    disabled={props.nodeData?.interactive?.type === "list"}
+                >
+                    Botão
+                </MenuItem>
+                <MenuItem disabled={props.nodeData?.interactive?.type === "button"}>Lista</MenuItem>
+            </Menu>
         </Box>
     )
 }

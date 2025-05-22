@@ -82,7 +82,7 @@ export const MessageContainer: React.FC<MessageContainerProps> = ({ message, nag
                     </MenuItem>
                 </PhotoView>
             )}
-            {(message.type === "text" || message.type === "button" || message.type === "reaction") && (
+            {(message.type === "text" || message.type === "button" || message.type === "reaction" || message.type === "interactive") && (
                 <Typography
                     sx={{
                         wordBreak: "break-word",

@@ -56,7 +56,10 @@ export const ChatItem: React.FC<ChatItemProps> = ({ chat, onChatClick, active })
                         src={chat.lastMessage.text}
                     />
                 )}
-                {(chat.lastMessage.type === "text" || chat.lastMessage.type === "button" || chat.lastMessage.type === "reaction") && (
+                {(chat.lastMessage.type === "text" ||
+                    chat.lastMessage.type === "button" ||
+                    chat.lastMessage.type === "reaction" ||
+                    chat.lastMessage.type === "interactive") && (
                     <Typography
                         sx={{
                             wordBreak: "break-word",

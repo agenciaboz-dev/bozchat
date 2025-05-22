@@ -1,17 +1,21 @@
 import React from "react"
-import { Avatar, Box, IconButton, MenuItem, Paper, Typography, useMediaQuery } from "@mui/material"
+import { Avatar, Box, Button, IconButton, MenuItem, Paper, TextField, Tooltip, Typography, useMediaQuery } from "@mui/material"
 import { FlowNode, FlowNodeData } from "../../types/server/class/Bot/Bot"
 import { useDarkMode } from "../../hooks/useDarkMode"
 import { PhotoView } from "react-photo-view"
 import { AudioPlayer } from "../Washima/AudioComponents/AudioPlayer"
 import { TrianguloFudido } from "../Zap/TrianguloFudido"
-import { Delete } from "@mui/icons-material"
+import { Close, Delete, Reply } from "@mui/icons-material"
 import { custom_colors } from "../../style/colors"
+import { WhastappButtonAction } from "../../types/server/class/Nagazap"
 
 interface BotMessageContainerProps {
     node: FlowNode | null
     nodeData?: FlowNodeData
     removeMedia?: () => void
+    editButton: (id: string | null) => void
+    edittingButton: string | null
+    setNodeData?: React.Dispatch<React.SetStateAction<FlowNodeData>>
 }
 
 export const BotMessageContainer: React.FC<BotMessageContainerProps> = (props) => {
@@ -108,6 +112,74 @@ export const BotMessageContainer: React.FC<BotMessageContainerProps> = (props) =
                     }}
                     inBoards
                 />
+            )}
+
+            {props.nodeData?.interactive?.type === "button" && (
+                <Box sx={{ flexDirection: "column" }}>
+                    {(props.nodeData.interactive.action as WhastappButtonAction).buttons?.map((button, index) => (
+                        <Tooltip
+                            key={button.reply.id}
+                            // placement="left"
+                            title={
+                                <Box sx={{ flexDirection: "column", padding: "0.5vw" }}>
+                                    <Box sx={{ justifyContent: "space-between", alignItems: "center" }}>
+                                        <Typography>Editar botão</Typography>
+                                        <IconButton sx={{ padding: "0.3vw" }} onClick={() => props.editButton(null)}>
+                                            <Close />
+                                        </IconButton>
+                                    </Box>
+                                    <TextField
+                                        value={button.reply.title}
+                                        variant="standard"
+                                        onChange={(ev) =>
+                                            props.setNodeData?.((data) => {
+                                                const action = data.interactive?.action as WhastappButtonAction
+                                                action.buttons[index].reply.title = ev.target.value
+                                                return { ...data, interactive: { ...data.interactive!, action: action } }
+                                            })
+                                        }
+                                        InputProps={{
+                                            endAdornment: (
+                                                <IconButton
+                                                    onClick={() =>
+                                                        props.setNodeData?.((data) => {
+                                                            const action = data.interactive?.action as WhastappButtonAction
+                                                            action.buttons = action.buttons.filter((item) => item.reply.id !== button.reply.id)
+                                                            return { ...data, interactive: { ...data.interactive!, action: action } }
+                                                        })
+                                                    }
+                                                >
+                                                    <Delete />
+                                                </IconButton>
+                                            ),
+                                        }}
+                                    />
+                                </Box>
+                            }
+                            arrow
+                            open={props.edittingButton === button.reply.id}
+                        >
+                            <Button
+                                variant="text"
+                                // fullWidth
+                                sx={{
+                                    textTransform: "none",
+                                    color: "secondary.main",
+                                    fontWeight: "bold",
+                                    borderTop: "1px solid",
+                                    borderColor: "#e1e1e188",
+                                    borderRadius: 0,
+                                    margin: "0 -0.5vw",
+                                    minWidth: "10vw",
+                                }}
+                                startIcon={<Reply />}
+                                onClick={() => props.editButton(button.reply.id)}
+                            >
+                                {button.reply.title}
+                            </Button>
+                        </Tooltip>
+                    ))}
+                </Box>
             )}
 
             <TrianguloFudido

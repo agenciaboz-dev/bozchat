@@ -1,4 +1,4 @@
-import React from "react"
+import React, { useState } from "react"
 import { Box } from "@mui/material"
 import { FlowNode, FlowNodeData } from "../../types/server/class/Bot/Bot"
 import { useSnackbar } from "burgos-snackbar"
@@ -18,6 +18,8 @@ interface SettingsTabProps {
 export const BotMessageTab: React.FC<SettingsTabProps> = (props) => {
     const { darkMode } = useDarkMode()
     const { snackbar } = useSnackbar()
+
+    const [edittingButton, setEdittingButton] = useState<string | null>(null)
 
     const onSaveClick = () => {
         if (!props.node || (props.node.type !== "response" && !props.nodeData) || props.nodeData === undefined) return
@@ -57,7 +59,14 @@ export const BotMessageTab: React.FC<SettingsTabProps> = (props) => {
                         <TextInfo>Essas respostas são os gatilhos que ativarão a próxima resposta do bot.</TextInfo>
                     </>
                 )}
-                <BotMessageContainer node={props.node} nodeData={props.nodeData} removeMedia={removeMedia} />
+                <BotMessageContainer
+                    node={props.node}
+                    nodeData={props.nodeData}
+                    setNodeData={props.setNodeData}
+                    removeMedia={removeMedia}
+                    editButton={(id) => setEdittingButton(id)}
+                    edittingButton={edittingButton}
+                />
             </Box>
 
             <ChatInput
@@ -65,7 +74,7 @@ export const BotMessageTab: React.FC<SettingsTabProps> = (props) => {
                 setData={props.setNodeData}
                 isBot={props.node?.type === "message"}
                 onSubmit={onSaveClick}
-                disabled={props.nodeData?.value === props.node?.data.value && props.nodeData?.media?.url === props.node?.data.media?.url}
+                // disabled={props.nodeData?.-value === props.node?.data.value && props.nodeData?.media?.url === props.node?.data.media?.url}
             />
         </Box>
     )

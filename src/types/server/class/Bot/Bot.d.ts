@@ -2,7 +2,7 @@ import { Prisma } from "@prisma/client";
 import { WithoutFunctions } from "../helpers";
 import { WashimaMediaForm } from "../Washima/Washima";
 import { Edge, Node, ReactFlowJsonObject } from "@xyflow/react";
-import { NagazapMediaForm } from "../Nagazap";
+import { NagazapMediaForm, WhatsappInteractiveForm } from "../Nagazap";
 import { NodeAction } from "./NodeAction";
 export declare const bot_include: {
     washimas: {
@@ -40,6 +40,7 @@ export interface FlowNodeData {
     };
     actions?: NodeAction[];
     next_node_id?: string;
+    interactive?: WhatsappInteractiveForm;
 }
 export interface FlowNode extends Node {
     data: FlowNodeData;
@@ -72,7 +73,7 @@ export interface PausedInteraction {
 export interface BotMessageForm {
     message: string;
     chat_id: string;
-    response: (text: string, media?: WashimaMediaForm | NagazapMediaForm) => Promise<void>;
+    response: (text: string, media?: WashimaMediaForm | NagazapMediaForm, interactive?: WhatsappInteractiveForm) => Promise<void>;
     other_bots: Bot[];
     platform: "nagazap" | "washima";
     platform_id: string;
@@ -119,6 +120,7 @@ export declare class Bot {
         value: string;
         media: undefined;
         actions: undefined;
+        interactive: undefined;
     }[];
     getNextNode(node_id: string): FlowNode | undefined;
     save(): Promise<void>;

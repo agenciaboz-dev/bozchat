@@ -8,7 +8,34 @@ import { TemplateCategory, TemplateComponent, TemplateForm, TemplateInfo } from 
 import { Company } from "./Company";
 import { Socket } from "socket.io";
 import { NagazapLink } from "./NagazapLink";
-export type NagaMessageType = "text" | "reaction" | "sticker" | "image" | "audio" | "video" | "button" | "template";
+export interface WhatsappListAction {
+    button: string;
+    sections: {
+        title: string;
+        rows: {
+            id: string;
+            title: string;
+            description: string;
+        }[];
+    }[];
+}
+export interface WhastappButtonAction {
+    buttons: {
+        type: "reply";
+        reply: {
+            id: string;
+            title: string;
+        };
+    }[];
+}
+export interface WhatsappInteractiveForm {
+    type: "list" | "button";
+    body: {
+        text: string;
+    };
+    action: WhatsappListAction | WhastappButtonAction;
+}
+export type NagaMessageType = "text" | "reaction" | "sticker" | "image" | "audio" | "video" | "button" | "template" | "interactive";
 export type NagaMessagePrisma = Prisma.NagazapMessageGetPayload<{}>;
 export type NagaMessageTemplate = {
     name: string;
@@ -19,6 +46,7 @@ export type NagaMessageTemplate = {
 };
 export type NagaMessageForm = Omit<Prisma.NagazapMessageGetPayload<{}>, "id" | "nagazap_id" | "template"> & {
     template?: NagaMessageTemplate;
+    interactive?: WhatsappInteractiveForm;
 };
 export type NagaTemplatePrisma = Prisma.NagaTemplateGetPayload<{}>;
 export declare const nagazap_include: {
@@ -48,6 +76,7 @@ export interface NagazapResponseForm {
     number: string;
     text: string;
     media?: NagazapMediaForm;
+    interactive?: WhatsappInteractiveForm;
 }
 interface BuildHeadersOptions {
     upload?: boolean;
