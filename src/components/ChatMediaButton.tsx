@@ -4,7 +4,7 @@ import { Add, Close, Photo } from "@mui/icons-material"
 import { useSnackbar } from "burgos-snackbar"
 import { FlowNodeData } from "../types/server/class/Bot/Bot"
 import { file2base64 } from "../tools/toBase64"
-import { WhastappButtonAction } from "../types/server/class/Nagazap"
+import { WhastappButtonAction, WhatsappListAction } from "../types/server/class/Nagazap"
 import { uid } from "uid"
 
 interface ChatMediaButtonProps {
@@ -54,6 +54,24 @@ export const ChatMediaButton: React.FC<ChatMediaButtonProps> = (props) => {
                     } as WhastappButtonAction,
                     body: { text: "" },
                     type: "button",
+                },
+            }
+        })
+    }
+
+    const addList = () => {
+        props.setNodeData((data) => {
+            const action = data.interactive?.action as WhatsappListAction | undefined
+
+            return {
+                ...data,
+                interactive: {
+                    action: {
+                        sections: [...(action?.sections || []), { title: "Ver opções", rows: [{ title: "Opção 1", id: uid(), description: "" }] }],
+                        button: "Ver opções",
+                    } as WhatsappListAction,
+                    body: { text: "" },
+                    type: "list",
                 },
             }
         })
@@ -130,11 +148,25 @@ export const ChatMediaButton: React.FC<ChatMediaButtonProps> = (props) => {
                         addButton()
                         handleCloseMenu()
                     }}
-                    disabled={props.nodeData?.interactive?.type === "list"}
+                    disabled={
+                        props.nodeData?.interactive?.type === "list" ||
+                        (props.nodeData?.interactive?.action as WhastappButtonAction | undefined)?.buttons.length === 3
+                    }
                 >
                     Botão
                 </MenuItem>
-                <MenuItem disabled={props.nodeData?.interactive?.type === "button"}>Lista</MenuItem>
+                <MenuItem
+                    onClick={() => {
+                        addList()
+                        handleCloseMenu()
+                    }}
+                    disabled={
+                        props.nodeData?.interactive?.type === "button" ||
+                        (props.nodeData?.interactive?.action as WhatsappListAction | undefined)?.sections.length === 1
+                    }
+                >
+                    Lista
+                </MenuItem>
             </Menu>
         </Box>
     )

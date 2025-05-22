@@ -48,6 +48,7 @@ export const BotForm: React.FC<BotFormProps> = ({ onSubmit, bot, onDelete, setSh
             expiry_message: bot?.expiry_message || "",
             idleness_message: bot?.idleness_message || "",
             idleness_minutes: bot?.idleness_minutes || 0,
+            paused_chats: new Map(),
         },
         async onSubmit(values, formikHelpers) {
             if (loading || !company || deleting) return

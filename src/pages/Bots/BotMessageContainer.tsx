@@ -5,9 +5,10 @@ import { useDarkMode } from "../../hooks/useDarkMode"
 import { PhotoView } from "react-photo-view"
 import { AudioPlayer } from "../Washima/AudioComponents/AudioPlayer"
 import { TrianguloFudido } from "../Zap/TrianguloFudido"
-import { Close, Delete, Reply } from "@mui/icons-material"
+import { Close, Delete, List, Reply } from "@mui/icons-material"
 import { custom_colors } from "../../style/colors"
-import { WhastappButtonAction } from "../../types/server/class/Nagazap"
+import { WhastappButtonAction, WhatsappListAction } from "../../types/server/class/Nagazap"
+import { uid } from "uid"
 
 interface BotMessageContainerProps {
     node: FlowNode | null
@@ -118,8 +119,8 @@ export const BotMessageContainer: React.FC<BotMessageContainerProps> = (props) =
                 <Box sx={{ flexDirection: "column" }}>
                     {(props.nodeData.interactive.action as WhastappButtonAction).buttons?.map((button, index) => (
                         <Tooltip
+                            placement="left-end"
                             key={button.reply.id}
-                            // placement="left"
                             title={
                                 <Box sx={{ flexDirection: "column", padding: "0.5vw" }}>
                                     <Box sx={{ justifyContent: "space-between", alignItems: "center" }}>
@@ -129,6 +130,7 @@ export const BotMessageContainer: React.FC<BotMessageContainerProps> = (props) =
                                         </IconButton>
                                     </Box>
                                     <TextField
+                                        onKeyDown={(ev) => (ev.key === "Enter" ? props.editButton(null) : {})}
                                         value={button.reply.title}
                                         variant="standard"
                                         onChange={(ev) =>
@@ -176,6 +178,104 @@ export const BotMessageContainer: React.FC<BotMessageContainerProps> = (props) =
                                 onClick={() => props.editButton(button.reply.id)}
                             >
                                 {button.reply.title}
+                            </Button>
+                        </Tooltip>
+                    ))}
+                </Box>
+            )}
+
+            {props.nodeData?.interactive?.type === "list" && (
+                <Box sx={{ flexDirection: "column" }}>
+                    {(props.nodeData.interactive.action as WhatsappListAction).sections?.map((section, index) => (
+                        <Tooltip
+                            key={section.title + index.toString()}
+                            slotProps={{ tooltip: { sx: { marginRight: "1vw" } } }}
+                            placement="left-end"
+                            title={
+                                <Box sx={{ flexDirection: "column", padding: "0.5vw" }}>
+                                    <Box sx={{ justifyContent: "space-between", alignItems: "center" }}>
+                                        <Typography>Editar lista</Typography>
+                                        <IconButton sx={{ padding: "0.3vw" }} onClick={() => props.editButton(null)}>
+                                            <Close />
+                                        </IconButton>
+                                    </Box>
+
+                                    {section.rows.map((button, button_index) => (
+                                        <TextField
+                                            onKeyDown={(ev) => (ev.key === "Enter" ? props.editButton(null) : {})}
+                                            value={button.title}
+                                            variant="standard"
+                                            onChange={(ev) =>
+                                                props.setNodeData?.((data) => {
+                                                    const action = data.interactive?.action as WhatsappListAction
+                                                    action.sections[index].rows[button_index].title = ev.target.value
+                                                    return { ...data, interactive: { ...data.interactive!, action: action } }
+                                                })
+                                            }
+                                            InputProps={{
+                                                startAdornment: (
+                                                    <Typography sx={{ color: "secondary.main", fontWeight: "bold", marginRight: "0.5vw" }}>
+                                                        {button_index + 1}.{" "}
+                                                    </Typography>
+                                                ),
+                                                endAdornment: (
+                                                    <IconButton
+                                                        onClick={() =>
+                                                            props.setNodeData?.((data) => {
+                                                                const action = data.interactive?.action as WhatsappListAction
+                                                                action.sections[index].rows = action.sections[index].rows.filter(
+                                                                    (item) => item.id !== button.id
+                                                                )
+
+                                                                if (action.sections[index].rows.length === 0) {
+                                                                    action.sections = action.sections.filter((_, item_index) => item_index !== index)
+                                                                }
+                                                                return { ...data, interactive: { ...data.interactive!, action: action } }
+                                                            })
+                                                        }
+                                                    >
+                                                        <Delete />
+                                                    </IconButton>
+                                                ),
+                                            }}
+                                        />
+                                    ))}
+                                    <Button
+                                        variant="outlined"
+                                        sx={{ textTransform: "none", fontWeight: "bold", marginTop: "0.5vw" }}
+                                        onClick={() =>
+                                            props.setNodeData?.((data) => {
+                                                const action = data.interactive?.action as WhatsappListAction
+                                                action.sections[index].rows.push({ description: "", id: uid(), title: "" })
+                                                return { ...data, interactive: { ...data.interactive!, action: action } }
+                                            })
+                                        }
+                                        disabled={section.rows.length === 10}
+                                    >
+                                        Nova opção
+                                    </Button>
+                                </Box>
+                            }
+                            arrow
+                            open={props.edittingButton === section.title + index.toString()}
+                        >
+                            <Button
+                                variant="text"
+                                // fullWidth
+                                sx={{
+                                    textTransform: "none",
+                                    color: "secondary.main",
+                                    fontWeight: "bold",
+                                    borderTop: "1px solid",
+                                    borderColor: "#e1e1e188",
+                                    borderRadius: 0,
+                                    margin: "0 -0.5vw",
+                                    minWidth: "10vw",
+                                }}
+                                startIcon={<List />}
+                                onClick={() => props.editButton(section.title + index.toString())}
+                            >
+                                {section.title}
                             </Button>
                         </Tooltip>
                     ))}
