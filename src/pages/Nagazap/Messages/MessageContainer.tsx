@@ -9,6 +9,7 @@ import { DeletedMessage } from "../../Zap/DeletedMessage"
 import { TemplatePreview } from "../TemplateForm/TemplatePreview"
 import { custom_colors } from "../../../style/colors"
 import { BotNameChip } from "../../Bots/BotNameChip"
+import { InteractiveMessageComponent } from "./InteractiveMessageComponent"
 
 interface MessageContainerProps {
     message: NagaMessage
@@ -116,6 +117,8 @@ export const MessageContainer: React.FC<MessageContainerProps> = ({ message, nag
                     <TemplatePreview components={message.template.components} realMessage />
                 </Box>
             )}
+
+            {message.type === "interactive" && message.template && <InteractiveMessageComponent interactive={message.template} />}
 
             <Box
                 sx={{
