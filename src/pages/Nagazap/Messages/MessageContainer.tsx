@@ -8,6 +8,7 @@ import { useDarkMode } from "../../../hooks/useDarkMode"
 import { DeletedMessage } from "../../Zap/DeletedMessage"
 import { TemplatePreview } from "../TemplateForm/TemplatePreview"
 import { custom_colors } from "../../../style/colors"
+import { BotNameChip } from "../../Bots/BotNameChip"
 
 interface MessageContainerProps {
     message: NagaMessage
@@ -54,6 +55,8 @@ export const MessageContainer: React.FC<MessageContainerProps> = ({ message, nag
                 margin: isMobile ? "1vw 0" : undefined,
             }}
         >
+            {/* //* BOT CHIP */}
+            {message.from_bot && <BotNameChip name={message.from_bot} />}
             {disabledIcon && <DeletedMessage customText="Tempo de resposta excedido (24 horas)" />}
             {(message.type === "image" || message.type === "sticker") && (
                 <PhotoView src={message.text}>

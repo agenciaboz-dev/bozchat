@@ -1,12 +1,12 @@
 import React, { forwardRef, useEffect, useMemo, useState } from "react"
-import { Avatar, Box, Checkbox, CircularProgress, MenuItem, Skeleton, Typography } from "@mui/material"
+import { Avatar, Box, Checkbox, Chip, CircularProgress, MenuItem, Skeleton, Tooltip, Typography } from "@mui/material"
 import { useMuiTheme } from "../../hooks/useMuiTheme"
 import { useMediaQuery } from "@mui/material"
 import { Washima, WashimaMedia } from "../../types/server/class/Washima/Washima"
 import { api } from "../../api"
 import { useVisibleCallback } from "burgos-use-visible-callback"
 import { ErrorChip, TodoChip } from "../../components/TodoChip"
-import { Reply } from "@mui/icons-material"
+import { Android, Reply } from "@mui/icons-material"
 import { AudioPlayer } from "../Washima/AudioComponents/AudioPlayer"
 import { TrianguloFudido } from "./TrianguloFudido"
 import { MessageDateContainer } from "./MessageDateContainer"
@@ -26,6 +26,7 @@ import { custom_colors } from "../../style/colors"
 import { CallInfo } from "./CallInfo"
 import { ChatInfoChip } from "../Washima/WashimaChat/GroupUpdateItem"
 import { phoneMask } from "../../tools/masks"
+import { BotNameChip } from "../Bots/BotNameChip"
 
 interface MessageProps {
     washima: Washima
@@ -268,6 +269,9 @@ export const Message: React.ForwardRefRenderFunction<HTMLDivElement, MessageProp
                                     <MessageAuthor washima_id={washima.id} contact_id={message.contact_id} />
                                 </Box>
                             )}
+
+                            {/* //* BOT CHIP */}
+                            {message.from_bot && <BotNameChip name={message.from_bot} />}
 
                             {/* //* QUOTED MESSAGE COMPONENT */}
                             {message.replied_to && !is_deleted && (

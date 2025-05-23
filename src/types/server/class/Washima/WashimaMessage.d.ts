@@ -17,6 +17,7 @@ export interface WashimaMessageForm {
     chat_id: string;
     isGroup?: boolean;
     createOnly?: boolean;
+    from_bot?: string;
 }
 export interface WashimaCall {
     isVideoCall: boolean;
@@ -44,6 +45,7 @@ export declare class WashimaMessage {
     phone_only: boolean | null;
     call: WashimaCall | null;
     contact_id: string | null;
+    from_bot: string | null;
     static getChatMessages(washima_id: string, chat_id: string, is_group: boolean, offset?: number, take?: number | null): Promise<WashimaMessage[]>;
     static getWashimaMessages(washima_id: string, body?: any): Promise<WashimaMessage[]>;
     static search(value: string, chat_id?: string): Promise<WashimaMessage[]>;

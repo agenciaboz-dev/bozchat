@@ -5,6 +5,7 @@ import { Socket } from "socket.io";
 import { WashimaMessage } from "./WashimaMessage";
 import { WashimaGroupUpdate } from "./WashimaGroupUpdate";
 import { Company } from "../Company";
+import { WhatsappInteractiveForm } from "../Nagazap";
 export type WashimaPrisma = Prisma.WashimaGetPayload<{}>;
 export type WashimaMediaPrisma = Prisma.WashimaMediaGetPayload<{}>;
 export type WashimaProfilePicPrisma = Prisma.WashimaProfilePicGetPayload<{}>;
@@ -90,7 +91,7 @@ export declare class Washima {
     static getContact(socket: Socket, washima_id: string, contact_id: string, message_id: string): Promise<void>;
     constructor(data: WashimaPrisma);
     handleAck(message: Message): Promise<void>;
-    handleNewMessage(message: Message, sendingNow?: boolean): Promise<void>;
+    handleNewMessage(message: Message, sendingNow?: boolean, from_bot?: string): Promise<void>;
     initialize(): Promise<void>;
     sendBulkGroupNotification(notification: WAWebJS.GroupNotification): Promise<void>;
     update(data: Partial<Washima>): Promise<void>;
@@ -103,7 +104,7 @@ export declare class Washima {
         group_updates?: undefined;
     } | undefined>;
     getMessage(message_id: string): Promise<WAWebJS.Message>;
-    sendMessage(chat_id: string, text?: string, media?: WashimaMediaForm, replyMessage?: WashimaMessage, from_bot?: boolean): Promise<void>;
+    sendMessage(chat_id: string, _text?: string, media?: WashimaMediaForm, replyMessage?: WashimaMessage, from_bot?: string, interactive?: WhatsappInteractiveForm): Promise<void>;
     getContact(contact_id: string): Promise<string>;
     getMedia(message: Message): Promise<WashimaMedia | undefined>;
     clearSingleton(): Promise<void>;

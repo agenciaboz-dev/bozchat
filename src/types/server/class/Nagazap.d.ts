@@ -77,6 +77,7 @@ export interface NagazapResponseForm {
     text: string;
     media?: NagazapMediaForm;
     interactive?: WhatsappInteractiveForm;
+    bot_name?: string;
 }
 interface BuildHeadersOptions {
     upload?: boolean;
@@ -112,6 +113,7 @@ export declare class NagaMessage {
     type: NagaMessageType;
     nagazap_id: string;
     template: TemplateInfo | null;
+    from_bot: string | null;
     constructor(data: NagaMessagePrisma);
 }
 export interface NagazapForm {
