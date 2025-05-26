@@ -52,6 +52,7 @@ export const custom_colors = {
     darkMode_messageMenuBg: "#4a4a4a",
     darkMode_receivedMsg: "#2a323c",
     darkMode_templatePreviewTriangle: "#2a323c",
+    darkMode_interactiveMessageBorder: "#e1e1e188",
 
     lightMode_border: "#c9c9c9",
     lightMode_botEmittedMsg: "#0f6787",
@@ -66,6 +67,7 @@ export const custom_colors = {
     lightMode_receivedMsg: "#e0e0e0",
     lightMode_templatePreviewTriangle: "#f4f4f4",
     lightMode_templatePreOvenTriangle: "#f7f7f7",
+    lightMode_interactiveMessageBorder: "#41c1e188",
 }
 
 export const washima_colors = [
