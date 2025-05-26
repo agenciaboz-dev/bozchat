@@ -114,6 +114,7 @@ export declare class NagaMessage {
     nagazap_id: string;
     template: TemplateInfo | null;
     from_bot: string | null;
+    media_url: string | null;
     constructor(data: NagaMessagePrisma);
 }
 export interface NagazapForm {
@@ -201,7 +202,7 @@ export declare class Nagazap {
     getMetaTemplates(): Promise<TemplateInfo[]>;
     getMetaTemplate(template_id: string): Promise<TemplateInfo>;
     uploadMedia(file: UploadedFile, filepath: string): Promise<string>;
-    sendMessage(message: WhatsappForm): Promise<void>;
+    sendTemplateMessage(message: WhatsappForm): Promise<void>;
     queueMessage(data: WhatsappForm): Promise<WhatsappForm[]>;
     queueBatch(data: WhatsappForm[]): Promise<WhatsappForm[]>;
     prepareBatch(data: OvenForm, image_id?: string, image_url?: string): Promise<void>;
@@ -222,7 +223,7 @@ export declare class Nagazap {
     uploadTemplateMedia(file: UploadedFile): Promise<any>;
     downloadMedia(media_id: string): Promise<string>;
     emit(): void;
-    sendResponse(data: NagazapResponseForm, socket?: Socket): Promise<void>;
+    sendMessage(data: NagazapResponseForm, socket?: Socket): Promise<void>;
     getLinks(): Promise<NagazapLink[]>;
     newLink(url: string, template_name?: string): Promise<NagazapLink>;
     findOriginalLink(url: string): Promise<NagazapLink | undefined>;

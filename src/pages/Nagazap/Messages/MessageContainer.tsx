@@ -55,51 +55,52 @@ export const MessageContainer: React.FC<MessageContainerProps> = ({ message, nag
                 marginBottom: message.type === "sticker" ? "0.5vw" : undefined,
                 margin: isMobile ? "1vw 0" : undefined,
             }}
+            onClick={() => console.log(message)}
         >
             {/* //* BOT CHIP */}
             {message.from_bot && <BotNameChip name={message.from_bot} />}
             {disabledIcon && <DeletedMessage customText="Tempo de resposta excedido (24 horas)" />}
-            {(message.type === "image" || message.type === "sticker") && (
-                <PhotoView src={message.text}>
+            {message.media_url && (
+                <PhotoView src={message.media_url}>
                     <MenuItem sx={{ padding: 0, justifyContent: "center", pointerEvents: message.type === "sticker" ? "none" : undefined }}>
                         <Avatar
                             variant="rounded"
                             sx={{
                                 width:
-                                    message.type === "image"
+                                    message.type === "sticker"
                                         ? inBoards
-                                            ? "15vw"
+                                            ? "5vw"
                                             : isMobile
                                             ? "33vw"
-                                            : "20vw"
+                                            : "10vw"
                                         : inBoards
-                                        ? "5vw"
+                                        ? "15vw"
                                         : isMobile
                                         ? "33vw"
-                                        : "10vw",
+                                        : "20vw",
                                 height: "auto",
                                 maxHeight: inBoards ? "15vw" : isMobile ? "80vw" : "20vw",
                                 borderRadius: message.type === "sticker" ? (isMobile ? "4px" : "0.75vw") : undefined,
                             }}
-                            src={message.text}
+                            src={message.media_url}
                         />
                     </MenuItem>
                 </PhotoView>
             )}
-            {(message.type === "text" || message.type === "button" || message.type === "reaction" || message.type === "interactive") && (
-                <Typography
-                    sx={{
-                        wordBreak: "break-word",
-                        whiteSpace: "pre-line",
-                        color: "text.secondary",
-                        fontSize: message.type === "reaction" ? "3rem" : undefined,
-                        alignSelf: message.type === "reaction" ? "center" : undefined,
-                        maxWidth: isMobile ? "100%" : "15vw",
-                    }}
-                >
-                    {message.text}
-                </Typography>
-            )}
+            {/* {(message.type === "text" || message.type === "button" || message.type === "reaction" || message.type === "interactive") && ( */}
+            <Typography
+                sx={{
+                    wordBreak: "break-word",
+                    whiteSpace: "pre-line",
+                    color: "text.secondary",
+                    fontSize: message.type === "reaction" ? "3rem" : undefined,
+                    alignSelf: message.type === "reaction" ? "center" : undefined,
+                    maxWidth: isMobile ? "100%" : "15vw",
+                }}
+            >
+                {message.text}
+            </Typography>
+            {/* )} */}
 
             {message.type === "audio" && (
                 <AudioPlayer

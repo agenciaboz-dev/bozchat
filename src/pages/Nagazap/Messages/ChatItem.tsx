@@ -44,7 +44,7 @@ export const ChatItem: React.FC<ChatItemProps> = ({ chat, onChatClick, active })
                 }}
             >
                 <MessageAuthor author={chat.name} phone={chat.from} />
-                {(chat.lastMessage.type === "image" || chat.lastMessage.type === "sticker") && (
+                {(chat.lastMessage.type === "image" || chat.lastMessage.type === "sticker") && chat.lastMessage.media_url && (
                     <Avatar
                         variant="rounded"
                         sx={{
@@ -53,27 +53,28 @@ export const ChatItem: React.FC<ChatItemProps> = ({ chat, onChatClick, active })
                             maxHeight: isMobile ? "80vw" : "20vw",
                             margin: "0 auto",
                         }}
-                        src={chat.lastMessage.text}
+                        src={chat.lastMessage.media_url}
                     />
                 )}
-                {(chat.lastMessage.type === "text" ||
+
+                {/* {(chat.lastMessage.type === "text" ||
                     chat.lastMessage.type === "button" ||
                     chat.lastMessage.type === "reaction" ||
-                    chat.lastMessage.type === "interactive") && (
-                    <Typography
-                        sx={{
-                            wordBreak: "break-word",
-                            color: "text.secondary",
-                            fontSize: chat.lastMessage.type === "reaction" ? "3rem" : undefined,
-                            alignSelf: chat.lastMessage.type === "reaction" ? "center" : undefined,
-                            maxHeight: isMobile ? "10vh" : "3vw",
-                            textOverflow: "ellipsis",
-                            overflow: "hidden",
-                        }}
-                    >
-                        {chat.lastMessage.text}
-                    </Typography>
-                )}
+                    chat.lastMessage.type === "interactive") && ( */}
+                <Typography
+                    sx={{
+                        wordBreak: "break-word",
+                        color: "text.secondary",
+                        fontSize: chat.lastMessage.type === "reaction" ? "3rem" : undefined,
+                        alignSelf: chat.lastMessage.type === "reaction" ? "center" : undefined,
+                        maxHeight: isMobile ? "10vh" : "3vw",
+                        textOverflow: "ellipsis",
+                        overflow: "hidden",
+                    }}
+                >
+                    {chat.lastMessage.text}
+                </Typography>
+                {/* )} */}
 
                 {chat.lastMessage.type === "template" && <TemplatePreview components={chat.lastMessage.template?.components || []} realMessage />}
 
