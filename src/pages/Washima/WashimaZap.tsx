@@ -24,7 +24,6 @@ export const WashimaZap: React.FC<WashimaZapProps> = ({ washima }) => {
     const [loading, setLoading] = useState(false)
     const [onSearch, setOnSearch] = useState(() => (result: Chat[]) => new Promise(() => null))
     const [onStartSearch, setOnStartSearch] = useState(() => (searched: string) => new Promise(() => null))
-    const [isSwitchingChat, setIsSwitchingChat] = useState(false)
 
     const handleSearch = async (value: string) => {
         onStartSearch(value)
@@ -69,14 +68,6 @@ export const WashimaZap: React.FC<WashimaZapProps> = ({ washima }) => {
         setLastWashima(washima)
     }, [washima])
 
-    const handleChatClick = (chat: Chat) => {
-        if (isSwitchingChat) {
-            return
-        }
-
-        setChat(chat)
-    }
-
     return (
         <Box sx={{ flex: 1 }}>
             <Box
@@ -100,7 +91,9 @@ export const WashimaZap: React.FC<WashimaZapProps> = ({ washima }) => {
                 <WashimaSearch handleSearch={debouncedSearch} />
 
                 <ChatList
-                    onChatClick={handleChatClick}
+                    onChatClick={(chat) => {
+                        setChat(chat)
+                    }}
                     washima={washima}
                     lastWashima={lastWashima}
                     loading={loading}
@@ -110,7 +103,7 @@ export const WashimaZap: React.FC<WashimaZapProps> = ({ washima }) => {
                     setOnStartSearch={setOnStartSearch}
                 />
             </Box>
-            <WashimaChat washima={washima} chat={chat} onClose={() => setChat(null)} setIsSwitchingChat={setIsSwitchingChat} />
+            <WashimaChat washima={washima} chat={chat} onClose={() => setChat(null)} />
         </Box>
     )
 }

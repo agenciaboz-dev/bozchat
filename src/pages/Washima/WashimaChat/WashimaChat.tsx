@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo, useRef, useState } from "react"
+import React, { useCallback, useEffect, useMemo, useRef, useState } from "react"
 import { Avatar, Box, IconButton, LinearProgress, Paper, Skeleton, Typography, useMediaQuery } from "@mui/material"
 import { Washima, WashimaMediaForm, WashimaProfilePic } from "../../../types/server/class/Washima/Washima"
 import CancelIcon from "@mui/icons-material/Cancel"
@@ -27,10 +27,9 @@ interface WashimaChatProps {
     chat: Chat | null
     onClose: () => void
     inBoards?: boolean
-    setIsSwitchingChat?: (value: boolean) => void
 }
 
-export const WashimaChat: React.FC<WashimaChatProps> = ({ washima, chat, onClose, inBoards, setIsSwitchingChat }) => {
+export const WashimaChat: React.FC<WashimaChatProps> = ({ washima, chat, onClose, inBoards }) => {
     const isMobile = useMediaQuery("(orientation: portrait)")
     const { darkMode } = useDarkMode()
     const io = useIo()
@@ -121,36 +120,37 @@ export const WashimaChat: React.FC<WashimaChatProps> = ({ washima, chat, onClose
         })
     }
 
-    const fetchMessages = async (offset: number = 0) => {
-        if (!chat) return
+    const fetchMessages = useCallback(
+        async (offset: number = 0) => {
+            if (!chat) return
 
-        try {
-            const params = { washima_id: washima.id, chat_id: chat.id._serialized, is_group: chat.isGroup, offset }
-            console.log(offset)
-            const response = await api.get("/washima/chat", { params: params })
-            const data = response.data as { messages: WashimaMessage[]; profilePic: string; group_updates?: WashimaGroupUpdate[] }
-            if (data.messages) {
-                addMessages(data.messages)
+            try {
+                const params = { washima_id: washima.id, chat_id: chat.id._serialized, is_group: chat.isGroup, offset }
+                console.log(offset)
+                const response = await api.get("/washima/chat", { params: params })
+                const data = response.data as { messages: WashimaMessage[]; profilePic: string; group_updates?: WashimaGroupUpdate[] }
+                if (data.messages && data.messages.every((message) => message.chat_id === chat.id._serialized)) {
+                    addMessages(data.messages)
+                }
+                setGroupUpdates(data.group_updates || [])
+            } catch (error) {
+                console.log(error)
             }
-            setGroupUpdates(data.group_updates || [])
-        } catch (error) {
-            console.log(error)
-        }
-    }
+        },
+        [chat]
+    )
 
     const fetchChat = async () => {
         if (!chat) return
 
         try {
             setLoading(true)
-            if (setIsSwitchingChat) setIsSwitchingChat(true)
             fetchProfilePic()
             await fetchMessages()
         } catch (error) {
             console.log(error)
         } finally {
             setLoading(false)
-            if (setIsSwitchingChat) setIsSwitchingChat(false)
         }
     }
 
