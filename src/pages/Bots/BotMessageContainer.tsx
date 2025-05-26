@@ -125,7 +125,7 @@ export const BotMessageContainer: React.FC<BotMessageContainerProps> = (props) =
                                 <Box sx={{ flexDirection: "column", padding: "0.5vw" }}>
                                     <Box sx={{ justifyContent: "space-between", alignItems: "center" }}>
                                         <Typography>Editar botão</Typography>
-                                        <IconButton sx={{ padding: "0.3vw" }} onClick={() => props.editButton(null)}>
+                                        <IconButton sx={{ padding: "0.3vw", color: "secondary.main" }} onClick={() => props.editButton(null)}>
                                             <Close />
                                         </IconButton>
                                     </Box>
@@ -150,10 +150,12 @@ export const BotMessageContainer: React.FC<BotMessageContainerProps> = (props) =
                                                             return { ...data, interactive: { ...data.interactive!, action: action } }
                                                         })
                                                     }
+                                                    sx={{ color: "secondary.main" }}
                                                 >
                                                     <Delete />
                                                 </IconButton>
                                             ),
+                                            sx: { color: darkMode ? "primary.main" : "secondary.main" },
                                         }}
                                     />
                                 </Box>
@@ -166,10 +168,12 @@ export const BotMessageContainer: React.FC<BotMessageContainerProps> = (props) =
                                 // fullWidth
                                 sx={{
                                     textTransform: "none",
-                                    color: "secondary.main",
+                                    color: "text.secondary",
                                     fontWeight: "bold",
                                     borderTop: "1px solid",
-                                    borderColor: "#e1e1e188",
+                                    borderColor: darkMode
+                                        ? custom_colors.darkMode_interactiveMessageBorder
+                                        : custom_colors.lightMode_interactiveMessageBorder,
                                     borderRadius: 0,
                                     margin: "0 -0.5vw",
                                     minWidth: "10vw",
@@ -195,7 +199,7 @@ export const BotMessageContainer: React.FC<BotMessageContainerProps> = (props) =
                                 <Box sx={{ flexDirection: "column", padding: "0.5vw" }}>
                                     <Box sx={{ justifyContent: "space-between", alignItems: "center" }}>
                                         <Typography>Editar lista</Typography>
-                                        <IconButton sx={{ padding: "0.3vw" }} onClick={() => props.editButton(null)}>
+                                        <IconButton sx={{ padding: "0.3vw", color: "secondary.main" }} onClick={() => props.editButton(null)}>
                                             <Close />
                                         </IconButton>
                                     </Box>
@@ -233,16 +237,22 @@ export const BotMessageContainer: React.FC<BotMessageContainerProps> = (props) =
                                                                 return { ...data, interactive: { ...data.interactive!, action: action } }
                                                             })
                                                         }
+                                                        sx={{ color: "secondary.main" }}
                                                     >
                                                         <Delete />
                                                     </IconButton>
                                                 ),
+                                                sx: { color: darkMode ? "primary.main" : "secondary.main" },
                                             }}
                                         />
                                     ))}
                                     <Button
                                         variant="outlined"
-                                        sx={{ textTransform: "none", fontWeight: "bold", marginTop: "0.5vw" }}
+                                        sx={{
+                                            textTransform: "none",
+                                            fontWeight: "bold",
+                                            marginTop: "0.5vw",
+                                        }}
                                         onClick={() =>
                                             props.setNodeData?.((data) => {
                                                 const action = data.interactive?.action as WhatsappListAction
@@ -264,10 +274,12 @@ export const BotMessageContainer: React.FC<BotMessageContainerProps> = (props) =
                                 // fullWidth
                                 sx={{
                                     textTransform: "none",
-                                    color: "secondary.main",
+                                    color: "text.secondary",
                                     fontWeight: "bold",
                                     borderTop: "1px solid",
-                                    borderColor: "#e1e1e188",
+                                    borderColor: darkMode
+                                        ? custom_colors.darkMode_interactiveMessageBorder
+                                        : custom_colors.lightMode_interactiveMessageBorder,
                                     borderRadius: 0,
                                     margin: "0 -0.5vw",
                                     minWidth: "10vw",
