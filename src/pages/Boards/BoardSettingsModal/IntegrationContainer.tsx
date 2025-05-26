@@ -1,5 +1,18 @@
 import React, { useEffect, useState } from "react"
-import { Autocomplete, Avatar, Box, Checkbox, FormControlLabel, Paper, Switch, TextField, Typography, useMediaQuery } from "@mui/material"
+import {
+    Autocomplete,
+    Avatar,
+    Box,
+    Checkbox,
+    FormControlLabel,
+    IconButton,
+    Paper,
+    Switch,
+    TextField,
+    Tooltip,
+    Typography,
+    useMediaQuery,
+} from "@mui/material"
 import { Washima, WashimaProfilePic } from "../../../types/server/class/Washima/Washima"
 import { useApi } from "../../../hooks/useApi"
 import { WithoutFunctions } from "../../../types/server/class/helpers"
@@ -8,6 +21,7 @@ import { Room } from "../../../types/server/class/Board/Room"
 import { Nagazap } from "../../../types/server/class/Nagazap"
 import { useDarkMode } from "../../../hooks/useDarkMode"
 import { custom_colors } from "../../../style/colors"
+import { Warning } from "@mui/icons-material"
 
 interface BusinessContainerProps {
     board: WithoutFunctions<Board>
@@ -31,6 +45,8 @@ export const IntegrationContainer: React.FC<BusinessContainerProps> = (props) =>
 
     const washima = props.integration as Washima
     const nagazap = props.integration as Nagazap
+
+    const washimaStopped = props.type === "washima" && washima.status === "stopped"
 
     const onChangeRoom = (room: Room) => {
         props.onChange(
@@ -70,7 +86,15 @@ export const IntegrationContainer: React.FC<BusinessContainerProps> = (props) =>
             }}
         >
             <Box sx={{ flex: 1, alignItems: "center", gap: isMobile ? "2vw" : "1vw" }}>
-                <Checkbox checked={props.checked} onChange={(_, value) => onChangeCheckbox(value)} sx={{ padding: isMobile ? 0 : undefined }} />
+                {washimaStopped ? (
+                    <Tooltip title={`Essa instância está parada e não pode ser sincronizada.`}>
+                        <IconButton color="warning">
+                            <Warning />
+                        </IconButton>
+                    </Tooltip>
+                ) : (
+                    <Checkbox checked={props.checked} onChange={(_, value) => onChangeCheckbox(value)} sx={{ padding: isMobile ? 0 : undefined }} />
+                )}
                 <Avatar src={profilePic?.url} />
                 <Box sx={{ flexDirection: "column" }}>
                     <Typography
@@ -98,14 +122,14 @@ export const IntegrationContainer: React.FC<BusinessContainerProps> = (props) =>
                     getOptionLabel={(option) => option.name}
                     ChipProps={{ size: "small", color: "primary" }}
                     disableClearable
-                    disabled={props.checked}
+                    disabled={washimaStopped || props.checked}
                     sx={{ flex: 1 }}
                 />
                 <FormControlLabel
                     sx={{ flex: 0.4 }}
                     labelPlacement="top"
                     componentsProps={{ typography: { sx: { fontSize: "0.7rem", color: "text.secondary" } } }}
-                    control={<Switch checked={unreadOnly} onChange={(_, value) => setUnreadOnly(value)} disabled={props.checked} />}
+                    control={<Switch checked={unreadOnly} onChange={(_, value) => setUnreadOnly(value)} disabled={washimaStopped || props.checked} />}
                     label={unreadOnly ? "Não lidas" : "Todas conversas"}
                 />
             </Box>
