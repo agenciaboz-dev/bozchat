@@ -27,7 +27,7 @@ interface WashimaChatProps {
     chat: Chat | null
     onClose: () => void
     inBoards?: boolean
-    setIsSwitchingChat: (value: boolean) => void
+    setIsSwitchingChat?: (value: boolean) => void
 }
 
 export const WashimaChat: React.FC<WashimaChatProps> = ({ washima, chat, onClose, inBoards, setIsSwitchingChat }) => {
@@ -143,14 +143,14 @@ export const WashimaChat: React.FC<WashimaChatProps> = ({ washima, chat, onClose
 
         try {
             setLoading(true)
-            setIsSwitchingChat(true)
+            if (setIsSwitchingChat) setIsSwitchingChat(true)
             fetchProfilePic()
             await fetchMessages()
         } catch (error) {
             console.log(error)
         } finally {
             setLoading(false)
-            setIsSwitchingChat(false)
+            if (setIsSwitchingChat) setIsSwitchingChat(false)
         }
     }
 
