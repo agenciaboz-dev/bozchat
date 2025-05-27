@@ -72,7 +72,8 @@ export const WashimaPage: React.FC<WashimaProps> = ({}) => {
     }
 
     const listen = () => {
-        io.on("washima:delete", (data: Washima) => {
+        io.on("washima:delete", (data: Washima | null) => {
+            if (!data) return
             setWashimas((values) => values.filter((item) => item.id !== data.id))
             if (currentWashima?.id === data.id) {
                 setCurrentWashima(null)
