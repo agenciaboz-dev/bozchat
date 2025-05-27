@@ -19,7 +19,7 @@ export const BotNameChip: React.FC<BotNameChipProps> = (props) => {
                         // marginBottom: "0.5vw",
                         "& .MuiChip-label": {
                             whiteSpace: "nowrap",
-                            width: "6vw",
+                            maxWidth: "6vw",
                             textOverflow: "ellipsis",
                         },
                     }}
