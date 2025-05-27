@@ -1,3 +1,4 @@
+import { light } from "@mui/material/styles/createPalette"
 import { Theme } from "../types/Theme"
 
 export const default_colors: Theme = {
@@ -53,6 +54,7 @@ export const custom_colors = {
     darkMode_receivedMsg: "#2a323c",
     darkMode_templatePreviewTriangle: "#2a323c",
     darkMode_interactiveMessageBorder: "#e1e1e188",
+    darkMode_kanbanOverlay: "#00000025",
 
     lightMode_border: "#c9c9c9",
     lightMode_botEmittedMsg: "#0f6787",
@@ -68,6 +70,7 @@ export const custom_colors = {
     lightMode_templatePreviewTriangle: "#f4f4f4",
     lightMode_templatePreOvenTriangle: "#f7f7f7",
     lightMode_interactiveMessageBorder: "#41c1e188",
+    lightMode_kanbanOverlay: "#0000000A",
 }
 
 export const washima_colors = [

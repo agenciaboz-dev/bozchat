@@ -264,7 +264,7 @@ export const BoardPage: React.FC<BoardPageProps> = (props) => {
                     borderStyle: "solid",
                     borderColor: darkMode ? custom_colors.darkMode_border : custom_colors.lightMode_border,
                     borderRadius: "4px",
-                    backgroundColor: "#0000000A",
+                    backgroundColor: darkMode ? custom_colors.darkMode_kanbanOverlay : custom_colors.lightMode_kanbanOverlay,
                 }}
             >
                 <OverlayScrollbarsComponent
