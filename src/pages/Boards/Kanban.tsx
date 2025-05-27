@@ -16,6 +16,10 @@ import { Washima } from "../../types/server/class/Washima/Washima"
 import { Nagazap } from "../../types/server/class/Nagazap"
 import { useApi } from "../../hooks/useApi"
 import { useSnackbar } from "burgos-snackbar"
+import { OverlayScrollbarsComponent } from "overlayscrollbars-react"
+import "overlayscrollbars/styles/overlayscrollbars.css"
+import { useDarkMode } from "../../hooks/useDarkMode"
+import { custom_colors } from "../../style/colors"
 
 interface BoardPageProps {
     board: WithoutFunctions<Board>
@@ -24,6 +28,7 @@ interface BoardPageProps {
 
 export const BoardPage: React.FC<BoardPageProps> = (props) => {
     const isMobile = useMediaQuery("(orientation: portrait)")
+    const { darkMode } = useDarkMode()
     const io = useIo()
     const { user } = useUser()
     const api = useApi()
@@ -251,58 +256,78 @@ export const BoardPage: React.FC<BoardPageProps> = (props) => {
             </Box>
             <Box
                 sx={{
-                    flexDirection: "column",
+                    display: "flex",
                     flex: 1,
-                    gap: isMobile ? "5vw" : "1vw",
-                    padding: isMobile ? "5vw" : "2vw",
-                    width: "100vw",
-                    overflow: "auto",
+                    margin: "2vw",
+                    overflow: "hidden",
+                    borderWidth: "1px",
+                    borderStyle: "solid",
+                    borderColor: darkMode ? custom_colors.darkMode_border : custom_colors.lightMode_border,
+                    borderRadius: "4px",
+                    backgroundColor: "#0000000A",
                 }}
             >
-                <Droppable droppableId={props.board.id} type="room" direction="horizontal">
-                    {(provided) => (
-                        <Box
-                            ref={(node: HTMLDivElement) => {
-                                provided.innerRef(node)
-                                columnsBoxRef.current = node
-                            }}
-                            {...provided.droppableProps}
-                            sx={{
-                                flex: 1,
-                                gap: isMobile ? "5vw" : "2vw",
-                                margin: isMobile ? "0 -5vw" : "0 -2vw",
-                                padding: isMobile ? "0 5vw" : "0 2vw",
-                                marginBottom: isMobile ? "-5vw" : "-2vw",
-                                paddingBottom: isMobile ? "5vw" : "2vw",
-                                overflow: "auto",
-                            }}
-                        >
-                            {board.rooms.map((room, index) => (
-                                <Draggable key={room.id} draggableId={room.id} index={index} isDragDisabled={!editMode}>
-                                    {(provided) => (
-                                        <Box ref={provided.innerRef} {...provided.draggableProps} {...provided.dragHandleProps}>
-                                            <BoardRoom
-                                                key={room.id}
-                                                washimas={washimas}
-                                                nagazaps={nagazaps}
-                                                room={room}
-                                                editMode={editMode}
-                                                updateRoom={updateRoom}
-                                                index={index}
-                                                board={board}
-                                                deleteRoom={deleteRoom}
-                                                updateBoard={(board) => setBoard(board)}
-                                            />
-                                        </Box>
-                                    )}
-                                </Draggable>
-                            ))}
-                            {provided.placeholder}
-                        </Box>
-                    )}
-                </Droppable>
-
-                <BoardSettingsModal board={board} open={showSettings} onClose={() => setShowSettings(false)} onSubmit={setBoard} />
+                <OverlayScrollbarsComponent
+                    style={{ display: "flex", flex: 1, overflow: "scroll" }}
+                    options={{
+                        scrollbars: {
+                            autoHide: "never",
+                            visibility: "visible",
+                            dragScroll: true,
+                            clickScroll: true,
+                            theme: darkMode ? "os-theme-light" : "os-theme-dark",
+                        },
+                    }}
+                >
+                    <Box
+                        sx={{
+                            padding: isMobile ? "5vw" : "2vw",
+                        }}
+                    >
+                        <Droppable droppableId={props.board.id} type="room" direction="horizontal">
+                            {(provided) => (
+                                <Box
+                                    ref={(node: HTMLDivElement) => {
+                                        provided.innerRef(node)
+                                        columnsBoxRef.current = node
+                                    }}
+                                    {...provided.droppableProps}
+                                    sx={{
+                                        flex: 1,
+                                        gap: isMobile ? "5vw" : "2vw",
+                                        margin: isMobile ? "0 -5vw" : "0 -2vw",
+                                        padding: isMobile ? "0 5vw" : "0 2vw",
+                                        marginBottom: isMobile ? "-5vw" : "-2vw",
+                                        paddingBottom: isMobile ? "5vw" : "2vw",
+                                    }}
+                                >
+                                    {board.rooms.map((room, index) => (
+                                        <Draggable key={room.id} draggableId={room.id} index={index} isDragDisabled={!editMode}>
+                                            {(provided) => (
+                                                <Box ref={provided.innerRef} {...provided.draggableProps} {...provided.dragHandleProps}>
+                                                    <BoardRoom
+                                                        key={room.id}
+                                                        washimas={washimas}
+                                                        nagazaps={nagazaps}
+                                                        room={room}
+                                                        editMode={editMode}
+                                                        updateRoom={updateRoom}
+                                                        index={index}
+                                                        board={board}
+                                                        deleteRoom={deleteRoom}
+                                                        updateBoard={(board) => setBoard(board)}
+                                                    />
+                                                </Box>
+                                            )}
+                                        </Draggable>
+                                    ))}
+                                    {provided.placeholder}
+                                </Box>
+                            )}
+                        </Droppable>
+                        <BoardSettingsModal board={board} open={showSettings} onClose={() => setShowSettings(false)} onSubmit={setBoard} />
+                    </Box>
+                </OverlayScrollbarsComponent>
             </Box>
         </DragDropContext>
     )
