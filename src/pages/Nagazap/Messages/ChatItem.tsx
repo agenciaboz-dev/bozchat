@@ -1,5 +1,5 @@
 import React from "react"
-import { Avatar, Box, MenuItem, Paper, Typography, useMediaQuery } from "@mui/material"
+import { Avatar, Box, Chip, MenuItem, Paper, Typography, useMediaQuery } from "@mui/material"
 import { MessageAuthor } from "../../Zap/MessageAuthor"
 import { AudioPlayer } from "../../Washima/AudioComponents/AudioPlayer"
 import { useFormatMessageTime } from "../../../hooks/useFormatMessageTime"
@@ -8,6 +8,7 @@ import { useDarkMode } from "../../../hooks/useDarkMode"
 import { TemplatePreview } from "../TemplateForm/TemplatePreview"
 import { NagaChat } from "../../../types/server/class/Nagazap"
 import { custom_colors } from "../../../style/colors"
+import { PhotoCamera } from "@mui/icons-material"
 
 interface ChatItemProps {
     chat: NagaChat
@@ -45,15 +46,30 @@ export const ChatItem: React.FC<ChatItemProps> = ({ chat, onChatClick, active })
             >
                 <MessageAuthor author={chat.name} phone={chat.from} />
                 {(chat.lastMessage.type === "image" || chat.lastMessage.type === "sticker") && chat.lastMessage.media_url && (
-                    <Avatar
-                        variant="rounded"
+                    // <Avatar
+                    //     variant="rounded"
+                    //     sx={{
+                    //         width: "3vw",
+                    //         height: "auto",
+                    //         maxHeight: isMobile ? "80vw" : "20vw",
+                    //         margin: "0 auto",
+                    //     }}
+                    //     src={chat.lastMessage.media_url}
+                    // />
+                    <Chip
                         sx={{
-                            width: "3vw",
+                            padding: "0.2vw",
                             height: "auto",
-                            maxHeight: isMobile ? "80vw" : "20vw",
-                            margin: "0 auto",
+                            width: "fit-content",
+                            color: "inherit",
+                            "& .MuiChip-label": {
+                                display: "block",
+                                whiteSpace: "normal",
+                            },
                         }}
-                        src={chat.lastMessage.media_url}
+                        label={`Imagem`}
+                        color="default"
+                        icon={<PhotoCamera sx={{ width: "1vw", height: "1vw" }} />}
                     />
                 )}
 
