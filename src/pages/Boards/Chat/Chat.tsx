@@ -116,6 +116,8 @@ export const BoardChat: React.FC<BoardChatProps> = (props) => {
                         overflow: "hidden",
                         gap: isMobile ? "5vw" : "1vw",
                         bgcolor: darkMode ? undefined : custom_colors.lightMode_chatWrapper,
+                        opacity: props.washima?.status === "stopped" ? 0.45 : undefined,
+                        pointerEvents: props.washima?.status === "stopped" ? "none" : undefined,
                     }}
                     onClick={() =>
                         console.log(props.nagazap, nagazapMessages.length, props.chat, { from: normalizePhonenumber(props.chat.last_message.from) })

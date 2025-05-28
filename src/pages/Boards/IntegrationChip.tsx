@@ -12,7 +12,7 @@ interface IntegrationChipProps {
 
 export const IntegrationChip: React.FC<IntegrationChipProps> = (props) => {
     const Icon = props.washima ? (
-        <WhatsApp color="success" />
+        <WhatsApp color={props.washima?.status === "stopped" ? "error" : "success"} />
     ) : props.nagazap ? (
         <Hub color="success" />
     ) : (
@@ -33,6 +33,8 @@ export const IntegrationChip: React.FC<IntegrationChipProps> = (props) => {
                         <Typography sx={{ fontSize: "0.8rem" }}>
                             Conversa de <IntegrationName />
                         </Typography>
+                    ) : props.washima?.status === "stopped" ? (
+                        <Typography sx={{ fontSize: "0.8rem" }}>Esta instância do Business está desativada.</Typography>
                     ) : (
                         <Typography sx={{ fontSize: "0.8rem" }}>
                             Recebendo novas mensagens de <IntegrationName /> nesta sala
@@ -41,7 +43,12 @@ export const IntegrationChip: React.FC<IntegrationChipProps> = (props) => {
                 </Box>
             }
         >
-            <Chip icon={Icon} label={name} size="small" sx={{ color: "success.main", overflow: "hidden" }} />
+            <Chip
+                icon={Icon}
+                label={name}
+                size="small"
+                sx={{ color: props.washima?.status === "stopped" ? "error.main" : "success.main", overflow: "hidden" }}
+            />
         </Tooltip>
     )
 }
