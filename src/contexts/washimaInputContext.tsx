@@ -7,6 +7,8 @@ export interface WashimaInputContext {}
 interface WashimaInputContextValue {
     replyMessage: WashimaMessage | null
     setReplyMessage: React.Dispatch<React.SetStateAction<WashimaMessage | null>>
+    deleting: boolean | "everyone"
+    setDeleting: React.Dispatch<React.SetStateAction<boolean | "everyone">>
 }
 
 interface WashimaInputContextProviderProps {
@@ -19,6 +21,7 @@ export default WashimaInputContext
 
 export const WashimaInputContextProvider: React.FC<WashimaInputContextProviderProps> = ({ children }) => {
     const [replyMessage, setReplyMessage] = useState<WashimaMessage | null>(null)
+    const [deleting, setDeleting] = useState<boolean | "everyone">(false)
 
-    return <WashimaInputContext.Provider value={{ replyMessage, setReplyMessage }}>{children}</WashimaInputContext.Provider>
+    return <WashimaInputContext.Provider value={{ replyMessage, setReplyMessage, deleting, setDeleting }}>{children}</WashimaInputContext.Provider>
 }

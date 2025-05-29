@@ -8,7 +8,7 @@ import { useIo } from "../../hooks/useIo"
 import { MediaInputMenu } from "./MediaInput/MediaInputMenu"
 import { useLocalStorage } from "@mantine/hooks"
 import { useWashimaInput } from "../../hooks/useWashimaInput"
-import { Reply } from "@mui/icons-material"
+import { Delete, Reply } from "@mui/icons-material"
 import { QuotedMessage } from "./QuotedMessage"
 import { WashimaMessage } from "../../types/server/class/Washima/WashimaMessage"
 import { useDarkMode } from "../../hooks/useDarkMode"
@@ -20,10 +20,20 @@ interface WashimaInputProps {
     chat_id: string
     selectedMessages: WashimaMessage[]
     onForwardPress: () => void
+    onDeleteMessages: () => void
     inBoards?: boolean
 }
 
-export const WashimaInput: React.FC<WashimaInputProps> = ({ onSubmit, disabled, washima, chat_id, selectedMessages, onForwardPress, inBoards }) => {
+export const WashimaInput: React.FC<WashimaInputProps> = ({
+    onSubmit,
+    disabled,
+    washima,
+    chat_id,
+    selectedMessages,
+    onForwardPress,
+    inBoards,
+    onDeleteMessages,
+}) => {
     const { darkMode } = useDarkMode()
     const io = useIo()
     const inputHelper = useWashimaInput()
@@ -46,7 +56,7 @@ export const WashimaInput: React.FC<WashimaInputProps> = ({ onSubmit, disabled, 
     }
 
     const handleSubmit = () => {
-        setLoading(true)
+        // setLoading(true)
         if (message) {
             const text = signature ? `*${signature}*\n${message}` : message
             onSubmit(text)
@@ -112,9 +122,15 @@ export const WashimaInput: React.FC<WashimaInputProps> = ({ onSubmit, disabled, 
                     ) : (
                         <Box sx={{ marginRight: "0.5vw" }}>
                             {is_forwarding ? (
-                                <IconButton color="primary" onClick={onForwardPress}>
-                                    <Reply sx={{ transform: "scaleX(-1)" }} />
-                                </IconButton>
+                                inputHelper.deleting ? (
+                                    <IconButton color="primary" onClick={onDeleteMessages}>
+                                        <Delete />
+                                    </IconButton>
+                                ) : (
+                                    <IconButton color="primary" onClick={onForwardPress}>
+                                        <Reply sx={{ transform: "scaleX(-1)" }} />
+                                    </IconButton>
+                                )
                             ) : message ? (
                                 <IconButton color="primary" type="submit" onClick={handleSubmit} disabled={disabled}>
                                     <SendIcon />

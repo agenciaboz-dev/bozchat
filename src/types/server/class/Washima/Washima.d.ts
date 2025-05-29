@@ -10,6 +10,10 @@ export type WashimaPrisma = Prisma.WashimaGetPayload<{}>;
 export type WashimaMediaPrisma = Prisma.WashimaMediaGetPayload<{}>;
 export type WashimaProfilePicPrisma = Prisma.WashimaProfilePicGetPayload<{}>;
 export type WashimaStatus = "loading" | "ready" | "qrcode" | "error" | "stopped" | "pairingcode";
+export interface WashimaDeleteMessagesForm {
+    sids: string[];
+    everyone?: boolean;
+}
 export interface WashimaDiskMetrics {
     messages: number;
     media: number;
@@ -89,6 +93,7 @@ export declare class Washima {
     static forwardMessage(socket: Socket, washima_id: string, chat_id: string, destinatary_ids: string[], message_ids: string[]): Promise<void>;
     static sendMessage(socket: Socket, washima_id: string, chat_id: string, message?: string, media?: WashimaMediaForm, replyMessage?: WashimaMessage): Promise<void>;
     static getContact(socket: Socket, washima_id: string, contact_id: string, message_id: string): Promise<void>;
+    static deleteMessages(socket: Socket, washima_id: string, data: WashimaDeleteMessagesForm): Promise<void>;
     constructor(data: WashimaPrisma);
     handleAck(message: Message): Promise<void>;
     handleNewMessage(message: Message, sendingNow?: boolean, from_bot?: string): Promise<void>;
@@ -125,6 +130,7 @@ export declare class Washima {
     search(value: string, target?: "chats" | "messages", chat_id?: string): Promise<WAWebJS.Chat[] | WashimaMessage[]>;
     setReady(): Promise<void>;
     setStopped(): Promise<void>;
+    deleteMessages(data: WashimaDeleteMessagesForm): Promise<void>;
     toJSON(): never;
 }
 export {};

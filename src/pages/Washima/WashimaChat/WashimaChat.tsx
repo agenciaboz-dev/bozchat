@@ -1,6 +1,6 @@
 import React, { useCallback, useEffect, useMemo, useRef, useState } from "react"
 import { Avatar, Box, IconButton, LinearProgress, Paper, Skeleton, Typography, useMediaQuery } from "@mui/material"
-import { Washima, WashimaMediaForm, WashimaProfilePic } from "../../../types/server/class/Washima/Washima"
+import { Washima, WashimaDeleteMessagesForm, WashimaMediaForm, WashimaProfilePic } from "../../../types/server/class/Washima/Washima"
 import CancelIcon from "@mui/icons-material/Cancel"
 import { api } from "../../../api"
 import { useIo } from "../../../hooks/useIo"
@@ -21,6 +21,7 @@ import { ChatSearch } from "./ChatSearch"
 import { custom_colors } from "../../../style/colors"
 import { BotActivity } from "./WashimaTools/BotActivity"
 import { getAuthorName } from "../../Zap/MessageAuthor"
+import { useConfirmDialog } from "burgos-confirm"
 
 interface WashimaChatProps {
     washima: Washima
@@ -35,6 +36,7 @@ export const WashimaChat: React.FC<WashimaChatProps> = ({ washima, chat, onClose
     const io = useIo()
     const messagesBoxRef = useRef<HTMLDivElement>(null)
     const washimaInput = useWashimaInput()
+    const { confirm } = useConfirmDialog()
 
     const [messages, setMessages] = useState<WashimaMessage[]>([])
     const [groupUpdates, setGroupUpdates] = useState<WashimaGroupUpdate[]>([])
@@ -86,6 +88,24 @@ export const WashimaChat: React.FC<WashimaChatProps> = ({ washima, chat, onClose
             console.log({ message_ids, contactIds })
             io.emit("washima:forward", washima.id, chat.id._serialized, contactIds, message_ids)
             setSelectedMessages([])
+        }
+    }
+
+    const onDeleteMessages = () => {
+        if (chat) {
+            confirm({
+                title: `Deletar mensagens ${washimaInput.deleting === "everyone" ? "para todos" : ""}`,
+                content: `Tem certeza que deseja deletar ${washimaInput.deleting === "everyone" ? "para todos" : ""} ${
+                    selectedMessages.length
+                } mensage${selectedMessages.length === 1 ? "m" : "ns"}?`,
+                onConfirm: () => {
+                    const message_ids = selectedMessages.map((item) => item.sid)
+                    const data: WashimaDeleteMessagesForm = { sids: message_ids, everyone: washimaInput.deleting === "everyone" }
+                    io.emit("washima:message:delete", washima.id, data)
+                    setSelectedMessages([])
+                    washimaInput.setDeleting(false)
+                },
+            })
         }
     }
 
@@ -392,6 +412,7 @@ export const WashimaChat: React.FC<WashimaChatProps> = ({ washima, chat, onClose
                 chat_id={chat.id._serialized}
                 selectedMessages={selectedMessages}
                 onForwardPress={() => setChooseForwardingContacts(true)}
+                onDeleteMessages={onDeleteMessages}
                 inBoards={inBoards}
             />
             <Paper

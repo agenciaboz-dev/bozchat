@@ -72,8 +72,15 @@ export const MessageMenu: React.FC<MessageMenuProps> = ({ from_me, onClose, mess
     }
 
     const onForwardPress = () => {
+        washimaInput.setDeleting(false)
         onSelect()
         handleCloseMenu()
+    }
+
+    const onDeletePress = (everyone: boolean | "everyone") => {
+        onSelect()
+        handleCloseMenu()
+        washimaInput.setDeleting(everyone)
     }
 
     const downloadMedia = async () => {
@@ -124,6 +131,7 @@ export const MessageMenu: React.FC<MessageMenuProps> = ({ from_me, onClose, mess
                         </MessageMenuItem>
                     )}
                     <MessageMenuItem onClick={onForwardPress}>Encaminhar</MessageMenuItem>
+                    <MessageMenuItem onClick={() => onDeletePress("everyone")}>Deletar para todos</MessageMenuItem>
                 </Menu>
             </Box>
         </motion.div>
