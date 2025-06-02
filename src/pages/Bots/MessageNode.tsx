@@ -1,6 +1,6 @@
 import React, { useContext, useMemo, useState } from "react"
 import { Avatar, Box, Button, Chip, IconButton, Menu, MenuItem, Paper, TextField, Typography, useTheme } from "@mui/material"
-import { AddCircle, Delete, Edit, Refresh, Report, Warning } from "@mui/icons-material"
+import { AddCircle, Delete, Edit, List, Refresh, Reply, Report } from "@mui/icons-material"
 import { nodeHeight, nodeWidth } from "./CustomNode"
 import { Handle, Position } from "@xyflow/react"
 import { TrianguloFudido } from "../Zap/TrianguloFudido"
@@ -10,6 +10,7 @@ import { useDarkMode } from "../../hooks/useDarkMode"
 import { PhotoView } from "react-photo-view"
 import BotContext from "../../contexts/bot.context"
 import { custom_colors } from "../../style/colors"
+import { WhastappButtonAction } from "../../types/server/class/Nagazap"
 
 interface MessageNodeProps extends FlowNode {}
 
@@ -43,6 +44,8 @@ export const MessageNode: React.FC<MessageNodeProps> = (node) => {
         node.data.onAddChild(type)
         closeMenu()
     }
+
+    const buttonsQuantity = node.data?.interactive?.type === "button" ? (node.data.interactive.action as WhastappButtonAction).buttons?.length : 0
 
     return (
         <>
@@ -93,7 +96,17 @@ export const MessageNode: React.FC<MessageNodeProps> = (node) => {
                         multiline
                         InputProps={{ sx: { fontSize: "0.8rem", padding: 1, color: "secondary.main" }, readOnly: true }}
                         inputProps={{ style: { cursor: "pointer" } }}
-                        rows={5}
+                        rows={
+                            node.data?.interactive?.type === "button"
+                                ? buttonsQuantity === 3
+                                    ? 1
+                                    : buttonsQuantity === 2
+                                    ? 2
+                                    : 3
+                                : node.data?.interactive?.type === "list"
+                                ? 3
+                                : 5
+                        }
                         onClick={() => (loopingNodeId ? addLoop() : node.data.editNode(node))}
                     />
                 ) : (
@@ -105,6 +118,44 @@ export const MessageNode: React.FC<MessageNodeProps> = (node) => {
                         <Edit color="secondary" sx={{ width: 45, height: "auto" }} />
                         Inserir resposta
                     </Button>
+                )}
+                {node.data?.interactive?.type === "button" && (
+                    <Box sx={{ flexDirection: "column", alignItems: "flex-start", padding: "0.2rem" }}>
+                        {(node.data.interactive.action as WhastappButtonAction).buttons?.map((button) => (
+                            <Button
+                                variant="text"
+                                sx={{
+                                    textTransform: "none",
+                                    color: "secondary.main",
+                                    padding: 0,
+                                    fontSize: "0.8rem",
+                                    pointerEvents: "none",
+                                    minWidth: "auto",
+                                }}
+                                startIcon={<Reply />}
+                            >
+                                {button.reply.title}
+                            </Button>
+                        ))}
+                    </Box>
+                )}
+                {node.data?.interactive?.type === "list" && (
+                    <Box sx={{ flexDirection: "column", alignItems: "flex-start", padding: "0.2rem" }}>
+                        <Button
+                            variant="text"
+                            sx={{
+                                textTransform: "none",
+                                color: "secondary.main",
+                                padding: 0,
+                                fontSize: "0.8rem",
+                                pointerEvents: "none",
+                                minWidth: "auto",
+                            }}
+                            startIcon={<List />}
+                        >
+                            (Lista de opções)
+                        </Button>
+                    </Box>
                 )}
                 <Handle type="target" position={Position.Top} />
                 {can_add_children && (
