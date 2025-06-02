@@ -9,6 +9,7 @@ import { SyncTemplates } from "./SyncTemplates"
 import { useSnackbar } from "burgos-snackbar"
 import { useFormik } from "formik"
 import { useApi } from "../../../hooks/useApi"
+import { useUser } from "../../../hooks/useUser"
 
 interface NagazapSettingsProps {
     nagazap: Nagazap
@@ -46,6 +47,8 @@ export const NagazapSettings: React.FC<NagazapSettingsProps> = ({ nagazap, setNa
         }
     }, 5000)
 
+    const { user } = useUser()
+
     return (
         <Subroute
             title="Configurações"
@@ -65,7 +68,7 @@ export const NagazapSettings: React.FC<NagazapSettingsProps> = ({ nagazap, setNa
                 isMobile ? undefined : (
                     <Box sx={{ gap: "0.5vw" }}>
                         <SyncTemplates nagazap={nagazap} />
-                        <DeleteNagazap nagazap={nagazap} setNagazap={setNagazap} fetchNagazaps={fetchNagazaps} />
+                        {user?.admin && <DeleteNagazap nagazap={nagazap} setNagazap={setNagazap} fetchNagazaps={fetchNagazaps} />}
                     </Box>
                 )
             }

@@ -193,9 +193,11 @@ export const WashimaPage: React.FC<WashimaProps> = ({}) => {
                     }
                     right={
                         <Box>
-                            <IconButton onClick={createWashima}>
-                                <Add />
-                            </IconButton>
+                            {user?.admin && (
+                                <IconButton onClick={createWashima}>
+                                    <Add />
+                                </IconButton>
+                            )}
                             <IconButton onClick={() => fetchWashimas()}>
                                 {loading ? <CircularProgress sx={{ color: "text.secondary" }} /> : <Refresh />}
                             </IconButton>

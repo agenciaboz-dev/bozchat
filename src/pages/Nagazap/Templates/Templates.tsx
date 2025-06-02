@@ -246,14 +246,16 @@ export const Templates: React.FC<TemplatesProps> = ({ nagazap, setShowInformatio
             title="Templates"
             right={
                 <Box sx={{ gap: "0.5vw" }}>
-                    <IconButton
-                        onClick={() => {
-                            setSelectedTemplate(null)
-                            setOpenTemplateModal(true)
-                        }}
-                    >
-                        <Add />
-                    </IconButton>
+                    {user?.admin && (
+                        <IconButton
+                            onClick={() => {
+                                setSelectedTemplate(null)
+                                setOpenTemplateModal(true)
+                            }}
+                        >
+                            <Add />
+                        </IconButton>
+                    )}
                     <IconButton onClick={fetchTemplates}>{loading ? <CircularProgress size={"1.5rem"} color="secondary" /> : <Refresh />}</IconButton>
                 </Box>
             }
