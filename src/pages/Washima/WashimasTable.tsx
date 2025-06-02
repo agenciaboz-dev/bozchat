@@ -357,9 +357,11 @@ export const WashimasTable: React.FC<WashimasTableProps> = (props) => {
                 <MenuItem onClick={onRestartPress} disabled={!user?.admin}>
                     Reiniciar
                 </MenuItem>
-                <MenuItem onClick={onDeletePress} disabled={!user?.admin}>
-                    Deletar
-                </MenuItem>
+                {user?.admin && (
+                    <MenuItem onClick={onDeletePress} disabled={!user?.admin}>
+                        Deletar
+                    </MenuItem>
+                )}
             </Menu>
         </Paper>
     )
