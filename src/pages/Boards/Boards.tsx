@@ -101,9 +101,11 @@ export const Boards: React.FC<BoardsProps> = ({}) => {
                                 name="Quadros"
                                 right={
                                     <Box sx={{ gap: "0.5vw" }}>
-                                        <IconButton onClick={() => setShowBoardForm(true)}>
-                                            <Add />
-                                        </IconButton>
+                                        {user?.admin && (
+                                            <IconButton onClick={() => setShowBoardForm(true)}>
+                                                <Add />
+                                            </IconButton>
+                                        )}
                                         <IconButton onClick={fetchData}>
                                             {loading ? <CircularProgress size="1.5rem" color="inherit" /> : <Refresh />}
                                         </IconButton>

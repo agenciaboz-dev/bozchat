@@ -134,7 +134,7 @@ export const BotForm: React.FC<BotFormProps> = ({ onSubmit, bot, onDelete, setSh
             right={
                 isMobile ? null : (
                     <Box sx={{ gap: "1vw" }}>
-                        {bot && (
+                        {bot && user?.admin && (
                             <Button onClick={onDeleteClick}>
                                 {deleting ? <CircularProgress size="1.5rem" sx={{ color: "text.secondary" }} /> : "Deletar"}
                             </Button>

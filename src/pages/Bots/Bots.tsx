@@ -18,7 +18,7 @@ interface BotsProps {}
 
 export const Bots: React.FC<BotsProps> = ({}) => {
     const isMobile = useMediaQuery("(orientation: portrait)")
-    const { company } = useUser()
+    const { company, user } = useUser()
     const navigate = useNavigate()
 
     const [loading, setLoading] = useState(true)
@@ -81,7 +81,9 @@ export const Bots: React.FC<BotsProps> = ({}) => {
                             >
                                 <Box sx={{ flexDirection: "column" }}>
                                     <ToolButton label="Início" parentRoute="bots" route="/" setShowInformations={setShowInformations} />
-                                    <ToolButton label="Criar bot" parentRoute="bots" route="/form" setShowInformations={setShowInformations} />
+                                    {user?.admin && (
+                                        <ToolButton label="Criar bot" parentRoute="bots" route="/form" setShowInformations={setShowInformations} />
+                                    )}
                                     <hr style={{ margin: "1vw 0" }} />
                                     {bots
                                         .sort((a, b) => Number(a.created_at) - Number(b.created_at))

@@ -220,9 +220,11 @@ export const BoardsTable: React.FC<BoardsTableProps> = (props) => {
                 <MenuItem onClick={openBoardSettings} disabled={!user?.admin}>
                     Configurações
                 </MenuItem>
-                <MenuItem onClick={deleteBoard} disabled={!user?.admin}>
-                    Deletar
-                </MenuItem>
+                {user?.admin && (
+                    <MenuItem onClick={deleteBoard} disabled={!user?.admin}>
+                        Deletar
+                    </MenuItem>
+                )}
             </Menu>
         </Paper>
     )
