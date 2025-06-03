@@ -28,7 +28,7 @@ export const MenuButton: React.FC<MenuButtonProps> = ({ menu, sx }) => {
     }
 
     const active = isActive(menu)
-    const [collapse, setCollapse] = useState(active)
+    const [collapse, setCollapse] = useState(true)
 
     const buildStyle = (active: boolean, menu: Menu): SxProps => {
         return {
