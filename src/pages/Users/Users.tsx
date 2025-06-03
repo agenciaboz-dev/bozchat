@@ -95,9 +95,11 @@ export const Users: React.FC<UsersProps> = ({}) => {
                     name="Usuários"
                     right={
                         <Box sx={{ gap: "0.5vw" }}>
-                            <IconButton onClick={() => setShowUserForm(true)}>
-                                <Add />
-                            </IconButton>
+                            {user?.admin && (
+                                <IconButton onClick={() => setShowUserForm(true)}>
+                                    <Add />
+                                </IconButton>
+                            )}
                             <IconButton onClick={fetchUsers}>
                                 {loading ? <CircularProgress size="1.5rem" sx={{ color: "text.secondary" }} /> : <Replay />}
                             </IconButton>

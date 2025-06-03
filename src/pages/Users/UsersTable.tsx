@@ -186,9 +186,11 @@ export const UsersTable: React.FC<UsersTableProps> = (props) => {
 
             <Menu open={!!menuAnchor} anchorEl={menuAnchor} onClose={() => setMenuAnchor(null)}>
                 <MenuItem onClick={copyId}>Copiar ID</MenuItem>
-                <MenuItem onClick={deleteUser} disabled={!user?.admin || selectedUser?.owner}>
-                    Deletar
-                </MenuItem>
+                {user?.admin && (
+                    <MenuItem onClick={deleteUser} disabled={selectedUser?.id === user?.id || selectedUser?.owner}>
+                        Deletar
+                    </MenuItem>
+                )}
             </Menu>
         </Paper>
     )

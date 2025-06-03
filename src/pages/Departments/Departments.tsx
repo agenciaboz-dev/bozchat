@@ -99,9 +99,11 @@ export const Departments: React.FC<DepartmentsProps> = ({}) => {
                     name="Setores"
                     right={
                         <Box sx={{ gap: "0.5vw" }}>
-                            <IconButton onClick={() => setShowDepartmentForm(true)}>
-                                <Add />
-                            </IconButton>
+                            {user?.admin && (
+                                <IconButton onClick={() => setShowDepartmentForm(true)}>
+                                    <Add />
+                                </IconButton>
+                            )}
                             <IconButton onClick={fetchDepartments}>
                                 {loading ? <CircularProgress size="1.5rem" sx={{ color: "text.secondary" }} /> : <Replay />}
                             </IconButton>
