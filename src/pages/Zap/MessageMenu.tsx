@@ -131,7 +131,7 @@ export const MessageMenu: React.FC<MessageMenuProps> = ({ from_me, onClose, mess
                         </MessageMenuItem>
                     )}
                     <MessageMenuItem onClick={onForwardPress}>Encaminhar</MessageMenuItem>
-                    <MessageMenuItem onClick={() => onDeletePress("everyone")}>Deletar para todos</MessageMenuItem>
+                    {from_me && <MessageMenuItem onClick={() => onDeletePress("everyone")}>Deletar para todos</MessageMenuItem>}
                 </Menu>
             </Box>
         </motion.div>

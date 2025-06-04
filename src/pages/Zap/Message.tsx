@@ -27,6 +27,7 @@ import { CallInfo } from "./CallInfo"
 import { ChatInfoChip } from "../Washima/WashimaChat/GroupUpdateItem"
 import { phoneMask } from "../../tools/masks"
 import { BotNameChip } from "../Bots/BotNameChip"
+import { useWashimaInput } from "../../hooks/useWashimaInput"
 
 interface MessageProps {
     washima: Washima
@@ -52,6 +53,7 @@ export const Message: React.ForwardRefRenderFunction<HTMLDivElement, MessageProp
     }, {})
     const isMobile = useMediaQuery("(orientation: portrait)")
     const theme = useMuiTheme()
+    const washima_input = useWashimaInput()
     const { darkMode } = useDarkMode()
 
     const same_as_previous = !!previousItem && (previousItem as WashimaMessage).contact_id === message.contact_id
@@ -136,6 +138,7 @@ export const Message: React.ForwardRefRenderFunction<HTMLDivElement, MessageProp
     }
 
     const onSelect = () => {
+        if (washima_input.deleting && !from_me) return
         setSelectedMessages?.((selectedMessages) =>
             is_selected ? selectedMessages.filter((item) => item.sid !== message.sid) : [...selectedMessages, message]
         )
@@ -167,7 +170,7 @@ export const Message: React.ForwardRefRenderFunction<HTMLDivElement, MessageProp
                     sx={{ flexDirection: from_me ? "row-reverse" : "row", alignItems: "center", gap: "1vw", position: "relative" }}
                 >
                     {/* //* HOVERING OVERLAY */}
-                    {(is_selected || (is_selecting && hovering)) && (
+                    {(is_selected || (is_selecting && hovering)) && !(washima_input.deleting && !from_me) && (
                         <Box
                             sx={{
                                 position: "absolute",
@@ -187,7 +190,17 @@ export const Message: React.ForwardRefRenderFunction<HTMLDivElement, MessageProp
                         />
                     )}
 
-                    {is_selecting && <Checkbox checked={is_selected} sx={{ position: "absolute", left: 0 }} />}
+                    {is_selecting && (
+                        <Checkbox
+                            checked={is_selected}
+                            sx={{
+                                position: "absolute",
+                                left: 0,
+                                opacity: washima_input.deleting && !from_me ? 0.3 : undefined,
+                                pointerEvents: washima_input.deleting && !from_me ? "none" : undefined,
+                            }}
+                        />
+                    )}
 
                     <Box
                         ref={visibleCallbackRef}
@@ -458,7 +471,7 @@ export const Message: React.ForwardRefRenderFunction<HTMLDivElement, MessageProp
                             />
 
                             {/* //* MENU BUTTON */}
-                            {hovering && !is_deleted && !noActions && (
+                            {hovering && !is_deleted && !noActions && !is_selecting && (
                                 <MessageMenu from_me={from_me} onClose={() => setHovering(false)} message={message} onSelect={onSelect} />
                             )}
                         </Box>
