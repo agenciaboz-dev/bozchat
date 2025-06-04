@@ -6,7 +6,7 @@ import { api } from "../../../api"
 import { useIo } from "../../../hooks/useIo"
 import { WashimaInput } from "../WashimaInput"
 import { KeyboardDoubleArrowDown } from "@mui/icons-material"
-import { WashimaMessage } from "../../../types/server/class/Washima/WashimaMessage"
+import { MessageType, WashimaMessage } from "../../../types/server/class/Washima/WashimaMessage"
 import { WashimaGroupUpdate } from "../../../types/server/class/Washima/WashimaGroupUpdate"
 import { GroupUpdateItem } from "./GroupUpdateItem"
 import { Chat } from "../../../types/Chat"
@@ -209,7 +209,7 @@ export const WashimaChat: React.FC<WashimaChatProps> = ({ washima, chat, onClose
     }, [loadingMessageId, messages.length])
 
     useEffect(() => {
-        if (chat?.lastMessage && chat.lastMessage.type !== "e2e_notification" && chat.lastMessage.type !== "notification_template") {
+        if (chat?.lastMessage && !(["e2e_notification", "notification_template", "revoked"] as MessageType[]).includes(chat.lastMessage.type)) {
             setLoadingMessageId(chat.lastMessage.id.id)
         }
     }, [chat?.lastMessage])
