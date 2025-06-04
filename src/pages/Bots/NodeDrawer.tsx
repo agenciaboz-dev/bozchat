@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from "react"
+import React, { useContext, useEffect, useRef, useState } from "react"
 import { Box, Button, Drawer, IconButton, Paper, Tab, Tabs, Typography } from "@mui/material"
 import { FlowNode, FlowNodeData } from "../../types/server/class/Bot/Bot"
 import { Close, Save } from "@mui/icons-material"
@@ -7,6 +7,7 @@ import { BotActionsTab } from "./BotActionsTab"
 import { BotLoopTab } from "./BotLoopTab"
 import { useSnackbar } from "burgos-snackbar"
 import { useDarkMode } from "../../hooks/useDarkMode"
+import BotContext from "../../contexts/bot.context"
 
 interface NodeDrawerProps {
     node: FlowNode | null
@@ -19,6 +20,7 @@ export const NodeDrawer: React.FC<NodeDrawerProps> = ({ node, onClose, saveNode,
     const { darkMode } = useDarkMode()
     const inputRef = useRef<HTMLInputElement>(null)
     const { snackbar } = useSnackbar()
+    const { actionsTab, setActionsTab } = useContext(BotContext)
 
     const [nodeData, setNodeData] = useState(node?.data)
     const [currentTab, setCurrentTab] = useState<"message" | "actions" | "loop">("message")
@@ -50,8 +52,15 @@ export const NodeDrawer: React.FC<NodeDrawerProps> = ({ node, onClose, saveNode,
     useEffect(() => {
         return () => {
             setCurrentTab("message")
+            setActionsTab(false)
         }
     }, [node])
+
+    useEffect(() => {
+        if (actionsTab) {
+            setCurrentTab("actions")
+        }
+    }, [actionsTab])
 
     return (
         <Drawer open={!!node} onClose={onClose} anchor="right" variant="persistent">

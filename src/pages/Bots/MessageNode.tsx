@@ -19,7 +19,7 @@ export const MessageNode: React.FC<MessageNodeProps> = (node) => {
     const { darkMode } = useDarkMode()
     const [menuAnchor, setMenuAnchor] = useState<HTMLElement | null>(null)
     const [mouseOver, setMouseOver] = useState(false)
-    const { setLoopingNodeId, loopingNodeId } = useContext(BotContext)
+    const { setLoopingNodeId, loopingNodeId, setActionsTab } = useContext(BotContext)
 
     const children = useMemo(() => (node.data.getChildren ? node.data.getChildren(node.id) : []), [node])
     const misconfigured_action = useMemo(() => node.data.actions?.find((action) => action.settings.misconfigured), [node.data.actions])
@@ -205,7 +205,10 @@ export const MessageNode: React.FC<MessageNodeProps> = (node) => {
                     icon={misconfigured_action ? <Report /> : undefined}
                     label={`${node.data.actions.length} ${node.data.actions.length === 1 ? "ação" : "ações"}`}
                     sx={{ position: "absolute", bottom: -30, padding: "0 0.5vw" }}
-                    onClick={() => node.data.editNode(node)}
+                    onClick={() => {
+                        node.data.editNode(node)
+                        setActionsTab(true)
+                    }}
                 />
             )}
             <Typography sx={{ position: "absolute", top: -10, right: -35, color: "text.disabled" }}>Bot</Typography>
