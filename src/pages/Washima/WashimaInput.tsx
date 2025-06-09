@@ -94,6 +94,16 @@ export const WashimaInput: React.FC<WashimaInputProps> = ({
         }
     }, [])
 
+    const handleKeyDown = (event: React.KeyboardEvent) => {
+        if (event.key === "Enter" && !event.shiftKey) {
+            event.preventDefault()
+            if (message.trim()) {
+                onSubmit(message)
+                setMessage("")
+            }
+        }
+    }
+
     return (
         <form onSubmit={(ev) => ev.preventDefault()}>
             {inputHelper.replyMessage && <QuotedMessage />}
@@ -110,9 +120,13 @@ export const WashimaInput: React.FC<WashimaInputProps> = ({
                 onChange={(ev) => setMessage(ev.target.value)}
                 sx={textFieldStyle({ darkMode })}
                 autoComplete="off"
+                multiline
+                minRows={1}
+                maxRows={5}
+                onKeyDown={handleKeyDown}
                 InputProps={{
                     readOnly: is_forwarding,
-                    sx: { color: "primary.main", bgcolor: darkMode ? "background.default" : "background.paper", paddingLeft: "0", paddingRight: "0" },
+                    sx: { color: "primary.main", bgcolor: darkMode ? "background.default" : "background.paper", padding: "0.25vw 0" },
                     // startAdornment: (
                     //     <Checkbox title="assinar mensagem" checked={sign} onChange={(_, checked) => handleSignCheckbox(checked)} />
                     // ),

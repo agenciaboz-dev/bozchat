@@ -223,7 +223,7 @@ export const Message: React.ForwardRefRenderFunction<HTMLDivElement, MessageProp
                                 : message.hasMedia && is_document
                                 ? "25vw"
                                 : message.hasMedia
-                                ? "20vw"
+                                ? "100%"
                                 : isMobile
                                 ? "90%"
                                 : "75%",
@@ -452,7 +452,7 @@ export const Message: React.ForwardRefRenderFunction<HTMLDivElement, MessageProp
                                         <p
                                             className={isLink ? "link" : undefined}
                                             style={{
-                                                padding: is_image ? "0 0.25vw" : undefined,
+                                                padding: is_image ? "0.25vw 0.25vw 0" : undefined,
                                                 wordBreak: "break-word",
                                                 whiteSpace: noActions ? undefined : isMobile && is_document ? "nowrap" : "pre-line",
                                                 color: isLink ? theme.palette.success.light : undefined,
