@@ -10,7 +10,7 @@ import { Android, Reply } from "@mui/icons-material"
 import { AudioPlayer } from "../Washima/AudioComponents/AudioPlayer"
 import { TrianguloFudido } from "./TrianguloFudido"
 import { MessageDateContainer } from "./MessageDateContainer"
-import { WashimaMessage } from "../../types/server/class/Washima/WashimaMessage"
+import { WashimaMessage, WashimaReaction } from "../../types/server/class/Washima/WashimaMessage"
 import { formatSize } from "../../tools/formatSize"
 import { documentIcon } from "../../tools/documentIcon"
 import { WashimaGroupUpdate } from "../../types/server/class/Washima/WashimaGroupUpdate"
@@ -28,6 +28,7 @@ import { ChatInfoChip } from "../Washima/WashimaChat/GroupUpdateItem"
 import { phoneMask } from "../../tools/masks"
 import { BotNameChip } from "../Bots/BotNameChip"
 import { useWashimaInput } from "../../hooks/useWashimaInput"
+import { MessageReactions } from "./MessageReactions"
 
 interface MessageProps {
     washima: Washima
@@ -55,6 +56,15 @@ export const Message: React.ForwardRefRenderFunction<HTMLDivElement, MessageProp
     const theme = useMuiTheme()
     const washima_input = useWashimaInput()
     const { darkMode } = useDarkMode()
+
+    const reactions = useMemo(() => {
+        console.log({ reactions: message.reactions })
+        const set = new Set<string>()
+        Object.entries(message.reactions as unknown as Record<string, WashimaReaction>).forEach(([_, reaction]) => {
+            if (reaction.reaction) set.add(reaction.reaction)
+        })
+        return Array.from(set)
+    }, [message.reactions])
 
     const same_as_previous = !!previousItem && (previousItem as WashimaMessage).contact_id === message.contact_id
     const day_changing =
@@ -245,6 +255,7 @@ export const Message: React.ForwardRefRenderFunction<HTMLDivElement, MessageProp
                                     ? custom_colors.darkMode_receivedMsg
                                     : custom_colors.lightMode_receivedMsg,
                                 marginTop: !same_as_previous && !day_changing ? (isMobile ? "2vw" : "0.5vw") : undefined,
+                                marginBottom: !!reactions.length ? "1.5vw" : undefined,
                                 gap: is_sticker ? "0.2vw" : undefined,
                                 opacity: is_deleted || message.phone_only ? 0.3 : undefined,
                                 transition: "0.5s",
@@ -467,6 +478,12 @@ export const Message: React.ForwardRefRenderFunction<HTMLDivElement, MessageProp
                                 is_audio={is_audio}
                                 is_image={is_image}
                                 is_document={is_document}
+                                from_me={from_me}
+                            />
+
+                            <MessageReactions
+                                reactions={reactions}
+                                length={Array.from(message.reactions as unknown as WashimaReaction[]).filter((item) => !!item.reaction).length}
                                 from_me={from_me}
                             />
 

@@ -24,6 +24,18 @@ export interface WashimaCall {
     callDuration: number | null;
     callParticipants: any;
 }
+export interface WashimaReaction {
+    id: string;
+    orphan: number;
+    orphanReason?: string;
+    timestamp: number;
+    reaction: string;
+    read: boolean;
+    msgId: object;
+    msgSid: string;
+    senderId: string;
+    ack?: number;
+}
 export declare class WashimaMessage {
     sid: string;
     washima_id: string;
@@ -46,6 +58,7 @@ export declare class WashimaMessage {
     call: WashimaCall | null;
     contact_id: string | null;
     from_bot: string | null;
+    reactions: Map<string, WashimaReaction>;
     static getChatMessages(washima_id: string, chat_id: string, is_group: boolean, offset?: number, take?: number | null): Promise<WashimaMessage[]>;
     static getWashimaMessages(washima_id: string, body?: any): Promise<WashimaMessage[]>;
     static search(value: string, chat_id?: string): Promise<WashimaMessage[]>;
@@ -59,4 +72,5 @@ export declare class WashimaMessage {
     }): Promise<WashimaMessage | undefined>;
     static revoke(message: WAWebJS.Message): Promise<WashimaMessage | undefined>;
     constructor(data: WashimaMessagePrisma);
+    handleReaction(reaction: WAWebJS.Reaction): Promise<void>;
 }

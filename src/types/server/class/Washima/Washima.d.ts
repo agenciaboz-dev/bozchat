@@ -127,7 +127,7 @@ export declare class Washima {
     getDiskUsage(megabyte?: boolean): Promise<WashimaDiskMetrics>;
     clearMedia(): Promise<number>;
     clearMessages(): Promise<number>;
-    search(value: string, target?: "chats" | "messages", chat_id?: string): Promise<WAWebJS.Chat[] | WashimaMessage[]>;
+    search(value: string, target?: "chats" | "messages", chat_id?: string): Promise<WashimaMessage[] | WAWebJS.Chat[]>;
     setReady(): Promise<void>;
     setStopped(): Promise<void>;
     deleteMessages(data: WashimaDeleteMessagesForm): Promise<void>;

@@ -1,5 +1,5 @@
 import React, { useState } from "react"
-import { Box, CircularProgress, IconButton, Menu, MenuItem, MenuItemProps, Paper, Typography, useMediaQuery } from "@mui/material"
+import { Box, CircularProgress, IconButton, Menu, MenuItem, MenuItemProps, Paper, Typography, useMediaQuery, useTheme } from "@mui/material"
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore"
 import { useWashimaInput } from "../../hooks/useWashimaInput"
 import { WashimaMessage } from "../../types/server/class/Washima/WashimaMessage"
@@ -9,6 +9,9 @@ import { motion } from "framer-motion"
 import { animationVariants } from "../../tools/animationVariants"
 import { useDarkMode } from "../../hooks/useDarkMode"
 import { custom_colors } from "../../style/colors"
+import { EmojiEmotions, EmojiEmotionsOutlined, SentimentSatisfiedAlt } from "@mui/icons-material"
+import EmojiPicker, { EmojiClickData, EmojiStyle, Theme } from "emoji-picker-react"
+import { useIo } from "../../hooks/useIo"
 
 const MessageMenuButton: React.FC<{ onClick: (event: React.MouseEvent<HTMLElement>) => void }> = ({ onClick }) => {
     return (
@@ -50,10 +53,13 @@ export const MessageMenu: React.FC<MessageMenuProps> = ({ from_me, onClose, mess
     const { darkMode } = useDarkMode()
     const washimaInput = useWashimaInput()
     const is_deleted = message.type === "revoked" || message.deleted
+    const theme = useTheme()
+    const io = useIo()
 
     const [menuIsOpen, setMenuIsOpen] = useState(false)
     const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null)
     const [downloading, setDownloading] = useState(false)
+    const [isEmojisOpen, setIsEmojisOpen] = useState(false)
 
     const handleToggleMenu = (event: React.MouseEvent<HTMLElement>) => {
         setAnchorEl(event.currentTarget)
@@ -61,8 +67,18 @@ export const MessageMenu: React.FC<MessageMenuProps> = ({ from_me, onClose, mess
         console.log(message)
     }
 
+    const handleEmojiMenu = (event: React.MouseEvent<HTMLElement>) => {
+        setAnchorEl(event.currentTarget)
+        setIsEmojisOpen(!menuIsOpen)
+    }
+
     const handleCloseMenu = () => {
         setMenuIsOpen(false)
+        onClose()
+    }
+
+    const handleCloseEmoji = () => {
+        setIsEmojisOpen(false)
         onClose()
     }
 
@@ -102,17 +118,46 @@ export const MessageMenu: React.FC<MessageMenuProps> = ({ from_me, onClose, mess
         }
     }
 
+    const onEmojiSelect = (emoji: EmojiClickData) => {
+        io.emit("washima:message:react", message.washima_id, message.sid, emoji.emoji)
+        handleCloseEmoji()
+    }
+
     return (
         <motion.div initial="initial" animate={"animate"} variants={animationVariants({ opacityOnly: true })}>
             <Box
                 sx={{
                     position: "absolute",
                     top: 0,
-                    left: from_me ? (isMobile ? "-15vw" : "-2.5vw") : undefined,
-                    right: !from_me ? (isMobile ? "-15vw" : "-2.5vw") : undefined,
+                    left: from_me ? (isMobile ? "-15vw" : "-5vw") : undefined,
+                    right: !from_me ? (isMobile ? "-15vw" : "-5vw") : undefined,
+                    flexDirection: from_me ? "row" : "row-reverse",
                 }}
             >
+                <IconButton onClick={handleEmojiMenu}>
+                    <SentimentSatisfiedAlt />
+                </IconButton>
+
                 <MessageMenuButton onClick={handleToggleMenu} />
+
+                <Menu
+                    open={isEmojisOpen}
+                    anchorEl={anchorEl}
+                    onClose={handleCloseEmoji}
+                    transformOrigin={{ vertical: "bottom", horizontal: "right" }}
+                    slotProps={{ paper: { sx: { bgcolor: "transparent" }, elevation: 0 } }}
+                >
+                    <EmojiPicker
+                        onEmojiClick={onEmojiSelect}
+                        reactionsDefaultOpen
+                        onReactionClick={onEmojiSelect}
+                        emojiStyle={EmojiStyle.GOOGLE}
+                        height={"30vh"}
+                        previewConfig={{ showPreview: false }}
+                        theme={darkMode ? Theme.DARK : Theme.LIGHT}
+                        // style={{ backgroundColor: theme.palette.background.default }}
+                    />
+                </Menu>
 
                 <Menu
                     anchorEl={anchorEl}
