@@ -58,6 +58,7 @@ export const WashimaInput: React.FC<WashimaInputProps> = ({
     const handleSubmit = () => {
         // setLoading(true)
         if (message) {
+            console.log(signature)
             const text = signature ? `*${signature}*\n${message}` : message
             onSubmit(text)
             setMessage("")
@@ -97,9 +98,8 @@ export const WashimaInput: React.FC<WashimaInputProps> = ({
     const handleKeyDown = (event: React.KeyboardEvent) => {
         if (event.key === "Enter" && !event.shiftKey) {
             event.preventDefault()
-            if (message.trim()) {
-                onSubmit(message)
-                setMessage("")
+            if (message) {
+                handleSubmit()
             }
         }
     }
