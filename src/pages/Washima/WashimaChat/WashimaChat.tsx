@@ -369,7 +369,7 @@ export const WashimaChat: React.FC<WashimaChatProps> = ({ washima, chat, onClose
                 onScroll={handleScroll}
                 sx={{
                     display: "flex",
-                    flex: 1,
+                    flex: inBoards ? undefined : 1,
                     width: "100%",
                     height: inBoards ? "20vw" : isMobile ? "60vh" : washimaInput.replyMessage ? "45vh" : "55vh",
                     bgcolor: darkMode ? "background.default" : custom_colors.lightMode_chatBackground,
