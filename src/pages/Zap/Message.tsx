@@ -59,11 +59,15 @@ export const Message: React.ForwardRefRenderFunction<HTMLDivElement, MessageProp
 
     const reactions = useMemo(() => {
         console.log({ reactions: message.reactions })
-        const set = new Set<string>()
-        Object.entries(message.reactions as unknown as Record<string, WashimaReaction>).forEach(([_, reaction]) => {
-            if (reaction.reaction) set.add(reaction.reaction)
-        })
-        return Array.from(set)
+        try {
+            const set = new Set<string>()
+            Object.entries(message?.reactions as unknown as Record<string, WashimaReaction>).forEach(([_, reaction]) => {
+                if (reaction?.reaction) set.add(reaction.reaction)
+            })
+            return Array.from(set)
+        } catch (error) {
+            return []
+        }
     }, [message.reactions])
 
     const same_as_previous = !!previousItem && (previousItem as WashimaMessage).contact_id === message.contact_id
@@ -483,7 +487,9 @@ export const Message: React.ForwardRefRenderFunction<HTMLDivElement, MessageProp
 
                             <MessageReactions
                                 reactions={reactions}
-                                length={Array.from(message.reactions as unknown as WashimaReaction[]).filter((item) => !!item.reaction).length}
+                                length={
+                                    Array.from((message.reactions || []) as unknown as WashimaReaction[]).filter((item) => !!item.reaction).length
+                                }
                                 from_me={from_me}
                             />
 
