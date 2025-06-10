@@ -388,24 +388,32 @@ export const WashimaChat: React.FC<WashimaChatProps> = ({ washima, chat, onClose
                     },
                 }}
             >
-                {messages_and_group_updates.map((item, index) =>
-                    (item as WashimaMessage).from ? (
-                        <Message
-                            key={item.id._serialized}
-                            message={item as WashimaMessage}
-                            isGroup={chat?.isGroup}
-                            washima={washima}
-                            previousItem={messages_and_group_updates[index + 1]}
-                            onVisible={index % 5 === 4 ? () => fetchMessages(messages.length) : undefined}
-                            scrollTo={scrollToMessage}
-                            selectedMessages={selectedMessages}
-                            setSelectedMessages={setSelectedMessages}
-                            inBoards={inBoards}
-                        />
-                    ) : (
-                        <GroupUpdateItem key={item.sid} chat={chat} update={item as WashimaGroupUpdate} washima={washima} profilePic={profilePic} />
-                    )
-                )}
+                {messages_and_group_updates
+                    .filter((item) => item.chat_id === chat.id._serialized)
+                    .map((item, index) =>
+                        (item as WashimaMessage).from ? (
+                            <Message
+                                key={item.id._serialized}
+                                message={item as WashimaMessage}
+                                isGroup={chat?.isGroup}
+                                washima={washima}
+                                previousItem={messages_and_group_updates[index + 1]}
+                                onVisible={index % 5 === 4 ? () => fetchMessages(messages.length) : undefined}
+                                scrollTo={scrollToMessage}
+                                selectedMessages={selectedMessages}
+                                setSelectedMessages={setSelectedMessages}
+                                inBoards={inBoards}
+                            />
+                        ) : (
+                            <GroupUpdateItem
+                                key={item.sid}
+                                chat={chat}
+                                update={item as WashimaGroupUpdate}
+                                washima={washima}
+                                profilePic={profilePic}
+                            />
+                        )
+                    )}
                 {loading && <LinearProgress sx={{ position: "absolute", bottom: 0, left: 0, right: 0 }} />}
             </Box>
             <WashimaInput
