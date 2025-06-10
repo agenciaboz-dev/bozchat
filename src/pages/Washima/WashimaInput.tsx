@@ -57,7 +57,7 @@ export const WashimaInput: React.FC<WashimaInputProps> = ({
 
     const handleSubmit = () => {
         // setLoading(true)
-        if (message) {
+        if (message.trim()) {
             console.log(signature)
             const text = signature ? `*${signature}*\n${message}` : message
             onSubmit(text)
@@ -145,7 +145,7 @@ export const WashimaInput: React.FC<WashimaInputProps> = ({
                                         <Reply sx={{ transform: "scaleX(-1)" }} />
                                     </IconButton>
                                 )
-                            ) : message ? (
+                            ) : message.trim() ? (
                                 <IconButton color="primary" type="submit" onClick={handleSubmit} disabled={disabled}>
                                     <SendIcon />
                                 </IconButton>
