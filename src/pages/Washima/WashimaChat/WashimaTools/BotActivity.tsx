@@ -58,7 +58,7 @@ export const BotActivity: React.FC<BotActivityProps> = (props) => {
             io.off(`bot:activity:${props.chat_id}`)
             io.off(`bot:paused:${props.chat_id}`)
         }
-    }, [])
+    }, [props.chat_id])
 
     return (
         <Tooltip title={pausedBot ? `Bot pausado` : activeBot ? `Bot ativo: ${activeBot.name}` : "Nenhum bot ativo"} arrow>
