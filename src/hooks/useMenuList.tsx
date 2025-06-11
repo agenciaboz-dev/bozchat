@@ -51,6 +51,7 @@ export const useMenuList = () => {
                         name: "Broadcast",
                         path: "/broadcast",
                         onClick: () => navigate("/broadcast/"),
+                        admin: true,
                     },
                 ],
             },
@@ -65,6 +66,7 @@ export const useMenuList = () => {
                         name: "Chatbots",
                         path: "/bots",
                         onClick: () => navigate("/bots/"),
+                        admin: true,
                     },
                     {
                         icon: <ViewWeek />,
@@ -85,18 +87,21 @@ export const useMenuList = () => {
                         name: "Usuários",
                         path: "/users",
                         onClick: () => navigate("/users/"),
+                        admin: true,
                     },
                     {
                         icon: <SafetyDivider />,
                         name: "Setores",
                         path: "/departments",
                         onClick: () => navigate("/departments/"),
+                        admin: true,
                     },
                     {
                         icon: <List />,
                         name: "Logs",
                         path: "/logs",
                         onClick: () => navigate("/logs/"),
+                        admin: true,
                     },
                     {
                         icon: <Tune />,
