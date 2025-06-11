@@ -5,14 +5,27 @@ import { backdropStyle } from "../../style/backdrop"
 import { MenuButton } from "./MenuButton"
 import { useMediaQuery } from "@mui/material"
 import { useDarkMode } from "../../hooks/useDarkMode"
+import { useUser } from "../../hooks/useUser"
 
 interface MenuDrawerProps {}
 
 export const MenuDrawer: React.FC<MenuDrawerProps> = ({}) => {
     const isMobile = useMediaQuery("(orientation: portrait)")
     const { darkMode } = useDarkMode()
-
+    const { user } = useUser()
     const { drawer } = useMenu()
+
+    const filteredMenus = drawer.menus
+        .filter((menu) => user?.admin || !menu.admin)
+        .map((menu) => ({
+            ...menu,
+            submenus: menu.submenus ? menu.submenus.filter((submenu) => user?.admin || !submenu.admin) : undefined,
+        }))
+        .filter((menu) => {
+            // Se tinha submenus, só mantém se ainda sobrou algum
+            if (menu.submenus) return menu.submenus.length > 0
+            return true
+        })
 
     return (
         <Drawer
@@ -33,7 +46,7 @@ export const MenuDrawer: React.FC<MenuDrawerProps> = ({}) => {
                 />
             </Box>
             <Box sx={{ flexDirection: "column", flex: 1 }}>
-                {drawer.menus.map((menu) => (
+                {filteredMenus.map((menu) => (
                     <MenuButton sx={{ fontSize: isMobile ? "4vw" : "1vw" }} menu={menu} key={menu.path} />
                 ))}
             </Box>

@@ -6,11 +6,13 @@ import { Title2 } from "../../components/Title"
 import { nagazap_notifications, washima_notifications } from "./notifications_list"
 import { NotificationSwitch } from "./NotificationSwitch"
 import { SigningBox } from "./SigningBox"
+import { useUser } from "../../hooks/useUser"
 
 interface OptionsProps {}
 
 export const Options: React.FC<OptionsProps> = ({}) => {
     const isMobile = useMediaQuery("(orientation: portrait)")
+    const { user } = useUser()
 
     return (
         <Box sx={{ ...backgroundStyle, overflow: isMobile ? "auto" : "hidden" }}>
@@ -25,9 +27,7 @@ export const Options: React.FC<OptionsProps> = ({}) => {
                                 {washima_notifications.map((item) => (
                                     <NotificationSwitch key={item.event} notification={item} />
                                 ))}
-                                {nagazap_notifications.map((item) => (
-                                    <NotificationSwitch key={item.event} notification={item} />
-                                ))}
+                                {user?.admin && nagazap_notifications.map((item) => <NotificationSwitch key={item.event} notification={item} />)}
                             </Box>
                         </Box>
                     </Grid>
