@@ -85,7 +85,7 @@ export const BotForm: React.FC<BotFormProps> = ({ onSubmit, bot, onDelete, setSh
 
     const fetchWashimas = async () => {
         try {
-            const response = await api.get("/washima", { params: { company_id: company?.id } })
+            const response = await api.get("/washima", { params: { user_id: user?.id } })
             console.log(response.data)
             setWashimas(response.data)
         } catch (error) {

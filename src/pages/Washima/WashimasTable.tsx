@@ -17,6 +17,7 @@ import { QRCode } from "react-qrcode-logo"
 import { SyncMessagesContainer } from "./SyncMessagesContainer"
 import { useSnackbar } from "burgos-snackbar"
 import { PairingCode } from "./PairingCode"
+import { WashimaAccessModal } from "./WashimaAccessModal"
 
 interface WashimasTableProps {
     washimas: Washima[]
@@ -46,6 +47,7 @@ export const WashimasTable: React.FC<WashimasTableProps> = (props) => {
 
     const [rows, setRows] = useState<CustomRow[]>(props.washimas.map((washima) => ({ ...washima, storage_media: "", storage_messages: "" })))
     const [menuAnchor, setMenuAnchor] = useState<HTMLElement | null>(null)
+    const [accessModal, setAccessModal] = useState(false)
 
     const columns: (GridColDef & { field: keyof WithoutFunctions<CustomRow> })[] = [
         {
@@ -151,6 +153,15 @@ export const WashimasTable: React.FC<WashimasTableProps> = (props) => {
                 storage_messages: numeral(metrics.messages * 1000 * 1000).format("0.00 b"),
             },
         ])
+    }
+
+    const openAccess = () => {
+        setAccessModal(true)
+    }
+
+    const closeAccess = () => {
+        setAccessModal(false)
+        closeMenu()
     }
 
     const onActionsButtonPress = (ev: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
@@ -362,7 +373,14 @@ export const WashimasTable: React.FC<WashimasTableProps> = (props) => {
                         Deletar
                     </MenuItem>
                 )}
+                <MenuItem onClick={openAccess} disabled={!user?.admin}>
+                    Configurar acessos
+                </MenuItem>
             </Menu>
+
+            {props.selectedWashima && (
+                <WashimaAccessModal washima={props.selectedWashima} onClose={closeAccess} open={accessModal} onSave={props.onWashimaUpdate} />
+            )}
         </Paper>
     )
 }

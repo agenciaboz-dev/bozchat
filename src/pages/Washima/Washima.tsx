@@ -1,19 +1,18 @@
 import React, { useEffect, useMemo, useState } from "react"
-import { Box, Button, CircularProgress, IconButton, MenuItem, Paper, Tab, Tabs, Typography, useMediaQuery } from "@mui/material"
+import { Box, CircularProgress, IconButton, useMediaQuery } from "@mui/material"
 import { backgroundStyle } from "../../style/background"
 import { Header } from "../../components/Header/Header"
 import { api } from "../../api"
-import { Add, ArrowBack, List, QrCodeScanner, Refresh, ReplayOutlined, Settings } from "@mui/icons-material"
+import { Add, ArrowBack, List, Refresh } from "@mui/icons-material"
 import { Washima } from "../../types/server/class/Washima/Washima"
 import { useDarkMode } from "../../hooks/useDarkMode"
-import { WashimaFormPage } from "./WashimaFormPage"
 import { useIo } from "../../hooks/useIo"
 import { WashimaZap } from "./WashimaZap"
 import { useUser } from "../../hooks/useUser"
 import { useNotification } from "../../hooks/useNotification"
 import { NoChat } from "../Zap/NoChat"
 import { Route, Routes, useLocation, useNavigate } from "react-router-dom"
-import { WashimaSidebar, WashimaSidebarProps } from "./WashimaSidebar"
+import { WashimaSidebar } from "./WashimaSidebar"
 import { slugify } from "../../tools/normalize"
 import { Title2 } from "../../components/Title"
 import { WashimasTable } from "./WashimasTable"
@@ -35,7 +34,7 @@ const SidebarWrapper: React.FC<{
 
 export const WashimaPage: React.FC<WashimaProps> = ({}) => {
     const { darkMode } = useDarkMode()
-    const { company, user } = useUser()
+    const { user } = useUser()
     const io = useIo()
     const notify = useNotification()
     const isMobile = useMediaQuery("(orientation: portrait)")
@@ -61,7 +60,7 @@ export const WashimaPage: React.FC<WashimaProps> = ({}) => {
     const fetchWashimas = async () => {
         setLoading(true)
         try {
-            const response = await api.get("/washima", { params: { company_id: company?.id } })
+            const response = await api.get("/washima", { params: { user_id: user?.id } })
             console.log(response.data)
             setWashimas(response.data)
         } catch (error) {
@@ -201,7 +200,7 @@ export const WashimaPage: React.FC<WashimaProps> = ({}) => {
                             <IconButton onClick={() => fetchWashimas()}>
                                 {loading ? <CircularProgress sx={{ color: "text.secondary" }} /> : <Refresh />}
                             </IconButton>
-                            {!isTable && (
+                            {!isTable && user?.admin && (
                                 <IconButton onClick={() => navigate("/business/contas")}>
                                     <List />
                                 </IconButton>

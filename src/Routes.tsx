@@ -32,6 +32,7 @@ export const Routes: React.FC<RoutesProps> = ({}) => {
             <Route path="/departments/*" element={<Departments />} />
             <Route path="/logs/*" element={<Logs />} />
             <Route path="/options/*" element={<Options />} />
+            <Route path="/signup/*" element={<Signup />} />
             {boz && <Route path="/admin/*" element={<Admin />} />}
             <Route path="*" element={<WildCard />} />
         </ReactRoutes>
