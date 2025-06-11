@@ -7,14 +7,17 @@ import { useFetchedData } from "../../hooks/useFetchedData"
 import { AdminCompany } from "../../types/server/class/Company"
 import { useUser } from "../../hooks/useUser"
 import { Title2 } from "../../components/Title"
-import { Refresh, WhatsApp } from "@mui/icons-material"
+import { Add, Refresh, WhatsApp } from "@mui/icons-material"
 import { AdminTable } from "./AdminTable"
 import { api } from "../../api"
 import { Washima } from "../../types/server/class/Washima/Washima"
+import { useNavigate } from "react-router-dom"
+import { CompanyFormModal } from "./CompanyFormModal"
 
 interface AdminProps {}
 
 export const Admin: React.FC<AdminProps> = (props) => {
+    const navigate = useNavigate()
     const isMobile = useMediaQuery("(orientation: portrait)")
     const apiHelper = useApi()
     const { user } = useUser()
@@ -22,6 +25,7 @@ export const Admin: React.FC<AdminProps> = (props) => {
     const [companies, setCompanies, { refresh, loading }] = useFetchedData<AdminCompany>("companies")
     const [washimaInitializing, setWashimaInitializing] = useState<Washima[]>([])
     const [washimaWaiting, setWashimaWaiting] = useState<Washima[]>([])
+    const [companyModal, setCompanyModal] = useState(false)
 
     const fetchWashimaInitInfo = async () => {
         try {
@@ -56,6 +60,9 @@ export const Admin: React.FC<AdminProps> = (props) => {
                     name="Administração"
                     right={
                         <Box sx={{ alignItems: "center" }}>
+                            <IconButton onClick={() => setCompanyModal(true)}>
+                                <Add />
+                            </IconButton>
                             <Tooltip
                                 title={
                                     <Box sx={{ flexDirection: "column", gap: "0.5vw" }}>
@@ -102,6 +109,8 @@ export const Admin: React.FC<AdminProps> = (props) => {
                 />
                 <AdminTable companies={companies} loading={loading} updateCompany={updateCompany} />
             </Box>
+
+            <CompanyFormModal open={companyModal} onClose={() => setCompanyModal(false)} onSave={addOrUpdateCompany} />
         </Box>
     )
 }
