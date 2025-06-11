@@ -30,13 +30,13 @@ export const BoardPage: React.FC<BoardPageProps> = (props) => {
     const isMobile = useMediaQuery("(orientation: portrait)")
     const { darkMode } = useDarkMode()
     const io = useIo()
-    const { user } = useUser()
+    const { user, company } = useUser()
     const api = useApi()
     const { snackbar } = useSnackbar()
 
     const columnsBoxRef = useRef<HTMLDivElement | null>(null)
 
-    const [washimas] = useFetchedData<Washima>("washimas")
+    const [washimas] = useFetchedData<Washima>("washimas", { params: { company_id: company?.id } })
     const [nagazaps] = useFetchedData<Nagazap>("nagazaps")
     const [board, setBoard] = useState(props.board)
     const [editMode, setEditMode] = useState(false)
