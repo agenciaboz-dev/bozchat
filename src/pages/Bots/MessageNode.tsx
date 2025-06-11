@@ -120,7 +120,10 @@ export const MessageNode: React.FC<MessageNodeProps> = (node) => {
                     </Button>
                 )}
                 {node.data?.interactive?.type === "button" && (
-                    <Box sx={{ flexDirection: "column", alignItems: "flex-start", padding: "0.2rem" }}>
+                    <Box
+                        sx={{ flexDirection: "column", alignItems: "flex-start", padding: "0.2rem" }}
+                        onClick={() => (loopingNodeId ? addLoop() : node.data.editNode(node))}
+                    >
                         {(node.data.interactive.action as WhastappButtonAction).buttons?.map((button) => (
                             <Button
                                 variant="text"
@@ -140,7 +143,10 @@ export const MessageNode: React.FC<MessageNodeProps> = (node) => {
                     </Box>
                 )}
                 {node.data?.interactive?.type === "list" && (
-                    <Box sx={{ flexDirection: "column", alignItems: "flex-start", padding: "0.2rem" }}>
+                    <Box
+                        sx={{ flexDirection: "column", alignItems: "flex-start", padding: "0.2rem" }}
+                        onClick={() => (loopingNodeId ? addLoop() : node.data.editNode(node))}
+                    >
                         <Button
                             variant="text"
                             sx={{
