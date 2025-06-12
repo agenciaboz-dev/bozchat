@@ -144,8 +144,8 @@ export const IntegrationContainer: React.FC<BusinessContainerProps> = (props) =>
                     sx={{ flex: 0.4 }}
                     labelPlacement="top"
                     componentsProps={{ typography: { sx: { fontSize: "0.7rem", color: "text.secondary" } } }}
-                    control={<Switch checked={unreadOnly} onChange={handleSwitchChange} disabled={washimaStopped || props.checked} />}
-                    label={unreadOnly ? "Não lidas" : "Todas conversas"}
+                    control={<Switch checked={unreadOnly} onChange={handleSwitchChange} disabled={washimaStopped} />}
+                    label={unreadOnly ? "Não lidas" : "Todas"}
                 />
             </Box>
         </Paper>
