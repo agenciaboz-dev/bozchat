@@ -165,7 +165,12 @@ export const Message: React.ForwardRefRenderFunction<HTMLDivElement, MessageProp
     }, [hovering])
 
     return (
-        <Box sx={{ flexDirection: "column" }} onPointerEnter={() => setHovering(true)} onPointerLeave={() => setHovering(false)}>
+        <Box
+            sx={{ flexDirection: "column" }}
+            onPointerEnter={() => setHovering(true)}
+            onPointerLeave={() => setHovering(false)}
+            onClick={() => console.log(message)}
+        >
             {/*//* DATE CHIP */}
             {day_changing && !noActions && <DateChip timestamp={message.timestamp * 1000} />}
             {is_info ? (
@@ -495,7 +500,7 @@ export const Message: React.ForwardRefRenderFunction<HTMLDivElement, MessageProp
 
                             {/* //* MENU BUTTON */}
                             {hovering && !is_deleted && !noActions && !is_selecting && (
-                                <MessageMenu from_me={from_me} onClose={() => setHovering(false)} message={message} onSelect={onSelect} />
+                                <MessageMenu from_me={from_me} onClose={() => setHovering(false)} message={message} onSelect={onSelect} washima={washima} />
                             )}
                         </Box>
                     </Box>

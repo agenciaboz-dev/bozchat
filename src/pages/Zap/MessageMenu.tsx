@@ -12,6 +12,7 @@ import { custom_colors } from "../../style/colors"
 import { EmojiEmotions, EmojiEmotionsOutlined, SentimentSatisfiedAlt } from "@mui/icons-material"
 import EmojiPicker, { EmojiClickData, EmojiStyle, Theme } from "emoji-picker-react"
 import { useIo } from "../../hooks/useIo"
+import { Washima } from "../../types/server/class/Washima/Washima"
 
 const MessageMenuButton: React.FC<{ onClick: (event: React.MouseEvent<HTMLElement>) => void }> = ({ onClick }) => {
     return (
@@ -45,10 +46,11 @@ interface MessageMenuProps {
     from_me?: boolean
     onClose: () => void
     message: WashimaMessage
+    washima: Washima
     onSelect: () => void
 }
 
-export const MessageMenu: React.FC<MessageMenuProps> = ({ from_me, onClose, message, onSelect }) => {
+export const MessageMenu: React.FC<MessageMenuProps> = ({ from_me, onClose, message, onSelect, washima }) => {
     const isMobile = useMediaQuery("(orientation: portrait)")
     const { darkMode } = useDarkMode()
     const washimaInput = useWashimaInput()
@@ -119,7 +121,7 @@ export const MessageMenu: React.FC<MessageMenuProps> = ({ from_me, onClose, mess
     }
 
     const onEmojiSelect = (emoji: EmojiClickData) => {
-        io.emit("washima:message:react", message.washima_id, message.sid, emoji.emoji)
+        io.emit("washima:message:react", washima.id, message.sid, emoji.emoji)
         handleCloseEmoji()
     }
 
