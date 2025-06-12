@@ -1,10 +1,11 @@
-import React, { useMemo, useState } from "react"
-import { Box, IconButton, Menu, MenuItem, Paper, Switch } from "@mui/material"
+import React, { useState } from "react"
+import { IconButton, Menu, MenuItem, Paper, Switch } from "@mui/material"
 import { DataGrid, GridColDef } from "@mui/x-data-grid"
 import { AdminCompany } from "../../types/server/class/Company"
-import { Circle, MoreHoriz, Send } from "@mui/icons-material"
+import { Circle, Send } from "@mui/icons-material"
 import { useUser } from "../../hooks/useUser"
 import { useNavigate } from "react-router-dom"
+import { useConfirmDialog } from "burgos-confirm"
 
 interface AdminTableProps {
     loading?: boolean
@@ -14,6 +15,7 @@ interface AdminTableProps {
 
 export const AdminTable: React.FC<AdminTableProps> = (props) => {
     const { onLogin, user } = useUser()
+    const { confirm } = useConfirmDialog()
     const navigate = useNavigate()
     const [menuAnchor, setMenuAnchor] = useState<HTMLElement | null>(null)
 
@@ -30,7 +32,20 @@ export const AdminTable: React.FC<AdminTableProps> = (props) => {
                 const active = !!cell.value
 
                 return (
-                    <IconButton sx={{ width: 40 }} onClick={() => props.updateCompany({ id: cell.row.id, active: !active })}>
+                    <IconButton
+                        sx={{ width: 40 }}
+                        onClick={() => {
+                            if (active) {
+                                confirm({
+                                    title: "Desativar cliente",
+                                    content: "Esta ação irá desativar este cliente. Prosseguir?",
+                                    onConfirm: () => props.updateCompany({ id: cell.row.id, active: false }),
+                                })
+                            } else {
+                                props.updateCompany({ id: cell.row.id, active: true })
+                            }
+                        }}
+                    >
                         <Circle color={active ? "success" : "disabled"} sx={{ width: 15 }} />
                     </IconButton>
                 )
@@ -48,17 +63,13 @@ export const AdminTable: React.FC<AdminTableProps> = (props) => {
             field: "getBots",
             headerName: "Bots",
             flex: 0.05,
-            renderCell: () => (
-                <Switch checked />
-            ),
+            renderCell: () => <Switch checked />,
         },
         {
             field: "getLogs",
             headerName: "Quadros",
             flex: 0.05,
-            renderCell: () => (
-                <Switch checked />
-            ),
+            renderCell: () => <Switch checked />,
         },
         { field: "diskUsed", headerName: "Armazenamento", flex: 0.08 },
         {
@@ -67,7 +78,7 @@ export const AdminTable: React.FC<AdminTableProps> = (props) => {
             renderCell: (cell) => {
                 return (
                     <IconButton
-                        onClick={(ev) => {
+                        onClick={() => {
                             onLogin({ company: cell.row, user: user! })
                             navigate("/")
                         }}
