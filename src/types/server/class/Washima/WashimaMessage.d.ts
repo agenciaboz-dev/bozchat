@@ -1,7 +1,21 @@
 import { Prisma } from "@prisma/client";
 import WAWebJS, { Contact } from "whatsapp-web.js";
 import { WashimaMessageId } from "./Washima";
-export type MessageType = "ptt" | "video" | "image" | "text" | "revoked" | "sticker" | "audio" | "chat" | "document" | "sticker" | "call_log" | "e2e_notification" | "notification_template";
+export type MessageType =
+    | "ptt"
+    | "video"
+    | "image"
+    | "text"
+    | "revoked"
+    | "sticker"
+    | "audio"
+    | "chat"
+    | "document"
+    | "sticker"
+    | "call_log"
+    | "e2e_notification"
+    | "notification_template"
+    | "vcard"
 export declare enum MessageAck {
     error = -1,
     pending = 0,

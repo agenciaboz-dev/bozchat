@@ -29,6 +29,7 @@ import { phoneMask } from "../../tools/masks"
 import { BotNameChip } from "../Bots/BotNameChip"
 import { useWashimaInput } from "../../hooks/useWashimaInput"
 import { MessageReactions } from "./MessageReactions"
+import { ContactCard } from "../Washima/ContactCard"
 
 interface MessageProps {
     washima: Washima
@@ -95,6 +96,7 @@ export const Message: React.ForwardRefRenderFunction<HTMLDivElement, MessageProp
     const is_sticker = message.type === "sticker"
     const is_deleted = message.type === "revoked" || message.deleted
     const is_info = message.type === "e2e_notification" || message.type === "notification_template"
+    const is_vcard = message.type === "vcard"
 
     function isURL(str: string) {
         if (str.split("http").length === 1) return
@@ -455,8 +457,11 @@ export const Message: React.ForwardRefRenderFunction<HTMLDivElement, MessageProp
                                         )}
                                     </Box>
                                 )}
-                                {/*//* MESSAGE BODY TEXT */}
-                                {
+                                {is_vcard ? (
+                                    /*//* CONTACT CARD */
+                                    <ContactCard message={message} />
+                                ) : (
+                                    /*//* MESSAGE BODY TEXT */
                                     <Box sx={{ flexDirection: "column" }}>
                                         <p
                                             className={isLink ? "link" : undefined}
@@ -479,7 +484,7 @@ export const Message: React.ForwardRefRenderFunction<HTMLDivElement, MessageProp
                                         </p>
                                         {attachmendMetaData && <p style={{ textAlign: "left" }}>{attachmendMetaData.size}</p>}
                                     </Box>
-                                }
+                                )}
                             </Box>
                             {/*//* TIME */}
                             <MessageDateContainer
@@ -500,7 +505,13 @@ export const Message: React.ForwardRefRenderFunction<HTMLDivElement, MessageProp
 
                             {/* //* MENU BUTTON */}
                             {hovering && !is_deleted && !noActions && !is_selecting && (
-                                <MessageMenu from_me={from_me} onClose={() => setHovering(false)} message={message} onSelect={onSelect} washima={washima} />
+                                <MessageMenu
+                                    from_me={from_me}
+                                    onClose={() => setHovering(false)}
+                                    message={message}
+                                    onSelect={onSelect}
+                                    washima={washima}
+                                />
                             )}
                         </Box>
                     </Box>
