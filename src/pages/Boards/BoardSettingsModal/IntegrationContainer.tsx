@@ -56,22 +56,13 @@ export const IntegrationContainer: React.FC<IntegrationContainerProps> = (props)
             confirm({
                 title: "Sincronizar todas as mensagens",
                 content: "Sincronização de todas as mensagens pode ser demorada, especialmente se houver um grande volume de dados. Prosseguir?",
-                onConfirm: () => setUnreadOnly(false),
+                onConfirm: () => {
+                    setUnreadOnly(false)
+                },
             })
         } else {
             setUnreadOnly(true)
         }
-        console.log("mudou o switch e o unreadOnly foi para: ", unreadOnly)
-        props.onChange(
-            props.integration.id,
-            // props.checked
-            // ?
-            props.type === "nagazap"
-                ? { nagazap_id: nagazap.id, room_id: selectedRoom.id, nagazap_name: nagazap.displayName || "", unread_only: unreadOnly }
-                : { washima_id: props.integration.id, room_id: selectedRoom.id, washima_name: washima.name, unread_only: unreadOnly }
-            // : undefined
-        )
-        console.log("o props.unreadOnly agora é: ", unreadOnly)
     }
 
     const onChangeRoom = (room: Room) => {
@@ -155,7 +146,7 @@ export const IntegrationContainer: React.FC<IntegrationContainerProps> = (props)
                     sx={{ flex: 0.4 }}
                     labelPlacement="top"
                     componentsProps={{ typography: { sx: { fontSize: "0.7rem", color: "text.secondary" } } }}
-                    control={<Switch checked={unreadOnly} onChange={onChangeSwitch} disabled={washimaStopped} />}
+                    control={<Switch checked={unreadOnly} onChange={onChangeSwitch} disabled={washimaStopped || props.checked} />}
                     label={unreadOnly ? "Não lidas" : "Todas"}
                 />
             </Box>
