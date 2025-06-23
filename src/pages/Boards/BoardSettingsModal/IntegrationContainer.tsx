@@ -24,7 +24,7 @@ import { custom_colors } from "../../../style/colors"
 import { Warning } from "@mui/icons-material"
 import { useConfirmDialog } from "burgos-confirm"
 
-interface BusinessContainerProps {
+interface IntegrationContainerProps {
     board: WithoutFunctions<Board>
     integration: Washima | Nagazap
     checked: boolean
@@ -34,7 +34,7 @@ interface BusinessContainerProps {
     unread_only: boolean
 }
 
-export const IntegrationContainer: React.FC<BusinessContainerProps> = (props) => {
+export const IntegrationContainer: React.FC<IntegrationContainerProps> = (props) => {
     const isMobile = useMediaQuery("(orientation: portrait)")
     const { darkMode } = useDarkMode()
 
@@ -50,6 +50,29 @@ export const IntegrationContainer: React.FC<BusinessContainerProps> = (props) =>
     const nagazap = props.integration as Nagazap
 
     const washimaStopped = props.type === "washima" && washima.status === "stopped"
+
+    const onChangeSwitch = (_event: React.ChangeEvent<HTMLInputElement>, checked: boolean) => {
+        if (!checked) {
+            confirm({
+                title: "Sincronizar todas as mensagens",
+                content: "Sincronização de todas as mensagens pode ser demorada, especialmente se houver um grande volume de dados. Prosseguir?",
+                onConfirm: () => setUnreadOnly(false),
+            })
+        } else {
+            setUnreadOnly(true)
+        }
+        console.log("mudou o switch e o unreadOnly foi para: ", unreadOnly)
+        props.onChange(
+            props.integration.id,
+            // props.checked
+            // ?
+            props.type === "nagazap"
+                ? { nagazap_id: nagazap.id, room_id: selectedRoom.id, nagazap_name: nagazap.displayName || "", unread_only: unreadOnly }
+                : { washima_id: props.integration.id, room_id: selectedRoom.id, washima_name: washima.name, unread_only: unreadOnly }
+            // : undefined
+        )
+        console.log("o props.unreadOnly agora é: ", unreadOnly)
+    }
 
     const onChangeRoom = (room: Room) => {
         props.onChange(
@@ -77,18 +100,6 @@ export const IntegrationContainer: React.FC<BusinessContainerProps> = (props) =>
     useEffect(() => {
         fetchWashimaProfilePic({ params: { washima_id: props.integration.id } }).then((data) => setProfilePic(data))
     }, [props.integration])
-
-    const handleSwitchChange = (_event: React.ChangeEvent<HTMLInputElement>, checked: boolean) => {
-        if (!checked) {
-            confirm({
-                title: "Sincronizar todas as mensagens",
-                content: "Sincronização de todas as mensagens pode ser demorada, especialmente se houver um grande volume de dados. Prosseguir?",
-                onConfirm: () => setUnreadOnly(false),
-            })
-        } else {
-            setUnreadOnly(true)
-        }
-    }
 
     return (
         <Paper
@@ -144,7 +155,7 @@ export const IntegrationContainer: React.FC<BusinessContainerProps> = (props) =>
                     sx={{ flex: 0.4 }}
                     labelPlacement="top"
                     componentsProps={{ typography: { sx: { fontSize: "0.7rem", color: "text.secondary" } } }}
-                    control={<Switch checked={unreadOnly} onChange={handleSwitchChange} disabled={washimaStopped} />}
+                    control={<Switch checked={unreadOnly} onChange={onChangeSwitch} disabled={washimaStopped} />}
                     label={unreadOnly ? "Não lidas" : "Todas"}
                 />
             </Box>
