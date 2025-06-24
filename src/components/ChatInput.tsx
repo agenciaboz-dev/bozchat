@@ -41,7 +41,7 @@ export const ChatInput: React.FC<ChatInputProps> = (props) => {
             <TextField
                 inputRef={inputRef}
                 placeholder="Texto da mensagem"
-                label="Mensagem"
+                label="Editar Mensagem"
                 name="props.value"
                 value={props.data?.value}
                 onChange={(ev) => props.setData((data) => ({ ...data, value: ev.target.value }))}

@@ -115,7 +115,7 @@ export const MediaInputMenu: React.FC<MediaInputMenuProps> = ({ washima, chat_id
     }, [handlePaste])
 
     return (
-        <Box sx={{ marginLeft: "0.5vw" }}>
+        <Box>
             <IconButton color="primary" onClick={handleOpenMenu}>
                 <Add />
             </IconButton>
