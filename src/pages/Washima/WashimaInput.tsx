@@ -126,7 +126,7 @@ export const WashimaInput: React.FC<WashimaInputProps> = ({
                 onKeyDown={handleKeyDown}
                 InputProps={{
                     readOnly: is_forwarding,
-                    sx: { color: "primary.main", bgcolor: darkMode ? "background.default" : "background.paper", padding: "0.25vw 0" },
+                    sx: { color: "primary.main", bgcolor: darkMode ? "background.default" : "background.paper", paddingY: "0.25vw" },
                     // startAdornment: (
                     //     <Checkbox title="assinar mensagem" checked={sign} onChange={(_, checked) => handleSignCheckbox(checked)} />
                     // ),
