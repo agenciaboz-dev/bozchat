@@ -23,6 +23,7 @@ import { Board } from "../../../types/server/class/Board/Board"
 import { normalizePhonenumber } from "../../../tools/normalize"
 import { custom_colors } from "../../../style/colors"
 import { useDarkMode } from "../../../hooks/useDarkMode"
+import { useUser } from "../../../hooks/useUser"
 
 interface BoardChatProps {
     chat: Chat
@@ -38,6 +39,7 @@ export const BoardChat: React.FC<BoardChatProps> = (props) => {
     const isMobile = useMediaQuery("(orientation: portrait)")
     const { darkMode } = useDarkMode()
     const { fetchNagaMessages } = useApi()
+    const { user } = useUser()
 
     const [mediaMetaData, setMediaMetaData] = useState<{
         mimetype: string | undefined
@@ -155,7 +157,7 @@ export const BoardChat: React.FC<BoardChatProps> = (props) => {
                             </Box>
                         </Box>
 
-                        <ChatMenu board_id={props.board.id} room_id={props.room_id} chat={props.chat} onTransfer={onTransferClick} />
+                        {user?.admin && <ChatMenu board_id={props.board.id} room_id={props.room_id} chat={props.chat} onTransfer={onTransferClick} />}
                         <TransferModal
                             open={!!showTranferModal}
                             onClose={() => setShowTranferModal(null)}
