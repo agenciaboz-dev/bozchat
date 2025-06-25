@@ -78,10 +78,6 @@ export const ChatContainer: React.FC<ChatContainerProps> = ({ chat, onClose, nag
                     flexDirection: "column-reverse",
                     gap: isMobile ? "1vw" : "0.5vw",
                     position: "relative",
-
-                    "::-webkit-scrollbar-thumb": {
-                        backgroundColor: "primary.main",
-                    },
                 }}
             >
                 {chat.messages.map((message, index) => {

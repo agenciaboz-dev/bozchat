@@ -82,9 +82,6 @@ export const WashimaZap: React.FC<WashimaZapProps> = ({ washima }) => {
                     overflowY: loading ? "hidden" : "auto",
                     gap: isMobile ? "5vw" : "1vw",
                     color: "primary.main",
-                    "::-webkit-scrollbar-thumb": {
-                        backgroundColor: "primary.main",
-                    },
                     width: isMobile ? "100vw" : undefined,
                 }}
             >

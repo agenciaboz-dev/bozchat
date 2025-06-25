@@ -382,10 +382,6 @@ export const WashimaChat: React.FC<WashimaChatProps> = ({ washima, chat, onClose
                     flexDirection: "column-reverse",
                     gap: isMobile ? "1vw" : "0.25vw",
                     position: "relative",
-
-                    "::-webkit-scrollbar-thumb": {
-                        backgroundColor: "primary.main",
-                    },
                 }}
             >
                 {messages_and_group_updates

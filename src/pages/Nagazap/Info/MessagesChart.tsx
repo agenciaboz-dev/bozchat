@@ -41,6 +41,7 @@ export const MessagesChart: React.FC<MessagesChartProps> = ({ messages }) => {
             sx={{
                 flexDirection: "column",
                 gap: isMobile ? "2vw" : "0.5vw",
+                height: "100%",
             }}
         >
             <Box
@@ -52,7 +53,7 @@ export const MessagesChart: React.FC<MessagesChartProps> = ({ messages }) => {
             >
                 Mensagens enviadas
             </Box>
-            <ResponsiveContainer style={{ flex: 1, paddingRight: isMobile ? 20 : undefined }} height={290}>
+            <ResponsiveContainer style={{ flex: 1, paddingRight: isMobile ? 20 : undefined }}>
                 <AreaChart
                     data={messagesData}
                     margin={{
