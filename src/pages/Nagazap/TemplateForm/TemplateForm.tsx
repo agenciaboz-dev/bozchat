@@ -212,7 +212,7 @@ export const TemplateForm: React.FC<TemplateFormProps> = ({ nagazap, setShowInfo
             sx={{
                 flexDirection: "column",
                 bgcolor: "background.default",
-                padding: isMobile ? "5vw" : "2vw",
+                padding: isMobile ? "5vw" : "1.5vw",
                 gap: isMobile ? "3vw" : "1vw",
                 minHeight: "90vh",
                 overflow: "auto",

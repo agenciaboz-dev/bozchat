@@ -78,7 +78,7 @@ export const WashimaAccessModal: React.FC<WashimaAccessModalProps> = (props) => 
         >
             <Box
                 sx={{
-                    padding: isMobile ? "5vw" : "1vw",
+                    padding: isMobile ? "5vw" : "1.5vw",
                     bgcolor: "background.default",
                     flexDirection: "column",
                     width: isMobile ? "90vw" : "50vw",
@@ -93,42 +93,43 @@ export const WashimaAccessModal: React.FC<WashimaAccessModalProps> = (props) => 
                         </IconButton>
                     }
                 />
-                {
-                    (fetchingUser || fetchingDepartments || fetchingAccess) ? <Box sx={{flexDirection: 'column'}}>
+                {fetchingUser || fetchingDepartments || fetchingAccess ? (
+                    <Box sx={{ flexDirection: "column" }}>
                         <Typography>Carregando usuários e departamentos</Typography>
                         <LinearProgress variant="indeterminate" />
-                    </Box> :
-                <Box sx={{ flexDirection: "column", gap: isMobile ? "5vw" : "1vw" }}>
-                    <Autocomplete
-                        fullWidth
-                        options={users}
-                        renderInput={(params) => <TextField {...params} label="Usuários" />}
-                        getOptionKey={(option) => option.id}
-                        getOptionLabel={(option) => option.name}
-                        isOptionEqualToValue={(option, value) => option.id === value.id}
-                        multiple
-                        value={access.users}
-                        onChange={(_, value) => handleAccessChange("users", value)}
-                        ChipProps={{ size: "small", color: "primary" }}
-                        disableCloseOnSelect
-                    />
-                    <Autocomplete
-                        fullWidth
-                        options={departments}
-                        renderInput={(params) => <TextField {...params} label="Setores" />}
-                        getOptionKey={(option) => option.id}
-                        getOptionLabel={(option) => option.name}
-                        isOptionEqualToValue={(option, value) => option.id === value.id}
-                        multiple
-                        value={access.departments}
-                        onChange={(_, value) => handleAccessChange("departments", value)}
-                        ChipProps={{ size: "small", color: "primary" }}
-                        disableCloseOnSelect
-                    />
-                </Box>
-                }
+                    </Box>
+                ) : (
+                    <Box sx={{ flexDirection: "column", gap: isMobile ? "5vw" : "1vw" }}>
+                        <Autocomplete
+                            fullWidth
+                            options={users}
+                            renderInput={(params) => <TextField {...params} label="Usuários" />}
+                            getOptionKey={(option) => option.id}
+                            getOptionLabel={(option) => option.name}
+                            isOptionEqualToValue={(option, value) => option.id === value.id}
+                            multiple
+                            value={access.users}
+                            onChange={(_, value) => handleAccessChange("users", value)}
+                            ChipProps={{ size: "small", color: "primary" }}
+                            disableCloseOnSelect
+                        />
+                        <Autocomplete
+                            fullWidth
+                            options={departments}
+                            renderInput={(params) => <TextField {...params} label="Setores" />}
+                            getOptionKey={(option) => option.id}
+                            getOptionLabel={(option) => option.name}
+                            isOptionEqualToValue={(option, value) => option.id === value.id}
+                            multiple
+                            value={access.departments}
+                            onChange={(_, value) => handleAccessChange("departments", value)}
+                            ChipProps={{ size: "small", color: "primary" }}
+                            disableCloseOnSelect
+                        />
+                    </Box>
+                )}
                 <Button variant="contained" sx={{ alignSelf: "flex-end" }} onClick={onSaveClick}>
-                    {loading ? <CircularProgress size='1.5rem' color='secondary' /> : 'Salvar'}
+                    {loading ? <CircularProgress size="1.5rem" color="secondary" /> : "Salvar"}
                 </Button>
             </Box>
         </Dialog>

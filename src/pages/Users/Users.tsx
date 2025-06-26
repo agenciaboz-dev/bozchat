@@ -110,24 +110,21 @@ export const Users: React.FC<UsersProps> = ({}) => {
                 <UsersTable users={users} departments={departments} loading={loading} updateUser={updateUser} onDeleteUser={deleteUser} />
             </Box>
 
-            <Dialog
-                open={showUserForm}
-                keepMounted
-                onClose={() => setShowUserForm(false)}
-                PaperProps={{ sx: { bgcolor: "background.default", width: "40vw" }, elevation: 2 }}
-            >
-                <Box sx={{ padding: "1vw", paddingBottom: 0, justifyContent: "space-between", alignItems: "center" }}>
-                    <Typography sx={{ fontWeight: "bold" }}>Adicionar usuário</Typography>
-                    <IconButton onClick={() => setShowUserForm(false)}>
-                        <Close />
-                    </IconButton>
+            <Dialog open={showUserForm} keepMounted onClose={() => setShowUserForm(false)} PaperProps={{ sx: { width: "40vw" }, elevation: 2 }}>
+                <Box sx={{ bgcolor: "background.default", flexDirection: "column", padding: "1.5vw", gap: "1vw" }}>
+                    <Box sx={{ justifyContent: "space-between", alignItems: "center" }}>
+                        <Typography sx={{ fontWeight: "bold" }}>Adicionar usuário</Typography>
+                        <IconButton onClick={() => setShowUserForm(false)}>
+                            <Close />
+                        </IconButton>
+                    </Box>
+                    <UserForm
+                        onSubmit={(user) => {
+                            addOrReplaceUser(user)
+                            setShowUserForm(false)
+                        }}
+                    />
                 </Box>
-                <UserForm
-                    onSubmit={(user) => {
-                        addOrReplaceUser(user)
-                        setShowUserForm(false)
-                    }}
-                />
             </Dialog>
         </Box>
     )

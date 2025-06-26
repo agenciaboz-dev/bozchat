@@ -45,7 +45,16 @@ export const BoardFormComponent: React.FC<BoardFormComponentProps> = (props) => 
     })
 
     return (
-        <Box sx={{ flexDirection: "column", flex: 1, gap: isMobile ? "5vw" : "1vw", padding: isMobile ? "5vw" : "1vw" }}>
+        <Box
+            sx={{
+                bgcolor: "background.default",
+                flexDirection: "column",
+                flex: 1,
+                gap: isMobile ? "5vw" : "1vw",
+                padding: isMobile ? "5vw" : "1.5vw",
+                paddingTop: 0,
+            }}
+        >
             <form onSubmit={formik.handleSubmit}>
                 <TextField
                     required

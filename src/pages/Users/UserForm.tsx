@@ -54,7 +54,7 @@ export const UserForm: React.FC<UserFormProps> = (props) => {
     })
 
     return (
-        <Box sx={{ flexDirection: "column", flex: 1, gap: "1vw", padding: "1vw" }}>
+        <Box sx={{ flexDirection: "column", flex: 1, gap: "1vw" }}>
             <form onSubmit={formik.handleSubmit}>
                 <TextField
                     required

@@ -68,7 +68,7 @@ export const BoardSettingsModal: React.FC<BoardSettingsModalProps> = (props) => 
         >
             <Box
                 sx={{
-                    padding: isMobile ? "5vw" : "2vw",
+                    padding: isMobile ? "5vw" : "1.5vw",
                     bgcolor: "background.default",
                     flexDirection: "column",
                     width: isMobile ? "90vw" : "50vw",

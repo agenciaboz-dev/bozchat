@@ -35,27 +35,32 @@ export const DownloadTemplateSheetModal: React.FC<DownloadTemplateSheetProps> = 
             onClose={props.onClose}
             PaperProps={{
                 sx: {
-                    bgcolor: "background.default",
-                    flexDirection: "column",
-                    padding: isMobile ? "5vw" : "2vw",
-                    gap: isMobile ? "5vw" : "2vw",
                     minWidth: isMobile ? "90%" : "25vw",
                 },
             }}
         >
-            <Box sx={{ alignItems: "center", justifyContent: "space-between" }}>
-                <Typography sx={{ fontWeight: "bold", color: "text.secondary" }}>Selecione o formato da planilha</Typography>
-                <IconButton onClick={props.onClose}>
-                    <Close />
-                </IconButton>
-            </Box>
-            <Box sx={{ gap: isMobile ? "5vw" : "1vw", justifyContent: "flex-end" }}>
-                <Button variant="contained" onClick={() => onDownloadClick("csv")}>
-                    Csv
-                </Button>
-                <Button variant="contained" onClick={() => onDownloadClick("xlsx")}>
-                    Excel
-                </Button>
+            <Box
+                sx={{
+                    bgcolor: "background.default",
+                    flexDirection: "column",
+                    padding: isMobile ? "5vw" : "1.5vw",
+                    gap: isMobile ? "5vw" : "1vw",
+                }}
+            >
+                <Box sx={{ alignItems: "center", justifyContent: "space-between" }}>
+                    <Typography sx={{ color: "text.secondary" }}>Selecione o formato da planilha</Typography>
+                    <IconButton onClick={props.onClose}>
+                        <Close />
+                    </IconButton>
+                </Box>
+                <Box sx={{ gap: isMobile ? "5vw" : "1vw", justifyContent: "flex-end" }}>
+                    <Button variant="contained" onClick={() => onDownloadClick("csv")}>
+                        Csv
+                    </Button>
+                    <Button variant="contained" onClick={() => onDownloadClick("xlsx")}>
+                        Excel
+                    </Button>
+                </Box>
             </Box>
         </Dialog>
     )

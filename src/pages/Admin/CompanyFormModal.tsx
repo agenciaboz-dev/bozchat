@@ -107,7 +107,7 @@ export const CompanyFormModal: React.FC<CompanyFormModalProps> = (props) => {
         <Dialog open={props.open} onClose={props.onClose} PaperProps={{ sx: { maxWidth: isMobile ? "90vw" : "80vw" } }}>
             <Box
                 sx={{
-                    padding: isMobile ? "5vw" : "1vw",
+                    padding: isMobile ? "5vw" : "1.5vw",
                     bgcolor: "background.default",
                     flexDirection: "column",
                     width: isMobile ? "90vw" : "70vw",
@@ -297,18 +297,17 @@ export const CompanyFormModal: React.FC<CompanyFormModalProps> = (props) => {
                         </Box>
                     </Box>
                     <Button
-                    type="submit"
-                    variant="contained"
-                    sx={{
-                        color: "secondary.main",
-                        fontWeight: "bold",
-                        alignSelf: 'flex-end'
-                    }}
-                >
-                    {loading ? <CircularProgress size="1.5rem" color="secondary" /> : "cadastrar"}
-                </Button>
+                        type="submit"
+                        variant="contained"
+                        sx={{
+                            color: "secondary.main",
+                            fontWeight: "bold",
+                            alignSelf: "flex-end",
+                        }}
+                    >
+                        {loading ? <CircularProgress size="1.5rem" color="secondary" /> : "cadastrar"}
+                    </Button>
                 </form>
-                
             </Box>
         </Dialog>
     )

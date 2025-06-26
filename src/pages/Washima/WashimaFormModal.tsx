@@ -137,56 +137,60 @@ export const WashimaFormModal: React.FC<WashimaFormModalProps> = (props) => {
     }, [props.currentWashima])
 
     return (
-        <Dialog
-            open={props.open}
-            onClose={handleClose}
-            PaperProps={{ sx: { flexDirection: "column", padding: "1vw", gap: "1vw", bgcolor: "background.default" } }}
-        >
-            <Title2
-                name={props.currentWashima?.name || "Novo Business"}
-                right={
-                    <IconButton onClick={handleClose}>
-                        <Close />
-                    </IconButton>
-                }
-            />
-            <Box sx={{ color: "text.secondary", flexDirection: "column", gap: "0.5vw" }}>
-                <Typography sx={{ marginTop: "-1vw" }}>
-                    Digite o número de telefone do whatsapp que deseja conectar e escolha o tipo de autenticação.
-                </Typography>
-                <Typography>
-                    Ao gerar um <InlineTypography highlight>código numérico</InlineTypography> você receberá uma notificação no whatsapp para inserir
-                    esse código e conectar.
-                </Typography>
-                <Typography sx={{ marginBottom: "1vw" }}>
-                    Caso prefira, você pode gerar um <InlineTypography highlight>QR Code</InlineTypography>, mas esse processo pode demorar alguns
-                    minutos.
-                </Typography>
-            </Box>
-
-            {loading ? (
-                <Loading />
-            ) : code ? (
-                <Box sx={{ alignSelf: "center" }}>
-                    {props.currentWashima?.status === "qrcode" ? <QRCode size={300} value={code} /> : <PairingCode code={code} />}
-                </Box>
-            ) : (
-                <TextField
-                    label="Número de telefone (sem o 9)"
-                    InputProps={{ inputComponent: MaskedInputComponent, inputProps: { mask: "(00) 0000-0000" } }}
-                    value={phone}
-                    onChange={(ev) => setPhone(ev.target.value)}
-                    error={!!error}
-                    helperText={error}
+        <Dialog open={props.open} onClose={handleClose}>
+            <Box
+                sx={{
+                    flexDirection: "column",
+                    padding: "1.5vw",
+                    gap: "1vw",
+                    bgcolor: "background.default",
+                }}
+            >
+                <Title2
+                    name={props.currentWashima?.name || "Novo Business"}
+                    right={
+                        <IconButton onClick={handleClose}>
+                            <Close />
+                        </IconButton>
+                    }
                 />
-            )}
-            <Box sx={{ justifyContent: "flex-end", gap: "1vw" }}>
-                <Button variant="outlined" onClick={requestQrCode} disabled={!!code || loading}>
-                    Gerar QR Code
-                </Button>
-                <Button variant="contained" onClick={requestPairingCode} disabled={!!code || loading}>
-                    Gerar código numérico
-                </Button>
+                <Box sx={{ color: "text.secondary", flexDirection: "column", gap: "0.5vw" }}>
+                    <Typography sx={{ marginTop: "-1vw" }}>
+                        Digite o número de telefone do whatsapp que deseja conectar e escolha o tipo de autenticação.
+                    </Typography>
+                    <Typography>
+                        Ao gerar um <InlineTypography highlight>código numérico</InlineTypography> você receberá uma notificação no whatsapp para
+                        inserir esse código e conectar.
+                    </Typography>
+                    <Typography sx={{ marginBottom: "1vw" }}>
+                        Caso prefira, você pode gerar um <InlineTypography highlight>QR Code</InlineTypography>, mas esse processo pode demorar alguns
+                        minutos.
+                    </Typography>
+                </Box>
+                {loading ? (
+                    <Loading />
+                ) : code ? (
+                    <Box sx={{ alignSelf: "center" }}>
+                        {props.currentWashima?.status === "qrcode" ? <QRCode size={300} value={code} /> : <PairingCode code={code} />}
+                    </Box>
+                ) : (
+                    <TextField
+                        label="Número de telefone (sem o 9)"
+                        InputProps={{ inputComponent: MaskedInputComponent, inputProps: { mask: "(00) 0000-0000" } }}
+                        value={phone}
+                        onChange={(ev) => setPhone(ev.target.value)}
+                        error={!!error}
+                        helperText={error}
+                    />
+                )}
+                <Box sx={{ justifyContent: "flex-end", gap: "1vw" }}>
+                    <Button variant="outlined" onClick={requestQrCode} disabled={!!code || loading}>
+                        Gerar QR Code
+                    </Button>
+                    <Button variant="contained" onClick={requestPairingCode} disabled={!!code || loading}>
+                        Gerar código numérico
+                    </Button>
+                </Box>
             </Box>
         </Dialog>
     )

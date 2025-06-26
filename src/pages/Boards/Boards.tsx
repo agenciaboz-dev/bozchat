@@ -132,9 +132,17 @@ export const Boards: React.FC<BoardsProps> = ({}) => {
                 open={showBoardForm}
                 keepMounted
                 onClose={() => setShowBoardForm(false)}
-                PaperProps={{ sx: { bgcolor: "background.default", width: isMobile ? "80vw" : "40vw" }, elevation: 2 }}
+                PaperProps={{ sx: { width: isMobile ? "80vw" : "40vw" }, elevation: 2 }}
             >
-                <Box sx={{ padding: isMobile ? "5vw" : "1vw", paddingBottom: 0, justifyContent: "space-between", alignItems: "center" }}>
+                <Box
+                    sx={{
+                        bgcolor: "background.default",
+                        padding: isMobile ? "5vw" : "1.5vw",
+                        paddingBottom: "1vw",
+                        justifyContent: "space-between",
+                        alignItems: "center",
+                    }}
+                >
                     <Typography sx={{ fontWeight: "bold" }}>Novo quadro</Typography>
                     <IconButton onClick={() => setShowBoardForm(false)}>
                         <Close />

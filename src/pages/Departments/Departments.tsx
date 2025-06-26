@@ -125,7 +125,15 @@ export const Departments: React.FC<DepartmentsProps> = ({}) => {
                 onClose={() => setShowDepartmentForm(false)}
                 PaperProps={{ sx: { bgcolor: "background.default", width: "40vw" }, elevation: 2 }}
             >
-                <Box sx={{ padding: "1vw", paddingBottom: 0, justifyContent: "space-between", alignItems: "center" }}>
+                <Box
+                    sx={{
+                        bgcolor: "background.default",
+                        padding: "1.5vw",
+                        paddingBottom: "1vw",
+                        justifyContent: "space-between",
+                        alignItems: "center",
+                    }}
+                >
                     <Typography sx={{ fontWeight: "bold" }}>Adicionar setor</Typography>
                     <IconButton onClick={() => setShowDepartmentForm(false)}>
                         <Close />

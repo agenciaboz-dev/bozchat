@@ -45,7 +45,7 @@ export const DepartmentFormComponent: React.FC<DepartmentFormComponentProps> = (
     })
 
     return (
-        <Box sx={{ flexDirection: "column", flex: 1, gap: "1vw", padding: "1vw" }}>
+        <Box sx={{ bgcolor: "background.default", flexDirection: "column", flex: 1, gap: "1vw", padding: "1.5vw", paddingTop: 0 }}>
             <form onSubmit={formik.handleSubmit}>
                 <TextField
                     required
