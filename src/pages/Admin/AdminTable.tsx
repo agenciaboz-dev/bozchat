@@ -1,5 +1,5 @@
 import React, { useState } from "react"
-import { IconButton, Menu, MenuItem, Paper, Switch } from "@mui/material"
+import { IconButton, Menu, MenuItem, Paper, Switch, useMediaQuery } from "@mui/material"
 import { DataGrid, GridColDef } from "@mui/x-data-grid"
 import { AdminCompany } from "../../types/server/class/Company"
 import { Circle, Send } from "@mui/icons-material"
@@ -14,6 +14,7 @@ interface AdminTableProps {
 }
 
 export const AdminTable: React.FC<AdminTableProps> = (props) => {
+    const isMobile = useMediaQuery("(orientation: portrait)")
     const { onLogin, user } = useUser()
     const { confirm } = useConfirmDialog()
     const navigate = useNavigate()
@@ -53,25 +54,27 @@ export const AdminTable: React.FC<AdminTableProps> = (props) => {
             flex: 0.05,
             align: "center",
         },
-        { field: "business_name", headerName: "Nome Fantasia", flex: 0.2 },
-        { field: "full_name", headerName: "Razão Social", flex: 0.2 },
-        { field: "document", headerName: "CNPJ", flex: 0.1 },
-        { field: "usersCount", headerName: "Usuários", flex: 0.05 },
-        { field: "washimaCount", headerName: "Business", flex: 0.05 },
-        { field: "nagazapCount", headerName: "Broadcast", flex: 0.05 },
+        { field: "business_name", headerName: "Nome Fantasia", flex: 0.2, minWidth: isMobile ? 200 : undefined },
+        { field: "full_name", headerName: "Razão Social", flex: 0.2, minWidth: isMobile ? 200 : undefined },
+        { field: "document", headerName: "CNPJ", flex: 0.1, minWidth: isMobile ? 150 : undefined },
+        { field: "usersCount", headerName: "Usuários", flex: 0.05, minWidth: isMobile ? 150 : undefined },
+        { field: "washimaCount", headerName: "Business", flex: 0.05, minWidth: isMobile ? 150 : undefined },
+        { field: "nagazapCount", headerName: "Broadcast", flex: 0.05, minWidth: isMobile ? 150 : undefined },
         {
             field: "getBots",
             headerName: "Bots",
             flex: 0.05,
+            minWidth: isMobile ? 150 : undefined,
             renderCell: () => <Switch checked />,
         },
         {
             field: "getLogs",
             headerName: "Quadros",
             flex: 0.05,
+            minWidth: isMobile ? 150 : undefined,
             renderCell: () => <Switch checked />,
         },
-        { field: "diskUsed", headerName: "Armazenamento", flex: 0.08 },
+        { field: "diskUsed", headerName: "Armazenamento", flex: 0.08, minWidth: isMobile ? 200 : undefined },
         {
             field: "id",
             headerName: "Acessar",

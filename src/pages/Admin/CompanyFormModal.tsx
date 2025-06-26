@@ -123,9 +123,9 @@ export const CompanyFormModal: React.FC<CompanyFormModalProps> = (props) => {
                     }
                 />
                 <form onSubmit={formik.handleSubmit}>
-                    <Box sx={{ gap: "1vw" }}>
-                        <Box sx={{ flexDirection: "column", gap: "1vw", flex: 1 }}>
-                            <Title2 name="Empresa" />
+                    <Box sx={{ gap: isMobile ? "5vw" : "1vw", flexDirection: isMobile ? "column" : "row" }}>
+                        <Box sx={{ flexDirection: "column", gap: isMobile ? "5vw" : "1vw", flex: 1, paddingTop: isMobile ? "5vw" : undefined }}>
+                            <Title2 name="Empresa" space={isMobile ? true : undefined} />
                             <TextField
                                 value={formik.values.document}
                                 onChange={formik.handleChange}
@@ -155,10 +155,10 @@ export const CompanyFormModal: React.FC<CompanyFormModalProps> = (props) => {
                                 required
                             />
                         </Box>
-                        <Box sx={{ flexDirection: "column", gap: "1vw", flex: 1 }}>
-                            <Title2 name="Endereço" />
-                            <Grid container columns={2} spacing={"1vw"}>
-                                <Grid item xs={1}>
+                        <Box sx={{ flexDirection: "column", gap: isMobile ? "5vw" : "1vw", flex: 1 }}>
+                            <Title2 name="Endereço" space={isMobile ? true : undefined} />
+                            <Grid container columns={2} spacing={isMobile ? "5vw" : "1vw"}>
+                                <Grid item xs={isMobile ? 2 : 1}>
                                     <TextField
                                         value={formik.values.address.cep}
                                         onChange={formik.handleChange}
@@ -174,7 +174,7 @@ export const CompanyFormModal: React.FC<CompanyFormModalProps> = (props) => {
                                         }}
                                     />
                                 </Grid>
-                                <Grid item xs={1}>
+                                <Grid item xs={isMobile ? 2 : 1}>
                                     <TextField
                                         value={formik.values.address.district}
                                         onChange={formik.handleChange}
@@ -185,7 +185,6 @@ export const CompanyFormModal: React.FC<CompanyFormModalProps> = (props) => {
                                         autoComplete="off"
                                     />
                                 </Grid>
-
                                 <Grid item xs={2}>
                                     <TextField
                                         value={formik.values.address.street}
@@ -197,8 +196,7 @@ export const CompanyFormModal: React.FC<CompanyFormModalProps> = (props) => {
                                         autoComplete="off"
                                     />
                                 </Grid>
-
-                                <Grid item xs={1}>
+                                <Grid item xs={isMobile ? 2 : 1}>
                                     <TextField
                                         value={formik.values.address.complement}
                                         onChange={formik.handleChange}
@@ -208,7 +206,7 @@ export const CompanyFormModal: React.FC<CompanyFormModalProps> = (props) => {
                                         autoComplete="off"
                                     />
                                 </Grid>
-                                <Grid item xs={1}>
+                                <Grid item xs={isMobile ? 2 : 1}>
                                     <TextField
                                         value={formik.values.address.number}
                                         onChange={formik.handleChange}
@@ -220,7 +218,7 @@ export const CompanyFormModal: React.FC<CompanyFormModalProps> = (props) => {
                                     />
                                 </Grid>
 
-                                <Grid item xs={1}>
+                                <Grid item xs={isMobile ? 2 : 1}>
                                     <TextField
                                         value={formik.values.address.city}
                                         onChange={formik.handleChange}
@@ -231,7 +229,7 @@ export const CompanyFormModal: React.FC<CompanyFormModalProps> = (props) => {
                                         autoComplete="off"
                                     />
                                 </Grid>
-                                <Grid item xs={1}>
+                                <Grid item xs={isMobile ? 2 : 1}>
                                     <TextField
                                         value={formik.values.address.uf}
                                         onChange={formik.handleChange}
@@ -257,8 +255,8 @@ export const CompanyFormModal: React.FC<CompanyFormModalProps> = (props) => {
                             </Grid>
                         </Box>
 
-                        <Box sx={{ flexDirection: "column", gap: "1vw", flex: 1 }}>
-                            <Title2 name="Usuário" />
+                        <Box sx={{ flexDirection: "column", gap: isMobile ? "5vw" : "1vw", flex: 1 }}>
+                            <Title2 name="Usuário" space={isMobile ? true : undefined} />
                             <TextField
                                 value={formik.values.user.name}
                                 onChange={formik.handleChange}
@@ -303,6 +301,7 @@ export const CompanyFormModal: React.FC<CompanyFormModalProps> = (props) => {
                             color: "secondary.main",
                             fontWeight: "bold",
                             alignSelf: "flex-end",
+                            marginTop: isMobile ? "5vw" : undefined,
                         }}
                     >
                         {loading ? <CircularProgress size="1.5rem" color="secondary" /> : "cadastrar"}

@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react"
-import { Badge, Box, Chip, CircularProgress, IconButton, Tooltip, Typography, useMediaQuery } from "@mui/material"
+import { Badge, Box, Chip, CircularProgress, ClickAwayListener, IconButton, Tooltip, Typography, useMediaQuery } from "@mui/material"
 import { backgroundStyle } from "../../style/background"
 import { Header } from "../../components/Header/Header"
 import { useApi } from "../../hooks/useApi"
@@ -52,10 +52,20 @@ export const Admin: React.FC<AdminProps> = (props) => {
         if (loading) fetchWashimaInitInfo()
     }, [loading])
 
+    const [tooltipOpen, setTooltipOpen] = useState(false)
+
+    const handleClick = () => {
+        setTooltipOpen((prev) => !prev)
+    }
+
+    const handleClickAway = () => {
+        setTooltipOpen(false)
+    }
+
     return (
         <Box sx={{ ...backgroundStyle, overflow: isMobile ? "auto" : "hidden" }}>
             <Header />
-            <Box sx={{ flexDirection: "column", gap: "1vw", padding: "2vw" }}>
+            <Box sx={{ flexDirection: "column", gap: "1vw", padding: isMobile ? "5vw" : "2vw" }}>
                 <Title2
                     name="Administração"
                     right={
@@ -63,46 +73,54 @@ export const Admin: React.FC<AdminProps> = (props) => {
                             <IconButton onClick={() => setCompanyModal(true)}>
                                 <Add />
                             </IconButton>
-                            <Tooltip
-                                title={
-                                    <Box sx={{ flexDirection: "column", gap: "0.5vw" }}>
-                                        <Typography>
-                                            Instâncias em inicialização:
-                                            <Chip label={washimaInitializing.length} size="small" color="primary" sx={{ marginLeft: "0.5vw" }} />
-                                        </Typography>
-                                        <Box sx={{ gap: "0.5vw", flexWrap: "wrap" }}>
-                                            {washimaInitializing.map((washima) => (
-                                                <Chip key={washima.id} size="small" label={washima.name} color="primary" />
-                                            ))}
+                            <ClickAwayListener onClickAway={handleClickAway}>
+                                <Tooltip
+                                    title={
+                                        <Box sx={{ flexDirection: "column", gap: "0.5vw" }}>
+                                            <Typography>
+                                                Instâncias em inicialização:
+                                                <Chip label={washimaInitializing.length} size="small" color="primary" sx={{ marginLeft: "0.5vw" }} />
+                                            </Typography>
+                                            <Box sx={{ gap: "0.5vw", flexWrap: "wrap" }}>
+                                                {washimaInitializing.map((washima) => (
+                                                    <Chip key={washima.id} size="small" label={washima.name} color="primary" />
+                                                ))}
+                                            </Box>
+                                            <Typography>
+                                                Instâncias em espera:
+                                                <Chip label={washimaWaiting.length} size="small" color="warning" sx={{ marginLeft: "0.5vw" }} />
+                                            </Typography>
+                                            <Box sx={{ gap: "0.5vw", flexWrap: "wrap" }}>
+                                                {washimaWaiting.map((washima) => (
+                                                    <Chip key={washima.id} size="small" label={washima.name} color="warning" />
+                                                ))}
+                                            </Box>
                                         </Box>
-                                        <Typography>
-                                            Instâncias em espera:
-                                            <Chip label={washimaWaiting.length} size="small" color="warning" sx={{ marginLeft: "0.5vw" }} />
-                                        </Typography>
-                                        <Box sx={{ gap: "0.5vw", flexWrap: "wrap" }}>
-                                            {washimaWaiting.map((washima) => (
-                                                <Chip key={washima.id} size="small" label={washima.name} color="warning" />
-                                            ))}
-                                        </Box>
-                                    </Box>
-                                }
-                            >
-                                <IconButton>
-                                    <Badge
-                                        badgeContent={washimaInitializing.length}
-                                        color="primary"
-                                        anchorOrigin={{ vertical: "top", horizontal: "right" }}
-                                    >
+                                    }
+                                    open={tooltipOpen}
+                                    onClose={handleClickAway}
+                                    disableHoverListener
+                                    disableFocusListener
+                                    disableTouchListener
+                                    placement="bottom"
+                                >
+                                    <IconButton onClick={handleClick}>
                                         <Badge
-                                            badgeContent={washimaWaiting.length}
-                                            color="warning"
-                                            anchorOrigin={{ vertical: "top", horizontal: "left" }}
+                                            badgeContent={washimaInitializing.length}
+                                            color="primary"
+                                            anchorOrigin={{ vertical: "top", horizontal: "right" }}
                                         >
-                                            <WhatsApp />
+                                            <Badge
+                                                badgeContent={washimaWaiting.length}
+                                                color="warning"
+                                                anchorOrigin={{ vertical: "top", horizontal: "left" }}
+                                            >
+                                                <WhatsApp />
+                                            </Badge>
                                         </Badge>
-                                    </Badge>
-                                </IconButton>
-                            </Tooltip>
+                                    </IconButton>
+                                </Tooltip>
+                            </ClickAwayListener>
                             <IconButton onClick={refresh}>{loading ? <CircularProgress sx={{ color: "text.secondary" }} /> : <Refresh />}</IconButton>
                         </Box>
                     }
