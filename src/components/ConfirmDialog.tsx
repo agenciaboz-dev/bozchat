@@ -35,7 +35,7 @@ export const ConfirmDialog: React.FC<ConfirmDialogProps> = ({}) => {
 
         actions: {
             padding: 0,
-            gap: "1vw",
+            gap: isMobile ? "5vw" : "1vw",
         },
     }
 

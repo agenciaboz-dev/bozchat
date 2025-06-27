@@ -76,21 +76,31 @@ export const Admin: React.FC<AdminProps> = (props) => {
                             <ClickAwayListener onClickAway={handleClickAway}>
                                 <Tooltip
                                     title={
-                                        <Box sx={{ flexDirection: "column", gap: "0.5vw" }}>
+                                        <Box sx={{ flexDirection: "column", gap: isMobile ? "2vw" : "0.5vw" }}>
                                             <Typography>
                                                 Instâncias em inicialização:
-                                                <Chip label={washimaInitializing.length} size="small" color="primary" sx={{ marginLeft: "0.5vw" }} />
+                                                <Chip
+                                                    label={washimaInitializing.length}
+                                                    size="small"
+                                                    color="primary"
+                                                    sx={{ marginLeft: isMobile ? "2vw" : "0.5vw" }}
+                                                />
                                             </Typography>
-                                            <Box sx={{ gap: "0.5vw", flexWrap: "wrap" }}>
+                                            <Box sx={{ gap: isMobile ? "2vw" : "0.5vw", flexWrap: "wrap" }}>
                                                 {washimaInitializing.map((washima) => (
                                                     <Chip key={washima.id} size="small" label={washima.name} color="primary" />
                                                 ))}
                                             </Box>
                                             <Typography>
                                                 Instâncias em espera:
-                                                <Chip label={washimaWaiting.length} size="small" color="warning" sx={{ marginLeft: "0.5vw" }} />
+                                                <Chip
+                                                    label={washimaWaiting.length}
+                                                    size="small"
+                                                    color="warning"
+                                                    sx={{ marginLeft: isMobile ? "2vw" : "0.5vw" }}
+                                                />
                                             </Typography>
-                                            <Box sx={{ gap: "0.5vw", flexWrap: "wrap" }}>
+                                            <Box sx={{ gap: isMobile ? "2vw" : "0.5vw", flexWrap: "wrap" }}>
                                                 {washimaWaiting.map((washima) => (
                                                     <Chip key={washima.id} size="small" label={washima.name} color="warning" />
                                                 ))}

@@ -17,22 +17,19 @@ export const Options: React.FC<OptionsProps> = ({}) => {
     return (
         <Box sx={{ ...backgroundStyle, overflow: isMobile ? "auto" : "hidden" }}>
             <Header />
-
-            <Box sx={{ padding: "2vw", flexDirection: "column", gap: "1vw" }}>
-                <Grid container columns={2} spacing={"1vw"}>
-                    <Grid item xs={1}>
-                        <Box sx={{ flexDirection: "column", gap: "1vw" }}>
-                            <Box sx={{ flexDirection: "column" }}>
-                                <Title2 name="Notificações" />
-                                {washima_notifications.map((item) => (
-                                    <NotificationSwitch key={item.event} notification={item} />
-                                ))}
-                                {user?.admin && nagazap_notifications.map((item) => <NotificationSwitch key={item.event} notification={item} />)}
-                            </Box>
+            <Box sx={{ padding: isMobile ? "5vw" : "2vw" }}>
+                <Grid container columns={2} spacing={isMobile ? "5vw" : "1vw"}>
+                    <Grid item xs={isMobile ? 2 : 1}>
+                        <Box sx={{ flexDirection: "column", gap: isMobile ? "2vw" : "1vw" }}>
+                            <Title2 name="Notificações" space={isMobile ? true : undefined} />
+                            {washima_notifications.map((item) => (
+                                <NotificationSwitch key={item.event} notification={item} />
+                            ))}
+                            {user?.admin && nagazap_notifications.map((item) => <NotificationSwitch key={item.event} notification={item} />)}
                         </Box>
                     </Grid>
-                    <Grid item xs={1}>
-                        <Title2 name="Assinatura" />
+                    <Grid item xs={isMobile ? 2 : 1}>
+                        <Title2 name="Assinatura" space={isMobile ? true : undefined} />
                         <SigningBox />
                     </Grid>
                 </Grid>
