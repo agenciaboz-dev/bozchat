@@ -48,14 +48,16 @@ export const Logs: React.FC<LogsProps> = ({ nagazap, setNagazap, setShowInformat
                 const date = new Date(Number(cell.value))
                 return date.toLocaleString("pt-br")
             },
+            minWidth: isMobile ? 150 : undefined,
         },
         {
             field: "data",
             headerName: "Telefone",
             flex: 0.25,
             valueFormatter: (value: any) => mask.format(value.contacts[0].wa_id.slice(2)),
+            minWidth: isMobile ? 150 : undefined,
         },
-        { field: "template_name", headerName: "Template", flex: 0.5 },
+        { field: "template_name", headerName: "Template", flex: 0.5, minWidth: isMobile ? 150 : undefined },
     ]
 
     const failedMessagesColumns: (GridColDef & { field: keyof WithoutFunctions<FailedMessageLog> })[] = [
@@ -67,18 +69,21 @@ export const Logs: React.FC<LogsProps> = ({ nagazap, setNagazap, setShowInformat
                 const date = new Date(Number(cell.value))
                 return date.toLocaleString("pt-br")
             },
+            minWidth: isMobile ? 150 : undefined,
         },
         {
             field: "number",
             headerName: "Telefone",
             flex: 0.25,
             valueFormatter: (value) => extra9Mask.format(value),
+            minWidth: isMobile ? 150 : undefined,
         },
         {
             field: "data",
             headerName: "Erro",
             flex: 0.45,
             valueFormatter: (value: any) => value.error?.message,
+            minWidth: isMobile ? 150 : undefined,
         },
     ]
 
@@ -111,9 +116,9 @@ export const Logs: React.FC<LogsProps> = ({ nagazap, setNagazap, setShowInformat
                 ) : undefined
             }
         >
-            <Box sx={{ marginTop: "-1vw", gap: "1vw", flex: 1 }}>
+            <Box sx={{ marginTop: "-1vw", gap: isMobile ? "5vw" : "1vw", flex: 1, flexDirection: isMobile ? "column" : "row" }}>
                 <Box sx={{ flex: 1, flexDirection: "column" }}>
-                    <Title2 name="Sucesso" />
+                    <Title2 name="Sucesso" space={isMobile} />
                     <Paper sx={{ marginTop: isMobile ? "2vw" : "1vw" }}>
                         <DataGrid
                             loading={loading}
@@ -126,7 +131,7 @@ export const Logs: React.FC<LogsProps> = ({ nagazap, setNagazap, setShowInformat
                             pageSizeOptions={[20, 50, 100, 200]}
                             sx={{
                                 border: 0,
-                                height: "60vh",
+                                height: isMobile ? "40vh" : "60vh",
                                 "& .MuiDataGrid-row": {
                                     cursor: "pointer",
                                 },
@@ -149,7 +154,7 @@ export const Logs: React.FC<LogsProps> = ({ nagazap, setNagazap, setShowInformat
                             pageSizeOptions={[20, 50, 100, 200]}
                             sx={{
                                 border: 0,
-                                height: "60vh",
+                                height: isMobile ? "40vh" : "60vh",
                                 "& .MuiDataGrid-row": {
                                     cursor: "pointer",
                                 },

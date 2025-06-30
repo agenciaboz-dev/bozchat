@@ -74,9 +74,16 @@ export const Blacklist: React.FC<BlacklistProps> = ({ nagazap, setNagazap, setSh
                 const date = new Date(Number(cell.value))
                 return date.toLocaleString("pt-br")
             },
+            minWidth: isMobile ? 150 : undefined,
         },
-        { field: "name", headerName: "Nome", flex: 0.55 },
-        { field: "number", headerName: "Telefone", flex: 0.25, valueFormatter: (value: string) => mask.format(value) },
+        { field: "name", headerName: "Nome", flex: 0.55, minWidth: isMobile ? 200 : undefined },
+        {
+            field: "number",
+            headerName: "Telefone",
+            flex: 0.25,
+            valueFormatter: (value: string) => mask.format(value),
+            minWidth: isMobile ? 150 : undefined,
+        },
         {
             field: "action",
             headerName: "Ações",
