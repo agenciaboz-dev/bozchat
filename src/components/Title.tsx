@@ -45,7 +45,7 @@ export const Title2: React.FC<{ name: string; right?: React.ReactNode; left?: Re
                 fontSize: isMobile ? "1.4rem" : "1.1vw",
                 justifyContent: isMobile ? "center" : "space-between",
                 alignItems: "center",
-                marginBottom: isMobile ? "2vw" : "0.5vw",
+                marginBottom: isMobile ? "5vw" : "0.5vw",
             }}
         >
             <Box sx={{ alignItems: "center", gap: "0.5vw", flex: 1, maxWidth: left && right ? "80%" : undefined }}>

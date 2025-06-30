@@ -150,22 +150,40 @@ export const ChatContainer: React.FC<ChatProps> = ({ chat, onChatClick, washima,
             >
                 {/*//*  title and date */}
                 <Box sx={{ justifyContent: "space-between", alignItems: "center", width: "100%", color: "text.secondary" }}>
-                    <Box sx={{ flex: 1, alignItems: "center", gap: "0.5vw" }}>
+                    <Box
+                        sx={{
+                            flex: 1,
+                            alignItems: "center",
+                            gap: "0.5vw",
+                            maxWidth: isMobile ? "65%" : undefined,
+                        }}
+                    >
                         <Typography
                             sx={{
                                 fontWeight: "bold",
+                                fontSize: isMobile ? "1rem" : "0.8vw",
                                 overflow: "hidden",
                                 whiteSpace: "nowrap",
                                 textOverflow: "ellipsis",
-                                maxWidth: isInContacts ? "70%" : "55%",
-                                fontSize: "0.8vw",
+                                maxWidth: isMobile ? undefined : isInContacts ? "70%" : "55%",
                             }}
                             title={contactName}
                         >
                             {!isInContacts && "~ "}
                             {contactName}
                         </Typography>
-                        {!isInContacts && <Typography sx={{ fontSize: "0.6vw" }}>{contactPhone}</Typography>}
+                        {!isInContacts && (
+                            <Typography
+                                sx={{
+                                    fontSize: isMobile ? "0.8rem" : "0.6vw",
+                                    overflow: "hidden",
+                                    whiteSpace: "nowrap",
+                                    textOverflow: "ellipsis",
+                                }}
+                            >
+                                {contactPhone}
+                            </Typography>
+                        )}
                     </Box>
                     {chat.lastMessage && (
                         <Box
@@ -186,7 +204,7 @@ export const ChatContainer: React.FC<ChatProps> = ({ chat, onChatClick, washima,
                     sx={{
                         whiteSpace: "nowrap",
                         textOverflow: "ellipsis",
-                        width: isMobile ? "100%" : "100%",
+                        width: "100%",
                         overflow: "hidden",
                         fontSize: isMobile ? "4vw" : "0.8vw",
                         gap: "0.5vw",
@@ -221,8 +239,8 @@ export const ChatContainer: React.FC<ChatProps> = ({ chat, onChatClick, washima,
                             color={"secondary.main"}
                             sx={{
                                 bgcolor: "warning.main",
-                                borderRadius: "0.7vw",
-                                padding: "0.3vw",
+                                borderRadius: isMobile ? "2vw" : "0.7vw",
+                                padding: isMobile ? "1vw" : "0.3vw",
                                 fontSize: isMobile ? "4vw" : "0.7vw",
                                 fontWeight: "bold",
                                 minWidth: isMobile ? "8vw" : "1.5vw",

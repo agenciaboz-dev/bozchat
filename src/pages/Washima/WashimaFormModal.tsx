@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react"
-import { Box, Button, CircularProgress, Dialog, IconButton, LinearProgress, Paper, TextField, Typography } from "@mui/material"
+import { Box, Button, CircularProgress, Dialog, IconButton, LinearProgress, Paper, TextField, Typography, useMediaQuery } from "@mui/material"
 import { Washima } from "../../types/server/class/Washima/Washima"
 import { Title2 } from "../../components/Title"
 import { Close } from "@mui/icons-material"
@@ -27,6 +27,7 @@ const Loading = () => (
 )
 
 export const WashimaFormModal: React.FC<WashimaFormModalProps> = (props) => {
+    const isMobile = useMediaQuery("(orientation: portrait)")
     const io = useIo()
     const { company, user } = useUser()
 
@@ -141,9 +142,10 @@ export const WashimaFormModal: React.FC<WashimaFormModalProps> = (props) => {
             <Box
                 sx={{
                     flexDirection: "column",
-                    padding: "1.5vw",
-                    gap: "1vw",
+                    padding: isMobile ? "5vw" : "1.5vw",
+                    gap: isMobile ? "5vw" : "1vw",
                     bgcolor: "background.default",
+                    maxWidth: isMobile ? "90vw" : undefined,
                 }}
             >
                 <Title2
@@ -154,7 +156,7 @@ export const WashimaFormModal: React.FC<WashimaFormModalProps> = (props) => {
                         </IconButton>
                     }
                 />
-                <Box sx={{ color: "text.secondary", flexDirection: "column", gap: "0.5vw" }}>
+                <Box sx={{ color: "text.secondary", flexDirection: "column", gap: isMobile ? "5vw" : "0.5vw" }}>
                     <Typography sx={{ marginTop: "-1vw" }}>
                         Digite o número de telefone do whatsapp que deseja conectar e escolha o tipo de autenticação.
                     </Typography>
@@ -183,7 +185,7 @@ export const WashimaFormModal: React.FC<WashimaFormModalProps> = (props) => {
                         helperText={error}
                     />
                 )}
-                <Box sx={{ justifyContent: "flex-end", gap: "1vw" }}>
+                <Box sx={{ justifyContent: "flex-end", gap: isMobile ? "5vw" : "1vw" }}>
                     <Button variant="outlined" onClick={requestQrCode} disabled={!!code || loading}>
                         Gerar QR Code
                     </Button>

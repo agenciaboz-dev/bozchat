@@ -19,8 +19,8 @@ export const WashimaSidebar: React.FC<WashimaSidebarProps> = (props) => {
                 flex: isMobile ? 1 : undefined,
                 flexDirection: "column",
                 alignItems: "center",
-                padding: isMobile ? "5vw" : "0vw",
-                width: "15vw",
+                padding: 0,
+                width: isMobile ? "90vw" : "15vw",
                 overflowY: "auto",
             }}
         >
@@ -33,7 +33,7 @@ export const WashimaSidebar: React.FC<WashimaSidebarProps> = (props) => {
                             <MenuItem
                                 key={item.id}
                                 sx={{
-                                    width: "15vw",
+                                    width: isMobile ? "100%" : "15vw",
                                     flexShrink: 0,
                                     borderRadius: "0.3vw",
                                     justifyContent: "space-between",
@@ -48,10 +48,10 @@ export const WashimaSidebar: React.FC<WashimaSidebarProps> = (props) => {
                                 // disabled={item.status !== "ready"}
                                 disableRipple={item.status !== "ready"}
                             >
-                                <Paper elevation={active ? 2 : 1} sx={{ padding: "1vw", flex: 1, flexDirection: "column" }}>
+                                <Paper elevation={active ? 2 : 1} sx={{ padding: isMobile ? "5vw" : "1vw", flex: 1, flexDirection: "column" }}>
                                     <Typography
                                         sx={{
-                                            maxWidth: "13vw",
+                                            maxWidth: isMobile ? "75%" : "13vw",
                                             whiteSpace: "nowrap",
                                             overflow: "hidden",
                                             textOverflow: "ellipsis",

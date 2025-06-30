@@ -232,7 +232,9 @@ export const Message: React.ForwardRefRenderFunction<HTMLDivElement, MessageProp
                                     ? "100%"
                                     : "90%"
                                 : message.hasMedia && is_document
-                                ? "25vw"
+                                ? isMobile
+                                    ? "100%"
+                                    : "25vw"
                                 : message.hasMedia
                                 ? "100%"
                                 : isMobile

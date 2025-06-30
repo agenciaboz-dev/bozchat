@@ -1,5 +1,5 @@
 import React from "react"
-import { Box, Chip, Tooltip } from "@mui/material"
+import { Box, Chip, Tooltip, useMediaQuery } from "@mui/material"
 import { Android } from "@mui/icons-material"
 
 interface BotNameChipProps {
@@ -7,9 +7,10 @@ interface BotNameChipProps {
 }
 
 export const BotNameChip: React.FC<BotNameChipProps> = (props) => {
+    const isMobile = useMediaQuery("(orientation: portrait)")
     return (
         <Tooltip title={props.name} arrow placement="left">
-            <Box sx={{ marginBottom: "0.5vw" }}>
+            <Box sx={{ marginBottom: isMobile ? "2vw" : "0.5vw" }}>
                 <Chip
                     label={props.name}
                     icon={<Android />}
@@ -19,7 +20,7 @@ export const BotNameChip: React.FC<BotNameChipProps> = (props) => {
                         // marginBottom: "0.5vw",
                         "& .MuiChip-label": {
                             whiteSpace: "nowrap",
-                            maxWidth: "6vw",
+                            maxWidth: isMobile ? "33vw" : "6vw",
                             textOverflow: "ellipsis",
                         },
                     }}

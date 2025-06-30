@@ -295,7 +295,6 @@ export const WashimaChat: React.FC<WashimaChatProps> = ({ washima, chat, onClose
                 flex: 1,
                 justifyContent: isMobile ? "flex-end" : undefined,
                 bgcolor: inBoards ? "transparent" : darkMode ? "background.paper" : custom_colors.lightMode_chatWrapper,
-                // height: isMobile ? "77vh" : "90vh",
                 padding: inBoards ? 0 : isMobile ? "5vw" : "1vw",
                 paddingBottom: inBoards ? 0 : isMobile ? "5vw" : "2vw",
                 color: "text.secondary",
@@ -311,8 +310,6 @@ export const WashimaChat: React.FC<WashimaChatProps> = ({ washima, chat, onClose
                     sx={{
                         gap: isMobile ? "3vw" : "2vw",
                         alignItems: "center",
-                        // height: isMobile ? "7vh" : "5vh",
-                        padding: isMobile ? "2vw" : "",
                     }}
                 >
                     {!profilePic && loading ? (
@@ -334,33 +331,61 @@ export const WashimaChat: React.FC<WashimaChatProps> = ({ washima, chat, onClose
                             </PhotoView>
                         </PhotoProvider>
                     )}
-                    <Box sx={{ flex: 1, alignItems: "center", gap: "0.5vw" }}>
+                    <Box
+                        sx={{
+                            flex: 1,
+                            alignItems: "center",
+                            gap: "0.5vw",
+                            flexDirection: isMobile ? "column" : "row",
+                            maxWidth: isMobile ? "45%" : undefined,
+                        }}
+                    >
                         <Typography
                             sx={{
                                 fontWeight: "bold",
                                 overflow: "hidden",
                                 whiteSpace: "nowrap",
                                 textOverflow: "ellipsis",
-                                maxWidth: isInContacts ? "70%" : "55%",
-                                fontSize: "1vw",
+                                maxWidth: isMobile ? "80%" : isInContacts ? "70%" : "55%",
+                                fontSize: isMobile ? "1rem" : "1vw",
                             }}
                             title={contactName}
                         >
                             {!isInContacts && "~ "}
                             {contactName}
                         </Typography>
-                        {!isInContacts && <Typography sx={{ fontSize: "0.8vw" }}>{contactPhone}</Typography>}
+                        {!isInContacts && (
+                            <Typography
+                                sx={{ fontSize: isMobile ? "0.8rem" : "0.8vw", overflow: "hidden", whiteSpace: "nowrap", textOverflow: "ellipsis" }}
+                            >
+                                {contactPhone}
+                            </Typography>
+                        )}
                     </Box>
-                    {!!chat && (
-                        <Box sx={{ marginLeft: "auto", alignItems: "center" }}>
-                            <ChatSearch washima_id={washima.id} chat_id={chat.id._serialized} onMessageClick={setLoadingMessageId} />
-                            <BotActivity chat_id={chat.id._serialized} />
-                            <CopyAllButton chat={chat} washima_id={washima.id} />
-                            <IconButton sx={{ color: "text.secondary", padding: isMobile ? "0" : "" }} onClick={onClose}>
-                                <CancelIcon />
-                            </IconButton>
-                        </Box>
-                    )}
+                    {!!chat &&
+                        (isMobile ? (
+                            <Box sx={{ marginLeft: "auto", alignItems: "center", flexDirection: "column" }}>
+                                <Box>
+                                    <BotActivity chat_id={chat.id._serialized} />
+                                    <IconButton sx={{ color: "text.secondary" }} onClick={onClose}>
+                                        <CancelIcon />
+                                    </IconButton>
+                                </Box>
+                                <Box sx={{ width: "100%", justifyContent: "space-between" }}>
+                                    <ChatSearch washima_id={washima.id} chat_id={chat.id._serialized} onMessageClick={setLoadingMessageId} />
+                                    <CopyAllButton chat={chat} washima_id={washima.id} />
+                                </Box>
+                            </Box>
+                        ) : (
+                            <Box sx={{ marginLeft: "auto", alignItems: "center" }}>
+                                <ChatSearch washima_id={washima.id} chat_id={chat.id._serialized} onMessageClick={setLoadingMessageId} />
+                                <BotActivity chat_id={chat.id._serialized} />
+                                <CopyAllButton chat={chat} washima_id={washima.id} />
+                                <IconButton sx={{ color: "text.secondary" }} onClick={onClose}>
+                                    <CancelIcon />
+                                </IconButton>
+                            </Box>
+                        ))}
                 </Box>
             )}
 

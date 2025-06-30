@@ -70,37 +70,73 @@ export const WashimaZap: React.FC<WashimaZapProps> = ({ washima }) => {
 
     return (
         <Box sx={{ flex: 1 }}>
-            <Box
-                ref={chatListRef}
-                sx={{
-                    flex: isMobile ? 1 : 0.5,
-                    flexDirection: "column",
-                    alignItems: isMobile ? "center" : "",
-                    padding: isMobile ? "5vw" : "1vw",
-                    height: "80vh",
-                    overflowX: isMobile ? "hidden" : "auto",
-                    overflowY: loading ? "hidden" : "auto",
-                    gap: isMobile ? "5vw" : "1vw",
-                    color: "primary.main",
-                    width: isMobile ? "100vw" : undefined,
-                }}
-            >
-                <WashimaSearch handleSearch={debouncedSearch} />
-
-                <ChatList
-                    onChatClick={(chat) => {
-                        setChat(chat)
-                    }}
-                    washima={washima}
-                    lastWashima={lastWashima}
-                    loading={loading}
-                    setLoading={setLoading}
-                    currentChat={chat}
-                    setOnSearch={setOnSearch}
-                    setOnStartSearch={setOnStartSearch}
-                />
-            </Box>
-            <WashimaChat washima={washima} chat={chat} onClose={() => setChat(null)} />
+            {isMobile ? (
+                chat ? (
+                    <Box sx={{ maxHeight: "75vh", width: "100%" }}>
+                        <WashimaChat washima={washima} chat={chat} onClose={() => setChat(null)} />
+                    </Box>
+                ) : (
+                    <Box
+                        ref={chatListRef}
+                        sx={{
+                            flex: 1,
+                            flexDirection: "column",
+                            alignItems: "center",
+                            height: "80vh",
+                            overflowX: "hidden",
+                            overflowY: "auto",
+                            gap: "5vw",
+                            color: "primary.main",
+                            width: "100vw",
+                        }}
+                    >
+                        <WashimaSearch handleSearch={debouncedSearch} />
+                        <ChatList
+                            onChatClick={(chat) => {
+                                setChat(chat)
+                            }}
+                            washima={washima}
+                            lastWashima={lastWashima}
+                            loading={loading}
+                            setLoading={setLoading}
+                            currentChat={chat}
+                            setOnSearch={setOnSearch}
+                            setOnStartSearch={setOnStartSearch}
+                        />
+                    </Box>
+                )
+            ) : (
+                <>
+                    <Box
+                        ref={chatListRef}
+                        sx={{
+                            flex: 0.5,
+                            flexDirection: "column",
+                            padding: "1vw",
+                            height: "80vh",
+                            overflowX: "auto",
+                            overflowY: "auto",
+                            gap: "1vw",
+                            color: "primary.main",
+                        }}
+                    >
+                        <WashimaSearch handleSearch={debouncedSearch} />
+                        <ChatList
+                            onChatClick={(chat) => {
+                                setChat(chat)
+                            }}
+                            washima={washima}
+                            lastWashima={lastWashima}
+                            loading={loading}
+                            setLoading={setLoading}
+                            currentChat={chat}
+                            setOnSearch={setOnSearch}
+                            setOnStartSearch={setOnStartSearch}
+                        />
+                    </Box>
+                    <WashimaChat washima={washima} chat={chat} onClose={() => setChat(null)} />
+                </>
+            )}
         </Box>
     )
 }

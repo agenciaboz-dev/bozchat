@@ -180,7 +180,7 @@ export const WashimaPage: React.FC<WashimaProps> = ({}) => {
     return (
         <Box sx={{ ...backgroundStyle, overflow: isMobile ? "auto" : "hidden" }}>
             <Header />
-            <Box sx={{ flexDirection: "column", flex: 1, height: "90vh", padding: "2vw" }}>
+            <Box sx={{ flexDirection: "column", flex: 1, height: "90vh", padding: isMobile ? "5vw" : "2vw" }}>
                 <Title2
                     name={`Business`}
                     left={
@@ -213,9 +213,13 @@ export const WashimaPage: React.FC<WashimaProps> = ({}) => {
                         index
                         path="/"
                         element={
-                            <SidebarWrapper currentWashima={currentWashima} onWashimaSelect={onWashimaSelect} washimas={washimas}>
-                                <NoChat homepage />
-                            </SidebarWrapper>
+                            isMobile ? (
+                                <WashimaSidebar washimas={washimas} currentWashima={currentWashima} onClick={onWashimaSelect} />
+                            ) : (
+                                <SidebarWrapper currentWashima={currentWashima} onWashimaSelect={onWashimaSelect} washimas={washimas}>
+                                    <NoChat homepage />
+                                </SidebarWrapper>
+                            )
                         }
                     />
 
@@ -223,9 +227,13 @@ export const WashimaPage: React.FC<WashimaProps> = ({}) => {
                         <Route
                             path="*"
                             element={
-                                <SidebarWrapper currentWashima={currentWashima} onWashimaSelect={onWashimaSelect} washimas={washimas}>
+                                isMobile ? (
                                     <WashimaZap washima={currentWashima} />
-                                </SidebarWrapper>
+                                ) : (
+                                    <SidebarWrapper currentWashima={currentWashima} onWashimaSelect={onWashimaSelect} washimas={washimas}>
+                                        <WashimaZap washima={currentWashima} />
+                                    </SidebarWrapper>
+                                )
                             }
                         />
                     )}

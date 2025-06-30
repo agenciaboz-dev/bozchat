@@ -92,8 +92,14 @@ export const WashimasTable: React.FC<WashimasTableProps> = (props) => {
             },
             align: "center",
         },
-        { field: "name", headerName: "Nome", flex: 0.4 },
-        { field: "number", headerName: "Número", flex: 0.25, valueFormatter: (value) => phoneMask.format(value) },
+        { field: "name", headerName: "Nome", flex: 0.4, minWidth: isMobile ? 200 : undefined },
+        {
+            field: "number",
+            headerName: "Número",
+            flex: 0.25,
+            valueFormatter: (value) => phoneMask.format(value),
+            minWidth: isMobile ? 150 : undefined,
+        },
         {
             field: "chats",
             headerName: "Conversas",
@@ -108,6 +114,7 @@ export const WashimasTable: React.FC<WashimasTableProps> = (props) => {
                     </Box>
                 )
             },
+            minWidth: isMobile ? 150 : undefined,
         },
         {
             field: "storage_messages",
@@ -123,8 +130,9 @@ export const WashimasTable: React.FC<WashimasTableProps> = (props) => {
                     </Box>
                 )
             },
+            minWidth: isMobile ? 300 : undefined,
         },
-        { field: "storage_media", headerName: "Armazenamento: mídia", flex: 0.3 },
+        { field: "storage_media", headerName: "Armazenamento: mídia", flex: 0.3, minWidth: isMobile ? 300 : undefined },
         {
             field: "id",
             headerName: "Ações",
