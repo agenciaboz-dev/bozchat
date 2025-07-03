@@ -1,5 +1,5 @@
 import React, { useState } from "react"
-import { Autocomplete, Box, Button, CircularProgress, FormControlLabel, FormLabel, IconButton, Switch, TextField } from "@mui/material"
+import { Autocomplete, Box, Button, CircularProgress, FormControlLabel, FormLabel, IconButton, Switch, TextField, useMediaQuery } from "@mui/material"
 import { User, UserForm as UserFormType } from "../../types/server/class/User"
 import { textFieldStyle } from "../../style/textfield"
 import { useFormik } from "formik"
@@ -16,6 +16,7 @@ interface UserFormProps {
 }
 
 export const UserForm: React.FC<UserFormProps> = (props) => {
+    const isMobile = useMediaQuery("(orientation: portrait)")
     const { darkMode } = useDarkMode()
     const { company, user } = useUser()
     const { confirm } = useConfirmDialog()
@@ -54,7 +55,7 @@ export const UserForm: React.FC<UserFormProps> = (props) => {
     })
 
     return (
-        <Box sx={{ flexDirection: "column", flex: 1, gap: "1vw" }}>
+        <Box sx={{ flexDirection: "column", flex: 1, gap: isMobile ? "5vw" : "1vw" }}>
             <form onSubmit={formik.handleSubmit}>
                 <TextField
                     required
@@ -90,7 +91,7 @@ export const UserForm: React.FC<UserFormProps> = (props) => {
                     }}
                 />
 
-                <Box sx={{ gap: "1vw", flexDirection: "row-reverse" }}>
+                <Box sx={{ justifyContent: "flex-end" }}>
                     <Button
                         type="submit"
                         variant="contained"

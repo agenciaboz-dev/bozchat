@@ -90,11 +90,11 @@ export const Users: React.FC<UsersProps> = ({}) => {
     return (
         <Box sx={{ ...backgroundStyle, overflow: isMobile ? "auto" : "hidden" }}>
             <Header />
-            <Box sx={{ flexDirection: "column", flex: 1, gap: "1vw", padding: "2vw" }}>
+            <Box sx={{ flexDirection: "column", flex: 1, gap: isMobile ? 0 : "1vw", padding: isMobile ? "5vw" : "2vw" }}>
                 <Title2
                     name="Usuários"
                     right={
-                        <Box sx={{ gap: "0.5vw" }}>
+                        <Box sx={{ gap: isMobile ? "1vw" : "0.5vw" }}>
                             {user?.admin && (
                                 <IconButton onClick={() => setShowUserForm(true)}>
                                     <Add />
@@ -110,8 +110,20 @@ export const Users: React.FC<UsersProps> = ({}) => {
                 <UsersTable users={users} departments={departments} loading={loading} updateUser={updateUser} onDeleteUser={deleteUser} />
             </Box>
 
-            <Dialog open={showUserForm} keepMounted onClose={() => setShowUserForm(false)} PaperProps={{ sx: { width: "40vw" }, elevation: 2 }}>
-                <Box sx={{ bgcolor: "background.default", flexDirection: "column", padding: "1.5vw", gap: "1vw" }}>
+            <Dialog
+                open={showUserForm}
+                keepMounted
+                onClose={() => setShowUserForm(false)}
+                PaperProps={{ sx: { width: isMobile ? "90vw" : "40vw" }, elevation: 2 }}
+            >
+                <Box
+                    sx={{
+                        bgcolor: "background.default",
+                        flexDirection: "column",
+                        padding: isMobile ? "5vw" : "1.5vw",
+                        gap: isMobile ? "3vw" : "1vw",
+                    }}
+                >
                     <Box sx={{ justifyContent: "space-between", alignItems: "center" }}>
                         <Typography sx={{ fontWeight: "bold" }}>Adicionar usuário</Typography>
                         <IconButton onClick={() => setShowUserForm(false)}>

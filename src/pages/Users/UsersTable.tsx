@@ -1,5 +1,5 @@
 import React, { useRef, useState } from "react"
-import { Autocomplete, IconButton, Menu, MenuItem, Paper, TextField } from "@mui/material"
+import { Autocomplete, IconButton, Menu, MenuItem, Paper, TextField, useMediaQuery } from "@mui/material"
 import { User } from "../../types/server/class/User"
 import { DataGrid, GridColDef } from "@mui/x-data-grid"
 import { AdminPanelSettings, Circle, MoreHoriz } from "@mui/icons-material"
@@ -18,6 +18,7 @@ interface UsersTableProps {
 }
 
 export const UsersTable: React.FC<UsersTableProps> = (props) => {
+    const isMobile = useMediaQuery("(orientation: portrait)")
     const clipboard = useClipboard({ timeout: 1000 })
     const { snackbar } = useSnackbar()
     const { user } = useUser()
@@ -59,6 +60,7 @@ export const UsersTable: React.FC<UsersTableProps> = (props) => {
             },
             flex: 0.03,
             align: "center",
+            minWidth: isMobile ? 100 : undefined,
         },
         {
             field: "admin",
@@ -79,9 +81,10 @@ export const UsersTable: React.FC<UsersTableProps> = (props) => {
             },
             flex: 0.035,
             align: "center",
+            minWidth: isMobile ? 100 : undefined,
         },
-        { field: "name", headerName: "Nome", flex: 0.15, editable: user?.admin },
-        { field: "email", headerName: "E-mail", flex: 0.15, editable: user?.admin },
+        { field: "name", headerName: "Nome", flex: 0.15, editable: user?.admin, minWidth: isMobile ? 200 : undefined },
+        { field: "email", headerName: "E-mail", flex: 0.15, editable: user?.admin, minWidth: isMobile ? 200 : undefined },
         {
             field: "password",
             headerName: "Senha",
@@ -90,6 +93,7 @@ export const UsersTable: React.FC<UsersTableProps> = (props) => {
             filterable: false,
             valueFormatter: () => "***************",
             editable: user?.admin,
+            minWidth: isMobile ? 150 : undefined,
         },
         {
             field: "departments",
@@ -117,6 +121,7 @@ export const UsersTable: React.FC<UsersTableProps> = (props) => {
                     />
                 )
             },
+            minWidth: isMobile ? 150 : undefined,
         },
         {
             field: "id",
@@ -131,11 +136,12 @@ export const UsersTable: React.FC<UsersTableProps> = (props) => {
             align: "center",
             sortable: false,
             filterable: false,
+            minWidth: isMobile ? 100 : undefined,
         },
     ]
 
     return (
-        <Paper sx={{ flex: 1 }}>
+        <Paper sx={{ flex: 1, marginTop: isMobile ? "5vw" : undefined }}>
             <DataGrid
                 loading={props.loading}
                 rows={props.users}
@@ -145,7 +151,7 @@ export const UsersTable: React.FC<UsersTableProps> = (props) => {
                     pagination: { paginationModel: { page: 0, pageSize: 10 } },
                 }}
                 pageSizeOptions={[10, 20, 50, 100]}
-                sx={{ border: 0, height: "61vh" }}
+                sx={{ border: 0, height: "auto" }}
                 // slots={{ filterPanel: () => <GridFilterPanel /> }}
                 onCellEditStop={(cell, event) => {
                     const new_value = newDepartmentsValue.current || ((event as unknown as any).target.value as string | undefined)
