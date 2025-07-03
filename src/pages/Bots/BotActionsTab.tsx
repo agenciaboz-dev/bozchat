@@ -1,5 +1,5 @@
 import React, { useEffect, useMemo, useState } from "react"
-import { Autocomplete, Box, Checkbox, IconButton, Paper, TextField, Tooltip, Typography } from "@mui/material"
+import { Autocomplete, Box, Checkbox, ClickAwayListener, IconButton, Paper, TextField, Tooltip, Typography, useMediaQuery } from "@mui/material"
 import { Accordion } from "../../components/Accordion"
 import { NodeAction, ValidAction } from "../../types/server/class/Bot/NodeAction"
 import { FlowNode, FlowNodeData } from "../../types/server/class/Bot/Bot"
@@ -29,7 +29,19 @@ interface ActionContainerProps {
 }
 
 const ActionContainer: React.FC<ActionContainerProps> = (props) => {
+    const isMobile = useMediaQuery("(orientation: portrait)")
     const { darkMode } = useDarkMode()
+    const [tooltipOpen, setTooltipOpen] = useState(false)
+    const [hovered, setHovered] = useState(false)
+
+    const handleClick = () => {
+        setTooltipOpen((prev) => !prev)
+    }
+
+    const handleClickAway = () => {
+        setTooltipOpen(false)
+    }
+
     return (
         <Accordion
             expanded={!!props.action}
@@ -41,7 +53,7 @@ const ActionContainer: React.FC<ActionContainerProps> = (props) => {
                         alignItems: "center",
                         flex: 1,
                         color: !!props.action ? "primary.main" : "text.secondary",
-                        padding: "0.5vw",
+                        padding: isMobile ? "1vw" : "0.5vw",
                         justifyContent: "space-between",
                         backgroundColor: darkMode ? undefined : "background.default",
                     }}
@@ -49,35 +61,51 @@ const ActionContainer: React.FC<ActionContainerProps> = (props) => {
                 >
                     <Box sx={{ alignItems: "center" }}>
                         <Checkbox checked={!!props.action} />
-                        <Typography>{props.title}</Typography>
+                        <Typography sx={{ fontSize: isMobile ? "0.8rem" : undefined }}>{props.title}</Typography>
                     </Box>
-                    <Tooltip arrow title={props.action?.settings.misconfigured ? "Essa ação precisa ser reconfigurada" : props.description}>
-                        <IconButton onClick={(e) => e.stopPropagation()}>
-                            {props.action?.settings.misconfigured ? (
-                                <Report
-                                    color="secondary"
-                                    sx={{
-                                        padding: "0.2vw",
-                                        bgcolor: "error.main",
-                                        borderRadius: "100%",
-                                        justifyContent: "center",
-                                        alignItems: "center",
-                                    }}
-                                />
-                            ) : (
-                                <InfoOutlined />
-                            )}
-                        </IconButton>
-                    </Tooltip>
+                    <ClickAwayListener onClickAway={handleClickAway}>
+                        <Tooltip
+                            arrow
+                            title={props.action?.settings.misconfigured ? "Essa ação precisa ser reconfigurada" : props.description}
+                            open={tooltipOpen || (!isMobile && hovered)}
+                            onClose={handleClickAway}
+                            disableHoverListener={isMobile}
+                            placement="bottom"
+                        >
+                            <IconButton
+                                onClick={(e) => {
+                                    e.stopPropagation()
+                                    handleClick()
+                                }}
+                                onMouseEnter={() => !isMobile && setHovered(true)}
+                                onMouseLeave={() => !isMobile && setHovered(false)}
+                            >
+                                {props.action?.settings.misconfigured ? (
+                                    <Report
+                                        color="secondary"
+                                        sx={{
+                                            padding: isMobile ? "1vw" : "0.2vw",
+                                            bgcolor: "error.main",
+                                            borderRadius: "100%",
+                                            justifyContent: "center",
+                                            alignItems: "center",
+                                        }}
+                                    />
+                                ) : (
+                                    <InfoOutlined />
+                                )}
+                            </IconButton>
+                        </Tooltip>
+                    </ClickAwayListener>
                 </Paper>
             }
             expandedElement={
                 <Paper
                     sx={{
                         flexDirection: "column",
-                        padding: "1vw",
+                        padding: isMobile ? "5vw" : "1vw",
                         flex: 1,
-                        marginTop: "0.5vw",
+                        marginTop: isMobile ? "3vw" : "0.5vw",
                         boxShadow: darkMode ? undefined : `inset 0 0 5px ${custom_colors.lightMode_border}`,
                     }}
                 >
@@ -89,6 +117,7 @@ const ActionContainer: React.FC<ActionContainerProps> = (props) => {
 }
 
 export const BotActionsTab: React.FC<BotActionsTabProps> = (props) => {
+    const isMobile = useMediaQuery("(orientation: portrait)")
     const { darkMode } = useDarkMode()
 
     const [boards] = useFetchedData<Board>("boards", { params: { all: true } })
@@ -167,13 +196,13 @@ export const BotActionsTab: React.FC<BotActionsTabProps> = (props) => {
         <Box
             sx={{
                 flexDirection: "column",
-                gap: "1vw",
-                padding: "1vw",
+                gap: isMobile ? "3vw" : "1vw",
+                padding: isMobile ? "5vw" : "1vw",
                 bgcolor: darkMode ? "background.default" : custom_colors.lightMode_botNodeDrawerBackground,
                 border: darkMode ? `1px solid ${custom_colors.darkMode_border}` : `1px solid ${custom_colors.lightMode_border}`,
                 boxShadow: darkMode ? undefined : `inset 0 0 5px ${custom_colors.lightMode_border}`,
                 flex: 1,
-                borderRadius: "0.5vw",
+                borderRadius: isMobile ? "4px" : "0.5vw",
             }}
         >
             <TextInfo>As ações marcadas serão executadas quando esta mensagem for enviada</TextInfo>
@@ -184,7 +213,7 @@ export const BotActionsTab: React.FC<BotActionsTabProps> = (props) => {
                 description="Copie esta conversa para um quadro"
                 settingsHeight="auto"
                 settingsComponent={
-                    <Box sx={{ gap: "1vw", flexDirection: "column" }}>
+                    <Box sx={{ gap: isMobile ? "3vw" : "1vw", flexDirection: "column" }}>
                         <Autocomplete
                             options={boards}
                             value={destinationBoard}

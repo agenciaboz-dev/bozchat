@@ -1,5 +1,5 @@
 import React, { useState } from "react"
-import { Box } from "@mui/material"
+import { Box, useMediaQuery } from "@mui/material"
 import { FlowNode, FlowNodeData } from "../../types/server/class/Bot/Bot"
 import { useSnackbar } from "burgos-snackbar"
 import { ChatInput } from "../../components/ChatInput"
@@ -16,6 +16,7 @@ interface SettingsTabProps {
 }
 
 export const BotMessageTab: React.FC<SettingsTabProps> = (props) => {
+    const isMobile = useMediaQuery("(orientation: portrait)")
     const { darkMode } = useDarkMode()
     const { snackbar } = useSnackbar()
 
@@ -33,16 +34,16 @@ export const BotMessageTab: React.FC<SettingsTabProps> = (props) => {
     }
 
     return (
-        <Box sx={{ flexDirection: "column", gap: "1vw" }}>
+        <Box sx={{ flexDirection: "column", gap: isMobile ? "5vw" : "1vw" }}>
             <Box
                 sx={{
                     flexDirection: "column",
                     bgcolor: darkMode ? "background.default" : custom_colors.lightMode_botNodeDrawerBackground,
                     border: darkMode ? `1px solid ${custom_colors.darkMode_border}` : `1px solid ${custom_colors.lightMode_border}`,
                     boxShadow: darkMode ? undefined : `inset 0 0 5px ${custom_colors.lightMode_border}`,
-                    padding: "1vw",
-                    borderRadius: "0.5vw",
-                    gap: "1vw",
+                    padding: isMobile ? "5vw" : "1vw",
+                    borderRadius: isMobile ? "4px" : "0.5vw",
+                    gap: isMobile ? "3vw" : "1vw",
                     overflow: "auto",
                     height: props.node?.type === "message" ? "70vh" : "82vh",
                 }}

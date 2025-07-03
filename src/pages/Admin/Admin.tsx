@@ -53,6 +53,7 @@ export const Admin: React.FC<AdminProps> = (props) => {
     }, [loading])
 
     const [tooltipOpen, setTooltipOpen] = useState(false)
+    const [hovered, setHovered] = useState(false)
 
     const handleClick = () => {
         setTooltipOpen((prev) => !prev)
@@ -107,14 +108,16 @@ export const Admin: React.FC<AdminProps> = (props) => {
                                             </Box>
                                         </Box>
                                     }
-                                    open={tooltipOpen}
+                                    open={tooltipOpen || (!isMobile && hovered)}
                                     onClose={handleClickAway}
-                                    disableHoverListener
-                                    disableFocusListener
-                                    disableTouchListener
+                                    disableHoverListener={isMobile}
                                     placement="bottom"
                                 >
-                                    <IconButton onClick={handleClick}>
+                                    <IconButton
+                                        onClick={handleClick}
+                                        onMouseEnter={() => !isMobile && setHovered(true)}
+                                        onMouseLeave={() => !isMobile && setHovered(false)}
+                                    >
                                         <Badge
                                             badgeContent={washimaInitializing.length}
                                             color="primary"

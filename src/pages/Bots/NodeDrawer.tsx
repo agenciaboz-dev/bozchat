@@ -1,5 +1,5 @@
 import React, { useContext, useEffect, useRef, useState } from "react"
-import { Box, Button, Drawer, IconButton, Paper, Tab, Tabs, Typography } from "@mui/material"
+import { Box, Button, Drawer, IconButton, Paper, Tab, Tabs, Typography, useMediaQuery } from "@mui/material"
 import { FlowNode, FlowNodeData } from "../../types/server/class/Bot/Bot"
 import { Close, Save } from "@mui/icons-material"
 import { BotMessageTab } from "./BotMessageTab"
@@ -17,6 +17,7 @@ interface NodeDrawerProps {
 }
 
 export const NodeDrawer: React.FC<NodeDrawerProps> = ({ node, onClose, saveNode, nodes }) => {
+    const isMobile = useMediaQuery("(orientation: portrait)")
     const { darkMode } = useDarkMode()
     const inputRef = useRef<HTMLInputElement>(null)
     const { snackbar } = useSnackbar()
@@ -69,9 +70,9 @@ export const NodeDrawer: React.FC<NodeDrawerProps> = ({ node, onClose, saveNode,
                     flexDirection: "column",
                     bgcolor: "background.default",
                     flex: 1,
-                    padding: "1vw",
-                    maxWidth: "25vw",
-                    width: "25vw",
+                    padding: isMobile ? "5vw" : "1vw",
+                    maxWidth: isMobile ? "100%" : "25vw",
+                    width: isMobile ? "100%" : "25vw",
                 }}
             >
                 <Box sx={{ alignItems: "center", justifyContent: "space-between" }}>
@@ -84,7 +85,12 @@ export const NodeDrawer: React.FC<NodeDrawerProps> = ({ node, onClose, saveNode,
                 </Box>
 
                 {node?.type === "message" && (
-                    <Tabs value={currentTab} onChange={(_, value) => setCurrentTab(value)} variant="fullWidth" sx={{ marginBottom: "1vw" }}>
+                    <Tabs
+                        value={currentTab}
+                        onChange={(_, value) => setCurrentTab(value)}
+                        variant="fullWidth"
+                        sx={{ marginBottom: isMobile ? "5vw" : "1vw" }}
+                    >
                         <Tab value={"message"} label="Mensagem" />
                         <Tab value={"actions"} label="Ações" />
                         <Tab value={"loop"} label="Loop" />
@@ -98,7 +104,12 @@ export const NodeDrawer: React.FC<NodeDrawerProps> = ({ node, onClose, saveNode,
                 )}
 
                 {(currentTab === "actions" || currentTab === "loop") && (
-                    <Button variant="contained" startIcon={<Save />} sx={{ alignSelf: "flex-end", marginTop: "1vw" }} onClick={save}>
+                    <Button
+                        variant="contained"
+                        startIcon={<Save />}
+                        sx={{ alignSelf: "flex-end", marginTop: isMobile ? "5vw" : "1vw" }}
+                        onClick={save}
+                    >
                         salvar
                     </Button>
                 )}

@@ -1,5 +1,5 @@
 import React from "react"
-import { Box, Button, Chip, Typography } from "@mui/material"
+import { Box, Button, Chip, Typography, useMediaQuery } from "@mui/material"
 import { Cancel } from "@mui/icons-material"
 
 interface LoopingOverlayProps {
@@ -7,6 +7,8 @@ interface LoopingOverlayProps {
 }
 
 export const LoopingOverlay: React.FC<LoopingOverlayProps> = (props) => {
+    const isMobile = useMediaQuery("(orientation: portrait)")
+
     return (
         <Box
             sx={{
@@ -24,7 +26,23 @@ export const LoopingOverlay: React.FC<LoopingOverlayProps> = (props) => {
         >
             <Chip
                 label="Selecione a mensagem que será referenciada"
-                sx={{ fontSize: "2rem", padding: "2vw", borderRadius: "5vw" }}
+                sx={{
+                    fontSize: isMobile ? "1.2rem" : "2rem",
+                    padding: "2vw",
+                    borderRadius: isMobile ? "2vw" : "5vw",
+                    height: "auto",
+                    "& .MuiChip-label": {
+                        display: "block",
+                        whiteSpace: "normal",
+                        wordWrap: "break-word",
+                        overflow: "hidden",
+                        textOverflow: "ellipsis",
+                        maxWidth: "100%",
+                    },
+                    "& .MuiChip-deleteIcon": {
+                        marginLeft: "2vw",
+                    },
+                }}
                 onDelete={props.cancelLoopingSelecting}
                 color="default"
                 deleteIcon={<Cancel sx={{ width: "2rem", height: "2rem" }} />}
