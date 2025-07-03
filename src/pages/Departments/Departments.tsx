@@ -94,11 +94,11 @@ export const Departments: React.FC<DepartmentsProps> = ({}) => {
     return (
         <Box sx={{ ...backgroundStyle, overflow: isMobile ? "auto" : "hidden" }}>
             <Header />
-            <Box sx={{ flexDirection: "column", flex: 1, gap: "1vw", padding: "2vw" }}>
+            <Box sx={{ flexDirection: "column", flex: 1, gap: isMobile ? 0 : "1vw", padding: isMobile ? "5vw" : "2vw" }}>
                 <Title2
                     name="Setores"
                     right={
-                        <Box sx={{ gap: "0.5vw" }}>
+                        <Box sx={{ gap: isMobile ? "1vw" : "0.5vw" }}>
                             {user?.admin && (
                                 <IconButton onClick={() => setShowDepartmentForm(true)}>
                                     <Add />
@@ -123,13 +123,13 @@ export const Departments: React.FC<DepartmentsProps> = ({}) => {
                 open={showDepartmentForm}
                 keepMounted
                 onClose={() => setShowDepartmentForm(false)}
-                PaperProps={{ sx: { bgcolor: "background.default", width: "40vw" }, elevation: 2 }}
+                PaperProps={{ sx: { width: isMobile ? "90vw" : "40vw", maxHeight: "90vh" }, elevation: 2 }}
             >
                 <Box
                     sx={{
                         bgcolor: "background.default",
-                        padding: "1.5vw",
-                        paddingBottom: "1vw",
+                        padding: isMobile ? "5vw" : "1.5vw",
+                        paddingBottom: isMobile ? "3vw" : "1vw",
                         justifyContent: "space-between",
                         alignItems: "center",
                     }}

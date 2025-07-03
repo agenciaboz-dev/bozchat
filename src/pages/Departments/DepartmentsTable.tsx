@@ -1,5 +1,5 @@
 import React, { useRef, useState } from "react"
-import { Autocomplete, Box, Chip, IconButton, Menu, MenuItem, Paper, TextField, Tooltip } from "@mui/material"
+import { Autocomplete, Box, Chip, IconButton, Menu, MenuItem, Paper, TextField, Tooltip, useMediaQuery } from "@mui/material"
 import { Department } from "../../types/server/class/Department"
 import { useSnackbar } from "burgos-snackbar"
 import { useUser } from "../../hooks/useUser"
@@ -20,6 +20,7 @@ interface DepartmentsTableProps {
 }
 
 export const DepartmentsTable: React.FC<DepartmentsTableProps> = (props) => {
+    const isMobile = useMediaQuery("(orientation: portrait)")
     const { snackbar } = useSnackbar()
     const { user } = useUser()
     const newUsersValue = useRef<User[] | null>(null)
@@ -35,7 +36,7 @@ export const DepartmentsTable: React.FC<DepartmentsTableProps> = (props) => {
     }
 
     const columns: (GridColDef & { field: keyof Department })[] = [
-        { field: "name", headerName: "Nome", flex: 0.6, editable: user?.admin },
+        { field: "name", headerName: "Nome", flex: 0.6, editable: user?.admin, minWidth: isMobile ? 150 : undefined },
         {
             field: "users",
             headerName: "Usuários",
@@ -62,6 +63,7 @@ export const DepartmentsTable: React.FC<DepartmentsTableProps> = (props) => {
                     />
                 )
             },
+            minWidth: isMobile ? 200 : undefined,
         },
 
         {
@@ -77,6 +79,7 @@ export const DepartmentsTable: React.FC<DepartmentsTableProps> = (props) => {
             align: "center",
             sortable: false,
             filterable: false,
+            minWidth: isMobile ? 100 : undefined,
         },
     ]
 
@@ -94,7 +97,7 @@ export const DepartmentsTable: React.FC<DepartmentsTableProps> = (props) => {
                 sx={{ border: 0, height: "74vh" }}
                 // slots={{ filterPanel: () => <GridFilterPanel /> }}
                 onCellEditStop={(cell, event) => {
-                    const new_value = newUsersValue.current || (event as unknown as any).target.value as string | undefined
+                    const new_value = newUsersValue.current || ((event as unknown as any).target.value as string | undefined)
                     const old_value = props.departments.find((department) => department.id === cell.row.id)![cell.field as keyof Department]
                     if (!new_value || new_value === old_value) {
                         return
@@ -117,7 +120,7 @@ export const DepartmentsTable: React.FC<DepartmentsTableProps> = (props) => {
                         return false
                     }
 
-                    if (!["name", 'users'].includes(cell.field)) {
+                    if (!["name", "users"].includes(cell.field)) {
                         return false
                     }
 

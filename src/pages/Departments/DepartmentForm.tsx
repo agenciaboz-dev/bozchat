@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react"
-import { Autocomplete, Box, Button, CircularProgress, TextField } from "@mui/material"
+import { Autocomplete, Box, Button, CircularProgress, TextField, useMediaQuery } from "@mui/material"
 import { Department, DepartmentForm } from "../../types/server/class/Department"
 import { useFormik } from "formik"
 import { api } from "../../api"
@@ -15,6 +15,7 @@ interface DepartmentFormComponentProps {
 }
 
 export const DepartmentFormComponent: React.FC<DepartmentFormComponentProps> = (props) => {
+    const isMobile = useMediaQuery("(orientation: portrait)")
     const { darkMode } = useDarkMode()
     const { company, user } = useUser()
     const { snackbar } = useSnackbar()
@@ -45,7 +46,16 @@ export const DepartmentFormComponent: React.FC<DepartmentFormComponentProps> = (
     })
 
     return (
-        <Box sx={{ bgcolor: "background.default", flexDirection: "column", flex: 1, gap: "1vw", padding: "1.5vw", paddingTop: 0 }}>
+        <Box
+            sx={{
+                bgcolor: "background.default",
+                flexDirection: "column",
+                flex: 1,
+                gap: isMobile ? "5vw" : "1vw",
+                padding: isMobile ? "5vw" : "1.5vw",
+                paddingTop: 0,
+            }}
+        >
             <form onSubmit={formik.handleSubmit}>
                 <TextField
                     required
@@ -58,16 +68,29 @@ export const DepartmentFormComponent: React.FC<DepartmentFormComponentProps> = (
 
                 <Autocomplete
                     options={props.users}
-                    renderInput={(params) => <TextField {...params} label="Usuários" sx={textFieldStyle({ darkMode })} />}
                     getOptionLabel={(option) => option.name}
                     value={formik.values.users}
                     multiple
                     onChange={(_, users) => formik.setFieldValue("users", users)}
                     disableCloseOnSelect
+                    renderInput={(params) => (
+                        <TextField
+                            {...params}
+                            label="Usuários"
+                            multiline
+                            sx={{
+                                ...textFieldStyle({ darkMode }),
+                                "& .MuiInputBase-root": {
+                                    flexWrap: "wrap",
+                                    alignItems: "flex-start",
+                                },
+                            }}
+                        />
+                    )}
                     ChipProps={{ size: "small", color: "primary" }}
                 />
 
-                <Box sx={{ gap: "1vw", flexDirection: "row-reverse" }}>
+                <Box sx={{ justifyContent: "flex-end" }}>
                     <Button
                         type="submit"
                         variant="contained"
