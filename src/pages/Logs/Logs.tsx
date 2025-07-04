@@ -43,6 +43,7 @@ export const Logs: React.FC<LogsProps> = ({}) => {
             },
             flex: 0.05,
             align: "center",
+            minWidth: isMobile ? 100 : undefined,
         },
         {
             field: "timestamp",
@@ -52,10 +53,11 @@ export const Logs: React.FC<LogsProps> = ({}) => {
                 const date = new Date(cell.value)
                 return date.toLocaleString("pt-br")
             },
+            minWidth: isMobile ? 200 : undefined,
         },
-        { field: "user_name", headerName: "Usuário", flex: 0.25 },
+        { field: "user_name", headerName: "Usuário", flex: 0.25, minWidth: isMobile ? 150 : undefined },
 
-        { field: "text", headerName: "Ação", flex: 0.55 },
+        { field: "text", headerName: "Ação", flex: 0.55, minWidth: isMobile ? 250 : undefined },
     ]
 
     const fetchLogs = async () => {
@@ -79,7 +81,7 @@ export const Logs: React.FC<LogsProps> = ({}) => {
     return (
         <Box sx={{ ...backgroundStyle, overflow: isMobile ? "auto" : "hidden" }}>
             <Header />
-            <Box sx={{ padding: "2vw", flex: 1, flexDirection: "column" }}>
+            <Box sx={{ padding: isMobile ? "5vw" : "2vw", flex: 1, flexDirection: "column" }}>
                 <Title2
                     name="Logs"
                     right={
