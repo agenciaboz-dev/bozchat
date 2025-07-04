@@ -142,7 +142,7 @@ export const Logs: React.FC<LogsProps> = ({ nagazap, setNagazap, setShowInformat
                 </Box>
                 <Box sx={{ flexDirection: "column", flex: 1 }}>
                     <Title2 name="Falhas" />
-                    <Paper sx={{ marginTop: isMobile ? "2vw" : "1vw" }}>
+                    <Paper sx={{ marginTop: isMobile ? 0 : "1vw" }}>
                         <DataGrid
                             loading={loading}
                             rows={nagazap.failedMessages}

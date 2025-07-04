@@ -87,7 +87,7 @@ export const WashimaStatistics: React.FC<WashimaStatisticsProps> = ({}) => {
     }, [])
 
     return (
-        <Box sx={{ flex: isMobile ? undefined : 1, flexDirection: "column", gap: "1vw" }}>
+        <Box sx={{ flex: isMobile ? undefined : 1, flexDirection: "column", gap: isMobile ? 0 : "1vw" }}>
             <Title2
                 name="Business"
                 right={

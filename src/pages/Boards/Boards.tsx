@@ -96,7 +96,7 @@ export const Boards: React.FC<BoardsProps> = ({}) => {
                     index
                     path="/"
                     element={
-                        <Box sx={{ flexDirection: "column", flex: 1, gap: isMobile ? "5vw" : "1vw", padding: isMobile ? "5vw" : "2vw" }}>
+                        <Box sx={{ flexDirection: "column", flex: 1, gap: isMobile ? 0 : "1vw", padding: isMobile ? "5vw" : "2vw" }}>
                             <Title2
                                 name="Quadros"
                                 right={
