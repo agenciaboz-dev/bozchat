@@ -108,19 +108,25 @@ export const BoardRoom: React.FC<KanbanColumnProps> = (props) => {
             console.log(error)
         }
     }
-
+    
     return (
         <Tooltip
             arrow
             placement="top"
             title={
-                <Box sx={{ padding: isMobile ? "5vw" : "0.5vw" }}>
+                <Box sx={{ padding: isMobile ? "3vw 2vw" : "1vw 0.5vw" }}>
                     <TextField
                         label="Filtrar"
-                        placeholder="nome ou telefone"
+                        placeholder="Nome ou telefone"
                         variant="standard"
                         value={filterText}
                         onChange={(ev) => setFilterText(ev.target.value)}
+                        InputLabelProps={{
+                            style: { color: "white" },
+                        }}
+                        InputProps={{
+                            style: { color: "white" },
+                        }}
                     />
                 </Box>
             }
