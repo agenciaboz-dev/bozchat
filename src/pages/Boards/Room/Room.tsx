@@ -30,6 +30,7 @@ interface KanbanColumnProps {
     washimas: Washima[]
     nagazaps: Nagazap[]
     updateBoard: (board: Board) => void
+    showAllAccordions?: boolean
 }
 
 export const BoardRoom: React.FC<KanbanColumnProps> = (props) => {
@@ -108,7 +109,7 @@ export const BoardRoom: React.FC<KanbanColumnProps> = (props) => {
             console.log(error)
         }
     }
-    
+
     return (
         <Tooltip
             arrow
@@ -199,6 +200,7 @@ export const BoardRoom: React.FC<KanbanColumnProps> = (props) => {
                                         board={props.board}
                                         room_id={props.room.id}
                                         updateBoard={(board) => props.updateBoard(board)}
+                                        showAllAccordions={props.showAllAccordions}
                                     />
                                 ))
                             )}

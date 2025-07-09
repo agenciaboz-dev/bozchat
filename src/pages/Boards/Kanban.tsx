@@ -2,7 +2,7 @@ import React, { useEffect, useRef, useState } from "react"
 import { Box, CircularProgress, IconButton, Tooltip, useMediaQuery } from "@mui/material"
 import { Board } from "../../types/server/class/Board/Board"
 import { Title2 } from "../../components/Title"
-import { Add, ArrowBack, Edit, EditOff, Settings } from "@mui/icons-material"
+import { Add, ArrowBack, Edit, EditOff, Settings, Preview } from "@mui/icons-material"
 import { BoardRoom } from "./Room/Room"
 import { DragDropContext, Draggable, Droppable, DropResult } from "@hello-pangea/dnd"
 import { WithoutFunctions } from "../../types/server/class/helpers"
@@ -43,6 +43,7 @@ export const BoardPage: React.FC<BoardPageProps> = (props) => {
     const [saving, setSaving] = useState(false)
     const [showSettings, setShowSettings] = useState(false)
     const [syncing, setSyncing] = useState(false)
+    const [showAllAccordions, setShowAllAccordions] = useState(false)
 
     const isSame = (result: DropResult<string>) =>
         result.destination?.droppableId === result.source.droppableId && result.destination.index === result.source.index
@@ -211,6 +212,8 @@ export const BoardPage: React.FC<BoardPageProps> = (props) => {
 
             io.off("sync:pending")
             io.off("sync:done")
+
+            setShowAllAccordions(false)
         }
     }, [])
 
@@ -231,6 +234,9 @@ export const BoardPage: React.FC<BoardPageProps> = (props) => {
                                     <CircularProgress color="success" />
                                 </Tooltip>
                             )}
+                            <IconButton onClick={() => setShowAllAccordions((prev) => !prev)}>
+                                <Preview />
+                            </IconButton>
                             {user?.admin && (
                                 <>
                                     <IconButton onClick={addRoom}>
@@ -316,6 +322,7 @@ export const BoardPage: React.FC<BoardPageProps> = (props) => {
                                                         board={board}
                                                         deleteRoom={deleteRoom}
                                                         updateBoard={(board) => setBoard(board)}
+                                                        showAllAccordions={showAllAccordions}
                                                     />
                                                 </Box>
                                             )}

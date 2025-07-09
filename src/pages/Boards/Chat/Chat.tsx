@@ -1,8 +1,8 @@
 import React, { useEffect, useMemo, useState } from "react"
-import { Avatar, Box, Chip, IconButton, LinearProgress, Paper, Typography, useMediaQuery } from "@mui/material"
+import { Avatar, Box, Chip, Collapse, IconButton, LinearProgress, Paper, Typography, useMediaQuery } from "@mui/material"
 import { Chat } from "../../../types/server/class/Board/Chat"
 import { Draggable } from "@hello-pangea/dnd"
-import { Cancel, MoreHoriz } from "@mui/icons-material"
+import { Cancel, KeyboardArrowDown, KeyboardArrowUp } from "@mui/icons-material"
 import { api } from "../../../api"
 import { Washima } from "../../../types/server/class/Washima/Washima"
 import { Chat as WashimaChatType } from "../../../types/Chat"
@@ -33,6 +33,7 @@ interface BoardChatProps {
     room_id: string
     board: WithoutFunctions<Board>
     updateBoard: (board: Board) => void
+    showAllAccordions?: boolean
 }
 
 export const BoardChat: React.FC<BoardChatProps> = (props) => {
@@ -46,9 +47,12 @@ export const BoardChat: React.FC<BoardChatProps> = (props) => {
         filename: string | undefined
         message_id: string
     }>()
+
     const [expandedChat, setExpandedChat] = useState(false)
     const [nagazapMessages, setNagazapMessages] = useState<NagaMessage[]>([])
     const [showTranferModal, setShowTranferModal] = useState<null | "transfer" | "copy">(null)
+    const [showAccordion, setShowAccordion] = useState(props.showAllAccordions || false)
+
     const nagaChat = useMemo(
         () => ({
             from: props.chat.phone,
@@ -105,6 +109,20 @@ export const BoardChat: React.FC<BoardChatProps> = (props) => {
         }
     }, [props.nagazap, props.chat])
 
+    const handleShowAccordion = (e: React.SyntheticEvent) => {
+        e.stopPropagation()
+
+        if (expandedChat) {
+            setExpandedChat(false)
+        }
+
+        setShowAccordion((prev) => !prev)
+    }
+
+    useEffect(() => {
+        setShowAccordion(!!props.showAllAccordions)
+    }, [props.showAllAccordions])
+
     return (
         <Draggable draggableId={props.chat.id} index={props.index}>
             {(provided) => (
@@ -114,6 +132,7 @@ export const BoardChat: React.FC<BoardChatProps> = (props) => {
                     {...provided.dragHandleProps}
                     sx={{
                         padding: isMobile ? "5vw" : "1vw",
+                        paddingBottom: showAccordion ? (isMobile ? "5vw" : "1vw") : 0,
                         flexDirection: "column",
                         overflow: "hidden",
                         gap: isMobile ? "5vw" : "1vw",
@@ -126,7 +145,7 @@ export const BoardChat: React.FC<BoardChatProps> = (props) => {
                     }
                 >
                     <Box sx={{ justifyContent: "space-between", alignItems: "flex-start" }}>
-                        <Box sx={{ gap: isMobile ? "2vw" : "1vw", alignItems: "center" }} color={"text.secondary"}>
+                        <Box sx={{ gap: isMobile ? "2vw" : "1vw", alignItems: "center", width: "100%" }} color={"text.secondary"}>
                             <Avatar src={props.chat.profile_pic} sx={{ width: isMobile ? "9vw" : "3vw", height: isMobile ? "9vw" : "3vw" }} />
                             <Box
                                 sx={{
@@ -155,9 +174,16 @@ export const BoardChat: React.FC<BoardChatProps> = (props) => {
                                     <IntegrationChip washima={props.washima} chatVariant nagazap={props.nagazap} />
                                 </Box>
                             </Box>
+                            <Box sx={{ flexDirection: "column", marginLeft: "auto", alignItems: "flex-end" }}>
+                                {user?.admin && (
+                                    <ChatMenu board_id={props.board.id} room_id={props.room_id} chat={props.chat} onTransfer={onTransferClick} />
+                                )}
+                                <IconButton onClick={(e) => handleShowAccordion(e)} aria-label={showAccordion ? "Recolher" : "Expandir"}>
+                                    {showAccordion ? <KeyboardArrowUp /> : <KeyboardArrowDown />}
+                                </IconButton>
+                            </Box>
                         </Box>
 
-                        {user?.admin && <ChatMenu board_id={props.board.id} room_id={props.room_id} chat={props.chat} onTransfer={onTransferClick} />}
                         <TransferModal
                             open={!!showTranferModal}
                             onClose={() => setShowTranferModal(null)}
@@ -169,69 +195,71 @@ export const BoardChat: React.FC<BoardChatProps> = (props) => {
                         />
                     </Box>
 
-                    {props.washima || (props.nagazap && nagazapMessages.length > 0) ? (
-                        <Accordion
-                            expanded={expandedChat}
-                            titleElement={
-                                <Paper
-                                    onClick={() => setExpandedChat((value) => !value)}
-                                    elevation={0}
-                                    sx={{
-                                        bgcolor: darkMode ? "background.default" : custom_colors.lightMode_chatBackground,
-                                        border: darkMode
-                                            ? `1px solid ${custom_colors.darkMode_border}`
-                                            : `1px solid ${custom_colors.lightMode_border}`,
-                                        borderRadius: 0,
-                                        flexDirection: "column",
-                                        padding: isMobile ? "5vw" : "1vw",
-                                        position: "relative",
-                                        color: "text.secondary",
-                                        flex: 1,
-                                    }}
-                                >
-                                    {!expandedChat && props.washima && (
-                                        <WashimaMessage
-                                            message={props.chat.last_message as WashimaMessageType}
-                                            washima={props.washima}
-                                            inBoards
-                                            isGroup={props.chat.is_group}
-                                            noActions
-                                        />
-                                    )}
-                                    {!expandedChat && props.nagazap && (
-                                        <MessageContainer
-                                            message={props.chat.last_message as NagaMessage}
-                                            nagazap={props.nagazap}
-                                            inBoards
-                                            disabledIcon={cannotRespondNagazap}
-                                        />
-                                    )}
-                                </Paper>
-                            }
-                            expandedElement={
-                                <Box sx={{ position: "relative", flex: 1 }}>
-                                    {props.washima && (
-                                        <WashimaChat inBoards chat={washimaChat} washima={props.washima} onClose={() => setExpandedChat(false)} />
-                                    )}
-                                    {props.nagazap && (
-                                        <ChatContainer
-                                            inBoards
-                                            nagazap={props.nagazap}
-                                            chat={nagaChat}
-                                            onClose={() => setExpandedChat(false)}
-                                            disabledResponse={cannotRespondNagazap}
-                                        />
-                                    )}
-                                    <IconButton sx={{ position: "absolute", top: "0", right: "0" }} onClick={() => setExpandedChat(false)}>
-                                        <Cancel />
-                                    </IconButton>
-                                </Box>
-                            }
-                            hideTitle
-                        />
-                    ) : (
-                        <LinearProgress variant="indeterminate" />
-                    )}
+                    <Collapse in={showAccordion}>
+                        {props.washima || (props.nagazap && nagazapMessages.length > 0) ? (
+                            <Accordion
+                                expanded={expandedChat}
+                                titleElement={
+                                    <Paper
+                                        onClick={() => setExpandedChat((value) => !value)}
+                                        elevation={0}
+                                        sx={{
+                                            bgcolor: darkMode ? "background.default" : custom_colors.lightMode_chatBackground,
+                                            border: darkMode
+                                                ? `1px solid ${custom_colors.darkMode_border}`
+                                                : `1px solid ${custom_colors.lightMode_border}`,
+                                            borderRadius: 0,
+                                            flexDirection: "column",
+                                            padding: isMobile ? "5vw" : "1vw",
+                                            position: "relative",
+                                            color: "text.secondary",
+                                            flex: 1,
+                                        }}
+                                    >
+                                        {!expandedChat && props.washima && (
+                                            <WashimaMessage
+                                                message={props.chat.last_message as WashimaMessageType}
+                                                washima={props.washima}
+                                                inBoards
+                                                isGroup={props.chat.is_group}
+                                                noActions
+                                            />
+                                        )}
+                                        {!expandedChat && props.nagazap && (
+                                            <MessageContainer
+                                                message={props.chat.last_message as NagaMessage}
+                                                nagazap={props.nagazap}
+                                                inBoards
+                                                disabledIcon={cannotRespondNagazap}
+                                            />
+                                        )}
+                                    </Paper>
+                                }
+                                expandedElement={
+                                    <Box sx={{ position: "relative", flex: 1 }}>
+                                        {props.washima && (
+                                            <WashimaChat inBoards chat={washimaChat} washima={props.washima} onClose={() => setExpandedChat(false)} />
+                                        )}
+                                        {props.nagazap && (
+                                            <ChatContainer
+                                                inBoards
+                                                nagazap={props.nagazap}
+                                                chat={nagaChat}
+                                                onClose={() => setExpandedChat(false)}
+                                                disabledResponse={cannotRespondNagazap}
+                                            />
+                                        )}
+                                        <IconButton sx={{ position: "absolute", top: "0", right: "0" }} onClick={() => setExpandedChat(false)}>
+                                            <Cancel />
+                                        </IconButton>
+                                    </Box>
+                                }
+                                hideTitle
+                            />
+                        ) : (
+                            <LinearProgress variant="indeterminate" />
+                        )}
+                    </Collapse>
                 </Paper>
             )}
         </Draggable>
