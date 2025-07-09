@@ -34,7 +34,7 @@ const SidebarWrapper: React.FC<{
 
 export const WashimaPage: React.FC<WashimaProps> = ({}) => {
     const { darkMode } = useDarkMode()
-    const { user } = useUser()
+    const { user, company } = useUser()
     const io = useIo()
     const notify = useNotification()
     const isMobile = useMediaQuery("(orientation: portrait)")
@@ -60,7 +60,7 @@ export const WashimaPage: React.FC<WashimaProps> = ({}) => {
     const fetchWashimas = async () => {
         setLoading(true)
         try {
-            const response = await api.get("/washima", { params: { user_id: user?.id } })
+            const response = await api.get("/washima", { params: { user_id: user?.id, company_id: company?.id } })
             console.log(response.data)
             setWashimas(response.data)
         } catch (error) {
