@@ -103,7 +103,7 @@ export const AdminTable: React.FC<AdminTableProps> = (props) => {
                 rows={props.companies}
                 columns={columns}
                 initialState={{
-                    sorting: { sortModel: [{ field: "name", sort: "asc" }] },
+                    sorting: { sortModel: [{ field: "business_name", sort: "asc" }] },
                     pagination: { paginationModel: { page: 0, pageSize: 10 } },
                 }}
                 pageSizeOptions={[10, 20, 50, 100]}
