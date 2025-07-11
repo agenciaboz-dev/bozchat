@@ -2,7 +2,7 @@ import React, { useEffect, useMemo, useState } from "react"
 import { Avatar, Box, Chip, Collapse, IconButton, LinearProgress, Paper, Typography, useMediaQuery } from "@mui/material"
 import { Chat } from "../../../types/server/class/Board/Chat"
 import { Draggable } from "@hello-pangea/dnd"
-import { Cancel, KeyboardArrowDown, KeyboardArrowUp } from "@mui/icons-material"
+import { Cancel, KeyboardArrowDown, KeyboardArrowUp, SpeakerNotes } from "@mui/icons-material"
 import { api } from "../../../api"
 import { Washima } from "../../../types/server/class/Washima/Washima"
 import { Chat as WashimaChatType } from "../../../types/Chat"
@@ -24,6 +24,7 @@ import { normalizePhonenumber } from "../../../tools/normalize"
 import { custom_colors } from "../../../style/colors"
 import { useDarkMode } from "../../../hooks/useDarkMode"
 import { useUser } from "../../../hooks/useUser"
+import { ChatNotesModal } from "./ChatNotesModal"
 
 interface BoardChatProps {
     chat: Chat
@@ -50,6 +51,7 @@ export const BoardChat: React.FC<BoardChatProps> = (props) => {
 
     const [expandedChat, setExpandedChat] = useState(false)
     const [nagazapMessages, setNagazapMessages] = useState<NagaMessage[]>([])
+    const [showChatNotesModal, setShowChatNotesModal] = useState(false)
     const [showTranferModal, setShowTranferModal] = useState<null | "transfer" | "copy">(null)
     const [showAccordion, setShowAccordion] = useState(props.showAllAccordions || false)
 
@@ -152,7 +154,7 @@ export const BoardChat: React.FC<BoardChatProps> = (props) => {
                                     flexDirection: "column",
                                     alignSelf: "center",
                                     gap: isMobile ? "2vw" : "0.2vw",
-                                    maxWidth: isMobile ? "50vw" : "13vw",
+                                    maxWidth: "50%",
                                 }}
                             >
                                 <Typography
@@ -175,15 +177,21 @@ export const BoardChat: React.FC<BoardChatProps> = (props) => {
                                 </Box>
                             </Box>
                             <Box sx={{ flexDirection: "column", marginLeft: "auto", alignItems: "flex-end" }}>
-                                {user?.admin && (
-                                    <ChatMenu board_id={props.board.id} room_id={props.room_id} chat={props.chat} onTransfer={onTransferClick} />
-                                )}
+                                <Box>
+                                    <IconButton onClick={() => setShowChatNotesModal(!showChatNotesModal)} aria-label="Anotações da conversa">
+                                        <SpeakerNotes />
+                                    </IconButton>
+                                    {user?.admin && (
+                                        <ChatMenu board_id={props.board.id} room_id={props.room_id} chat={props.chat} onTransfer={onTransferClick} />
+                                    )}
+                                </Box>
                                 <IconButton onClick={(e) => handleShowAccordion(e)} aria-label={showAccordion ? "Recolher" : "Expandir"}>
                                     {showAccordion ? <KeyboardArrowUp /> : <KeyboardArrowDown />}
                                 </IconButton>
                             </Box>
                         </Box>
 
+                        <ChatNotesModal open={!!showChatNotesModal} onClose={() => setShowChatNotesModal(false)} onSubmit={() => {}} />
                         <TransferModal
                             open={!!showTranferModal}
                             onClose={() => setShowTranferModal(null)}

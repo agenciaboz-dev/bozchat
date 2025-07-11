@@ -82,66 +82,69 @@ export const TransferModal: React.FC<TransferModalProps> = (props) => {
             onClose={handleClose}
             PaperProps={{
                 sx: {
-                    padding: isMobile ? "5vw" : "2vw",
-                    bgcolor: "background.default",
                     maxWidth: isMobile ? "90vw" : "60vw",
-                    flexDirection: "column",
-                    gap: isMobile ? "5vw" : "1vw",
                 },
             }}
         >
-            <Box sx={{ flexDirection: "column" }}>
-                <Title2
-                    name={props.action === "copy" ? "Copiar conversa" : "Transferir conversa"}
-                    right={
-                        <IconButton onClick={handleClose}>
-                            <Close />
-                        </IconButton>
-                    }
-                />
-                <Typography color={"text.secondary"}>
-                    Escolha o quadro e a sala para onde vai {props.action === "copy" ? "copiar" : "transferir"} esta conversa
-                </Typography>
-            </Box>
-
-            {fetchingBoards ? (
-                <Box sx={{ flexDirection: "column" }}>
-                    <Typography sx={{ fontSize: "0.85vw" }}>Carregando quadros</Typography>
-                    <LinearProgress variant="indeterminate" />
-                </Box>
-            ) : (
-                <Box sx={{ flexDirection: isMobile ? "column" : "row", gap: isMobile ? "5vw" : "1vw" }}>
-                    <Autocomplete
-                        options={boards}
-                        value={destinationBoard}
-                        onChange={(_, value) => setDestinationBoard(value)}
-                        renderInput={(params) => <TextField {...params} label="Quadro" />}
-                        fullWidth
-                        getOptionLabel={(option) => option.name}
-                        getOptionKey={(option) => option.id}
-                        isOptionEqualToValue={(option, value) => option.id === value.id}
-                    />
-                    <Autocomplete
-                        options={rooms}
-                        value={destinationRoom}
-                        onChange={(_, value) => setDestinationRoom(value)}
-                        renderInput={(params) => <TextField {...params} label="Sala" />}
-                        fullWidth
-                        getOptionLabel={(option) => option.name}
-                        getOptionKey={(option) => option.id}
-                        isOptionEqualToValue={(option, value) => option.id === value.id}
-                    />
-                </Box>
-            )}
-
-            <Button
-                sx={{ alignSelf: "flex-end" }}
-                variant="contained"
-                onClick={onSubmitPress}
-                disabled={!destinationBoard || !destinationRoom || destinationRoom.id === props.room_id}
+            <Box
+                sx={{
+                    padding: isMobile ? "5vw" : "2vw",
+                    bgcolor: "background.default",
+                    flexDirection: "column",
+                    gap: isMobile ? "5vw" : "1vw",
+                }}
             >
-                {loading ? <CircularProgress sx={{ color: "secondary.main" }} /> : props.action === "copy" ? "Copiar" : "Transferir"}
-            </Button>
+                <Box sx={{ flexDirection: "column" }}>
+                    <Title2
+                        name={props.action === "copy" ? "Copiar conversa" : "Transferir conversa"}
+                        right={
+                            <IconButton onClick={handleClose}>
+                                <Close />
+                            </IconButton>
+                        }
+                    />
+                    <Typography color={"text.secondary"}>
+                        Escolha o quadro e a sala para onde vai {props.action === "copy" ? "copiar" : "transferir"} esta conversa
+                    </Typography>
+                </Box>
+                {fetchingBoards ? (
+                    <Box sx={{ flexDirection: "column" }}>
+                        <Typography sx={{ fontSize: "0.85vw" }}>Carregando quadros</Typography>
+                        <LinearProgress variant="indeterminate" />
+                    </Box>
+                ) : (
+                    <Box sx={{ flexDirection: isMobile ? "column" : "row", gap: isMobile ? "5vw" : "1vw" }}>
+                        <Autocomplete
+                            options={boards}
+                            value={destinationBoard}
+                            onChange={(_, value) => setDestinationBoard(value)}
+                            renderInput={(params) => <TextField {...params} label="Quadro" />}
+                            fullWidth
+                            getOptionLabel={(option) => option.name}
+                            getOptionKey={(option) => option.id}
+                            isOptionEqualToValue={(option, value) => option.id === value.id}
+                        />
+                        <Autocomplete
+                            options={rooms}
+                            value={destinationRoom}
+                            onChange={(_, value) => setDestinationRoom(value)}
+                            renderInput={(params) => <TextField {...params} label="Sala" />}
+                            fullWidth
+                            getOptionLabel={(option) => option.name}
+                            getOptionKey={(option) => option.id}
+                            isOptionEqualToValue={(option, value) => option.id === value.id}
+                        />
+                    </Box>
+                )}
+                <Button
+                    sx={{ alignSelf: "flex-end" }}
+                    variant="contained"
+                    onClick={onSubmitPress}
+                    disabled={!destinationBoard || !destinationRoom || destinationRoom.id === props.room_id}
+                >
+                    {loading ? <CircularProgress sx={{ color: "secondary.main" }} /> : props.action === "copy" ? "Copiar" : "Transferir"}
+                </Button>
+            </Box>
         </Dialog>
     )
 }
