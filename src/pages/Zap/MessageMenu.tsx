@@ -30,7 +30,7 @@ const MessageMenuButton: React.FC<{ onClick: (event: React.MouseEvent<HTMLElemen
 
 const MessageMenuItem: React.FC<MenuItemProps> = (props) => {
     return (
-        <MenuItem onClick={props.onClick}>
+        <MenuItem {...props}>
             <Typography
                 sx={{
                     color: "text.secondary",
@@ -178,7 +178,14 @@ export const MessageMenu: React.FC<MessageMenuProps> = ({ from_me, onClose, mess
                         </MessageMenuItem>
                     )}
                     <MessageMenuItem onClick={onForwardPress}>Encaminhar</MessageMenuItem>
-                    {from_me && <MessageMenuItem onClick={() => onDeletePress("everyone")}>Deletar para todos</MessageMenuItem>}
+                    {from_me && (
+                        <MessageMenuItem
+                            disabled={new Date().getTime() - message.timestamp * 1000 >= 1000 * 60 * 60 * 60}
+                            onClick={() => onDeletePress("everyone")}
+                        >
+                            Deletar para todos
+                        </MessageMenuItem>
+                    )}
                 </Menu>
             </Box>
         </motion.div>
