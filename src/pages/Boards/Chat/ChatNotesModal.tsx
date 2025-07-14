@@ -1,9 +1,11 @@
 import React, { useState, useEffect } from "react"
-import { Box, Button, CircularProgress, Dialog, IconButton, TextField, Typography, useMediaQuery } from "@mui/material"
+import { Box, Button, CircularProgress, Dialog, IconButton, Paper, TextField, Typography, useMediaQuery } from "@mui/material"
 import { Title2 } from "../../../components/Title"
 import { Close } from "@mui/icons-material"
 import { useSnackbar } from "burgos-snackbar"
 import { ChatNote, Note, NoteReply } from "./ChatNote" // Importe os tipos também
+import { custom_colors } from "../../../style/colors"
+import { useDarkMode } from "../../../hooks/useDarkMode"
 
 interface ChatNotesModalProps {
     open: boolean
@@ -13,6 +15,7 @@ interface ChatNotesModalProps {
 
 export const ChatNotesModal: React.FC<ChatNotesModalProps> = (props) => {
     const isMobile = useMediaQuery("(orientation: portrait)")
+    const { darkMode } = useDarkMode()
     const { snackbar } = useSnackbar()
     const [loading, setLoading] = useState(false)
     const [text, setText] = useState("")
@@ -38,9 +41,9 @@ export const ChatNotesModal: React.FC<ChatNotesModalProps> = (props) => {
                 id: Date.now().toString(), // Usa timestamp como ID
                 text: text.trim(),
                 date: new Date().toISOString(), // Data em formato ISO
-                replies: [] // Inicia sem respostas
+                replies: [], // Inicia sem respostas
             }
-            
+
             const newNotes = [...savedNotes, newNote]
             setSavedNotes(newNotes)
             localStorage.setItem("chat_notes", JSON.stringify(newNotes))
@@ -55,7 +58,7 @@ export const ChatNotesModal: React.FC<ChatNotesModalProps> = (props) => {
     }
 
     const handleRemoveNote = (id: string) => {
-        const newNotes = savedNotes.filter(note => note.id !== id)
+        const newNotes = savedNotes.filter((note) => note.id !== id)
         setSavedNotes(newNotes)
         localStorage.setItem("chat_notes", JSON.stringify(newNotes))
         snackbar({ severity: "info", text: "Anotação removida" })
@@ -63,14 +66,14 @@ export const ChatNotesModal: React.FC<ChatNotesModalProps> = (props) => {
 
     const handleAddReply = (noteId: string, replyText: string) => {
         const newNotes = [...savedNotes]
-        const noteIndex = newNotes.findIndex(note => note.id === noteId)
-        
+        const noteIndex = newNotes.findIndex((note) => note.id === noteId)
+
         if (noteIndex !== -1) {
             const newReply: NoteReply = {
                 text: replyText.trim(),
-                date: new Date().toISOString() // Data atual em formato ISO
+                date: new Date().toISOString(), // Data atual em formato ISO
             }
-            
+
             newNotes[noteIndex].replies.push(newReply)
             setSavedNotes(newNotes)
             localStorage.setItem("chat_notes", JSON.stringify(newNotes))
@@ -93,26 +96,26 @@ export const ChatNotesModal: React.FC<ChatNotesModalProps> = (props) => {
                     width: isMobile ? "90vw" : "75vw",
                 },
             }}
+        >
+            <Box
+                sx={{
+                    padding: isMobile ? "5vw" : "2vw",
+                    bgcolor: "background.default",
+                    flexDirection: "column",
+                    gap: isMobile ? "5vw" : "1vw",
+                }}
             >
-            <Box sx={{
-                padding: isMobile ? "5vw" : "2vw",
-                bgcolor: "background.default",
-                flexDirection: "column",
-                gap: isMobile ? "5vw" : "1vw",
-            }}>
-                <Box sx={{ flexDirection: "column" }}>
-                    <Title2
-                        name={"Anotações da conversa"}
-                        right={
-                            <IconButton onClick={handleClose}>
-                                <Close />
-                            </IconButton>
-                        }
-                    />
-                </Box>
+                <Title2
+                    name={"Anotações da conversa"}
+                    right={
+                        <IconButton onClick={handleClose}>
+                            <Close />
+                        </IconButton>
+                    }
+                />
                 <TextField
                     multiline
-                    rows={4}
+                    rows={3}
                     variant="outlined"
                     placeholder="Escreva uma nova anotação para esta conversa"
                     fullWidth
@@ -120,35 +123,31 @@ export const ChatNotesModal: React.FC<ChatNotesModalProps> = (props) => {
                     onChange={(e) => setText(e.target.value)}
                     sx={{
                         "& .MuiInputBase-input": {
-                            color: "text.secondary"
-                        }
+                            color: "text.secondary",
+                        },
+                        marginTop: isMobile ? "-5vw" : undefined,
                     }}
                 />
-                <Button
-                    sx={{ alignSelf: "flex-end" }}
-                    variant="contained"
-                    onClick={onSubmitPress}
-                    disabled={!text.trim()}
-                >
+                <Button sx={{ alignSelf: "flex-end" }} variant="contained" onClick={onSubmitPress} disabled={!text.trim()}>
                     {loading ? <CircularProgress size={24} sx={{ color: "secondary.main" }} /> : "Salvar"}
                 </Button>
                 {/* Seção de anotações salvas */}
                 {savedNotes.length > 0 && (
-                    <Box sx={{
-                        borderTop: "1px solid",
-                        borderColor: "divider",
-                        paddingTop: isMobile ? "5vw" : "1vw",
-                        maxHeight: "50vh",
-                        overflowY: "auto",
-                        flexDirection: "column",
-                    }}>
+                    <Box
+                        sx={{
+                            boxShadow: darkMode ? undefined : `inset 0 0 5px ${custom_colors.lightMode_border}`,
+                            borderRadius: "4px",
+                            border: "1px solid",
+                            borderColor: "divider",
+                            maxHeight: "45vh",
+                            overflowY: "auto",
+                            flexDirection: "column",
+                            padding: isMobile ? "5vw 0" : "1vw",
+                            gap: isMobile ? "5vw" : "1vw",
+                        }}
+                    >
                         {savedNotes.map((note) => (
-                            <ChatNote
-                                key={note.id}
-                                note={note}
-                                onRemove={() => handleRemoveNote(note.id)}
-                                onAddReply={handleAddReply}
-                            />
+                            <ChatNote key={note.id} note={note} onRemove={() => handleRemoveNote(note.id)} onAddReply={handleAddReply} />
                         ))}
                     </Box>
                 )}

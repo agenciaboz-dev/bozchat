@@ -46,94 +46,108 @@ export const ChatNote: React.FC<ChatNoteProps> = ({ note, onRemove, onAddReply }
     }
 
     return (
-        <Paper sx={{
-            border: darkMode ? undefined : `1px solid ${custom_colors.lightMode_border}`,
-            boxShadow: darkMode ? undefined : `inset 0 0 5px ${custom_colors.lightMode_border}`,
-            padding: isMobile ? "5vw" : "1vw",
-            flexDirection: "column",
-            gap: isMobile ? "5vw" : "1vw",
-            borderRadius: "4px",
-            display: "flex",
-            justifyContent: "space-between",
-            alignItems: "center",
-            marginBottom: "2vw",
-        }}>
-            <Box sx={{
-                width: "100%",
-                display: "flex",
+        <Paper
+            sx={{
+                padding: isMobile ? "5vw" : "1vw",
                 flexDirection: "column",
-                gap: "1vw",
-            }}>
-                {/* Cabeçalho da anotação */}
-                <Box sx={{
-                    display: "flex",
-                    justifyContent: "space-between",
-                    alignItems: "center",
+                gap: isMobile ? "5vw" : "1vw",
+                borderRadius: "4px",
+                display: "flex",
+                justifyContent: "space-between",
+                alignItems: "center",
+            }}
+        >
+            <Box
+                sx={{
                     width: "100%",
-                }}>
-                    <Typography sx={{
-                        fontSize: "0.8rem",
-                        color: "text.secondary",
-                    }}>
+                    display: "flex",
+                    flexDirection: "column",
+                    gap: isMobile ? "5vw" : "1vw",
+                }}
+            >
+                {/* Cabeçalho da anotação */}
+                <Box
+                    sx={{
+                        display: "flex",
+                        justifyContent: "space-between",
+                        alignItems: "center",
+                        width: "100%",
+                    }}
+                >
+                    <Typography
+                        sx={{
+                            fontSize: "0.8rem",
+                            color: "text.secondary",
+                        }}
+                    >
                         {formatDate(note.date)}
                     </Typography>
-                    <IconButton
-                        size="small"
-                        onClick={onRemove}
-                        color="error"
-                    >
+                    <IconButton size="small" onClick={onRemove} color="error">
                         <Delete fontSize="small" />
                     </IconButton>
                 </Box>
 
                 {/* Conteúdo da anotação */}
-                <Box sx={{
-                    border: "1px solid",
-                    borderColor: "divider",
-                    borderRadius: "4px",
-                    padding: isMobile ? "5vw" : "1vw",
-                    width: "100%",
-                }}>
-                    <Typography sx={{
-                        color: "text.secondary",
-                        whiteSpace: "pre-wrap",
-                    }}>{note.text}</Typography>
+                <Box
+                    sx={{
+                        borderRadius: "4px",
+                        padding: isMobile ? "0 0 2vw" : "0 0 0.5vw",
+                        width: "100%",
+                    }}
+                >
+                    <Typography
+                        sx={{
+                            color: "text.secondary",
+                            whiteSpace: "pre-wrap",
+                        }}
+                    >
+                        {note.text}
+                    </Typography>
                 </Box>
 
                 {/* Respostas existentes */}
                 {note.replies.length > 0 && (
-                    <Box sx={{
-                        marginLeft: "2vw",
-                        borderLeft: "2px solid",
-                        borderColor: "divider",
-                        paddingLeft: "2vw",
-                        flexDirection: "column",
-                        gap: "1vw",
-                    }}>
+                    <Box
+                        sx={{
+                            marginLeft: "2vw",
+                            borderLeft: "2px solid",
+                            borderColor: "divider",
+                            paddingLeft: "2vw",
+                            flexDirection: "column",
+                            gap: isMobile ? "5vw" : "1vw",
+                        }}
+                    >
                         {note.replies.map((reply, index) => (
                             <Box key={index} sx={{ flexDirection: "column", gap: "0.5vw", marginBottom: "1vw" }}>
-                                <Typography sx={{
-                                    fontSize: "0.7rem",
-                                    color: "text.secondary",
-                                }}>
+                                <Typography
+                                    sx={{
+                                        fontSize: "0.7rem",
+                                        color: "text.secondary",
+                                    }}
+                                >
                                     {formatDate(reply.date)}
                                 </Typography>
-                                <Typography sx={{
-                                    color: "text.secondary",
-                                    whiteSpace: "pre-wrap",
-                                }}>{reply.text}</Typography>
+                                <Typography
+                                    sx={{
+                                        color: "text.secondary",
+                                        whiteSpace: "pre-wrap",
+                                    }}
+                                >
+                                    {reply.text}
+                                </Typography>
                             </Box>
                         ))}
                     </Box>
                 )}
 
                 {/* Campo para nova resposta */}
-                <Box sx={{
-                    display: "flex",
-                    flexDirection: "column",
-                    gap: "1vw",
-                    marginTop: "1vw",
-                }}>
+                <Box
+                    sx={{
+                        display: "flex",
+                        flexDirection: "column",
+                        gap: isMobile ? "5vw" : "1vw",
+                    }}
+                >
                     <TextField
                         fullWidth
                         placeholder="Escreva uma resposta"
@@ -144,17 +158,11 @@ export const ChatNote: React.FC<ChatNoteProps> = ({ note, onRemove, onAddReply }
                         maxRows={4}
                         sx={{
                             "& .MuiInputBase-input": {
-                                color: "text.secondary"
-                            }
+                                color: "text.secondary",
+                            },
                         }}
                     />
-                    <Button 
-                        variant="outlined" 
-                        size="small" 
-                        onClick={handleReplySubmit}
-                        sx={{ alignSelf: "flex-end" }}
-                        disabled={!replyText.trim()}
-                    >
+                    <Button variant="contained" size="small" onClick={handleReplySubmit} sx={{ alignSelf: "flex-end" }} disabled={!replyText.trim()}>
                         Responder
                     </Button>
                 </Box>
