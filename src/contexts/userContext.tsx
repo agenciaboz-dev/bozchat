@@ -38,13 +38,22 @@ export const UserProvider: React.FC<UserProviderProps> = ({ children }) => {
     const [company, setCompany] = useLocalStorage<Company | null>({ key: "bozchat:company", defaultValue: null })
     const [boz, setBoz] = useState(false)
 
+    const logout = () => {
+        setCompany(null)
+        setUser(null)
+    }
+
     const refreshCachedUser = async (user: User) => {
         try {
             const data: LoginForm = { login: user.email, password: user.password }
             const response = await api.post("/user/login", data)
             const user_and_company = response.data as { user: User; company: Company }
-            setUser(user_and_company.user)
-            setCompany(user_and_company.company)
+            if (user_and_company) {
+                setUser(user_and_company.user)
+                setCompany(user_and_company.company)
+            } else {
+                logout()
+            }
         } catch (error) {
             console.log(error)
         }
@@ -59,6 +68,20 @@ export const UserProvider: React.FC<UserProviderProps> = ({ children }) => {
             setBoz(false)
         }
     }, [company, user])
+
+    useEffect(() => {
+        if (user) {
+            io.emit("user:join", user.id)
+            io.on("user:delete", () => {
+                logout()
+            })
+
+            return () => {
+                io.emit("user:leave", user.id)
+                io.off("user:delete")
+            }
+        }
+    }, [user])
 
     useEffect(() => {
         if (user) {
