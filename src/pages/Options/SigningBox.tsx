@@ -1,13 +1,15 @@
 import React, { useEffect } from "react"
 import { Box, Switch, TextField, useMediaQuery } from "@mui/material"
 import { useLocalStorage } from "@mantine/hooks"
+import { useUser } from "../../hooks/useUser"
 
 interface SigningBoxProps {}
 
 export const SigningBox: React.FC<SigningBoxProps> = ({}) => {
     const isMobile = useMediaQuery("(orientation: portrait)")
-    const [signing, setSigning] = useLocalStorage({ key: "washima:sign", defaultValue: "" })
-    const [enabledSignBox, setEnableSignBox] = useLocalStorage({ key: "washima:enabled-sign", defaultValue: true })
+    const { user } = useUser()
+    const [signing, setSigning] = useLocalStorage({ key: `washima:sign:${user?.id}`, defaultValue: "" })
+    const [enabledSignBox, setEnableSignBox] = useLocalStorage({ key: `washima:enabled-sign:${user?.id}`, defaultValue: true })
 
     useEffect(() => {
         if (!enabledSignBox) setSigning("")

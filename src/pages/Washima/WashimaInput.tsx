@@ -12,6 +12,7 @@ import { Delete, Reply } from "@mui/icons-material"
 import { QuotedMessage } from "./QuotedMessage"
 import { WashimaMessage } from "../../types/server/class/Washima/WashimaMessage"
 import { useDarkMode } from "../../hooks/useDarkMode"
+import { useUser } from "../../hooks/useUser"
 
 interface WashimaInputProps {
     onSubmit: (message?: string, media?: WashimaMediaForm) => void
@@ -38,8 +39,9 @@ export const WashimaInput: React.FC<WashimaInputProps> = ({
     const io = useIo()
     const inputHelper = useWashimaInput()
     const inputRef = useRef<HTMLInputElement>(null)
+    const { user } = useUser()
 
-    const [signature] = useLocalStorage({ key: "washima:sign", defaultValue: "" })
+    const [signature] = useLocalStorage({ key: `washima:sign:${user?.id}`, defaultValue: "" })
     const [message, setMessage] = useState("")
     const [textDisabled, setTextDisabled] = useState(disabled)
     const [loading, setLoading] = useState(false)
