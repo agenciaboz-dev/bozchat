@@ -44,25 +44,46 @@ export const IntegrationContainer: React.FC<IntegrationContainerProps> = (props)
 
     const [profilePic, setProfilePic] = useState<WashimaProfilePic | null>(null)
     const [selectedRoom, setSelectedRoom] = useState(props.room || props.board.rooms[props.board.entry_room_index])
-    const [unreadOnly, setUnreadOnly] = useState(props.unread_only)
+    const [unreadOnlyDisplay, setUnreadOnlyDisplay] = useState(props.unread_only)
 
     const washima = props.integration as Washima
     const nagazap = props.integration as Nagazap
 
     const washimaStopped = props.type === "washima" && washima.status === "stopped"
 
-    const onChangeSwitch = (_event: React.ChangeEvent<HTMLInputElement>, checked: boolean) => {
-        if (!checked) {
+    const onChangeSwitch = (_event: React.ChangeEvent<HTMLInputElement>, newValue: boolean) => {
+        if (newValue === false) {
             confirm({
                 title: "Sincronizar todas as mensagens",
                 content: "Sincronização de todas as mensagens pode ser demorada, especialmente se houver um grande volume de dados. Prosseguir?",
                 onConfirm: () => {
-                    setUnreadOnly(false)
+                    setUnreadOnlyDisplay(false)
+                    elevateChangeSwitch(newValue)
                 },
             })
         } else {
-            setUnreadOnly(true)
+            setUnreadOnlyDisplay(true)
+            elevateChangeSwitch(newValue)
         }
+    }
+
+    const elevateChangeSwitch = (newValue: boolean) => {
+        props.onChange(
+            props.integration.id,
+            props.type === "nagazap"
+                ? {
+                      nagazap_id: nagazap.id,
+                      room_id: selectedRoom.id,
+                      nagazap_name: nagazap.displayName || "",
+                      unread_only: newValue,
+                  }
+                : {
+                      washima_id: props.integration.id,
+                      room_id: selectedRoom.id,
+                      washima_name: washima.name,
+                      unread_only: newValue,
+                  }
+        )
     }
 
     const onChangeRoom = (room: Room) => {
@@ -82,8 +103,18 @@ export const IntegrationContainer: React.FC<IntegrationContainerProps> = (props)
             props.integration.id,
             value
                 ? props.type === "nagazap"
-                    ? { nagazap_id: nagazap.id, room_id: selectedRoom.id, nagazap_name: nagazap.displayName || "", unread_only: unreadOnly }
-                    : { washima_id: props.integration.id, room_id: selectedRoom.id, washima_name: washima.name, unread_only: unreadOnly }
+                    ? {
+                          nagazap_id: nagazap.id,
+                          room_id: selectedRoom.id,
+                          nagazap_name: nagazap.displayName || "",
+                          unread_only: props.unread_only,
+                      }
+                    : {
+                          washima_id: props.integration.id,
+                          room_id: selectedRoom.id,
+                          washima_name: washima.name,
+                          unread_only: props.unread_only,
+                      }
                 : undefined
         )
     }
@@ -146,8 +177,8 @@ export const IntegrationContainer: React.FC<IntegrationContainerProps> = (props)
                     sx={{ flex: 0.4 }}
                     labelPlacement="top"
                     componentsProps={{ typography: { sx: { fontSize: "0.7rem", color: "text.secondary" } } }}
-                    control={<Switch checked={unreadOnly} onChange={onChangeSwitch} disabled={washimaStopped || props.checked} />}
-                    label={unreadOnly ? "Não lidas" : "Todas"}
+                    control={<Switch checked={unreadOnlyDisplay} onChange={onChangeSwitch} disabled={washimaStopped} />}
+                    label={unreadOnlyDisplay ? "Não lidas" : "Todas"}
                 />
             </Box>
         </Paper>
