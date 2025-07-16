@@ -240,9 +240,6 @@ export const Message: React.ForwardRefRenderFunction<HTMLDivElement, MessageProp
                                 : "75%",
                         }}
                     >
-                        {/*//* MESSAGE AUTHOR  */}
-                        {show_author && is_deleted && <MessageAuthor washima_id={washima.id} contact_id={message.contact_id} />}
-
                         {/* //* MESSAGE CONTAINER */}
                         <Box
                             sx={{
@@ -299,11 +296,7 @@ export const Message: React.ForwardRefRenderFunction<HTMLDivElement, MessageProp
                             )}
 
                             {/*//* MESSAGE AUTHOR  */}
-                            {show_author && message.type !== "revoked" && (
-                                <Box sx={{}}>
-                                    <MessageAuthor washima_id={washima.id} contact_id={message.contact_id} />
-                                </Box>
-                            )}
+                            {show_author && <MessageAuthor washima_id={washima.id} contact_id={message.contact_id} />}
 
                             {/* //* BOT CHIP */}
                             {message.from_bot && <BotNameChip name={message.from_bot} />}
