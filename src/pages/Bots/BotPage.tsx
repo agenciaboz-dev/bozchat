@@ -3,7 +3,7 @@ import { Box, IconButton, useMediaQuery } from "@mui/material"
 import { Subroute } from "../Nagazap/Subroute"
 import { useLocation } from "react-router-dom"
 import { Bot } from "../../types/server/class/Bot/Bot"
-import { ArrowBack, Redo, Settings, Undo } from "@mui/icons-material"
+import { ArrowBack, Settings, Undo } from "@mui/icons-material"
 import { BotForm } from "./BotForm"
 import { FlowLayout } from "./FlowLayout"
 import { Edge, Node, ReactFlowJsonObject } from "@xyflow/react"
@@ -41,6 +41,24 @@ export const BotPage: React.FC<BotPageProps> = ({ onSave, onDelete, setShowInfor
         setBotInstances([])
     }, [bot])
 
+    if (showForm) {
+        return (
+            <BotForm
+                onSubmit={(bot) => {
+                    onSave(bot)
+                    setShowForm(false)
+                }}
+                onDelete={(bot) => {
+                    onDelete(bot)
+                    setShowForm(false)
+                }}
+                onCancel={() => setShowForm(false)}
+                bot={bot}
+                setShowInformations={setShowInformations}
+            />
+        )
+    }
+
     return (
         <Subroute
             title={bot.name}
@@ -57,46 +75,24 @@ export const BotPage: React.FC<BotPageProps> = ({ onSave, onDelete, setShowInfor
             }
             right={
                 <Box>
-                    {!showForm && (
-                        <>
-                            <IconButton disabled={botInstances.length === 0} onClick={() => onUndo()}>
-                                <Undo />
-                            </IconButton>
-                            {/* <IconButton onClick={() => setShowForm((value) => !value)}>
-                                <Redo />
-                            </IconButton> */}
-                        </>
-                    )}
-                    <IconButton onClick={() => setShowForm((value) => !value)}>
-                        <Settings color={showForm ? "primary" : darkMode ? "secondary" : "action"} />
+                    <IconButton disabled={botInstances.length === 0} onClick={() => onUndo()}>
+                        <Undo />
+                    </IconButton>
+                    <IconButton onClick={() => setShowForm(true)}>
+                        <Settings color={darkMode ? "secondary" : "action"} />
                     </IconButton>
                 </Box>
             }
         >
-            {showForm ? (
-                <BotForm
-                    onSubmit={(bot) => {
-                        onSave(bot)
-                        setShowForm(false)
-                    }}
-                    onDelete={(bot) => {
-                        onDelete(bot)
-                        setShowForm(false)
-                    }}
-                    bot={bot}
-                    setShowInformations={setShowInformations}
+            <Box sx={{ flex: 1, margin: "-2vw" }}>
+                <FlowLayout
+                    bot_id={bot.id}
+                    botInstances={botInstances}
+                    setBotInstances={setBotInstances}
+                    undoToInstance={undoToInstance}
+                    setUndoToInstance={setUndoToInstance}
                 />
-            ) : (
-                <Box sx={{ flex: 1, margin: "-2vw" }}>
-                    <FlowLayout
-                        bot_id={bot.id}
-                        botInstances={botInstances}
-                        setBotInstances={setBotInstances}
-                        undoToInstance={undoToInstance}
-                        setUndoToInstance={setUndoToInstance}
-                    />
-                </Box>
-            )}
+            </Box>
         </Subroute>
     )
 }

@@ -19,10 +19,11 @@ interface BotFormProps {
     onSubmit: (bot: Bot) => void
     bot?: Bot
     onDelete?: (bot: Bot) => void
+    onCancel?: () => void
     setShowInformations: Dispatch<SetStateAction<boolean>>
 }
 
-export const BotForm: React.FC<BotFormProps> = ({ onSubmit, bot, onDelete, setShowInformations }) => {
+export const BotForm: React.FC<BotFormProps> = ({ onSubmit, bot, onDelete, onCancel, setShowInformations }) => {
     const isMobile = useMediaQuery("(orientation: portrait)")
     const { company, user } = useUser()
     const navigate = useNavigate()
@@ -118,7 +119,7 @@ export const BotForm: React.FC<BotFormProps> = ({ onSubmit, bot, onDelete, setSh
 
     return (
         <Subroute
-            title={bot ? "Configurações" : "Criar Bot"}
+            title={bot ? `Configurações do Bot: "${bot.name}"` : "Criar Bot"}
             elevation={bot ? 5 : undefined}
             left={
                 isMobile ? (
@@ -134,8 +135,9 @@ export const BotForm: React.FC<BotFormProps> = ({ onSubmit, bot, onDelete, setSh
             right={
                 isMobile ? null : (
                     <Box sx={{ gap: "1vw" }}>
+                        {bot && <Button onClick={onCancel}>Cancelar</Button>}
                         {bot && user?.admin && (
-                            <Button onClick={onDeleteClick}>
+                            <Button onClick={onDeleteClick} color="error">
                                 {deleting ? <CircularProgress size="1.5rem" sx={{ color: "text.secondary" }} /> : "Deletar"}
                             </Button>
                         )}
@@ -359,9 +361,10 @@ export const BotForm: React.FC<BotFormProps> = ({ onSubmit, bot, onDelete, setSh
                     </Box>
                 </Box>
                 {isMobile && (
-                    <Box sx={{ gap: "5vw", justifyContent: "flex-end" }}>
+                    <Box sx={{ gap: "5vw", justifyContent: "space-between" }}>
+                        <Button onClick={onCancel}>Cancelar</Button>
                         {bot && (
-                            <Button onClick={onDeleteClick}>
+                            <Button onClick={onDeleteClick} color="error">
                                 {deleting ? <CircularProgress size="1.5rem" sx={{ color: "text.secondary" }} /> : "Deletar"}
                             </Button>
                         )}
