@@ -120,12 +120,12 @@ export const NagazapForm: React.FC<NagazapFormProps> = ({ onSuccess, setShowInfo
                 </Typography>
                 <Typography>
                     3. Adicione o usuário do sistema à sua conta do Whatsapp na seção <InlineTypography highlight>Pessoas</InlineTypography>,
-                    concedendo <InlineTypography>Controle highlight total</InlineTypography> sobre sua conta do Whatsapp.{" "}
+                    concedendo <InlineTypography highlight>Controle total</InlineTypography> sobre sua conta do Whatsapp.{" "}
                     <InlineTypography url={urls.accounts}>({urls.accounts})</InlineTypography>
                 </Typography>
                 <Typography>
-                    4. Agora clique no botão <InlineTypography>Gerar novo highlight token</InlineTypography> para o usuário do sistema criado acima,
-                    que revela um pop-up <InlineTypography>Gerar highlight token</InlineTypography>. Selecione as 2 permissões{" "}
+                    4. Agora clique no botão <InlineTypography highlight>Gerar novo token</InlineTypography> para o usuário do sistema criado acima,
+                    que revela um pop-up <InlineTypography highlight>Gerar token</InlineTypography>. Selecione as 2 permissões{" "}
                     <InlineTypography highlight>whatsapp_business_management</InlineTypography> e{" "}
                     <InlineTypography highlight>whatsapp_business_messaging</InlineTypography> e confirme.
                 </Typography>
