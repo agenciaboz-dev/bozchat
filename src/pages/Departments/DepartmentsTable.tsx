@@ -6,6 +6,7 @@ import { useUser } from "../../hooks/useUser"
 import { DataGrid, GridColDef } from "@mui/x-data-grid"
 import { MoreHoriz } from "@mui/icons-material"
 import { User } from "../../types/server/class/User"
+import { DataGridWrapper } from "../../components/DataGridWrapper"
 
 interface DepartmentsTableProps {
     departments: Department[]
@@ -85,7 +86,7 @@ export const DepartmentsTable: React.FC<DepartmentsTableProps> = (props) => {
 
     return (
         <Paper sx={{ flex: 1 }}>
-            <DataGrid
+            <DataGridWrapper
                 loading={props.loading}
                 rows={props.departments}
                 columns={columns}
