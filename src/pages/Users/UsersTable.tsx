@@ -1,13 +1,13 @@
 import React, { useRef, useState } from "react"
 import { Autocomplete, IconButton, Menu, MenuItem, Paper, TextField, useMediaQuery } from "@mui/material"
 import { User } from "../../types/server/class/User"
-import { DataGrid, GridColDef } from "@mui/x-data-grid"
+import { GridColDef } from "@mui/x-data-grid"
 import { AdminPanelSettings, Circle, MoreHoriz } from "@mui/icons-material"
 import { useClipboard } from "@mantine/hooks"
 import { useSnackbar } from "burgos-snackbar"
 import { useUser } from "../../hooks/useUser"
 import { Department } from "../../types/server/class/Department"
-import { textFieldStyle } from "../../style/textfield"
+import { DataGridWrapper } from "../../components/DataGridWrapper"
 
 interface UsersTableProps {
     users: User[]
@@ -79,7 +79,7 @@ export const UsersTable: React.FC<UsersTableProps> = (props) => {
                     </IconButton>
                 )
             },
-            flex: 0.035,
+            flex: 0.03,
             align: "center",
             minWidth: isMobile ? 100 : undefined,
         },
@@ -88,7 +88,7 @@ export const UsersTable: React.FC<UsersTableProps> = (props) => {
         {
             field: "password",
             headerName: "Senha",
-            flex: 0.1,
+            flex: 0.12,
             sortable: false,
             filterable: false,
             valueFormatter: () => "***************",
@@ -142,7 +142,7 @@ export const UsersTable: React.FC<UsersTableProps> = (props) => {
 
     return (
         <Paper sx={{ flex: 1, marginTop: isMobile ? "5vw" : undefined }}>
-            <DataGrid
+            <DataGridWrapper
                 loading={props.loading}
                 rows={props.users}
                 columns={columns}

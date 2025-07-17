@@ -1,9 +1,9 @@
 import React, { useRef, useState } from "react"
-import { Autocomplete, Box, Chip, IconButton, Menu, MenuItem, Paper, TextField, Tooltip, useMediaQuery } from "@mui/material"
+import { Autocomplete, IconButton, Menu, MenuItem, Paper, TextField, useMediaQuery } from "@mui/material"
 import { Department } from "../../types/server/class/Department"
 import { useSnackbar } from "burgos-snackbar"
 import { useUser } from "../../hooks/useUser"
-import { DataGrid, GridColDef } from "@mui/x-data-grid"
+import { GridColDef } from "@mui/x-data-grid"
 import { MoreHoriz } from "@mui/icons-material"
 import { User } from "../../types/server/class/User"
 import { DataGridWrapper } from "../../components/DataGridWrapper"
@@ -37,7 +37,7 @@ export const DepartmentsTable: React.FC<DepartmentsTableProps> = (props) => {
     }
 
     const columns: (GridColDef & { field: keyof Department })[] = [
-        { field: "name", headerName: "Nome", flex: 0.6, editable: user?.admin, minWidth: isMobile ? 150 : undefined },
+        { field: "name", headerName: "Nome do setor", flex: 0.6, editable: user?.admin, minWidth: isMobile ? 150 : undefined },
         {
             field: "users",
             headerName: "Usuários",
