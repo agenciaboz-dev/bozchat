@@ -32,19 +32,18 @@ export const DataGridWrapper = (props: DataGridProps) => {
                             alignItems: "center",
                             height: "100%",
                             width: "100%",
+                            position: "relative",
                         }}
                     >
-                        <Box sx={{ flex: 1, overflow: "hidden", ...cellStyle }}>
-                            {originalRenderCell ? originalRenderCell(params) : params.formattedValue}
-                        </Box>
+                        <Box sx={{ flex: 1, ...cellStyle }}>{originalRenderCell ? originalRenderCell(params) : params.formattedValue}</Box>
                         {showEditHint && (
                             <Box
                                 sx={{
-                                    gap: 1,
+                                    position: "absolute",
+                                    right: 0,
                                     fontSize: "1rem",
                                     color: "text.secondary",
                                     opacity: 0.5,
-                                    position: "relative",
                                 }}
                             >
                                 <Typography
