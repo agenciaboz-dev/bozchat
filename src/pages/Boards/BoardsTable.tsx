@@ -4,6 +4,7 @@ import { useSnackbar } from "burgos-snackbar"
 import { useUser } from "../../hooks/useUser"
 import {
     DataGrid,
+    GridActionsCellItem,
     GridCallbackDetails,
     GridCellEditStopParams,
     GridCellParams,
@@ -14,7 +15,7 @@ import {
     MuiBaseEvent,
     MuiEvent,
 } from "@mui/x-data-grid"
-import { Hub, MoreHoriz, WhatsApp } from "@mui/icons-material"
+import { Delete, Edit, Hub, MoreHoriz, WhatsApp } from "@mui/icons-material"
 import { User } from "../../types/server/class/User"
 import { Board } from "../../types/server/class/Board/Board"
 import { WithoutFunctions } from "../../types/server/class/helpers"
@@ -32,9 +33,9 @@ interface BoardsTableProps {
         }
     ) => Promise<void>
     onDeleteBoard: (data: Board) => void
-    selectedBoard: Board | null
+    openBoardSettings: (board: Board) => void
     setSelectedBoard: React.Dispatch<React.SetStateAction<Board | null>>
-    openBoardSettings: () => void
+    setLoading: React.Dispatch<React.SetStateAction<boolean>>
 }
 
 interface CustomRow extends WithoutFunctions<Board> {
@@ -67,18 +68,6 @@ export const BoardsTable: React.FC<BoardsTableProps> = (props) => {
 
     const [menuAnchor, setMenuAnchor] = useState<HTMLElement | null>(null)
 
-    const openBoardSettings = () => {
-        props.openBoardSettings()
-        setMenuAnchor(null)
-    }
-
-    const deleteBoard = () => {
-        if (!props.selectedBoard) return
-
-        props.onDeleteBoard(props.selectedBoard)
-        setMenuAnchor(null)
-    }
-
     const rows: CustomRow[] = useMemo(
         () =>
             props.boards.map((board) => ({
@@ -91,7 +80,7 @@ export const BoardsTable: React.FC<BoardsTableProps> = (props) => {
         [props.boards]
     )
 
-    const columns: (GridColDef & { field: keyof CustomRow })[] = [
+    const columns: (GridColDef & { field: keyof CustomRow | "actions" })[] = [
         {
             field: "syncsCount",
             headerName: "Integração",
@@ -106,46 +95,42 @@ export const BoardsTable: React.FC<BoardsTableProps> = (props) => {
             ),
             minWidth: isMobile ? 150 : undefined,
         },
-        { field: "name", headerName: "Nome", flex: 0.1, editable: user?.admin, minWidth: isMobile ? 150 : undefined },
+        { field: "name", headerName: "Nome", flex: 0.1, minWidth: isMobile ? 150 : undefined },
         { field: "roomsCount", headerName: "Salas", flex: 0.1, minWidth: isMobile ? 150 : undefined },
         { field: "chats", headerName: "Conversas", flex: 0.1, minWidth: isMobile ? 150 : undefined },
         { field: "unreadCount", headerName: "Não respondidas", flex: 0.1, minWidth: isMobile ? 200 : undefined },
         {
-            field: "id",
+            field: "actions",
+            type: "actions",
             headerName: "Ações",
-            renderCell: () => {
-                return (
-                    <IconButton onClick={onActionsButtonPress}>
-                        <MoreHoriz />
-                    </IconButton>
-                )
+            getActions(params) {
+                return [
+                    // <GridActionsCellItem label="Visualizar" showInMenu onClick={() => onDeletePress(params.row.id)} disabled icon={<Visibility />} />,
+                    <GridActionsCellItem
+                        label="Editar"
+                        showInMenu
+                        onClick={() => props.openBoardSettings(params.row)}
+                        icon={<Edit />}
+                        disabled={!user?.admin}
+                    />,
+                    <GridActionsCellItem
+                        label="Deletar"
+                        showInMenu
+                        onClick={() => props.onDeleteBoard(params.row)}
+                        icon={<Delete />}
+                        disabled={!user?.admin}
+                    />,
+                ]
             },
-            align: "center",
-            sortable: false,
-            filterable: false,
             minWidth: isMobile ? 150 : undefined,
         },
     ]
 
-    const onActionsButtonPress = (ev: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
-        // ev.stopPropagation()
-        isMenu.current = true
-        setMenuAnchor(ev.currentTarget)
-    }
-
-    const closeMenu = () => {
-        setMenuAnchor(null)
-        isMenu.current = false
-        props.setSelectedBoard(null)
-    }
-
     const onRowClick = (params: GridRowParams<Board>) => {
         const board = params.row
-        if (board.id === props.selectedBoard?.id || isMenu.current === false) {
-            navigateToBoard(board)
-        } else {
-            props.setSelectedBoard(board)
-        }
+        props.setLoading(true)
+        props.setSelectedBoard(board)
+        setTimeout(() => navigateToBoard(board), 300)
     }
 
     const onCellEditStop = (cell: GridCellEditStopParams<Board, any, any>, event: MuiEvent<MuiBaseEvent>) => {
@@ -156,15 +141,6 @@ export const BoardsTable: React.FC<BoardsTableProps> = (props) => {
         } else {
             props.updateBoard({ id: cell.row.id, [cell.field]: new_value })
             snackbar({ severity: "info", text: "salvo" })
-        }
-    }
-
-    const onRowSelectionModelChange = (rowSelectionModel: GridRowSelectionModel, details: GridCallbackDetails) => {
-        if (rowSelectionModel.length === 0) return
-        console.log(rowSelectionModel[0])
-        const selected_department = props.boards.find((department) => department.id === rowSelectionModel[0])
-        if (selected_department) {
-            props.setSelectedBoard(selected_department)
         }
     }
 
@@ -182,12 +158,6 @@ export const BoardsTable: React.FC<BoardsTableProps> = (props) => {
     const navigateToBoard = (board: Board) => {
         navigate(slugify(board.name))
     }
-
-    useEffect(() => {
-        if (props.selectedBoard && !isMenu.current) {
-            navigateToBoard(props.selectedBoard)
-        }
-    }, [props.selectedBoard])
 
     return (
         <Paper sx={{ flex: 1 }}>
@@ -211,21 +181,9 @@ export const BoardsTable: React.FC<BoardsTableProps> = (props) => {
                     },
                 }}
                 onCellEditStop={onCellEditStop}
-                onRowSelectionModelChange={onRowSelectionModelChange}
                 isCellEditable={isCellEditable}
                 onRowClick={onRowClick}
             />
-
-            <Menu open={!!menuAnchor} anchorEl={menuAnchor} onClose={closeMenu}>
-                <MenuItem onClick={openBoardSettings} disabled={!user?.admin}>
-                    Configurações
-                </MenuItem>
-                {user?.admin && (
-                    <MenuItem onClick={deleteBoard} disabled={!user?.admin}>
-                        Deletar
-                    </MenuItem>
-                )}
-            </Menu>
         </Paper>
     )
 }

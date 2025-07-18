@@ -37,6 +37,17 @@ export const Boards: React.FC<BoardsProps> = ({}) => {
 
     const removeBoard = (board: Board) => setBoards((list) => list.filter((item) => item.id !== board.id))
 
+    const closeBoardSettings = () => {
+        setSelectedBoard(null)
+        setShowBoardForm(false)
+    }
+
+    const openBoardSettings = (board: Board) => {
+        console.log(board)
+        setSelectedBoard(board)
+        setShowBoardSettings(true)
+    }
+
     const fetchData = async () => {
         setBoards(await fetchBoards({ params: { all: boz && user?.admin ? true : undefined } }))
     }
@@ -77,6 +88,7 @@ export const Boards: React.FC<BoardsProps> = ({}) => {
     }
 
     const navigateBack = () => {
+        setLoading(false)
         fetchData()
         navigate("/boards")
         setSelectedBoard(null)
@@ -118,9 +130,9 @@ export const Boards: React.FC<BoardsProps> = ({}) => {
                                 users={users}
                                 onDeleteBoard={deleteBoard}
                                 updateBoard={updateBoards}
-                                selectedBoard={selectedBoard}
+                                openBoardSettings={openBoardSettings}
                                 setSelectedBoard={setSelectedBoard}
-                                openBoardSettings={() => setShowBoardSettings(true)}
+                                setLoading={setLoading}
                             />
                         </Box>
                     }
@@ -131,7 +143,7 @@ export const Boards: React.FC<BoardsProps> = ({}) => {
             <Dialog
                 open={showBoardForm}
                 keepMounted
-                onClose={() => setShowBoardForm(false)}
+                onClose={closeBoardSettings}
                 PaperProps={{ sx: { width: isMobile ? "80vw" : "40vw" }, elevation: 2 }}
             >
                 <Box
@@ -144,7 +156,7 @@ export const Boards: React.FC<BoardsProps> = ({}) => {
                     }}
                 >
                     <Typography sx={{ fontWeight: "bold" }}>Novo quadro</Typography>
-                    <IconButton onClick={() => setShowBoardForm(false)}>
+                    <IconButton onClick={closeBoardSettings}>
                         <Close />
                     </IconButton>
                 </Box>
@@ -152,21 +164,13 @@ export const Boards: React.FC<BoardsProps> = ({}) => {
                     users={users}
                     onSubmit={(board) => {
                         addOrReplaceBoard(board)
-                        setShowBoardForm(false)
+                        closeBoardSettings()
                     }}
                 />
             </Dialog>
 
             {showBoardSettings && selectedBoard && (
-                <BoardSettingsModal
-                    board={selectedBoard}
-                    open={showBoardSettings}
-                    onClose={() => setShowBoardSettings(false)}
-                    onSubmit={(board) => {
-                        addOrReplaceBoard(board)
-                        setSelectedBoard(board)
-                    }}
-                />
+                <BoardSettingsModal board={selectedBoard} open={showBoardSettings} onClose={closeBoardSettings} onSubmit={addOrReplaceBoard} />
             )}
         </Box>
     )

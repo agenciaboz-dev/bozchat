@@ -33,6 +33,8 @@ export const BoardSettingsModal: React.FC<BoardSettingsModalProps> = (props) => 
     const [boardChanges, setBoardChanges] = useState<Partial<Board>>({ name: props.board.name })
     const [access, setAccess] = useState<BoardAccess>({ users: [], departments: [] })
 
+    console.log(props.board)
+
     const onSaveClick = async () => {
         if (loading) return
 
