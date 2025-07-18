@@ -264,7 +264,6 @@ export const Message: React.ForwardRefRenderFunction<HTMLDivElement, MessageProp
                                     : custom_colors.lightMode_receivedMsg,
                                 marginTop: !same_as_previous && !day_changing ? (isMobile ? "2vw" : "0.5vw") : undefined,
                                 marginBottom: !!reactions.length ? "1.5vw" : undefined,
-                                gap: is_sticker ? "0.2vw" : undefined,
                                 opacity: is_deleted || message.phone_only ? 0.6 : undefined,
                                 transition: "0.5s",
                                 width: "100%",
