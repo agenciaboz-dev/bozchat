@@ -3,6 +3,7 @@ import { LoginForm } from "../types/shared/LoginForm";
 import { WithoutFunctions } from "./helpers";
 import { Department } from "./Department";
 import { Board } from "./Board/Board";
+import { Washima } from "./Washima/Washima";
 export declare const user_include: {
     departments: {
         include: {
@@ -47,4 +48,5 @@ export declare class User {
     update(data: Partial<User>): Promise<void>;
     notify(reason: string, data: UserNotification): void;
     getBoards(): Promise<Board[]>;
+    getWashimas(): Promise<Washima[]>;
 }

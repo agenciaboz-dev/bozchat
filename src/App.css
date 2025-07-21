@@ -89,6 +89,10 @@ section {
     flex-shrink: 0
 }
 
+.MuiButton-root {
+    text-transform: none!important;
+}
+
 img {
     object-fit: contain;
 }

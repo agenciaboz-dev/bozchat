@@ -1,21 +1,7 @@
 import { Prisma } from "@prisma/client";
 import WAWebJS, { Contact } from "whatsapp-web.js";
 import { WashimaMessageId } from "./Washima";
-export type MessageType =
-    | "ptt"
-    | "video"
-    | "image"
-    | "text"
-    | "revoked"
-    | "sticker"
-    | "audio"
-    | "chat"
-    | "document"
-    | "sticker"
-    | "call_log"
-    | "e2e_notification"
-    | "notification_template"
-    | "vcard"
+export type MessageType = "ptt" | "video" | "image" | "text" | "revoked" | "sticker" | "audio" | "chat" | "document" | "sticker" | "call_log" | "e2e_notification" | "notification_template";
 export declare enum MessageAck {
     error = -1,
     pending = 0,
@@ -73,6 +59,7 @@ export declare class WashimaMessage {
     contact_id: string | null;
     from_bot: string | null;
     reactions: Map<string, WashimaReaction>;
+    static default_messages_offset: number;
     static getChatMessages(washima_id: string, chat_id: string, is_group: boolean, offset?: number, take?: number | null): Promise<WashimaMessage[]>;
     static getWashimaMessages(washima_id: string, body?: any): Promise<WashimaMessage[]>;
     static search(value: string, chat_id?: string): Promise<WashimaMessage[]>;
@@ -87,4 +74,8 @@ export declare class WashimaMessage {
     static revoke(message: WAWebJS.Message): Promise<WashimaMessage | undefined>;
     constructor(data: WashimaMessagePrisma);
     handleReaction(reaction: WAWebJS.Reaction): Promise<void>;
+    emit(): void;
+    toJSON(): this & {
+        reactions: WashimaReaction[];
+    };
 }

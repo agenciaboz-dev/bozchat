@@ -16,10 +16,12 @@ import { Washima } from "../../types/server/class/Washima/Washima"
 import { Nagazap } from "../../types/server/class/Nagazap"
 import { useApi } from "../../hooks/useApi"
 import { useSnackbar } from "burgos-snackbar"
-import { OverlayScrollbarsComponent } from "overlayscrollbars-react"
 import "overlayscrollbars/styles/overlayscrollbars.css"
 import { useDarkMode } from "../../hooks/useDarkMode"
 import { custom_colors } from "../../style/colors"
+import { ArchiveContainer } from "./ArchiveContainer"
+import { api } from "../../api"
+import { ArchiveChatForm } from "../../types/server/class/Board/Archive"
 
 interface BoardPageProps {
     board: WithoutFunctions<Board>
@@ -31,7 +33,7 @@ export const BoardPage: React.FC<BoardPageProps> = (props) => {
     const { darkMode } = useDarkMode()
     const io = useIo()
     const { user, company } = useUser()
-    const api = useApi()
+    const apiHelper = useApi()
     const { snackbar } = useSnackbar()
 
     const columnsBoxRef = useRef<HTMLDivElement | null>(null)
@@ -56,6 +58,25 @@ export const BoardPage: React.FC<BoardPageProps> = (props) => {
                 return true
             }
         })
+
+        if (sourceRoom && result.destination?.droppableId === "archive") {
+            const chat = sourceRoom.chats[result.source.index]
+            const archiveData: ArchiveChatForm = { chat_id: chat.id }
+            sourceRoom.chats = sourceRoom.chats.filter((item) => item.id !== chat.id)
+            setBoard((currentBoard) => {
+                const rooms = currentBoard.rooms
+                rooms[sourceRoomIndex].chats = sourceRoom.chats
+                const board = { ...currentBoard, rooms }
+                return board
+            })
+            api.post("/company/boards/archive", archiveData, { params: { user_id: user?.id, company_id: company?.id, board_id: board.id } }).then(
+                () => {
+                    snackbar({ severity: "info", text: "Conversa arquivada!" })
+                }
+            )
+            return
+        }
+
         let destinationRoomIndex = -1
         const destinationRoom = board.rooms.find((room, index) => {
             if (room.id === result.destination?.droppableId) {
@@ -82,11 +103,11 @@ export const BoardPage: React.FC<BoardPageProps> = (props) => {
                 save(board)
 
                 if (destinationRoom.on_new_chat) {
-                    api.emitRommTrigger(chat, destinationRoom.on_new_chat, "in")
+                    apiHelper.emitRommTrigger(chat, destinationRoom.on_new_chat, "in")
                 }
 
                 if (sourceRoom.on_new_chat) {
-                    api.emitRommTrigger(chat, sourceRoom.on_new_chat, "out")
+                    apiHelper.emitRommTrigger(chat, sourceRoom.on_new_chat, "out")
                 }
 
                 return board
@@ -317,6 +338,21 @@ export const BoardPage: React.FC<BoardPageProps> = (props) => {
                                     </Draggable>
                                 ))}
                                 {provided.placeholder}
+                                <Droppable droppableId={"archive"} type="chat" direction="vertical">
+                                    {(provided) => (
+                                        <Box
+                                            ref={provided.innerRef}
+                                            {...provided.droppableProps}
+                                            sx={{
+                                                flexDirection: "column",
+                                                gap: isMobile ? "5vw" : "1vw",
+                                                flex: 1,
+                                            }}
+                                        >
+                                            <ArchiveContainer board={board} placeholder={provided.placeholder} setBoard={setBoard}  />
+                                        </Box>
+                                    )}
+                                </Droppable>
                             </Box>
                         )}
                     </Droppable>

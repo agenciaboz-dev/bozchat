@@ -67,7 +67,7 @@ export interface PendingResponse {
     platform_id: string;
 }
 export interface PausedInteraction {
-    expiry: number;
+    expiry: number | null;
     chat_id: string;
 }
 export interface BotMessageForm {
@@ -107,7 +107,7 @@ export declare class Bot {
     update(data: Partial<Bot>): Promise<void>;
     getChannels(): Promise<void>;
     delete(): Promise<void>;
-    pauseChat(chat_id: string, minutes: number): void;
+    pauseChat(chat_id: string, minutes?: number): void;
     unpauseChat(chat_id: string): void;
     isPaused(chat_id: string): boolean;
     handleIncomingMessage(data: BotMessageForm): Promise<void>;

@@ -11,6 +11,7 @@ import { WashimaInputContextProvider } from "./contexts/washimaInputContext"
 import { ConfirmDialog } from "./components/ConfirmDialog"
 import { ReactFlowProvider } from "@xyflow/react"
 import { BotProvider } from "./contexts/bot.context"
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query"
 
 interface ProvidersProps {
     children: React.ReactNode
@@ -28,10 +29,12 @@ export const Providers: React.FC<ProvidersProps> = ({ children }) => {
                                     <PhotoProvider>
                                         <BotProvider>
                                             <ReactFlowProvider>
-                                                <MenuDrawer />
-                                                <Snackbar />
-                                                <ConfirmDialog />
-                                                {children}
+                                                <QueryClientProvider client={new QueryClient()}>
+                                                    <MenuDrawer />
+                                                    <Snackbar />
+                                                    <ConfirmDialog />
+                                                    {children}
+                                                </QueryClientProvider>
                                             </ReactFlowProvider>
                                         </BotProvider>
                                     </PhotoProvider>

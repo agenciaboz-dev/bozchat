@@ -5,7 +5,11 @@ import { Socket } from "socket.io";
 import { WashimaMessage } from "./WashimaMessage";
 import { WashimaGroupUpdate } from "./WashimaGroupUpdate";
 import { Company } from "../Company";
+import { BoardAccess } from "../Board/Board";
+import { Mutex } from "async-mutex";
 import { WhatsappInteractiveForm } from "../Nagazap";
+import { User } from "../User";
+import { Department } from "../Department";
 export type WashimaPrisma = Prisma.WashimaGetPayload<{}>;
 export type WashimaMediaPrisma = Prisma.WashimaMediaGetPayload<{}>;
 export type WashimaProfilePicPrisma = Prisma.WashimaProfilePicGetPayload<{}>;
@@ -71,6 +75,7 @@ export declare class Washima {
     companies: Company[];
     syncing: boolean;
     status: WashimaStatus;
+    mutex: Mutex;
     static initializeBatch: number;
     static washimas: Washima[];
     static waitingList: Washima[];
@@ -91,6 +96,7 @@ export declare class Washima {
     static new(data: WashimaForm): Promise<Washima>;
     static delete(washima_id: string): Promise<Washima | undefined>;
     static forwardMessage(socket: Socket, washima_id: string, chat_id: string, destinatary_ids: string[], message_ids: string[]): Promise<void>;
+    static newReaction(socket: Socket, washima_id: string, message_id: string, emoji: string): Promise<void>;
     static sendMessage(socket: Socket, washima_id: string, chat_id: string, message?: string, media?: WashimaMediaForm, replyMessage?: WashimaMessage): Promise<void>;
     static getContact(socket: Socket, washima_id: string, contact_id: string, message_id: string): Promise<void>;
     static deleteMessages(socket: Socket, washima_id: string, data: WashimaDeleteMessagesForm): Promise<void>;
@@ -127,10 +133,18 @@ export declare class Washima {
     getDiskUsage(megabyte?: boolean): Promise<WashimaDiskMetrics>;
     clearMedia(): Promise<number>;
     clearMessages(): Promise<number>;
-    search(value: string, target?: "chats" | "messages", chat_id?: string): Promise<WashimaMessage[] | WAWebJS.Chat[]>;
+    search(value: string, target?: "chats" | "messages", chat_id?: string): Promise<WAWebJS.Chat[] | WashimaMessage[]>;
     setReady(): Promise<void>;
     setStopped(): Promise<void>;
     deleteMessages(data: WashimaDeleteMessagesForm): Promise<void>;
+    getClientMessageBySid(sid: string): Promise<WAWebJS.Message>;
+    newReaction(message_id: string, emoji: string): Promise<void>;
+    getAccess(): Promise<{
+        users: User[];
+        departments: Department[];
+    }>;
+    changeAccess(access: BoardAccess): Promise<void>;
+    getContactProfilePicFromWaid(waid: string): Promise<string>;
     toJSON(): never;
 }
 export {};

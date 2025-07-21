@@ -3,12 +3,13 @@ import { Room, RoomForm } from "./Room";
 import { WithoutFunctions } from "../helpers";
 import { Department } from "../Department";
 import { User } from "../User";
-import { Chat, ChatDto } from "./Chat";
+import { Chat, ChatDto, CommentForm } from "./Chat";
 import WAWebJS from "whatsapp-web.js";
 import { Washima } from "../Washima/Washima";
 import { WashimaMessage } from "../Washima/WashimaMessage";
 import { Socket } from "socket.io";
 import { NagaMessage } from "../Nagazap";
+import { Archive } from "./Archive";
 export type BoardPrisma = Prisma.BoardGetPayload<{}>;
 export interface BoardForm {
     name: string;
@@ -55,6 +56,7 @@ export declare class Board {
     company_id: string;
     washima_settings: BoardWashimaSettings[];
     nagazap_settings: BoardNagazapSettings[];
+    archive: Archive;
     static handleSocket(socket: Socket): void;
     static handleNagazapNewMessage(message: NagaMessage, company_id: string): Promise<void>;
     static handleWashimaNewMessage(data: HandleWashimaMessageDto): Promise<void>;
@@ -74,11 +76,12 @@ export declare class Board {
         id: string;
         name: string;
         created_at: string;
-        company_id: string;
         rooms: Prisma.JsonValue;
         washima_settings: Prisma.JsonValue;
         nagazap_settings: Prisma.JsonValue;
+        archive: Prisma.JsonValue | null;
         entry_room_id: string;
+        company_id: string;
     }>;
     saveRooms(): Promise<void>;
     newRoom(data: RoomForm): void;
@@ -112,4 +115,8 @@ export declare class Board {
     removeChat(chat_id: string): void;
     transferChat(data: TransferChatForm): Promise<void>;
     getRoom(room_id: string): Room;
+    addComment(chat_id: string, data: CommentForm): Promise<import("./Chat").Comment | undefined>;
+    getChatComments(chat_id: string): import("./Chat").Comment[] | undefined;
+    archiveChat(chat_id: string): Promise<void>;
+    unarchiveChat(chat_id: string, room_id?: string): Promise<Chat | undefined>;
 }
