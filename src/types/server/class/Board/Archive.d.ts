@@ -1,6 +1,7 @@
-import { WithoutFunctions } from "../helpers";
 import { Chat } from "./Chat";
-export type ArchiveDto = WithoutFunctions<Archive>;
+export interface ArchiveDto {
+    chats: Chat[];
+}
 export interface RestoreChatForm {
     chat_id: string;
     room_id?: string;
@@ -14,4 +15,7 @@ export declare class Archive {
     addChat(chat: Chat): void;
     getChats(): Chat[];
     restoreChat(chat_id: string): Chat | undefined;
+    toJSON(): this & {
+        chats: Chat[];
+    };
 }

@@ -56,6 +56,10 @@ export declare class ActiveBot {
     started_at: number;
     constructor(data: WithoutFunctions<ActiveBot>);
 }
+export interface PauseBotForm {
+    chat_id: string;
+    until?: number;
+}
 export type BotForm = Omit<WithoutFunctions<Bot>, "id" | "created_at" | "triggered" | "instance" | "active_on">;
 export interface PendingResponse {
     response: (text: string) => Promise<void>;

@@ -17,6 +17,7 @@ import { slugify } from "../../tools/normalize"
 import { Title2 } from "../../components/Title"
 import { WashimasTable } from "./WashimasTable"
 import { WashimaFormModal } from "./WashimaFormModal"
+import { useNetwork } from "@mantine/hooks"
 
 interface WashimaProps {}
 
@@ -49,6 +50,7 @@ export const WashimaPage: React.FC<WashimaProps> = ({}) => {
 
     const isTable = useMemo(() => pathname === "/business/contas" || pathname === "/business/contas/", [pathname])
     const isHome = useMemo(() => pathname === "/business" || pathname === "/business/", [pathname])
+    const network = useNetwork()
 
     const addWashima = (washima: Washima) => setWashimas((values) => [...values.filter((item) => item.id !== washima.id), washima])
 
@@ -109,6 +111,17 @@ export const WashimaPage: React.FC<WashimaProps> = ({}) => {
         if (!washimas.find((item) => item.id === washima.id)) return
         setWashimas((washimas) => [...washimas.filter((item) => item.id !== washima.id), washima])
     }
+
+    useEffect(() => {
+        if (!network.online) {
+            return () => {
+                io.connect()
+                unlisten()
+                fetchWashimas()
+                listen()
+            }
+        }
+    }, [network.online])
 
     useEffect(() => {
         // const washima = washimas.find((item) => item.id === currentWashima?.id)

@@ -9,6 +9,7 @@ import { api } from "../../api"
 import { WashimaSearch } from "./WashimaSearch"
 import { useUser } from "../../hooks/useUser"
 import { WashimaMessage } from "../../types/server/class/Washima/WashimaMessage"
+import { useNetwork } from "@mantine/hooks"
 
 interface WashimaZapProps {
     washima: Washima
@@ -18,6 +19,7 @@ export const WashimaZap: React.FC<WashimaZapProps> = ({ washima }) => {
     const isMobile = useMediaQuery("(orientation: portrait)")
     const chatListRef = useRef<HTMLDivElement>(null)
     const { user } = useUser()
+    const network = useNetwork()
 
     const [chat, setChat] = useState<Chat | null>(null)
     const [lastWashima, setLastWashima] = useState(washima)
@@ -58,6 +60,14 @@ export const WashimaZap: React.FC<WashimaZapProps> = ({ washima }) => {
     }
 
     const debouncedSearch = useCallback(debounce(handleSearch, 300), [handleSearch])
+
+    useEffect(() => {
+        if (!network.online) {
+            return () => {
+                handleSearch("")
+            }
+        }
+    }, [network.online])
 
     useEffect(() => {
         if (washima.id !== lastWashima.id) {

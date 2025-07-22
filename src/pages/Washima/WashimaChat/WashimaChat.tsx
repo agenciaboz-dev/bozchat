@@ -22,6 +22,7 @@ import { custom_colors } from "../../../style/colors"
 import { BotActivity } from "./WashimaTools/BotActivity"
 import { getAuthorName } from "../../Zap/MessageAuthor"
 import { useConfirmDialog } from "burgos-confirm"
+import { useNetwork } from "@mantine/hooks"
 
 interface WashimaChatProps {
     washima: Washima
@@ -37,6 +38,7 @@ export const WashimaChat: React.FC<WashimaChatProps> = ({ washima, chat, onClose
     const messagesBoxRef = useRef<HTMLDivElement>(null)
     const washimaInput = useWashimaInput()
     const { confirm } = useConfirmDialog()
+    const network = useNetwork()
 
     const [messages, setMessages] = useState<WashimaMessage[]>([])
     const [groupUpdates, setGroupUpdates] = useState<WashimaGroupUpdate[]>([])
@@ -193,6 +195,15 @@ export const WashimaChat: React.FC<WashimaChatProps> = ({ washima, chat, onClose
             }
         }
     }
+
+    useEffect(() => {
+        if (!network.online) {
+            return () => {
+                io.connect()
+                fetchChat()
+            }
+        }
+    }, [network.online])
 
     useEffect(() => {
         if (loadingMessageId) {
