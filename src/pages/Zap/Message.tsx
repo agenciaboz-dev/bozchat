@@ -30,6 +30,7 @@ import { BotNameChip } from "../Bots/BotNameChip"
 import { useWashimaInput } from "../../hooks/useWashimaInput"
 import { MessageReactions } from "./MessageReactions"
 import { ContactCard } from "../Washima/ContactCard"
+import { useUser } from "../../hooks/useUser"
 
 interface MessageProps {
     washima: Washima
@@ -54,6 +55,7 @@ export const Message: React.ForwardRefRenderFunction<HTMLDivElement, MessageProp
         if (onVisible) onVisible()
     }, {})
     const isMobile = useMediaQuery("(orientation: portrait)")
+    const { user } = useUser()
     const theme = useMuiTheme()
     const washima_input = useWashimaInput()
     const { darkMode } = useDarkMode()
@@ -451,7 +453,7 @@ export const Message: React.ForwardRefRenderFunction<HTMLDivElement, MessageProp
                                 )}
                                 {is_vcard ? (
                                     /*//* CONTACT CARD */
-                                    <ContactCard message={message} />
+                                    <ContactCard message={message} washima={washima} user_id={user?.id} />
                                 ) : (
                                     /*//* MESSAGE BODY TEXT */
                                     <Box sx={{ flexDirection: "column" }}>

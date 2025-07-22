@@ -1,33 +1,85 @@
 import React, { useEffect, useState } from "react"
 import { Avatar, Box, Typography, useMediaQuery } from "@mui/material"
 import { WashimaMessage } from "../../types/server/class/Washima/WashimaMessage"
+import { Washima } from "../../types/server/class/Washima/Washima"
+import { api } from "../../api"
 
 interface ContactCardProps {
     message?: WashimaMessage
+    washima?: Washima
+    user_id: string | undefined
 }
 
-export const ContactCard: React.FC<ContactCardProps> = ({ message }) => {
+export const ContactCard: React.FC<ContactCardProps> = ({ message, washima, user_id }) => {
     const isMobile = useMediaQuery("(orientation: portrait)")
+    const [contactPicUrl, setContactPicUrl] = useState("")
+    const [error, setError] = useState<string | null>(null)
 
-    //todo Chamar função na API que busca a foto pelo número
+    const extractFormattedWaid = (vcard: string): string | undefined => {
+        try {
+            // Extrai apenas os dígitos:
+            const waidMatch = vcard.match(/waid=(\d+)/)
+            if (!waidMatch) return undefined
 
-    // const [contactPicUrl, setContactPicUrl] = useState("")
+            // Formata com o sufixo legado:
+            return `${waidMatch[1]}@c.us`
+        } catch (e) {
+            console.error("(ContactCard) Erro ao formatar waid:", e)
+            return undefined
+        }
+    }
 
-    // const fetchContactPic = async () => {
-    //     try {
-    //         const response = await api.get("...")
-    //         const data = response.data
-    //         setContactPicUrl(data.url)
-    //     } catch (error) {
-    //         console.log(error)
-    //     }
-    // }
+    const fetchContactPic = async () => {
+        setError(null)
 
-    // useEffect(() => {
-    // fetchContactPic()
-    // }, [])
+        if (!washima?.id) {
+            setError("(ContactCard) Washima ID não disponível")
+            return
+        }
 
-    //todo Fazer botões para adicionar contato / ligar / conversar ? (Precisa do painel de contatos primeiro)
+        if (!user_id) {
+            setError("(ContactCard) User ID não definido")
+            return
+        }
+
+        if (!message?.body) {
+            setError("(ContactCard) Corpo da mensagem vazio")
+            return
+        }
+
+        const formattedWaid = extractFormattedWaid(message.body)
+        if (!formattedWaid) {
+            setError("(ContactCard) WAID não encontrado ou formato inválido no vCard")
+            return
+        }
+
+        try {
+            console.log("(ContactCard) Enviando requisição com waid formatado:", formattedWaid)
+
+            const response = await api.get("/washima/contact/profile-pic", {
+                params: {
+                    washima_id: washima.id,
+                    user_id,
+                    contact_id: formattedWaid,
+                },
+            })
+
+            const url = response.data?.url || response.data
+            if (!url) {
+                setError("(ContactCard) URL da foto não encontrada na resposta")
+                return
+            }
+
+            setContactPicUrl(url)
+        } catch (e: any) {
+            console.error("(ContactCard) Catch:", e)
+        }
+        console.error("(ContactCard) Erro encontrado:", error)
+    }
+
+    useEffect(() => {
+        fetchContactPic()
+    }, [])
 
     return (
         <Box sx={{ flexDirection: "row", alignItems: "center", display: "flex" }}>
@@ -41,7 +93,7 @@ export const ContactCard: React.FC<ContactCardProps> = ({ message }) => {
                     color: "text.secondary",
                 }}
                 alt="ícone"
-                // src={contactPicUrl}
+                src={contactPicUrl}
             />
             <Box sx={{ flexDirection: "column", alignItems: "center" }}>
                 <Typography sx={{ textAlign: "center" }}>{message?.body.match(/FN:(.+)/)?.[1] ?? "Contato"}</Typography>
