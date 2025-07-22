@@ -1,5 +1,5 @@
 import React, { useState } from "react"
-import { Button, Paper, Typography } from "@mui/material"
+import { Button, Paper, Typography, useMediaQuery } from "@mui/material"
 import { Board } from "../../types/server/class/Board/Board"
 import { WithoutFunctions } from "../../types/server/class/helpers"
 import { Title2 } from "../../components/Title"
@@ -13,6 +13,7 @@ interface ArchiveContainerProps {
 }
 
 export const ArchiveContainer: React.FC<ArchiveContainerProps> = (props) => {
+    const isMobile = useMediaQuery("(orientation: portrait)")
     const [showChats, setShowChats] = useState(false)
 
     const closeChatsModal = () => {
@@ -20,7 +21,7 @@ export const ArchiveContainer: React.FC<ArchiveContainerProps> = (props) => {
     }
 
     return (
-        <Paper sx={{ width: "25vw", flexDirection: "column", padding: 2, gap: 1 }}>
+        <Paper sx={{ flexDirection: "column", width: isMobile ? "90vw" : "25vw", padding: isMobile ? "5vw" : "1vw", gap: isMobile ? "5vw" : "1vw" }}>
             <Title2 name="Arquivo" left={<ArchiveIcon />} />
             <Typography color="text.secondary" variant="subtitle2">
                 Conversas que forem soltas aqui serão arquivadas. Você pode recuperá-las a partir do botão abaixo.

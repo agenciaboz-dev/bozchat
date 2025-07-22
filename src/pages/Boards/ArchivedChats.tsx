@@ -79,6 +79,7 @@ export const ArchivedChats: React.FC<ArchivedChatsProps> = (props) => {
                     </Typography>
                 )
             },
+            minWidth: isMobile ? 200 : undefined,
         },
         {
             field: "name",
@@ -92,6 +93,7 @@ export const ArchivedChats: React.FC<ArchivedChatsProps> = (props) => {
                     </Typography>
                 )
             },
+            minWidth: isMobile ? 200 : undefined,
         },
         {
             field: "phone",
@@ -105,6 +107,7 @@ export const ArchivedChats: React.FC<ArchivedChatsProps> = (props) => {
                     </Typography>
                 )
             },
+            minWidth: isMobile ? 200 : undefined,
         },
         {
             field: "actions",
@@ -120,6 +123,7 @@ export const ArchivedChats: React.FC<ArchivedChatsProps> = (props) => {
                     </IconButton>
                 )
             },
+            minWidth: isMobile ? 150 : undefined,
         },
     ]
 
