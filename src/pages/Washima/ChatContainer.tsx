@@ -226,7 +226,7 @@ export const ChatContainer: React.FC<ChatProps> = ({ chat, onChatClick, washima,
                     {chat.lastMessage?.type === "vcard" && <Chip icon={<Person />} sx={{ color: "text.secondary" }} label="Contato" size="small" />}
                     {chat.lastMessage?.type === "revoked" ? (
                         <DeletedMessage />
-                    ) : chat.lastMessage.type === "vcard" ? null : (
+                    ) : chat.lastMessage?.type === "vcard" ? null : (
                         <p
                             style={{
                                 whiteSpace: "nowrap",
