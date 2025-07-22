@@ -1,19 +1,5 @@
 import React, { useEffect, useState } from "react"
-import {
-    Box,
-    Button,
-    CircularProgress,
-    Divider,
-    Grid,
-    IconButton,
-    MenuItem,
-    Paper,
-    Tab,
-    Tabs,
-    TextField,
-    Typography,
-    useMediaQuery,
-} from "@mui/material"
+import { Box, Button, CircularProgress, Divider, Grid, IconButton, MenuItem, Tab, Tabs, TextField, Typography, useMediaQuery } from "@mui/material"
 import { NagaTemplate, Nagazap } from "../../../types/server/class/Nagazap"
 import { useFormik } from "formik"
 import {
@@ -208,7 +194,7 @@ export const TemplateForm: React.FC<TemplateFormProps> = ({ nagazap, setShowInfo
     }, [currentTemplate])
 
     return (
-        <Paper
+        <Box
             sx={{
                 flexDirection: "column",
                 bgcolor: "background.default",
@@ -320,6 +306,6 @@ export const TemplateForm: React.FC<TemplateFormProps> = ({ nagazap, setShowInfo
                     </Grid>
                 </Grid>
             </form>
-        </Paper>
+        </Box>
     )
 }

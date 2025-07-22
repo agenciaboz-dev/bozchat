@@ -6,6 +6,7 @@ import { useSnackbar } from "burgos-snackbar"
 import { ChatNote, Note, NoteReply } from "./ChatNote" // Importe os tipos também
 import { custom_colors } from "../../../style/colors"
 import { useDarkMode } from "../../../hooks/useDarkMode"
+import { useUser } from "../../../hooks/useUser"
 
 interface ChatNotesModalProps {
     open: boolean
@@ -17,6 +18,7 @@ export const ChatNotesModal: React.FC<ChatNotesModalProps> = (props) => {
     const isMobile = useMediaQuery("(orientation: portrait)")
     const { darkMode } = useDarkMode()
     const { snackbar } = useSnackbar()
+    const { user } = useUser()
     const [loading, setLoading] = useState(false)
     const [text, setText] = useState("")
     const [savedNotes, setSavedNotes] = useState<Note[]>([])
@@ -26,7 +28,18 @@ export const ChatNotesModal: React.FC<ChatNotesModalProps> = (props) => {
         if (props.open) {
             const storedNotes = localStorage.getItem("chat_notes")
             if (storedNotes) {
-                setSavedNotes(JSON.parse(storedNotes))
+                const parsedNotes: Note[] = JSON.parse(storedNotes)
+
+                const updatedNotes = parsedNotes.map((note) => ({
+                    ...note,
+                    userName: note.userName || "Usuário desconhecido",
+                    replies: note.replies.map((reply) => ({
+                        ...reply,
+                        userName: reply.userName || "Usuário desconhecido",
+                    })),
+                }))
+
+                setSavedNotes(updatedNotes)
             }
         }
     }, [props.open])
@@ -38,10 +51,11 @@ export const ChatNotesModal: React.FC<ChatNotesModalProps> = (props) => {
         try {
             // Cria uma nova anotação com ID único
             const newNote: Note = {
-                id: Date.now().toString(), // Usa timestamp como ID
+                id: Date.now().toString(),
                 text: text.trim(),
-                date: new Date().toISOString(), // Data em formato ISO
-                replies: [], // Inicia sem respostas
+                date: new Date().toISOString(),
+                replies: [],
+                userName: user?.name || "Usuário desconhecido",
             }
 
             const newNotes = [...savedNotes, newNote]
@@ -71,7 +85,8 @@ export const ChatNotesModal: React.FC<ChatNotesModalProps> = (props) => {
         if (noteIndex !== -1) {
             const newReply: NoteReply = {
                 text: replyText.trim(),
-                date: new Date().toISOString(), // Data atual em formato ISO
+                date: new Date().toISOString(),
+                userName: user?.name || "Usuário desconhecido",
             }
 
             newNotes[noteIndex].replies.push(newReply)
@@ -115,7 +130,7 @@ export const ChatNotesModal: React.FC<ChatNotesModalProps> = (props) => {
                 />
                 <TextField
                     multiline
-                    rows={3}
+                    rows={2}
                     variant="outlined"
                     placeholder="Escreva uma nova anotação para esta conversa"
                     fullWidth
@@ -144,6 +159,7 @@ export const ChatNotesModal: React.FC<ChatNotesModalProps> = (props) => {
                             flexDirection: "column",
                             padding: isMobile ? "5vw 0" : "1vw",
                             gap: isMobile ? "5vw" : "1vw",
+                            backgroundColor: darkMode ? custom_colors.darkMode_scrollablesBackground : custom_colors.lightMode_scrollablesBackground,
                         }}
                     >
                         {savedNotes.map((note) => (

@@ -1,5 +1,5 @@
 import React, { useState } from "react"
-import { Avatar, Box, CircularProgress, Dialog, IconButton, Typography } from "@mui/material"
+import { Avatar, Box, CircularProgress, Dialog, IconButton, Typography, useMediaQuery } from "@mui/material"
 import { Board } from "../../types/server/class/Board/Board"
 import { WithoutFunctions } from "../../types/server/class/helpers"
 import { Title2 } from "../../components/Title"
@@ -8,7 +8,7 @@ import { Chat } from "../../types/server/class/Board/Chat"
 import { api } from "../../api"
 import { useUser } from "../../hooks/useUser"
 import { DataGrid, GridColDef } from "@mui/x-data-grid"
-import {  Close, Refresh, Restore } from "@mui/icons-material"
+import { Close, Refresh, Restore } from "@mui/icons-material"
 import { numberMask } from "../../tools/numberMask"
 
 interface ArchivedChatsProps {
@@ -19,6 +19,7 @@ interface ArchivedChatsProps {
 }
 
 export const ArchivedChats: React.FC<ArchivedChatsProps> = (props) => {
+    const isMobile = useMediaQuery("(orientation: portrait)")
     const [loading, setLoading] = useState(false)
 
     const { user, company } = useUser()
@@ -78,6 +79,7 @@ export const ArchivedChats: React.FC<ArchivedChatsProps> = (props) => {
                     </Typography>
                 )
             },
+            minWidth: isMobile ? 200 : undefined,
         },
         {
             field: "name",
@@ -91,6 +93,7 @@ export const ArchivedChats: React.FC<ArchivedChatsProps> = (props) => {
                     </Typography>
                 )
             },
+            minWidth: isMobile ? 200 : undefined,
         },
         {
             field: "phone",
@@ -100,10 +103,11 @@ export const ArchivedChats: React.FC<ArchivedChatsProps> = (props) => {
             renderCell(params) {
                 return (
                     <Typography variant="subtitle2" sx={{ fontWeight: "bold", textWrap: "wrap" }}>
-                        {numberMask(params.value, '(99) 9999 - 9999')}
+                        {numberMask(params.value, "(99) 9999 - 9999")}
                     </Typography>
                 )
             },
+            minWidth: isMobile ? 200 : undefined,
         },
         {
             field: "actions",
@@ -119,44 +123,50 @@ export const ArchivedChats: React.FC<ArchivedChatsProps> = (props) => {
                     </IconButton>
                 )
             },
+            minWidth: isMobile ? 150 : undefined,
         },
     ]
 
     return (
-        <Dialog
-            open={props.open}
-            onClose={props.handleClose}
-            PaperProps={{ sx: { padding: 2, bgcolor: "background.default", maxWidth: "90vw", width: "70vw" }, elevation: 0 }}
-        >
-            <Title2
-                name="Conversas arquivadas"
-                right={
-                    <Box>
-                        <IconButton onClick={() => refetch()} size="small">
-                            {isFetching ? <CircularProgress size={"1rem"} /> : <Refresh fontSize="small" />}
-                        </IconButton>
-                        <IconButton onClick={props.handleClose} size="small">
-                            <Close fontSize="small" />
-                        </IconButton>
-                    </Box>
-                }
-            />
-            <DataGrid
-                loading={isFetching || loading}
-                rows={data}
-                columns={desktopColumns}
-                initialState={{
-                    pagination: { paginationModel: { page: 0, pageSize: 10 } },
-                    sorting: { sortModel: [{ field: "last_message", sort: "desc" }] },
+        <Dialog open={props.open} onClose={props.handleClose} PaperProps={{ sx: { maxWidth: "90vw" } }}>
+            <Box
+                sx={{
+                    padding: isMobile ? "5vw" : "1.5vw",
+                    bgcolor: "background.default",
+                    flexDirection: "column",
+                    width: isMobile ? "90vw" : "70vw",
                 }}
-                pageSizeOptions={[10, 20, 50]}
-                sx={{ border: 0 }}
-                rowHeight={65}
-                // showToolbar
-                // hideFooterPagination
-                // autoPageSize
-                density="compact"
-            />
+            >
+                <Title2
+                    name="Conversas arquivadas"
+                    right={
+                        <Box>
+                            <IconButton onClick={() => refetch()} size="small">
+                                {isFetching ? <CircularProgress size={"1rem"} /> : <Refresh fontSize="small" />}
+                            </IconButton>
+                            <IconButton onClick={props.handleClose} size="small">
+                                <Close fontSize="small" />
+                            </IconButton>
+                        </Box>
+                    }
+                />
+                <DataGrid
+                    loading={isFetching || loading}
+                    rows={data}
+                    columns={desktopColumns}
+                    initialState={{
+                        pagination: { paginationModel: { page: 0, pageSize: 10 } },
+                        sorting: { sortModel: [{ field: "last_message", sort: "desc" }] },
+                    }}
+                    pageSizeOptions={[10, 20, 50]}
+                    sx={{ border: 0 }}
+                    rowHeight={65}
+                    // showToolbar
+                    // hideFooterPagination
+                    // autoPageSize
+                    density="compact"
+                />
+            </Box>
         </Dialog>
     )
 }

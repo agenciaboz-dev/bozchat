@@ -33,7 +33,7 @@ export interface Message {
     hasMedia: boolean
     timestamp: number
     to: string
-    type: "ptt" | "video" | "image" | "text" | "sticker" | "revoked" | "call_log" | "e2e_notification" | "notification_template"
+    type: "ptt" | "video" | "image" | "text" | "sticker" | "revoked" | "call_log" | "e2e_notification" | "notification_template" | "vcard"
 }
 
 export interface Group {

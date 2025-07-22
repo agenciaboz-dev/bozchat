@@ -52,9 +52,9 @@ export const custom_colors = {
     darkMode_emittedMsg: "#0f6787",
     darkMode_messageMenuBg: "#4a4a4a",
     darkMode_receivedMsg: "#2a323c",
-    darkMode_templatePreviewTriangle: "#2a323c",
+    darkMode_templatePreviewTriangle: "#1F2631",
     darkMode_interactiveMessageBorder: "#e1e1e188",
-    darkMode_kanbanOverlay: "#00000025",
+    darkMode_scrollablesBackground: "#00000025",
 
     lightMode_border: "#c9c9c9",
     lightMode_botEmittedMsg: "#0f6787",
@@ -70,7 +70,7 @@ export const custom_colors = {
     lightMode_templatePreviewTriangle: "#f4f4f4",
     lightMode_templatePreOvenTriangle: "#f7f7f7",
     lightMode_interactiveMessageBorder: "#41c1e188",
-    lightMode_kanbanOverlay: "#0000000A",
+    lightMode_scrollablesBackground: "#0000000A",
 }
 
 export const washima_colors = [

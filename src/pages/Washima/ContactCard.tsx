@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react"
-import { Avatar, Box, Typography, useMediaQuery } from "@mui/material"
+import { Avatar, Box, Divider, Typography, useMediaQuery } from "@mui/material"
 import { WashimaMessage } from "../../types/server/class/Washima/WashimaMessage"
 import { Washima } from "../../types/server/class/Washima/Washima"
 import { api } from "../../api"
@@ -74,7 +74,9 @@ export const ContactCard: React.FC<ContactCardProps> = ({ message, washima, user
         } catch (e: any) {
             console.error("(ContactCard) Catch:", e)
         }
-        console.error("(ContactCard) Erro encontrado:", error)
+        if (error) {
+            console.error("(ContactCard) Erro encontrado:", error)
+        }
     }
 
     useEffect(() => {
@@ -95,8 +97,9 @@ export const ContactCard: React.FC<ContactCardProps> = ({ message, washima, user
                 alt="ícone"
                 src={contactPicUrl}
             />
-            <Box sx={{ flexDirection: "column", alignItems: "center" }}>
-                <Typography sx={{ textAlign: "center" }}>{message?.body.match(/FN:(.+)/)?.[1] ?? "Contato"}</Typography>
+            <Box sx={{ flexDirection: "column", alignItems: "center", justifyContent: "center", gap: "5px" }}>
+                <Typography sx={{ textAlign: "center", marginBottom: "-5px" }}>{message?.body.match(/FN:(.+)/)?.[1] ?? "Contato"}</Typography>
+                <Divider sx={{ borderWidth: 1, width: "100%" }} />
                 <Typography sx={{ textAlign: "center" }}>{message?.body.match(/TEL[^:]*:(.+)/)?.[1] ?? "Telefone"}</Typography>
             </Box>
         </Box>

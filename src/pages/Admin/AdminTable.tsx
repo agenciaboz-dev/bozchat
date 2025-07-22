@@ -37,11 +37,15 @@ export const AdminTable: React.FC<AdminTableProps> = (props) => {
                         sx={{ width: 40 }}
                         onClick={() => {
                             if (active) {
-                                confirm({
-                                    title: "Desativar cliente",
-                                    content: "Esta ação irá desativar este cliente. Prosseguir?",
-                                    onConfirm: () => props.updateCompany({ id: cell.row.id, active: false }),
-                                })
+                                if (cell.row.business_name === "Boz") {
+                                    alert("Por segurança, não é possível desativar acesso de super-administrador desta forma.")
+                                } else {
+                                    confirm({
+                                        title: "Desativar cliente",
+                                        content: "Esta ação irá desativar este cliente. Prosseguir?",
+                                        onConfirm: () => props.updateCompany({ id: cell.row.id, active: false }),
+                                    })
+                                }
                             } else {
                                 props.updateCompany({ id: cell.row.id, active: true })
                             }

@@ -1,11 +1,11 @@
 import React, { useEffect, useMemo, useState } from "react"
-import { Avatar, Badge, Box, Chip, MenuItem, Paper, Typography, useTheme } from "@mui/material"
+import { Avatar, Box, Chip, MenuItem, Paper, Typography } from "@mui/material"
 import { useFormatMessageTime } from "../../hooks/useFormatMessageTime"
 import { useMediaQuery } from "@mui/material"
 import { api } from "../../api"
 import { Washima, WashimaProfilePic } from "../../types/server/class/Washima/Washima"
 import { useVisibleCallback } from "burgos-use-visible-callback"
-import { AttachFile, Call, Headphones, PhotoCamera, Videocam } from "@mui/icons-material"
+import { Call, Person } from "@mui/icons-material"
 import { MessageAck } from "../Zap/MessageAck"
 import { Chat } from "../../types/Chat"
 import { DeletedMessage } from "../Zap/DeletedMessage"
@@ -65,6 +65,11 @@ export const ChatContainer: React.FC<ChatProps> = ({ chat, onChatClick, washima,
         phone_only: false,
         call: null,
         contact_id: "",
+        from_bot: "",
+        emit: () => {},
+        // reactions: [],
+        // handleReaction: () => {},
+        // toJSON: () => {}
     }
 
     const handleClick = () => {
@@ -218,9 +223,10 @@ export const ChatContainer: React.FC<ChatProps> = ({ chat, onChatClick, washima,
                     {chat.lastMessage?.type === "call_log" && (
                         <Chip icon={<Call />} sx={{ color: "text.secondary" }} label="Ligação de voz" size="small" />
                     )}
+                    {chat.lastMessage?.type === "vcard" && <Chip icon={<Person />} sx={{ color: "text.secondary" }} label="Contato" size="small" />}
                     {chat.lastMessage?.type === "revoked" ? (
                         <DeletedMessage />
-                    ) : (
+                    ) : chat.lastMessage.type === "vcard" ? null : (
                         <p
                             style={{
                                 whiteSpace: "nowrap",
