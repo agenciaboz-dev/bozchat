@@ -13,6 +13,7 @@ import { api } from "../../api"
 import { useUser } from "../../hooks/useUser"
 import { ToolButton } from "../../components/ToolButton"
 import { BotPage } from "./BotPage"
+import { PausedChatsList } from "./PausedChatsList/PausedChatsList"
 
 interface BotsProps {}
 
@@ -27,11 +28,16 @@ export const Bots: React.FC<BotsProps> = ({}) => {
 
     const addBot = (bot: Bot) => setBots((list) => [...list.filter((item) => item.id !== bot.id), bot])
 
-    const fetchBots = async () => {
+    const fetchBots = async (set_loading = true) => {
         try {
-            setLoading(true)
+            if (set_loading) setLoading(true)
             const response = await api.get("/company/bots", { params: { company_id: company?.id } })
-            setBots(response.data)
+            const botList = response.data as Bot[]
+            for (const bot of botList) {
+                bot.active_on = eval("(" + bot.active_on + ")")
+                bot.paused_chats = eval("(" + bot.paused_chats + ")")
+            }
+            setBots(botList)
         } catch (error) {
             console.log(error)
         } finally {
@@ -41,7 +47,7 @@ export const Bots: React.FC<BotsProps> = ({}) => {
 
     const onDeleteBot = (bot: Bot) => {
         setBots((list) => list.filter((item) => item.id !== bot.id))
-        navigate("/bots")
+        navigate("/")
     }
 
     useEffect(() => {
@@ -83,6 +89,14 @@ export const Bots: React.FC<BotsProps> = ({}) => {
                                     <ToolButton label="Início" parentRoute="bots" route="/" setShowInformations={setShowInformations} />
                                     {user?.admin && (
                                         <ToolButton label="Criar bot" parentRoute="bots" route="/form" setShowInformations={setShowInformations} />
+                                    )}
+                                    {user?.admin && (
+                                        <ToolButton
+                                            label="Conversas interrompidas"
+                                            parentRoute="bots"
+                                            route="/paused"
+                                            setShowInformations={setShowInformations}
+                                        />
                                     )}
                                     <hr style={{ margin: "1vw 0" }} />
                                     {bots
@@ -139,6 +153,7 @@ export const Bots: React.FC<BotsProps> = ({}) => {
                             <Routes>
                                 <Route index element={<Home bots={bots} fetchBots={fetchBots} setShowInformations={setShowInformations} />} />
                                 <Route path="/form" element={<BotForm onSubmit={addBot} setShowInformations={setShowInformations} />} />
+                                <Route path="/paused" element={<PausedChatsList bots={bots} fetchBots={fetchBots} />} />
                                 <Route
                                     path="/*"
                                     element={<BotPage onSave={addBot} onDelete={onDeleteBot} setShowInformations={setShowInformations} />}
