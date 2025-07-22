@@ -17,7 +17,7 @@ interface BotActivityProps {
 export const BotActivity: React.FC<BotActivityProps> = (props) => {
     const { user, company } = useUser()
     const io = useIo()
-    const datetimeAnchorRef = useRef<HTMLButtonElement>(null)
+    const datetimeAnchorRef = useRef<HTMLDivElement>(null)
 
     const [loading, setLoading] = useState(false)
     const [menuAnchor, setMenuAnchor] = useState<HTMLButtonElement | null>(null)
@@ -42,7 +42,7 @@ export const BotActivity: React.FC<BotActivityProps> = (props) => {
                 ? botStatus === "active"
                     ? `Bot ativo agora: ${bot.name}`
                     : botStatus === "paused"
-                    ? `Bot ${bot.name} interrompido ${
+                    ? `Bot interrompido ${
                           bot.paused_chats.get(props.chat_id)?.expiry
                               ? `até ${new Date(bot.paused_chats.get(props.chat_id)!.expiry!).toLocaleString("pt-br")}`
                               : "indefinidamente"
@@ -141,7 +141,7 @@ export const BotActivity: React.FC<BotActivityProps> = (props) => {
 
             <Popper open={!!menuAnchor} anchorEl={menuAnchor} placement="bottom-start">
                 <ClickAwayListener onClickAway={() => setMenuAnchor(null)}>
-                    <Paper sx={{ bgcolor: "background.default", padding: 2, flexDirection: "column", gap: 1 }} elevation={5}>
+                    <Paper sx={{ bgcolor: "background.default", padding: 2, flexDirection: "column", gap: 1 }} elevation={5} ref={datetimeAnchorRef}>
                         <Title2
                             name="Atividade do Bot"
                             right={
@@ -153,10 +153,20 @@ export const BotActivity: React.FC<BotActivityProps> = (props) => {
 
                         {loading && <LinearProgress variant="indeterminate" />}
                         {!loading && (
-                            <Box sx={{ alignItems: "center", gap: 1 }} ref={datetimeAnchorRef}>
+                            <Box sx={{ alignItems: "center", gap: 1 }}>
                                 <Circle
                                     fontSize="small"
-                                    color={bot ? (botStatus === "active" ? "success" : botStatus === "paused" ? "warning" : "error") : "disabled"}
+                                    color={
+                                        bot
+                                            ? botStatus === "active"
+                                                ? "success"
+                                                : botStatus === "paused"
+                                                ? bot.paused_chats.get(props.chat_id)?.expiry
+                                                    ? "warning"
+                                                    : "error"
+                                                : "error"
+                                            : "disabled"
+                                    }
                                 />
                                 <Typography color={"secondary"}>{botLabel}</Typography>
                             </Box>
@@ -169,15 +179,15 @@ export const BotActivity: React.FC<BotActivityProps> = (props) => {
 
                         <Box sx={{ justifyContent: "flex-end", gap: 1 }}>
                             {botStatus === "paused" ? (
-                                <Button disabled={loading} variant="outlined" onClick={() => resumeBots()}>
+                                <Button disabled={loading} variant="contained" onClick={() => resumeBots()}>
                                     Retomar
                                 </Button>
                             ) : (
                                 <>
-                                    <Button disabled={loading} variant="outlined" onClick={() => pauseBot()}>
+                                    <Button disabled={loading} variant="outlined" onClick={() => pauseBot()} color="error">
                                         Interromper indefinidamente
                                     </Button>
-                                    <Button disabled={loading} variant="outlined" onClick={() => setDatepicker(true)}>
+                                    <Button disabled={loading} variant="contained" onClick={() => setDatepicker(true)}>
                                         Interromper provisoriamente
                                     </Button>
                                 </>
@@ -194,6 +204,7 @@ export const BotActivity: React.FC<BotActivityProps> = (props) => {
                                 mobilePaper: { sx: { bgcolor: "background.default" } },
                                 popper: {
                                     anchorEl: datetimeAnchorRef.current,
+                                    placement: "bottom-end",
                                 },
                             }}
                             // onChange={(value) => console.log(value?.toDate())}
