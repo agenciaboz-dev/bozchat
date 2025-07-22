@@ -74,7 +74,9 @@ export const ContactCard: React.FC<ContactCardProps> = ({ message, washima, user
         } catch (e: any) {
             console.error("(ContactCard) Catch:", e)
         }
-        console.error("(ContactCard) Erro encontrado:", error)
+        if (error) {
+            console.error("(ContactCard) Erro encontrado:", error)
+        }
     }
 
     useEffect(() => {
