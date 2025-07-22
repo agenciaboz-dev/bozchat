@@ -20,9 +20,9 @@ export const ArchiveContainer: React.FC<ArchiveContainerProps> = (props) => {
     }
 
     return (
-        <Paper sx={{ width: "25vw", flexDirection: "column", padding: 2, gap: 1,  }}>
+        <Paper sx={{ width: "25vw", flexDirection: "column", padding: 2, gap: 1 }}>
             <Title2 name="Arquivo" left={<ArchiveIcon />} />
-            <Typography color="secondary" variant="subtitle2">
+            <Typography color="text.secondary" variant="subtitle2">
                 Conversas que forem soltas aqui serão arquivadas. Você pode recuperá-las a partir do botão abaixo.
             </Typography>
 
