@@ -291,7 +291,7 @@ export const BoardPage: React.FC<BoardPageProps> = (props) => {
                     borderStyle: "solid",
                     borderColor: darkMode ? custom_colors.darkMode_border : custom_colors.lightMode_border,
                     borderRadius: "4px",
-                    backgroundColor: darkMode ? custom_colors.darkMode_kanbanOverlay : custom_colors.lightMode_kanbanOverlay,
+                    backgroundColor: darkMode ? custom_colors.darkMode_scrollablesBackground : custom_colors.lightMode_scrollablesBackground,
                 }}
             >
                 <Box
@@ -348,7 +348,7 @@ export const BoardPage: React.FC<BoardPageProps> = (props) => {
                                                 flex: 1,
                                             }}
                                         >
-                                            <ArchiveContainer board={board} placeholder={provided.placeholder} setBoard={setBoard}  />
+                                            <ArchiveContainer board={board} placeholder={provided.placeholder} setBoard={setBoard} />
                                         </Box>
                                     )}
                                 </Droppable>

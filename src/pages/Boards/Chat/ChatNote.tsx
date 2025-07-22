@@ -4,16 +4,17 @@ import { Delete } from "@mui/icons-material"
 import { useDarkMode } from "../../../hooks/useDarkMode"
 import { custom_colors } from "../../../style/colors"
 
-export interface NoteReply {
-    text: string
-    date: string // Data em formato ISO
-}
-
 export interface Note {
     id: string // ID único para cada anotação
     text: string
     date: string // Data em formato ISO
     replies: NoteReply[]
+    userName: string
+}
+export interface NoteReply {
+    text: string
+    date: string // Data em formato ISO
+    userName: string
 }
 
 interface ChatNoteProps {
@@ -23,19 +24,19 @@ interface ChatNoteProps {
 }
 
 export const ChatNote: React.FC<ChatNoteProps> = ({ note, onRemove, onAddReply }) => {
-    const isMobile = useMediaQuery('(orientation: portrait)')
+    const isMobile = useMediaQuery("(orientation: portrait)")
     const { darkMode } = useDarkMode()
     const [replyText, setReplyText] = useState("")
 
     const formatDate = (dateString: string) => {
         const date = new Date(dateString)
-        return date.toLocaleDateString("pt-BR", {
-            year: "numeric",
-            month: "2-digit",
-            day: "2-digit",
-            hour: "2-digit",
-            minute: "2-digit",
-        })
+        const hours = date.getHours().toString().padStart(2, "0")
+        const minutes = date.getMinutes().toString().padStart(2, "0")
+        const day = date.getDate().toString().padStart(2, "0")
+        const month = (date.getMonth() + 1).toString().padStart(2, "0")
+        const year = date.getFullYear()
+
+        return `${hours}:${minutes} • ${day}/${month}/${year}`
     }
 
     const handleReplySubmit = () => {
@@ -80,7 +81,7 @@ export const ChatNote: React.FC<ChatNoteProps> = ({ note, onRemove, onAddReply }
                             color: "text.secondary",
                         }}
                     >
-                        {formatDate(note.date)}
+                        {note.userName} • {formatDate(note.date)}
                     </Typography>
                     <IconButton size="small" onClick={onRemove} color="error">
                         <Delete fontSize="small" />
@@ -125,7 +126,7 @@ export const ChatNote: React.FC<ChatNoteProps> = ({ note, onRemove, onAddReply }
                                         color: "text.secondary",
                                     }}
                                 >
-                                    {formatDate(reply.date)}
+                                    {reply.userName} • {formatDate(reply.date)}
                                 </Typography>
                                 <Typography
                                     sx={{
