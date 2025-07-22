@@ -52,7 +52,7 @@ export const custom_colors = {
     darkMode_emittedMsg: "#0f6787",
     darkMode_messageMenuBg: "#4a4a4a",
     darkMode_receivedMsg: "#2a323c",
-    darkMode_templatePreviewTriangle: "#2a323c",
+    darkMode_templatePreviewTriangle: "#1F2631",
     darkMode_interactiveMessageBorder: "#e1e1e188",
     darkMode_kanbanOverlay: "#00000025",
 
