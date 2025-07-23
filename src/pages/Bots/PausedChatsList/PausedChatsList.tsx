@@ -3,11 +3,12 @@ import { Avatar, Box, Chip, IconButton, Typography } from "@mui/material"
 import { Subroute } from "../../Nagazap/Subroute"
 import { Bot, PausedInteraction } from "../../../types/server/class/Bot/Bot"
 import { DataGrid, GridColDef } from "@mui/x-data-grid"
-import { PlayArrow, Refresh } from "@mui/icons-material"
+import { PlayArrow, Refresh, Replay } from "@mui/icons-material"
 import { useUser } from "../../../hooks/useUser"
 import { api } from "../../../api"
 import { PausedChatAvatar } from "./PausedChatAvatar"
 import { PausedChatName } from "./PausedChatName"
+import { numberMask } from "../../../tools/numberMask"
 
 interface PausedChatsListProps {
     bots: Bot[]
@@ -36,7 +37,7 @@ export const PausedChatsList: React.FC<PausedChatsListProps> = (props) => {
         await props.fetchBots(false)
         setLoading(false)
     }
- 
+
     const resumeBot = async (bot_id: string, chat_id: string) => {
         const params = { company_id: company?.id, user_id: user?.id, chat_id, bot_id }
         try {
@@ -58,22 +59,24 @@ export const PausedChatsList: React.FC<PausedChatsListProps> = (props) => {
             sortable: false,
             filterable: false,
             renderCell(params) {
-                return (
-                    <PausedChatAvatar chat_id={params.row.chat_id} />
-                )
+                return <PausedChatAvatar chat_id={params.row.chat_id} />
             },
             display: "flex",
         },
         {
             field: "contact_name",
             headerName: "Contato",
-            flex: 0.2,
+            flex: 0.15,
             display: "flex",
             renderCell(params) {
-                return (
-                    <PausedChatName chat_id={params.row.chat_id} />
-                )
+                return <PausedChatName chat_id={params.row.chat_id} />
             },
+        },
+        {
+            field: "chat_id",
+            headerName: "Número",
+            flex: 0.1,
+            valueFormatter: (value) => numberMask((value as string).split("@")[0], "+99 (99) 9999 - 9999"),
         },
         {
             field: "expiry",
@@ -82,7 +85,11 @@ export const PausedChatsList: React.FC<PausedChatsListProps> = (props) => {
             display: "flex",
             renderCell(params) {
                 return (
-                    <Chip color={params.value ? 'warning' : 'error'} label={params.value ? new Date(params.value).toLocaleString("pt-br").replace("-", "") : 'Tempo indeterminado'} size="small" />
+                    <Chip
+                        color={params.value ? "warning" : "error"}
+                        label={params.value ? new Date(params.value).toLocaleString("pt-br").replace("-", "") : "Tempo indeterminado"}
+                        size="small"
+                    />
                 )
             },
         },
@@ -97,7 +104,7 @@ export const PausedChatsList: React.FC<PausedChatsListProps> = (props) => {
             renderCell(params) {
                 return (
                     <IconButton onClick={() => resumeBot(params.row.bot_id, params.row.chat_id)}>
-                        <PlayArrow />
+                        <Replay />
                     </IconButton>
                 )
             },
