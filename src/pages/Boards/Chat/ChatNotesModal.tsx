@@ -3,15 +3,17 @@ import { Box, Button, CircularProgress, Dialog, IconButton, Paper, TextField, Ty
 import { Title2 } from "../../../components/Title"
 import { Close } from "@mui/icons-material"
 import { useSnackbar } from "burgos-snackbar"
-import { ChatNote, Note, NoteReply } from "./ChatNote" // Importe os tipos também
+import { ChatNote, Note, NoteReply } from "./ChatNote"
 import { custom_colors } from "../../../style/colors"
 import { useDarkMode } from "../../../hooks/useDarkMode"
 import { useUser } from "../../../hooks/useUser"
+import { api } from "../../../api"
 
 interface ChatNotesModalProps {
     open: boolean
     onClose: () => void
-    onSubmit: () => void
+    board_id: string
+    chat_id: string
 }
 
 export const ChatNotesModal: React.FC<ChatNotesModalProps> = (props) => {
@@ -95,6 +97,101 @@ export const ChatNotesModal: React.FC<ChatNotesModalProps> = (props) => {
             snackbar({ severity: "success", text: "Resposta adicionada!" })
         }
     }
+
+    // const fetchNotes = async () => {
+    //     setLoading(true)
+    //     try {
+    //         const params = {
+    //             user_id: user?.id,
+    //             company_id: user?.company_id,
+    //             board_id: props.board_id,
+    //             chat_id: props.chat_id,
+    //         }
+
+    //         const response = await api.get("/board/comments", { params })
+    //         setSavedNotes(response.data)
+    //     } catch (error) {
+    //         console.error("Erro ao carregar anotações:", error)
+    //         snackbar({ severity: "error", text: "Erro ao carregar anotações" })
+    //     } finally {
+    //         setLoading(false)
+    //     }
+    // }
+
+    // useEffect(() => {
+    //     if (props.open) {
+    //         fetchNotes()
+    //     }
+    // }, [props.open])
+
+    // const onSubmitPress = async () => {
+    //     if (loading || !text.trim()) return
+    //     setLoading(true)
+    //     try {
+    //         const params = {
+    //             user_id: user?.id,
+    //             company_id: user?.company_id,
+    //             board_id: props.board_id,
+    //             chat_id: props.chat_id,
+    //         }
+
+    //         const body = {
+    //             author_id: user?.id || "",
+    //             text: text.trim(),
+    //             image: "",
+    //             parent_id: "",
+    //         }
+
+    //         const response = await api.post("/board/comment", body, { params })
+    //         const newNote = response.data
+
+    //         setSavedNotes([...savedNotes, newNote])
+    //         setText("")
+    //         snackbar({ severity: "success", text: "Anotação salva" })
+    //     } catch (error) {
+    //         console.log(error)
+    //         snackbar({ severity: "error", text: "Erro ao salvar anotação" })
+    //     } finally {
+    //         setLoading(false)
+    //     }
+    // }
+
+    // const handleAddReply = async (note_id: string, reply_text: string) => {
+    //     try {
+    //         const params = {
+    //             user_id: user?.id,
+    //             company_id: user?.company_id,
+    //             board_id: props.board_id,
+    //             chat_id: props.chat_id,
+    //         }
+
+    //         const body = {
+    //             author_id: user?.id || "",
+    //             text: reply_text.trim(),
+    //             image: "",
+    //             parent_id: note_id,
+    //         }
+
+    //         const response = await api.post("/board/comment", body, { params })
+    //         const newReply = response.data
+
+    //         const updatedNotes = savedNotes.map((note) => {
+    //             if (note.id === note_id) {
+    //                 return {
+    //                     ...note,
+    //                     replies: [...note.replies, newReply],
+    //                 }
+    //             }
+    //             return note
+    //         })
+
+    //         setSavedNotes(updatedNotes)
+    //         snackbar({ severity: "success", text: "Resposta adicionada!" })
+    //     } catch (error) {
+    //         console.error("Erro ao adicionar resposta: ", error)
+    //         snackbar({ severity: "error", text: "Erro ao adicionar resposta" })
+    //     }
+    // }
 
     const handleClose = () => {
         props.onClose()

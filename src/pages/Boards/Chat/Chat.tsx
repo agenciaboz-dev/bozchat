@@ -191,7 +191,12 @@ export const BoardChat: React.FC<BoardChatProps> = (props) => {
                             </Box>
                         </Box>
 
-                        <ChatNotesModal open={!!showChatNotesModal} onClose={() => setShowChatNotesModal(false)} onSubmit={() => {}} />
+                        <ChatNotesModal
+                            open={!!showChatNotesModal}
+                            onClose={() => setShowChatNotesModal(false)}
+                            board_id={props.board.id}
+                            chat_id={props.chat.id}
+                        />
                         <TransferModal
                             open={!!showTranferModal}
                             onClose={() => setShowTranferModal(null)}
