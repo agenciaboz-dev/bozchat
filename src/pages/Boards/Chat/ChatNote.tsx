@@ -1,35 +1,20 @@
 import React, { useState } from "react"
-import { Box, IconButton, Paper, TextField, Typography, useMediaQuery, Button } from "@mui/material"
+import { Box, IconButton, Paper, TextField, Typography, useMediaQuery, Button, Avatar } from "@mui/material"
 import { Delete } from "@mui/icons-material"
-import { useDarkMode } from "../../../hooks/useDarkMode"
-import { custom_colors } from "../../../style/colors"
-
-export interface Note {
-    id: string // ID único para cada anotação
-    text: string
-    date: string // Data em formato ISO
-    replies: NoteReply[]
-    userName: string
-}
-export interface NoteReply {
-    text: string
-    date: string // Data em formato ISO
-    userName: string
-}
+import { Comment } from "../../../types/server/class/Board/Chat"
 
 interface ChatNoteProps {
-    note: Note
+    note: Comment
     onRemove: () => void
     onAddReply: (noteId: string, replyText: string) => void
 }
 
 export const ChatNote: React.FC<ChatNoteProps> = ({ note, onRemove, onAddReply }) => {
     const isMobile = useMediaQuery("(orientation: portrait)")
-    const { darkMode } = useDarkMode()
     const [replyText, setReplyText] = useState("")
 
-    const formatDate = (dateString: string) => {
-        const date = new Date(dateString)
+    const formatDate = (timestamp: number) => {
+        const date = new Date(timestamp)
         const hours = date.getHours().toString().padStart(2, "0")
         const minutes = date.getMinutes().toString().padStart(2, "0")
         const day = date.getDate().toString().padStart(2, "0")
@@ -70,22 +55,23 @@ export const ChatNote: React.FC<ChatNoteProps> = ({ note, onRemove, onAddReply }
                 <Box
                     sx={{
                         display: "flex",
-                        justifyContent: "space-between",
                         alignItems: "center",
                         width: "100%",
+                        gap: isMobile ? "5vw" : "1vw",
                     }}
                 >
+                    {/* <Avatar src={note.image} /> */}
                     <Typography
                         sx={{
                             fontSize: "0.8rem",
                             color: "text.secondary",
                         }}
                     >
-                        {note.userName} • {formatDate(note.date)}
+                        {note.author_id} • {formatDate(note.datetime)}
                     </Typography>
-                    <IconButton size="small" onClick={onRemove} color="error">
+                    {/* <IconButton size="small" onClick={onRemove} color="error">
                         <Delete fontSize="small" />
-                    </IconButton>
+                    </IconButton> */}
                 </Box>
 
                 {/* Conteúdo da anotação */}
@@ -120,14 +106,24 @@ export const ChatNote: React.FC<ChatNoteProps> = ({ note, onRemove, onAddReply }
                     >
                         {note.replies.map((reply, index) => (
                             <Box key={index} sx={{ flexDirection: "column", gap: "0.5vw", marginBottom: "1vw" }}>
-                                <Typography
+                                <Box
                                     sx={{
-                                        fontSize: "0.7rem",
-                                        color: "text.secondary",
+                                        display: "flex",
+                                        alignItems: "center",
+                                        width: "100%",
+                                        gap: isMobile ? "5vw" : "1vw",
                                     }}
                                 >
-                                    {reply.userName} • {formatDate(reply.date)}
-                                </Typography>
+                                    {/* <Avatar src={reply.image} /> */}
+                                    <Typography
+                                        sx={{
+                                            fontSize: "0.7rem",
+                                            color: "text.secondary",
+                                        }}
+                                    >
+                                        {reply.author_id} • {formatDate(reply.datetime)}
+                                    </Typography>
+                                </Box>
                                 <Typography
                                     sx={{
                                         color: "text.secondary",
