@@ -131,9 +131,47 @@ export const ChatNotesModal: React.FC<ChatNotesModalProps> = (props) => {
         }
     }
 
-    const handleRemoveNote = (noteId: string) => {
-        alert("Remoção ainda não implementada")
-    }
+        const handleDeleteNoteOrReply = async (id: string, parent_id: string | null = null) => {
+            try {
+                const params = {
+                    user_id: user?.id,
+                    company_id: user?.company_id,
+                    board_id: props.board_id,
+                    chat_id: props.chat_id,
+                }
+
+                const body = {
+                    id,
+                    parent_id: parent_id || null,
+                }
+
+                await api.delete("/company/boards/comment", {
+                    data: body,
+                    params,
+                })
+
+                if (parent_id) {
+                    setLoadedNotes((prevNotes) =>
+                        prevNotes.map((note) => {
+                            if (note.id === parent_id) {
+                                return {
+                                    ...note,
+                                    replies: note.replies.filter((reply) => reply.id !== id),
+                                }
+                            }
+                            return note
+                        })
+                    )
+                } else {
+                    setLoadedNotes((prevNotes) => prevNotes.filter((note) => note.id !== id))
+                }
+
+                snackbar({ severity: "info", text: parent_id ? "Resposta removida" : "Anotação removida" })
+            } catch (error) {
+                console.error("Erro ao tentar remover anotação de chat: ", error)
+                snackbar({ severity: "error", text: "Erro ao tentar remover" })
+            }
+        }
 
     const handleClose = () => {
         props.onClose()
@@ -185,7 +223,7 @@ export const ChatNotesModal: React.FC<ChatNotesModalProps> = (props) => {
                 <Button sx={{ alignSelf: "flex-end" }} variant="contained" onClick={handleAddNote} disabled={!text.trim()}>
                     {loading ? <CircularProgress size={24} sx={{ color: "secondary.main" }} /> : "Salvar"}
                 </Button>
-                {/* Seção de anotações salvas */}
+
                 {loadedNotes.length > 0 && (
                     <Box
                         sx={{
@@ -202,7 +240,13 @@ export const ChatNotesModal: React.FC<ChatNotesModalProps> = (props) => {
                         }}
                     >
                         {loadedNotes.map((note) => (
-                            <ChatNote key={note.id} note={note} onRemove={() => handleRemoveNote(note.id)} onAddReply={handleAddReply} />
+                            <ChatNote
+                                key={note.id}
+                                note={note}
+                                onDelete={() => handleDeleteNoteOrReply(note.id)}
+                                onAddReply={handleAddReply}
+                                onDeleteReply={(replyId) => handleDeleteNoteOrReply(replyId, note.id)}
+                            />
                         ))}
                     </Box>
                 )}

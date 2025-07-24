@@ -5,11 +5,12 @@ import { Comment } from "../../../types/server/class/Board/Chat"
 
 interface ChatNoteProps {
     note: Comment
-    onRemove: () => void
+    onDelete: () => void
     onAddReply: (noteId: string, replyText: string) => void
+    onDeleteReply: (replyId: string) => void
 }
 
-export const ChatNote: React.FC<ChatNoteProps> = ({ note, onRemove, onAddReply }) => {
+export const ChatNote: React.FC<ChatNoteProps> = ({ note, onDelete, onAddReply, onDeleteReply }) => {
     const isMobile = useMediaQuery("(orientation: portrait)")
     const [replyText, setReplyText] = useState("")
 
@@ -69,9 +70,9 @@ export const ChatNote: React.FC<ChatNoteProps> = ({ note, onRemove, onAddReply }
                     >
                         {note.author_id} • {formatDate(note.datetime)}
                     </Typography>
-                    {/* <IconButton size="small" onClick={onRemove} color="error">
+                    <IconButton size="small" onClick={onDelete} color="error" sx={{ marginLeft: "auto" }}>
                         <Delete fontSize="small" />
-                    </IconButton> */}
+                    </IconButton>
                 </Box>
 
                 {/* Conteúdo da anotação */}
@@ -123,6 +124,9 @@ export const ChatNote: React.FC<ChatNoteProps> = ({ note, onRemove, onAddReply }
                                     >
                                         {reply.author_id} • {formatDate(reply.datetime)}
                                     </Typography>
+                                    <IconButton size="small" onClick={() => onDeleteReply(reply.id)} color="error" sx={{ opacity: 0.75 }}>
+                                        <Delete fontSize="small" />
+                                    </IconButton>
                                 </Box>
                                 <Typography
                                     sx={{
