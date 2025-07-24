@@ -1,5 +1,5 @@
 import React, { useEffect, useMemo, useState } from "react"
-import { Box, CircularProgress, Dialog, IconButton, TextField, useMediaQuery } from "@mui/material"
+import { Box, CircularProgress, Dialog, Divider, IconButton, TextField, useMediaQuery } from "@mui/material"
 import { Close } from "@mui/icons-material"
 import SendIcon from "@mui/icons-material/Send"
 import { MediaListItem } from "./MediaListItem"
@@ -48,6 +48,7 @@ export const PhotoVideoConfirmationModal: React.FC<PhotoVideoConfirmationModalPr
 
         if (medias.length === 1) {
             io.emit("washima:message", washima.id, chat_id, caption, medias[0])
+            setCaption("")
             return
         }
 
@@ -103,6 +104,11 @@ export const PhotoVideoConfirmationModal: React.FC<PhotoVideoConfirmationModalPr
             }}
         >
             <Box
+                component="form"
+                onSubmit={(e) => {
+                    e.preventDefault() // Impede recarregamento indesejado da página
+                    onSubmit()
+                }}
                 sx={{
                     padding: isMobile ? "5vw" : "1vw",
                     bgcolor: "background.default",
@@ -118,8 +124,9 @@ export const PhotoVideoConfirmationModal: React.FC<PhotoVideoConfirmationModalPr
                 >
                     <Close />
                 </IconButton>
-                {type === "image" && <img src={url} style={{ width: "auto", height: "60vh", objectFit: "contain" }} draggable={false} />}
-                {type === "video" && <video src={url} style={{ width: "auto", height: "60vh", objectFit: "contain" }} controls />}
+                {type === "image" && <img src={url} style={{ width: "auto", height: "50vh", objectFit: "contain" }} draggable={false} />}
+                {type === "video" && <video src={url} style={{ width: "auto", height: "50vh", objectFit: "contain" }} controls />}
+                <Divider />
                 <Box sx={{ justifyContent: "center", width: isMobile ? "80vw" : "55vw", gap: isMobile ? "2vw" : "0.5vw", overflow: "auto" }}>
                     {files.map((file, index) => (
                         <MediaListItem
@@ -138,11 +145,21 @@ export const PhotoVideoConfirmationModal: React.FC<PhotoVideoConfirmationModalPr
                     onChange={(ev) => setCaption(ev.target.value)}
                     sx={textFieldStyle({ darkMode })}
                     autoComplete="off"
+                    multiline
+                    maxRows={3}
+                    onKeyDown={(e) => {
+                        if (e.key === "Enter" && !e.shiftKey) {
+                            e.preventDefault() // Impede quebra de linha (evento padrão da tecla Enter), para isso deve segurar a tecla Shift
+                            if (loading <= 0) {
+                                onSubmit()
+                            }
+                        }
+                    }}
                     InputProps={{
-                        sx: { color: "primary.main", bgcolor: "background.default", paddingLeft: "0", paddingRight: "0" },
+                        sx: { color: "primary.main", bgcolor: "background.default", paddingRight: "0" },
                         endAdornment: (
                             <Box sx={{ marginRight: isMobile ? "2vw" : "0.5vw" }}>
-                                <IconButton color="primary" type="submit" onClick={() => onSubmit()}>
+                                <IconButton color="primary" type="submit" onClick={() => onSubmit()} disabled={loading > 0}>
                                     {loading > 0 ? <CircularProgress size="1.5rem" color="primary" /> : <SendIcon />}
                                 </IconButton>
                             </Box>

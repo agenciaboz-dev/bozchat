@@ -1,14 +1,14 @@
 import React, { useEffect, useMemo, useState } from "react"
-import { Avatar, Box, CircularProgress, Dialog, DialogTitle, IconButton, MenuItem, TextField, Typography } from "@mui/material"
+import { Avatar, Box, CircularProgress, Dialog, Divider, IconButton, TextField, Typography, useMediaQuery } from "@mui/material"
 import { Close } from "@mui/icons-material"
 import SendIcon from "@mui/icons-material/Send"
 import { MediaListItem } from "./MediaListItem"
 import { Washima, WashimaMediaForm } from "../../../types/server/class/Washima/Washima"
 import { file2base64 } from "../../../tools/toBase64"
 import { useIo } from "../../../hooks/useIo"
-import { Center } from "@mantine/core"
-import { documentIcon } from "../../../tools/documentIcon"
 import { useDarkMode } from "../../../hooks/useDarkMode"
+import { textFieldStyle } from "../../../style/textfield"
+import { documentIcon } from "../../../tools/documentIcon"
 
 interface ConfirmationModalProps {
     files: File[]
@@ -20,6 +20,7 @@ interface ConfirmationModalProps {
 }
 
 export const DocumentConfirmationModal: React.FC<ConfirmationModalProps> = ({ files, onCancel, isOpen, washima, chat_id, onDelete }) => {
+    const isMobile = useMediaQuery("(orientation: portrait)")
     const { darkMode } = useDarkMode()
 
     const io = useIo()
@@ -37,7 +38,7 @@ export const DocumentConfirmationModal: React.FC<ConfirmationModalProps> = ({ fi
         setLoading(1)
 
         const medias: WashimaMediaForm[] = await Promise.all(
-            files.map(async (file, index) => {
+            files.map(async (file) => {
                 const base64 = await file2base64(file)
                 const data: WashimaMediaForm = { base64, mimetype: file.type, name: file.name, size: file.size }
                 return data
@@ -48,6 +49,7 @@ export const DocumentConfirmationModal: React.FC<ConfirmationModalProps> = ({ fi
 
         if (medias.length === 1) {
             io.emit("washima:message", washima.id, chat_id, caption, medias[0])
+            setCaption("")
             return
         }
 
@@ -96,70 +98,94 @@ export const DocumentConfirmationModal: React.FC<ConfirmationModalProps> = ({ fi
             open={isOpen}
             onClose={loading > 0 ? undefined : onCancel}
             PaperProps={{
-                sx: { padding: "1vw", borderRadius: "1vw", bgcolor: "background.default", flexDirection: "column", gap: "1vw", maxWidth: "60vw" },
+                sx: {
+                    borderRadius: isMobile ? "4px" : "1vw",
+                    maxWidth: isMobile ? "90vw" : "60vw",
+                },
             }}
         >
-            <Box sx={{ fontSize: "1.2rem", fontWeight: "bold", color: "text.secondary" }}>Enviar documentos</Box>
-            <IconButton sx={{ position: "absolute", top: "1vw", right: "1vw" }} onClick={onCancel} disabled={loading > 0}>
-                <Close />
-            </IconButton>
-
-            {type === "image" && (
-                <img src={url} style={{ width: "auto", height: "15vw", objectFit: "contain", margin: "4vw auto 0" }} draggable={false} />
-            )}
-            {type === "video" && <video src={url} style={{ width: "auto", height: "15vw", objectFit: "contain", margin: "4vw auto 0" }} controls />}
-
-            {type !== "image" && type !== "video" && (
-                <Avatar
-                    sx={{
-                        width: "auto",
-                        height: "15vw",
-                        objectFit: "contain",
-                        borderRadius: 0,
-                        margin: "4vw auto 0",
-                    }}
-                    alt="icone"
-                    imgProps={{ draggable: false }}
-                    src={documentIcon(currentFile?.name.split(".").pop())}
-                />
-            )}
-
-            {type !== "image" && type !== "video" ? (
-                <Typography sx={{ color: "#fff", alignSelf: "center", marginBottom: "4vw" }}>Pré-visualização do documento indisponível</Typography>
-            ) : (
-                <Box sx={{ height: "1.5rem", marginBottom: "4vw" }}></Box>
-            )}
-
-            <Box sx={{ justifyContent: "center", width: "55vw", gap: "0.5vw", overflow: "auto" }}>
-                {files.map((file, index) => (
-                    <MediaListItem
-                        key={file.name}
-                        file={file}
-                        is_current={index === currentFileIndex}
-                        onClick={() => setCurrentFileIndex(index)}
-                        onDelete={() => (loading > 0 ? undefined : onDelete(index))}
-                    />
-                ))}
-            </Box>
-
-            <TextField
-                label="Legenda"
-                placeholder="Insira uma legenda"
-                value={caption}
-                onChange={(ev) => setCaption(ev.target.value)}
-                // sx={textFieldStyle({ darkMode })}
-                autoComplete="off"
-                InputProps={{
-                    sx: { color: "primary.main", bgcolor: "background.default", paddingLeft: "0", paddingRight: "0" },
-                    endAdornment: (
-                        <Box sx={{ marginRight: "0.5vw" }}>
-                            <IconButton color="primary" type="submit" onClick={() => onSubmit()}>
-                                {loading > 0 ? <CircularProgress size="1.5rem" /> : <SendIcon />}
-                            </IconButton>
-                        </Box>
-                    ),
+            <Box
+                component="form"
+                onSubmit={(e) => {
+                    e.preventDefault() // Impede recarregamento indesejado da página
+                    onSubmit()
                 }}
-            />
+                sx={{
+                    padding: isMobile ? "5vw" : "1vw",
+                    bgcolor: "background.default",
+                    flexDirection: "column",
+                    gap: isMobile ? "5vw" : "1vw",
+                }}
+            >
+                <Box sx={{ fontSize: "1.2rem", fontWeight: "bold", color: "text.secondary" }}>Enviar documentos</Box>
+                <IconButton
+                    sx={{ position: "absolute", top: isMobile ? "2vw" : "1vw", right: isMobile ? "2vw" : "1vw" }}
+                    onClick={onCancel}
+                    disabled={loading > 0}
+                >
+                    <Close />
+                </IconButton>
+                {type === "image" && <img src={url} style={{ width: "auto", height: "30vh", objectFit: "contain" }} draggable={false} />}
+                {type === "video" && <video src={url} style={{ width: "auto", height: "30vh", objectFit: "contain" }} controls />}
+                {type !== "image" && type !== "video" && (
+                    <Avatar
+                        sx={{
+                            width: "auto",
+                            height: "30vh",
+                            objectFit: "contain",
+                            borderRadius: 0,
+                        }}
+                        alt="icone"
+                        imgProps={{ draggable: false }}
+                        src={documentIcon(currentFile?.name.split(".").pop())}
+                    />
+                )}
+                {type !== "image" && type !== "video" && (
+                    <Typography sx={{ color: "text.secondary", alignSelf: "center", marginBottom: isMobile ? "2vw" : "1vw" }}>
+                        Pré-visualização do documento indisponível
+                    </Typography>
+                )}
+                <Divider />
+                <Box sx={{ justifyContent: "center", width: isMobile ? "80vw" : "55vw", gap: isMobile ? "2vw" : "0.5vw", overflow: "auto" }}>
+                    {files.map((file, index) => (
+                        <MediaListItem
+                            key={file.name}
+                            file={file}
+                            is_current={index === currentFileIndex}
+                            onClick={() => setCurrentFileIndex(index)}
+                            onDelete={() => (loading > 0 ? undefined : onDelete(index))}
+                        />
+                    ))}
+                </Box>
+                <TextField
+                    label="Legenda"
+                    placeholder="Insira uma legenda"
+                    value={caption}
+                    onChange={(ev) => setCaption(ev.target.value)}
+                    sx={textFieldStyle({ darkMode })}
+                    autoComplete="off"
+                    multiline
+                    maxRows={3}
+                    onKeyDown={(e) => {
+                        if (e.key === "Enter" && !e.shiftKey) {
+                            e.preventDefault() // Impede quebra de linha (evento padrão da tecla Enter), para isso deve segurar a tecla Shift
+                            if (loading <= 0) {
+                                onSubmit()
+                            }
+                        }
+                    }}
+                    InputProps={{
+                        sx: { color: "primary.main", bgcolor: "background.default", paddingRight: "0" },
+                        endAdornment: (
+                            <Box sx={{ marginRight: isMobile ? "2vw" : "0.5vw" }}>
+                                <IconButton color="primary" type="submit" onClick={() => onSubmit()} disabled={loading > 0}>
+                                    {loading > 0 ? <CircularProgress size="1.5rem" color="primary" /> : <SendIcon />}
+                                </IconButton>
+                            </Box>
+                        ),
+                    }}
+                />
+            </Box>
         </Dialog>
     ) : null
 }
