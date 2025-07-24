@@ -39,7 +39,7 @@ export const Boards: React.FC<BoardsProps> = ({}) => {
 
     const closeBoardSettings = () => {
         setSelectedBoard(null)
-        setShowBoardForm(false)
+        setShowBoardSettings(false)
     }
 
     const openBoardSettings = (board: Board) => {
