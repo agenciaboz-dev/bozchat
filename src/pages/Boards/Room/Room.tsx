@@ -29,7 +29,7 @@ interface KanbanColumnProps {
     deleteRoom: (room_id: string) => void
     washimas: Washima[]
     nagazaps: Nagazap[]
-    updateBoard: (board: Board) => void
+    updateBoard: (board: WithoutFunctions<Board>) => void
     showAllAccordions?: boolean
 }
 

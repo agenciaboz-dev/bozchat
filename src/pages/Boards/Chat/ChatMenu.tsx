@@ -8,6 +8,7 @@ interface ChatMenuProps {
     board_id: string
     room_id: string
     onTransfer: (action?: "copy" | "transfer") => void
+    onArchive: () => void
 }
 
 export const ChatMenu: React.FC<ChatMenuProps> = (props) => {
@@ -39,6 +40,14 @@ export const ChatMenu: React.FC<ChatMenuProps> = (props) => {
                     }}
                 >
                     Copiar
+                </MenuItem>
+                <MenuItem
+                    onClick={() => {
+                        closeMenu()
+                        props.onArchive()
+                    }}
+                >
+                    Arquivar
                 </MenuItem>
             </Menu>
         </Box>

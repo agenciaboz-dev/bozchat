@@ -75,7 +75,7 @@ export const ArchivedChats: React.FC<ArchivedChatsProps> = (props) => {
             renderCell(params) {
                 return (
                     <Typography variant="subtitle2" sx={{ textWrap: "wrap" }}>
-                        {new Date(Number((params.row as Chat).last_message.timestamp)).toLocaleString("pt-br").replace("-", "")}
+                        {new Date(Number((params.row as Chat).last_message.timestamp) * 1000).toLocaleString("pt-br").replace("-", "")}
                     </Typography>
                 )
             },

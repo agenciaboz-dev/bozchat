@@ -25,6 +25,8 @@ import { custom_colors } from "../../../style/colors"
 import { useDarkMode } from "../../../hooks/useDarkMode"
 import { useUser } from "../../../hooks/useUser"
 import { ChatNotesModal } from "./ChatNotesModal"
+import { ArchiveChatForm } from "../../../types/server/class/Board/Archive"
+import { useSnackbar } from "burgos-snackbar"
 
 interface BoardChatProps {
     chat: Chat
@@ -33,7 +35,7 @@ interface BoardChatProps {
     nagazap?: Nagazap
     room_id: string
     board: WithoutFunctions<Board>
-    updateBoard: (board: Board) => void
+    updateBoard: (board: WithoutFunctions<Board>) => void
     showAllAccordions?: boolean
 }
 
@@ -41,7 +43,8 @@ export const BoardChat: React.FC<BoardChatProps> = (props) => {
     const isMobile = useMediaQuery("(orientation: portrait)")
     const { darkMode } = useDarkMode()
     const { fetchNagaMessages } = useApi()
-    const { user } = useUser()
+    const { user, company } = useUser()
+    const { snackbar } = useSnackbar()
 
     const [mediaMetaData, setMediaMetaData] = useState<{
         mimetype: string | undefined
@@ -93,6 +96,26 @@ export const BoardChat: React.FC<BoardChatProps> = (props) => {
 
     const onTransferClick = (action: "transfer" | "copy" = "transfer") => {
         setShowTranferModal(action)
+    }
+
+    const handleArchive = async () => {
+        const archiveData: ArchiveChatForm = { chat_id: props.chat.id }
+        try {
+            const updatedBoard = { ...props.board }
+            for (const room of updatedBoard.rooms) {
+                if (room.id === props.room_id) {
+                    room.chats = room.chats.filter((chat) => chat.id !== props.chat.id)
+                    break
+                }
+            }
+            props.updateBoard(updatedBoard)
+            await api.post("/company/boards/archive", archiveData, {
+                params: { user_id: user?.id, company_id: company?.id, board_id: props.board.id },
+            })
+            snackbar({ severity: "info", text: "Conversa arquivada!" })
+        } catch (error) {
+            console.log(error)
+        }
     }
 
     useEffect(() => {
@@ -182,7 +205,13 @@ export const BoardChat: React.FC<BoardChatProps> = (props) => {
                                         <SpeakerNotes />
                                     </IconButton>
                                     {user?.admin && (
-                                        <ChatMenu board_id={props.board.id} room_id={props.room_id} chat={props.chat} onTransfer={onTransferClick} />
+                                        <ChatMenu
+                                            board_id={props.board.id}
+                                            room_id={props.room_id}
+                                            chat={props.chat}
+                                            onTransfer={onTransferClick}
+                                            onArchive={handleArchive}
+                                        />
                                     )}
                                 </Box>
                                 <IconButton onClick={(e) => handleShowAccordion(e)} aria-label={showAccordion ? "Recolher" : "Expandir"}>
