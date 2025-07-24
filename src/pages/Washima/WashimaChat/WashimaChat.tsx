@@ -199,7 +199,9 @@ export const WashimaChat: React.FC<WashimaChatProps> = ({ washima, chat, onClose
     useEffect(() => {
         if (!network.online) {
             return () => {
-                io.connect()
+                if (chat) {
+                    io.emit("washima:channel:join", chat.id._serialized)
+                }
                 fetchChat()
             }
         }

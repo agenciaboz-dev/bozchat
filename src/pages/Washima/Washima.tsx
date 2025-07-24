@@ -115,7 +115,9 @@ export const WashimaPage: React.FC<WashimaProps> = ({}) => {
     useEffect(() => {
         if (!network.online) {
             return () => {
-                io.connect()
+                if (currentWashima) {
+                    io.emit("washima:channel:join", currentWashima.id)
+                }
                 unlisten()
                 fetchWashimas()
                 listen()
