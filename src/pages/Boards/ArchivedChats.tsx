@@ -1,5 +1,5 @@
 import React, { useState } from "react"
-import { Avatar, Box, CircularProgress, Dialog, IconButton, Typography, useMediaQuery } from "@mui/material"
+import { Avatar, Box, Chip, CircularProgress, Dialog, IconButton, Typography, useMediaQuery } from "@mui/material"
 import { Board } from "../../types/server/class/Board/Board"
 import { WithoutFunctions } from "../../types/server/class/helpers"
 import { Title2 } from "../../components/Title"
@@ -8,7 +8,7 @@ import { Chat } from "../../types/server/class/Board/Chat"
 import { api } from "../../api"
 import { useUser } from "../../hooks/useUser"
 import { DataGrid, GridColDef } from "@mui/x-data-grid"
-import { Close, Refresh, Restore } from "@mui/icons-material"
+import { Close, Groups, Refresh, Restore } from "@mui/icons-material"
 import { numberMask } from "../../tools/numberMask"
 
 interface ArchivedChatsProps {
@@ -30,6 +30,8 @@ export const ArchivedChats: React.FC<ArchivedChatsProps> = (props) => {
             (await api.get("/company/boards/archive", { params: { user_id: user?.id, company_id: company?.id, board_id: props.board.id } })).data,
         refetchOnWindowFocus: false,
     })
+
+    console.log(data)
 
     const restoreChat = async (chat_id: string) => {
         setLoading(true)
@@ -101,10 +103,12 @@ export const ArchivedChats: React.FC<ArchivedChatsProps> = (props) => {
             flex: 0.2,
             display: "flex",
             renderCell(params) {
-                return (
+                return params.value ? (
                     <Typography variant="subtitle2" sx={{ fontWeight: "bold", textWrap: "wrap" }}>
                         {numberMask(params.value, "(99) 9999 - 9999")}
                     </Typography>
+                ) : (
+                    <Chip label="Grupo" size="small" icon={<Groups />} color="default" sx={{ color: "secondary.main" }} />
                 )
             },
             minWidth: isMobile ? 200 : undefined,
