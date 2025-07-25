@@ -1,13 +1,13 @@
-import React, { useMemo, useState } from "react"
+import React, { useEffect, useMemo, useState } from "react"
 import { Box, Chip, IconButton, Menu, MenuItem, Paper, TextField, Tooltip, Typography, useMediaQuery } from "@mui/material"
 import { Room } from "../../../types/server/class/Board/Room"
 import { BoardChat } from "../Chat/Chat"
-import { Droppable } from "@hello-pangea/dnd"
+import { Draggable, Droppable } from "@hello-pangea/dnd"
 import { RoomNameInput } from "./RoomNameInput"
 import { Board } from "../../../types/server/class/Board/Board"
 import { useSnackbar } from "burgos-snackbar"
 import { WithoutFunctions } from "../../../types/server/class/helpers"
-import { Home, More, MoreHoriz, WhatsApp } from "@mui/icons-material"
+import { MoreHoriz } from "@mui/icons-material"
 import { useConfirmDialog } from "burgos-confirm"
 import { Washima } from "../../../types/server/class/Washima/Washima"
 import { IntegrationChip } from "../IntegrationChip"
@@ -19,6 +19,7 @@ import { RoomSettingsModal } from "./RoomSettingsModal"
 import { SearchIcon } from "./SearchIcon"
 import { fuzzy } from "../../../tools/fuzzy"
 import { Chat } from "../../../types/server/class/Board/Chat"
+import { Virtuoso } from "react-virtuoso"
 
 interface KanbanColumnProps {
     room: Room
@@ -43,8 +44,6 @@ export const BoardRoom: React.FC<KanbanColumnProps> = (props) => {
     const [showSettingsModal, setShowSettingsModal] = useState(false)
     const [showSearchBar, setShowSearchBar] = useState(false)
     const [filterText, setFilterText] = useState("")
-
-    console.log(props.room.chats)
 
     const filteredChats = useMemo(
         () => (filterText ? fuzzy<Chat>({ keys: ["name", "phone"], list: props.room.chats, text: filterText }) : props.room.chats),
@@ -110,6 +109,28 @@ export const BoardRoom: React.FC<KanbanColumnProps> = (props) => {
         }
     }
 
+    const HeightPreservingItem: React.FC<any> = React.useCallback(({ children, ...props }) => {
+        const [size, setSize] = useState(0)
+        const knownSize = props["data-known-size"]
+        useEffect(() => {
+            setSize((prevSize) => {
+                return knownSize == 0 ? prevSize : knownSize
+            })
+        }, [knownSize])
+        // check style.css for the height-preserving-container rule
+        return (
+            <div
+                {...props}
+                className="height-preserving-container"
+                style={{
+                    "--child-height": `${size}px`,
+                }}
+            >
+                {children}
+            </div>
+        )
+    }, [])
+
     return (
         <Tooltip
             arrow
@@ -139,7 +160,8 @@ export const BoardRoom: React.FC<KanbanColumnProps> = (props) => {
                     width: isMobile ? "90vw" : "25vw",
                     padding: isMobile ? "5vw" : "1vw",
                     gap: isMobile ? "5vw" : "1vw",
-                    height: "max-content",
+                    height: 1,
+                    // overflow: "scroll",
                 }}
             >
                 {props.editMode ? (
@@ -172,39 +194,87 @@ export const BoardRoom: React.FC<KanbanColumnProps> = (props) => {
                     </Box>
                 )}
 
-                <Droppable droppableId={props.room.id} type="chat" direction="vertical">
-                    {(provided) => (
+                <Droppable
+                    droppableId={props.room.id}
+                    type="chat"
+                    direction="vertical"
+                    mode="virtual"
+                    renderClone={(provided, snapshot, rubric) => (
+                        <Box ref={provided.innerRef} {...provided.draggableProps} {...provided.dragHandleProps}>
+                            <BoardChat
+                                chat={filteredChats[rubric.source.index]}
+                                index={rubric.source.index}
+                                washima={props.washimas.find((w) => w.id === filteredChats[rubric.source.index].washima_id)}
+                                nagazap={props.nagazaps.find((n) => n.id === filteredChats[rubric.source.index].nagazap_id)}
+                                board={props.board}
+                                room_id={props.room.id}
+                                updateBoard={props.updateBoard}
+                                showAllAccordions={true}
+                                isDragging
+                            />
+                        </Box>
+                    )}
+                >
+                    {(provided, snapshot) => (
                         <Box
                             ref={provided.innerRef}
                             {...provided.droppableProps}
                             sx={{
-                                flexDirection: "column",
-                                gap: isMobile ? "5vw" : "1vw",
-                                flex: 1,
-                                opacity: props.editMode ? 0.45 : 1,
-                                pointerEvents: props.editMode ? "none" : undefined,
+                                height: "50vh",
+                                overflow: "scroll",
+                                position: "relative",
+                                bgcolor: snapshot.isDraggingOver ? "action.hover" : "background.paper",
+                                transition: "background-color 0.3s ease",
                             }}
                         >
                             {filteredChats.length === 0 ? (
                                 <Box sx={{ justifyContent: "center", alignItems: "center", height: "100%" }}>
-                                    <Typography sx={{ color: "text.secondary", alignSelf: "center" }}>Nenhuma conversa</Typography>
+                                    <Typography sx={{ color: "text.secondary" }}>Nenhuma conversa</Typography>
                                 </Box>
                             ) : (
-                                filteredChats.map((chat, index) => (
-                                    <BoardChat
-                                        key={chat.id}
-                                        chat={chat}
-                                        index={index}
-                                        washima={props.washimas.find((washima) => washima.id === chat.washima_id)}
-                                        nagazap={props.nagazaps.find((nagazap) => nagazap.id === chat.nagazap_id)}
-                                        board={props.board}
-                                        room_id={props.room.id}
-                                        updateBoard={(board) => props.updateBoard(board)}
-                                        showAllAccordions={props.showAllAccordions}
-                                    />
-                                ))
+                                <Virtuoso
+                                    style={{ height: "50vh", width: "100%", flexDirection: "column" }}
+                                    data={filteredChats}
+                                    components={{ Item: HeightPreservingItem }}
+                                    // @ts-ignore
+                                    scrollerRef={provided.innerRef}
+                                    itemContent={(index, chat) => (
+                                        <Draggable draggableId={chat.id} index={index} key={chat.id}>
+                                            {(provided, snapshot) => (
+                                                <Box
+                                                    ref={provided.innerRef}
+                                                    {...provided.draggableProps}
+                                                    {...provided.dragHandleProps}
+                                                    style={{
+                                                        ...provided.draggableProps.style,
+                                                        marginBottom: isMobile ? "5vw" : "1vw",
+                                                        // zIndex: snapshot.isDragging ? 9999 : "auto",
+                                                    }}
+                                                    // sx={{
+                                                    //     width: 1,
+                                                    //     transform: snapshot.isDragging ? "scale(1.05)" : "none",
+                                                    //     opacity: snapshot.isDragging ? 0.8 : 1,
+                                                    //     transition: "transform 0.2s, opacity 0.2s",
+                                                    //     flexDirection: "column",
+                                                    // }}
+                                                >
+                                                    <BoardChat
+                                                        chat={chat}
+                                                        index={index}
+                                                        washima={props.washimas.find((w) => w.id === chat.washima_id)}
+                                                        nagazap={props.nagazaps.find((n) => n.id === chat.nagazap_id)}
+                                                        board={props.board}
+                                                        room_id={props.room.id}
+                                                        updateBoard={props.updateBoard}
+                                                        showAllAccordions={props.showAllAccordions}
+                                                        isDragging={snapshot.isDragging}
+                                                    />
+                                                </Box>
+                                            )}
+                                        </Draggable>
+                                    )}
+                                />
                             )}
-                            {provided.placeholder}
                         </Box>
                     )}
                 </Droppable>

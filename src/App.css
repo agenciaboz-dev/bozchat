@@ -143,3 +143,8 @@ border-radius: 4px;
 .MuiDataGrid-panelWrapper {
     background-color: #131b26;
 }
+
+.height-preserving-container:empty {
+  min-height: calc(var(--child-height));
+  box-sizing: border-box;
+}

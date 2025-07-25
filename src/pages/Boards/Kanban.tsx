@@ -50,6 +50,9 @@ export const BoardPage: React.FC<BoardPageProps> = (props) => {
         result.destination?.droppableId === result.source.droppableId && result.destination.index === result.source.index
 
     const handleChatDrag = (result: DropResult<string>) => {
+
+        if (!result.destination) return
+
         let sourceRoomIndex = -1
         const sourceRoom = board.rooms.find((room, index) => {
             if (room.id === result.source.droppableId) {
@@ -92,7 +95,6 @@ export const BoardPage: React.FC<BoardPageProps> = (props) => {
                 chat,
                 ...destinationRoom.chats.slice(result.destination.index),
             ]
-
             setBoard((currentBoard) => {
                 const rooms = currentBoard.rooms
                 rooms[sourceRoomIndex].chats = sourceRoom.chats
